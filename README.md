@@ -13,8 +13,10 @@ and shown in Storybook under _Platform → Design decisions_.
 
 ## Install
 
+Each release attaches the built package to its [GitHub release](https://github.com/openasy/ui/releases); no registry or token is needed.
+
 ```bash
-npm install @openasy/ui
+npm install https://github.com/openasy/ui/releases/download/v0.1.0/openasy-ui-0.1.0.tgz
 ```
 
 ```tsx

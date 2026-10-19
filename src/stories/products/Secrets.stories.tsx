@@ -634,7 +634,7 @@ const VALIDATORS: Validator[] = [
   { id: "v4", type: "Stripe live key", provider: "Stripe", method: "GET /v1/balance", detector: "sk_live_, rk_live_", verified: 0, enabled: false, scope: "Reads balance; disabled by policy" },
   { id: "v5", type: "Google API key", provider: "Google Cloud", method: "GET tokeninfo", detector: "AIza…", verified: 0, enabled: true, scope: "No data access" },
   { id: "v6", type: "Twilio auth token", provider: "Twilio", method: "GET /Accounts/{sid}", detector: "SK…, AC… pair", verified: 0, enabled: true, scope: "Reads account status" },
-  { id: "v7", type: "Private key", provider: "—", method: "No live check", detector: "PEM headers", verified: 0, enabled: false, scope: "Matched certificate inventory instead" },
+  { id: "v7", type: "Private key", provider: "–", method: "No live check", detector: "PEM headers", verified: 0, enabled: false, scope: "Matched certificate inventory instead" },
   { id: "v8", type: "Postgres URI", provider: "Database", method: "TCP handshake only", detector: "postgres://user:pass@", verified: 1, enabled: true, scope: "Never authenticates" },
 ];
 
@@ -725,7 +725,7 @@ function SecretExceptionsPage() {
           onSubmit={(e) => {
             e.preventDefault();
             if (!value.trim()) return;
-            setRows((rs) => [{ id: `x${rs.length + 10}`, kind, value: value.trim(), repo: "All repositories", reason: reason.trim() || "—", by: "Emily Clark", expires: "Jan 19" }, ...rs]);
+            setRows((rs) => [{ id: `x${rs.length + 10}`, kind, value: value.trim(), repo: "All repositories", reason: reason.trim() || "–", by: "Emily Clark", expires: "Jan 19" }, ...rs]);
             setValue("");
             setReason("");
           }}

@@ -450,7 +450,7 @@ function AdvisoriesPage() {
         </span>
       ),
     },
-    { id: "pr", header: "PR", width: "90px", cell: (a) => (prs.includes(a.id) ? <StatusBadge tone="info">Opened</StatusBadge> : <span className="text-xs text-fg-muted">—</span>) },
+    { id: "pr", header: "PR", width: "90px", cell: (a) => (prs.includes(a.id) ? <StatusBadge tone="info">Opened</StatusBadge> : <span className="text-xs text-fg-muted">–</span>) },
   ];
   const openPrs = () => {
     const fixable = selected.filter((id) => ORG_ADVISORIES.find((a) => a.id === id)?.fix);
@@ -718,7 +718,7 @@ function SbomPage() {
     { id: "components", header: "Components", align: "right", mono: true, sortValue: (s) => s.components, cell: (s) => s.components.toLocaleString("en-US") },
     { id: "generated", header: "Last generated", cell: (s) => s.generated },
     { id: "signed", header: "Attestation", description: "Signed with Sigstore keyless signing and recorded in the Rekor transparency log.", cell: (s) => (s.signed ? <StatusBadge tone="success">Signed</StatusBadge> : <StatusBadge tone="warning">Unsigned</StatusBadge>) },
-    { id: "status", header: "Status", cell: (s) => (status[s.repo] ? <StatusBadge tone="info">{status[s.repo]}</StatusBadge> : <span className="text-xs text-fg-muted">—</span>) },
+    { id: "status", header: "Status", cell: (s) => (status[s.repo] ? <StatusBadge tone="info">{status[s.repo]}</StatusBadge> : <span className="text-xs text-fg-muted">–</span>) },
     {
       id: "act",
       header: <span className="sr-only">Actions</span>,

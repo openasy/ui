@@ -21,5 +21,6 @@ Architecture decision records for OpenAsy. Each one says what we decided, why, a
 | 0015 | [Your data stays yours](./0015-data-ownership.md) | Privacy | Accepted |
 | 0016 | [One container per product, signed](./0016-one-container-per-product.md) | Operations | Accepted |
 | 0017 | [Every product can be monitored](./0017-self-observability.md) | Operations | Accepted |
+| 0018 | [One application per product; agents on hosts are separate](./0018-one-application-per-product.md) | Architecture | Accepted |
 
 To propose a change, open a pull request that adds a new record or updates the status of an existing one.

@@ -15,4 +15,5 @@ Security tools must be inspectable, and nobody should be locked in.
 
 ## Consequences
 
-- No closed "enterprise edition" features. Paid support, if any, is separate from the code.
+- No closed "enterprise edition" features and no licence keys. The code is the same for everyone.
+- The project is funded by support plans (Standard and Enterprise): response times, help with installs and upgrades, 24/7 cover. Paying never unlocks code.

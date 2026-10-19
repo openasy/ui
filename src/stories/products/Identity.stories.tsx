@@ -650,8 +650,8 @@ function ProvidersPage() {
               { id: "m1", field: "email", kc: "email", ad: "mail", google: "email", required: true },
               { id: "m2", field: "name", kc: "name", ad: "displayName", google: "name", required: true },
               { id: "m3", field: "groups", kc: "realm_access.roles", ad: "memberOf", google: "department", required: false },
-              { id: "m4", field: "employee_id", kc: "—", ad: "employeeID", google: "externalIds.organization", required: false },
-              { id: "m5", field: "manager", kc: "—", ad: "manager", google: "relations.manager", required: false },
+              { id: "m4", field: "employee_id", kc: "–", ad: "employeeID", google: "externalIds.organization", required: false },
+              { id: "m5", field: "manager", kc: "–", ad: "manager", google: "relations.manager", required: false },
               { id: "m6", field: "disabled", kc: "enabled = false", ad: "userAccountControl & 2", google: "suspended", required: true },
             ]}
             getRowId={(r) => r.id}

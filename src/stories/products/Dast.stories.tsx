@@ -148,7 +148,7 @@ const cap = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
 function SevCountsCell({ counts }: { counts: SevCounts }) {
   const keys = (["critical", "high", "medium", "low"] as const).filter((k) => counts[k] > 0);
-  if (keys.length === 0) return <span className="text-fg-muted">—</span>;
+  if (keys.length === 0) return <span className="text-fg-muted">–</span>;
   return (
     <span className="flex flex-wrap gap-1">
       {keys.map((k) => (
@@ -182,7 +182,7 @@ const findingColumns: Column<Finding>[] = [
     ),
   },
   { id: "url", header: "Location", cell: (f) => <EntityChip kind="url" value={f.url} hideKind /> },
-  { id: "param", header: "Param", mono: true, cell: (f) => f.param ?? "—" },
+  { id: "param", header: "Param", mono: true, cell: (f) => f.param ?? "–" },
   { id: "engine", header: "Engine", cell: (f) => <Badge>{f.engine}</Badge> },
   { id: "state", header: "Status", cell: (f) => (f.confirmed ? <StatusBadge tone="danger">Confirmed</StatusBadge> : <StatusBadge tone="neutral">Detected</StatusBadge>) },
 ];

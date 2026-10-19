@@ -1101,8 +1101,8 @@ function PcapPage() {
               },
               { id: "sensor", header: "Sensor", mono: true, cell: (r) => r.sensor },
               { id: "req", header: "Requested", cell: (r) => <span className="flex flex-col whitespace-nowrap"><span>{r.requested}</span><span className="text-2xs text-fg-muted">{r.by}</span></span> },
-              { id: "size", header: "Size", align: "right", mono: true, sortValue: (r) => r.size, cell: (r) => (r.size ? formatBytes(r.size) : "—") },
-              { id: "pk", header: "Packets", align: "right", mono: true, cell: (r) => (r.packets ? r.packets.toLocaleString("en-US") : "—") },
+              { id: "size", header: "Size", align: "right", mono: true, sortValue: (r) => r.size, cell: (r) => (r.size ? formatBytes(r.size) : "–") },
+              { id: "pk", header: "Packets", align: "right", mono: true, cell: (r) => (r.packets ? r.packets.toLocaleString("en-US") : "–") },
               { id: "status", header: "Status", sortValue: (r) => r.status, cell: (r) => <StatusBadge tone={CAPTURE_STATUS[r.status].tone}>{CAPTURE_STATUS[r.status].label}</StatusBadge> },
               {
                 id: "act",

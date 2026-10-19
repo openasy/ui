@@ -84,7 +84,7 @@ export const Query: Story = {
     return (
       <div className="flex flex-col gap-2">
         <QueryBar value={q} onChange={setQ} onSubmit={setRan} />
-        <p className="font-mono text-xs text-fg-muted">last run: {ran || "—"}</p>
+        <p className="font-mono text-xs text-fg-muted">last run: {ran || "–"}</p>
       </div>
     );
   },

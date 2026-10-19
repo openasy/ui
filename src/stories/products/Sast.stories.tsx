@@ -243,7 +243,7 @@ interface PR {
 }
 
 const PRS: PR[] = [
-  { id: "485", number: 485, title: "Bump chi to v5.2", repo: "acme/orders-api", author: PEOPLE[3]!, branch: "deps/chi-5.2", findings: [], existing: 14, scanned: "now", duration: "—", scanning: true },
+  { id: "485", number: 485, title: "Bump chi to v5.2", repo: "acme/orders-api", author: PEOPLE[3]!, branch: "deps/chi-5.2", findings: [], existing: 14, scanned: "now", duration: "–", scanning: true },
   { id: "482", number: 482, title: "Add order search endpoint", repo: "acme/orders-api", author: PEOPLE[2]!, branch: "feat/order-search", findings, existing: 14, scanned: "2 min ago", duration: "41 s" },
   { id: "481", number: 481, title: "Retry failed webhooks with backoff", repo: "acme/notifications", author: PEOPLE[6]!, branch: "fix/webhook-retry", findings: [], existing: 3, scanned: "34 min ago", duration: "52 s" },
   { id: "480", number: 480, title: "Sign invoices before upload", repo: "acme/billing-worker", author: PEOPLE[4]!, branch: "feat/invoice-signing", findings: md5Findings, existing: 6, scanned: "1 h ago", duration: "19 s" },
@@ -572,7 +572,7 @@ function PullRequestsPage({ initialOpen }: { initialOpen?: string }) {
       align: "right",
       description: "Findings introduced on lines this pull request changes.",
       sortValue: (p) => newOf(p).length,
-      cell: (p) => (p.scanning ? "—" : newOf(p).length ? <Badge tone="danger">{newOf(p).length}</Badge> : <span className="font-mono text-fg-muted">0</span>),
+      cell: (p) => (p.scanning ? "–" : newOf(p).length ? <Badge tone="danger">{newOf(p).length}</Badge> : <span className="font-mono text-fg-muted">0</span>),
     },
     {
       id: "fixed",

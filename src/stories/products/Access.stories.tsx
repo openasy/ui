@@ -242,7 +242,7 @@ function RequestsPage() {
 const LIVE: Record<string, string[]> = {
   s1: ["$ sudo systemctl status nginx", "● nginx.service - A high performance web server", "     Active: active (running) since Mon 2026-10-19 08:02:11 UTC", "$ sudo tail -n 3 /var/log/nginx/error.log", "2026/10/19 13:10:44 [warn] 812#812: *4411 upstream response is buffered", "$ sudo nginx -t", "nginx: configuration file /etc/nginx/nginx.conf test is successful"],
   s2: ["orders=> SELECT count(*) FROM orders WHERE created_at > now() - interval '1 day';", " count ", "-------", " 18422", "orders=> SELECT id, total FROM orders WHERE customer_id = 88213 ORDER BY id DESC LIMIT 3;", "   id    | total ", " 1928412 | 49.90", " 1928407 | 49.90"],
-  s3: ["[RDP] Window focus: Accounting Client 9.4 — Setup", "[RDP] Clipboard: blocked by policy (outbound)", "[RDP] Window focus: Services (Local)", "[RDP] Process started: msiexec.exe /i AcctClient-9.5.msi"],
+  s3: ["[RDP] Window focus: Accounting Client 9.4 Setup", "[RDP] Clipboard: blocked by policy (outbound)", "[RDP] Window focus: Services (Local)", "[RDP] Process started: msiexec.exe /i AcctClient-9.5.msi"],
   s4: ["$ ls /var/log/reports/", "run-2026-10-19.log  run-2026-10-18.log", "$ grep -c ERROR /var/log/reports/run-2026-10-19.log", "3"],
   s5: ["analytics=> \\dt mart.*", " mart | daily_revenue | table", " mart | churn_cohorts | table", "analytics=> SELECT * FROM mart.daily_revenue ORDER BY day DESC LIMIT 2;"],
 };

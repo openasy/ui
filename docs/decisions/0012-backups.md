@@ -15,7 +15,7 @@ Data loss must be recoverable, and people need to know the state of things at a 
 
 ## Consequences
 
-- "Can we go back in time?" — yes: to any day with snapshots, and to any second with continuous replication.
+- "Can we go back in time?" Yes: to any day with snapshots, and to any second with continuous replication.
 
 ## Where you can see it
 

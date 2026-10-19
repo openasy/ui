@@ -454,7 +454,7 @@ function QueriesPage() {
             </div>
           ) : (
             <p className="text-sm text-fg-muted">
-              No index would help. {q.plan.children?.some((c) => c.hot) || q.plan.hot ? "Time is spent waiting on locks — see Locks." : "This plan is already efficient."}
+              No index would help. {q.plan.children?.some((c) => c.hot) || q.plan.hot ? "Time is spent waiting on locks. See Locks." : "This plan is already efficient."}
             </p>
           )}
         </Panel>

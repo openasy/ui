@@ -144,7 +144,7 @@ function CanariesPage() {
           </Button>
         }
       />
-      <Callout tone="critical" title="Canary AWS key used from 198.51.100.201 — this only happens in a breach" action={<Button size="sm" variant="danger">Open incident</Button>}>
+      <Callout tone="critical" title="Canary AWS key used from 198.51.100.201. This only happens in a breach." action={<Button size="sm" variant="danger">Open incident</Button>}>
         The key planted in ~deploy/.aws/credentials on api-prod-01 has no permissions and appears nowhere else. Someone read that file.
       </Callout>
       <KpiGrid>

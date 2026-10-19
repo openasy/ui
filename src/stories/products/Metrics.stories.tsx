@@ -543,7 +543,7 @@ function MetricListPage() {
   const cols: Column<MetricRow>[] = [
     { id: "name", header: "Metric", pinned: "left", width: "36%", sortValue: (x) => x.name, cell: (x) => <span className="block truncate font-mono text-xs font-medium">{x.name}</span> },
     { id: "type", header: "Type", sortValue: (x) => x.type, cell: (x) => <Badge tone={TYPE_TONE[x.type]}>{x.type}</Badge> },
-    { id: "unit", header: "Unit", cell: (x) => <span className="text-xs text-fg-muted">{x.unit || "—"}</span> },
+    { id: "unit", header: "Unit", cell: (x) => <span className="text-xs text-fg-muted">{x.unit || "–"}</span> },
     { id: "series", header: "Series", align: "right", mono: true, sortValue: (x) => x.series, cell: (x) => formatNumber(x.series), description: "Active time series (cardinality) in the last hour. Each unique label combination is one series." },
     { id: "labels", header: "Labels", align: "right", mono: true, sortValue: (x) => x.labels.length, cell: (x) => x.labels.length },
     { id: "trend", header: "Series · 24 h", width: "130px", cell: (x) => <Sparkline data={x.trend} label={`Series count of ${x.name}`} height={20} className="w-24" /> },

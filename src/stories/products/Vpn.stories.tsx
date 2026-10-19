@@ -119,7 +119,7 @@ const EVENTS: Array<{ id: string; level: LogLevel; kind: "auth" | "admin" | "con
   { id: "e1", level: "info", kind: "conn", text: "Dana Kim connected to lon-01", actor: "dana.kim", ip: "203.0.113.24", time: "14:02" },
   { id: "e2", level: "error", kind: "auth", text: "Failed sign-in: wrong TOTP code (attempt 3 of 5)", actor: "ben.ortiz", ip: "198.51.100.201", time: "13:53" },
   { id: "e3", level: "info", kind: "admin", text: "Added 172.16.30.0/24 to Production databases", actor: "emily.clark", ip: "203.0.113.24", time: "13:31" },
-  { id: "e4", level: "warn", kind: "conn", text: "Node fra-01 CPU above 80% for 10 minutes", actor: "system", ip: "—", time: "13:18" },
+  { id: "e4", level: "warn", kind: "conn", text: "Node fra-01 CPU above 80% for 10 minutes", actor: "system", ip: "–", time: "13:18" },
   { id: "e5", level: "info", kind: "auth", text: "MFA enrolled with a passkey", actor: "zoe.adams", ip: "192.0.2.44", time: "12:40" },
   { id: "e6", level: "info", kind: "admin", text: "Invited liam.turner@example.com to Contractors", actor: "emily.clark", ip: "203.0.113.24", time: "11:02" },
   { id: "e7", level: "warn", kind: "auth", text: "Sign-in from a new country (IE)", actor: "sarah.chen", ip: "198.51.100.96", time: "10:15" },
@@ -467,7 +467,7 @@ function ActivityPage() {
             { id: "level", header: "Level", width: "80px", cell: (e) => <LevelBadge level={e.level} /> },
             { id: "text", header: "Event", cell: (e) => e.text },
             { id: "actor", header: "Actor", mono: true, width: "130px", cell: (e) => e.actor },
-            { id: "ip", header: "IP", width: "150px", cell: (e) => (e.ip === "—" ? "—" : <EntityChip kind="ip" value={e.ip} hideKind href="#ip" />) },
+            { id: "ip", header: "IP", width: "150px", cell: (e) => (e.ip === "–" ? "–" : <EntityChip kind="ip" value={e.ip} hideKind href="#ip" />) },
           ]}
         />
       </Panel>

@@ -708,7 +708,7 @@ const SERVICES: Service[] = [
   { id: "payments-api", name: "payments-api", runtime: "Java 21 · OpenJDK", pods: 4, cpu: 1.12, mem: "1.4 GB", hottest: "com.acme.payments.Ledger.post", agent: "0.9.2", state: "Collecting", types: { cpu: true, alloc: true, heap: true, goroutines: false, mutex: false } },
   { id: "inventory-api", name: "inventory-api", runtime: "Python 3.12", pods: 3, cpu: 0.61, mem: "288 MB", hottest: "inventory.sync.reconcile", agent: "0.8.4", state: "Agent outdated", types: { cpu: true, alloc: false, heap: false, goroutines: false, mutex: false } },
   { id: "reports-worker", name: "reports-worker", runtime: "Java 21 · OpenJDK", pods: 2, cpu: 0.42, mem: "2.1 GB", hottest: "com.acme.reports.CsvExporter.write", agent: "0.9.2", state: "Collecting", types: { cpu: true, alloc: true, heap: true, goroutines: false, mutex: false } },
-  { id: "search-indexer", name: "search-indexer", runtime: "Rust 1.82", pods: 0, cpu: 0, mem: "—", hottest: "—", agent: "—", state: "No data", types: { cpu: false, alloc: false, heap: false, goroutines: false, mutex: false } },
+  { id: "search-indexer", name: "search-indexer", runtime: "Rust 1.82", pods: 0, cpu: 0, mem: "–", hottest: "–", agent: "–", state: "No data", types: { cpu: false, alloc: false, heap: false, goroutines: false, mutex: false } },
 ];
 
 const STATE_TONE: Record<Service["state"], "success" | "warning" | "neutral"> = { Collecting: "success", "Agent outdated": "warning", "No data": "neutral" };
@@ -734,7 +734,7 @@ function ServicesPage() {
     },
     { id: "state", header: "State", sortValue: (x) => x.state, cell: (x) => <StatusBadge tone={STATE_TONE[x.state]}>{x.state}</StatusBadge> },
     { id: "pods", header: "Pods", align: "right", mono: true, sortValue: (x) => x.pods, cell: (x) => x.pods },
-    { id: "cpu", header: "CPU", align: "right", mono: true, description: "Average cores used across all pods in the last hour.", sortValue: (x) => x.cpu, cell: (x) => (x.cpu ? `${x.cpu.toFixed(2)} cores` : "—") },
+    { id: "cpu", header: "CPU", align: "right", mono: true, description: "Average cores used across all pods in the last hour.", sortValue: (x) => x.cpu, cell: (x) => (x.cpu ? `${x.cpu.toFixed(2)} cores` : "–") },
     { id: "mem", header: "Heap in use", align: "right", mono: true, cell: (x) => x.mem },
     { id: "hottest", header: "Hottest function", cell: (x) => <span className="block max-w-[260px] truncate font-mono text-xs">{x.hottest}</span> },
     { id: "types", header: "Profile types", cell: (x) => <span className="text-xs">{Object.entries(x.types).filter(([, on]) => on).map(([k]) => TYPE_LABELS[k]).join(", ") || "None"}</span> },

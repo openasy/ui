@@ -154,7 +154,7 @@ const stepColumns: Column<Step>[] = [
     sortValue: (s) => ["missed", "detected", "prevented"].indexOf(s.result),
     cell: (s) => <StatusBadge tone={OUTCOME[s.result].tone}>{OUTCOME[s.result].label}</StatusBadge>,
   },
-  { id: "ttd", header: "Time to detect", align: "right", mono: true, width: "110px", cell: (s) => s.ttd ?? "—" },
+  { id: "ttd", header: "Time to detect", align: "right", mono: true, width: "110px", cell: (s) => s.ttd ?? "–" },
   {
     id: "signal",
     header: "Signal",
@@ -532,7 +532,7 @@ function TechniquesPage() {
     { id: "platform", header: "Platform", cell: (t) => <Badge>{t.platform}</Badge> },
     { id: "detector", header: "Should be caught by", description: "The products expected to detect or prevent this technique, from Platform → Breach coverage.", cell: (t) => <span className="text-xs">{t.detector}</span> },
     { id: "last", header: "Last result", sortValue: (t) => t.last, cell: (t) => <StatusBadge tone={LAST_TONE[t.last]}>{t.last}</StatusBadge> },
-    { id: "ttd", header: "Time to detect", align: "right", mono: true, cell: (t) => t.ttd ?? "—" },
+    { id: "ttd", header: "Time to detect", align: "right", mono: true, cell: (t) => t.ttd ?? "–" },
     {
       id: "run",
       header: "",

@@ -204,7 +204,7 @@ function ChecksPage() {
           options={(["HTTP", "TCP", "DNS", "TLS"] as const).map((t) => ({ value: t, count: checks.filter((c) => c.type === t).length }))}
         />
       </FilterBar>
-      <Callout tone="info" title="Runs from GitHub Actions every 5 min — no server">
+      <Callout tone="info" title="Runs from GitHub Actions every 5 min, no server needed">
         Checks run on a scheduled workflow in acme/uptime-checks and write results to this workspace. Last run 13:55 UTC, took 41 s.
       </Callout>
       <KpiGrid>
@@ -833,9 +833,9 @@ function LocationsPage() {
     { id: "runner", header: "Runs on", cell: (x) => <span className="text-xs">{x.runner}</span> },
     { id: "egress", header: "Egress IP", description: "Allow-list this address if the target filters by source IP.", cell: (x) => <EntityChip kind="ip" value={x.egress} hideKind /> },
     { id: "checks", header: "Checks", align: "right", mono: true, sortValue: (x) => x.checks, cell: (x) => x.checks },
-    { id: "p50", header: "p50", align: "right", mono: true, description: "Median response time of all HTTP checks from this location.", sortValue: (x) => x.p50, cell: (x) => (x.enabled ? `${x.p50} ms` : "—") },
-    { id: "p95", header: "p95", align: "right", mono: true, sortValue: (x) => x.p95, cell: (x) => (x.enabled ? <span className={x.p95 > 300 ? "text-warning-text" : "text-fg"}>{x.p95} ms</span> : "—") },
-    { id: "success", header: "Success", align: "right", mono: true, sortValue: (x) => x.success, cell: (x) => (x.enabled ? `${x.success.toFixed(2)}%` : "—") },
+    { id: "p50", header: "p50", align: "right", mono: true, description: "Median response time of all HTTP checks from this location.", sortValue: (x) => x.p50, cell: (x) => (x.enabled ? `${x.p50} ms` : "–") },
+    { id: "p95", header: "p95", align: "right", mono: true, sortValue: (x) => x.p95, cell: (x) => (x.enabled ? <span className={x.p95 > 300 ? "text-warning-text" : "text-fg"}>{x.p95} ms</span> : "–") },
+    { id: "success", header: "Success", align: "right", mono: true, sortValue: (x) => x.success, cell: (x) => (x.enabled ? `${x.success.toFixed(2)}%` : "–") },
     {
       id: "enabled",
       header: "Enabled",
@@ -882,7 +882,7 @@ function LocationsPage() {
             </div>
             <div>
               <dt className="text-2xs text-fg-muted">Last heartbeat</dt>
-              <dd>{p.enabled ? "38 s ago" : "—"}</dd>
+              <dd>{p.enabled ? "38 s ago" : "–"}</dd>
             </div>
             <div>
               <dt className="text-2xs text-fg-muted">Egress IP</dt>
@@ -928,7 +928,7 @@ export const Checks: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
     await expect(c.getByRole("heading", { level: 1, name: "Checks" })).toBeInTheDocument();
-    await expect(c.getByText("Runs from GitHub Actions every 5 min — no server")).toBeInTheDocument();
+    await expect(c.getByText("Runs from GitHub Actions every 5 min, no server needed")).toBeInTheDocument();
     await expect(c.getByRole("img", { name: "Webhooks receiver, 19 Oct: outage" })).toBeInTheDocument();
     const table = c.getByRole("table", { name: "Uptime checks" });
     await expect(within(table).getAllByRole("row")).toHaveLength(15);

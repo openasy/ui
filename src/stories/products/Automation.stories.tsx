@@ -162,7 +162,7 @@ const STEPS: Record<string, Step> = {
     title: "Notify #sec-incidents",
     icon: MessageSquare,
     state: "waiting",
-    duration: "—",
+    duration: "–",
     config: [
       ["Integration", "Slack · acme.slack.com"],
       ["Channel", "#sec-incidents"],
@@ -272,7 +272,7 @@ const RUNS: Run[] = [
   { id: "run-4812", playbook: "contain", started: "Today 02:14", host: "api-prod-03", user: PEOPLE[4], state: "failed", steps: "6 of 8", duration: "4 m 22 s" },
   { id: "run-4809", playbook: "backup-fail", started: "Today 12:04", host: "db-prod-01", user: PEOPLE[2], state: "success", steps: "2 of 2", duration: "1.4 s" },
   { id: "run-4806", playbook: "vpn-brute", started: "Today 11:02", host: "edge-fra-02", user: PEOPLE[4], state: "success", steps: "3 of 3", duration: "2.1 s" },
-  { id: "run-4801", playbook: "cert-renew", started: "Today 02:06", host: "api-prod-01", user: PEOPLE[2], state: "waiting", steps: "2 of 3", duration: "—" },
+  { id: "run-4801", playbook: "cert-renew", started: "Today 02:06", host: "api-prod-01", user: PEOPLE[2], state: "waiting", steps: "2 of 3", duration: "–" },
   { id: "run-4790", playbook: "contain", started: "Oct 17 21:03", host: "worker-prod-09", user: PEOPLE[6], state: "success", steps: "8 of 8", duration: "2 m 05 s" },
   { id: "run-4788", playbook: "leaked-secret", started: "Oct 17 16:04", host: "api-prod-05", user: PEOPLE[1], state: "success", steps: "3 of 3", duration: "12.8 s" },
   { id: "run-4781", playbook: "offboard", started: "Oct 16 17:30", host: "db-prod-02", user: PEOPLE[5], state: "success", steps: "5 of 5", duration: "4 m 51 s" },
@@ -412,7 +412,7 @@ function PlaybooksPage({ initialOpen }: { initialOpen?: string }) {
     },
     { id: "approval", header: "Approval", description: "Whether a human must approve before actions run.", cell: (p) => (p.approval ? <Badge tone="info">Required</Badge> : <span className="text-xs text-fg-muted">No</span>) },
     { id: "runs", header: "Runs · 90 d", align: "right", mono: true, sortValue: (p) => p.runs, cell: (p) => p.runs },
-    { id: "success", header: "Success", align: "right", sortValue: (p) => p.success, cell: (p) => (p.runs ? <span className={cn("font-mono text-xs", p.success < 90 && "text-warning-text")}>{p.success}%</span> : <span className="text-xs text-fg-muted">—</span>) },
+    { id: "success", header: "Success", align: "right", sortValue: (p) => p.success, cell: (p) => (p.runs ? <span className={cn("font-mono text-xs", p.success < 90 && "text-warning-text")}>{p.success}%</span> : <span className="text-xs text-fg-muted">–</span>) },
     { id: "last", header: "Last run", cell: (p) => <span className="text-xs whitespace-nowrap text-fg-muted">{p.last}</span> },
     {
       id: "owner",
@@ -475,14 +475,14 @@ function runSteps(r: Run): Array<{ id: string; title: string; product?: ProductI
       { id: "5", title: "End VPN sessions for user", product: "vpn", state: "success", duration: "1.2 s", output: "2 sessions ended for ben.ortiz@example.com" },
       { id: "6", title: "Revoke access grants", product: "access", state: "failed", duration: "30 s", output: "POST /v1/grants/revoke → 504 Gateway Timeout after 3 retries" },
       { id: "7", title: "Open incident", product: "incidents", state: "success", duration: "0.6 s", output: "INC-214 created · SEV-1" },
-      { id: "8", title: "Notify #sec-incidents", state: "waiting", duration: "—", output: "Waiting for step 6 to finish or be skipped" },
+      { id: "8", title: "Notify #sec-incidents", state: "waiting", duration: "–", output: "Waiting for step 6 to finish or be skipped" },
     ];
   const pb = PLAYBOOKS.find((p) => p.id === r.playbook)!;
   const { steps, flow } = stepsFor(pb);
   return flow.flat().map((id, i) => {
     const s = steps[id]!;
     const state: StepState = r.state === "skipped" && i > 1 ? "skipped" : r.state === "waiting" && i === flow.flat().length - 1 ? "waiting" : "success";
-    return { id: String(i + 1), title: s.title, product: s.product, state, duration: state === "success" ? s.duration : "—", output: state === "success" ? "ok" : state === "skipped" ? "Condition false, not run" : "Waiting for approval" };
+    return { id: String(i + 1), title: s.title, product: s.product, state, duration: state === "success" ? s.duration : "–", output: state === "success" ? "ok" : state === "skipped" ? "Condition false, not run" : "Waiting for approval" };
   });
 }
 

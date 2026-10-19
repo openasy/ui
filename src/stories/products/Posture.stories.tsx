@@ -674,7 +674,7 @@ const EXCEPTIONS: PostureException[] = [
   { id: "e1", control: "CIS AWS 1.14", title: "IAM key older than 90 days", scope: "iam/user/ci-deployer", reason: "Legacy Jenkins cannot use OIDC; migration planned in OPS-1902.", requester: PEOPLE[4], approver: PEOPLE[1], expires: "Dec 31", status: "active" },
   { id: "e2", control: "CIS AWS 1.9", title: "Password policy allows reuse", scope: "AWS staging", reason: "Staging uses SSO only; console passwords are disabled.", requester: PEOPLE[2], approver: PEOPLE[1], expires: "Mar 31", status: "active" },
   { id: "e3", control: "CIS K8s 5.2.1", title: "Privileged container", scope: "kube-system/cilium-*", reason: "CNI needs privileged mode to manage eBPF programs.", requester: PEOPLE[0], approver: PEOPLE[3], expires: "Never (vendor requirement)", status: "active" },
-  { id: "e4", control: "CIS GCP 3.8", title: "VPC flow logs disabled", scope: "acme-data/default", reason: "Default network is being deleted this sprint.", requester: PEOPLE[6], approver: "—", expires: "Nov 1", status: "pending" },
+  { id: "e4", control: "CIS GCP 3.8", title: "VPC flow logs disabled", scope: "acme-data/default", reason: "Default network is being deleted this sprint.", requester: PEOPLE[6], approver: "–", expires: "Nov 1", status: "pending" },
   { id: "e5", control: "CIS Azure 3.3", title: "Shared key access", scope: "storageAccounts/acmebuild", reason: "Build cache used by an old agent.", requester: PEOPLE[5], approver: PEOPLE[1], expires: "Oct 1", status: "expired" },
 ];
 
@@ -682,7 +682,7 @@ function ExceptionsPage() {
   const [rows, setRows] = useState(EXCEPTIONS);
   const [tab, setTab] = useState<"all" | ExStatus>("all");
   const shown = rows.filter((r) => tab === "all" || r.status === tab);
-  const set = (id: string, status: ExStatus) => setRows((rs) => rs.map((r) => (r.id === id ? { ...r, status, approver: status === "active" && r.approver === "—" ? "Emily Clark" : r.approver } : r)));
+  const set = (id: string, status: ExStatus) => setRows((rs) => rs.map((r) => (r.id === id ? { ...r, status, approver: status === "active" && r.approver === "–" ? "Emily Clark" : r.approver } : r)));
   const cols: Column<PostureException>[] = [
     {
       id: "control",

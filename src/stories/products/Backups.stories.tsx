@@ -87,7 +87,7 @@ const columns: Column<Job>[] = [
   { id: "schedule", header: "Schedule", mono: true, description: "Cron expression in the agent's local time zone.", cell: (j) => j.schedule },
   { id: "last", header: "Last run", sortValue: (j) => j.last, cell: (j) => <StatusBadge tone={RUN_TONE[j.last]}>{j.last}</StatusBadge> },
   { id: "duration", header: "Duration", align: "right", mono: true, sortValue: (j) => j.durationMin, cell: (j) => `${j.durationMin} m` },
-  { id: "size", header: "Size", align: "right", mono: true, description: "Data added to the repository by the last run, after deduplication.", sortValue: (j) => j.bytes, cell: (j) => (j.bytes ? formatBytes(j.bytes) : "—") },
+  { id: "size", header: "Size", align: "right", mono: true, description: "Data added to the repository by the last run, after deduplication.", sortValue: (j) => j.bytes, cell: (j) => (j.bytes ? formatBytes(j.bytes) : "–") },
   { id: "next", header: "Next run", align: "right", cell: (j) => <span className="text-xs whitespace-nowrap text-fg-muted">{j.next}</span> },
 ];
 
@@ -160,7 +160,7 @@ function JobDetail({ job, onClose }: { job: Job; onClose: () => void }) {
         <dt className="text-fg-muted">Retention</dt>
         <dd>{job.retention}</dd>
         <dt className="text-fg-muted">Size</dt>
-        <dd className="font-mono text-xs">{job.bytes ? formatBytes(job.bytes) : "—"}</dd>
+        <dd className="font-mono text-xs">{job.bytes ? formatBytes(job.bytes) : "–"}</dd>
         <dt className="text-fg-muted">Next run</dt>
         <dd>{job.next}</dd>
       </dl>
@@ -395,7 +395,7 @@ function SnapshotsPage() {
     { id: "total", header: "Restore size", align: "right", mono: true, sortValue: (s) => s.total, cell: (s) => formatBytes(s.total) },
     { id: "files", header: "Files", align: "right", mono: true, cell: (s) => s.files.toLocaleString("en-US") },
     { id: "verified", header: "Integrity", description: "Result of the last restic check --read-data-subset over this snapshot.", cell: (s) => <StatusBadge tone={VERIFY_TONE[s.verified]}>{s.verified}</StatusBadge> },
-    { id: "lock", header: "Lock", description: "Object Lock in compliance mode; cannot be deleted before expiry.", cell: (s) => (s.locked ? <Badge tone="info" icon={<Lock aria-hidden className="size-3" />}>Locked</Badge> : <span className="text-xs text-fg-muted">—</span>) },
+    { id: "lock", header: "Lock", description: "Object Lock in compliance mode; cannot be deleted before expiry.", cell: (s) => (s.locked ? <Badge tone="info" icon={<Lock aria-hidden className="size-3" />}>Locked</Badge> : <span className="text-xs text-fg-muted">–</span>) },
     {
       id: "act",
       header: <span className="sr-only">Actions</span>,
@@ -782,7 +782,7 @@ function keepLabel(p: Policy) {
       p.yearly && `${p.yearly} yearly`,
     ]
       .filter(Boolean)
-      .join(" · ") || "—"
+      .join(" · ") || "–"
   );
 }
 
@@ -810,7 +810,7 @@ function PoliciesPage() {
         <span className="flex gap-1">
           {x.immutable && <Badge tone="info">Immutable</Badge>}
           {x.offsite && <Badge tone="info">Off-site</Badge>}
-          {!x.immutable && !x.offsite && <span className="text-xs text-fg-muted">—</span>}
+          {!x.immutable && !x.offsite && <span className="text-xs text-fg-muted">–</span>}
         </span>
       ),
     },

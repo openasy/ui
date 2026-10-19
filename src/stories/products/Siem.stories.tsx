@@ -870,7 +870,7 @@ function ThreatIntelPage() {
     { id: "hits", header: "Hits", align: "right", mono: true, sortValue: (m) => m.hits, cell: (m) => m.hits.toLocaleString("en-US") },
     { id: "entity", header: "Seen on", cell: (m) => (m.entity.includes("-") ? <EntityChip kind="host" value={m.entity} /> : <span className="text-xs text-fg-muted">{m.entity}</span>) },
     { id: "first", header: "First match", align: "right", cell: (m) => <span className="whitespace-nowrap text-fg-muted">{m.first}</span> },
-    { id: "signal", header: "Signal", cell: (m) => (m.signal ? <a href={`#${m.signal}`} className="font-mono text-xs text-accent-text">{m.signal}</a> : <span className="text-fg-muted">—</span>) },
+    { id: "signal", header: "Signal", cell: (m) => (m.signal ? <a href={`#${m.signal}`} className="font-mono text-xs text-accent-text">{m.signal}</a> : <span className="text-fg-muted">–</span>) },
   ];
   return (
     <>
@@ -979,7 +979,7 @@ const INGEST: IngestSource[] = [
   { id: "vpn", name: "OpenAsy VPN", kind: "Native · OCSF", classes: ["Authentication", "Network Activity"], eps: 42, gbDay: 2.9, lag: "0.8 s", errors: 0.0, last: "now", status: "ok", seed: 104 },
   { id: "malware", name: "OpenAsy Malware", kind: "Native · OCSF", classes: ["Detection Finding"], eps: 3, gbDay: 0.2, lag: "0.6 s", errors: 0.0, last: "now", status: "ok", seed: 105 },
   { id: "m365", name: "Microsoft 365 audit", kind: "Management Activity API", classes: ["API Activity", "Authentication"], eps: 64, gbDay: 4.1, lag: "9 min", errors: 1.4, last: "6 min ago", status: "lagging", seed: 106 },
-  { id: "keycloak", name: "Keycloak", kind: "Events webhook", classes: ["Authentication", "API Activity"], eps: 0, gbDay: 0, lag: "—", errors: 0.0, last: "12:02", status: "silent", seed: 107 },
+  { id: "keycloak", name: "Keycloak", kind: "Events webhook", classes: ["Authentication", "API Activity"], eps: 0, gbDay: 0, lag: "–", errors: 0.0, last: "12:02", status: "silent", seed: 107 },
 ];
 
 const INGEST_STATUS = { ok: { label: "Receiving", tone: "success" }, lagging: { label: "Lagging", tone: "warning" }, silent: { label: "Silent", tone: "danger" } } as const;
@@ -1099,7 +1099,7 @@ const REPORTS: Report[] = [
   { id: "r1", name: "Weekly SOC summary", kind: "Signals, MTTA, MTTR, top rules", schedule: "Mondays 08:00", recipients: "soc@example.com", format: "PDF", last: "Oct 13 · 412 KB", next: "Oct 20 08:00", enabled: true },
   { id: "r2", name: "PCI DSS 4.0 Req. 10 log review", kind: "Compliance evidence", schedule: "Daily 06:00", recipients: emailOf(PEOPLE[3]), format: "PDF", last: "Today 06:00 · 1.1 MB", next: "Tomorrow 06:00", enabled: true },
   { id: "r3", name: "Privileged access changes", kind: "IAM and realm admin grants", schedule: "Daily 07:30", recipients: "iam-owners@example.com", format: "CSV", last: "Today 07:30 · 18 KB", next: "Tomorrow 07:30", enabled: true },
-  { id: "r4", name: "GDPR Art. 33 breach evidence", kind: "Personal data access timeline", schedule: "On demand", recipients: "dpo@example.com", format: "PDF", last: "Aug 2 · 2.4 MB", next: "—", enabled: true },
+  { id: "r4", name: "GDPR Art. 33 breach evidence", kind: "Personal data access timeline", schedule: "On demand", recipients: "dpo@example.com", format: "PDF", last: "Aug 2 · 2.4 MB", next: "–", enabled: true },
   { id: "r5", name: "ISO/IEC 27001 A.8.15 logging", kind: "Source coverage and retention", schedule: "1st of month", recipients: emailOf(PEOPLE[1]), format: "PDF", last: "Oct 1 · 640 KB", next: "Nov 1 08:00", enabled: true },
   { id: "r6", name: "Noisy rules digest", kind: "FP rate and tuning backlog", schedule: "Fridays 16:00", recipients: "detection-eng@example.com", format: "CSV", last: "Oct 17 · 6 KB", next: "Oct 24 16:00", enabled: false },
 ];

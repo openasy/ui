@@ -353,7 +353,7 @@ function ControlsPage() {
       header: "Also covers",
       description: "Requirements in other frameworks satisfied by the same evidence. Fix once, pass everywhere.",
       sortValue: (c) => (MAPPED[c.id] ?? []).length,
-      cell: (c) => <span className="font-mono text-2xs text-fg-muted">{(MAPPED[c.id] ?? []).join(", ") || "—"}</span>,
+      cell: (c) => <span className="font-mono text-2xs text-fg-muted">{(MAPPED[c.id] ?? []).join(", ") || "–"}</span>,
     },
     { id: "status", header: "Status", sortValue: (c) => ["passing", "needs-evidence", "failing"].indexOf(c.status), cell: (c) => <StatusBadge tone={STATUS[c.status].tone}>{STATUS[c.status].label}</StatusBadge> },
     { id: "source", header: "Evidence from", sortValue: (c) => PRODUCTS[c.source].name, cell: (c) => <SourceName source={c.source} /> },
@@ -440,7 +440,7 @@ function ControlsPage() {
                 <SourceLink source={current.source} />
               </dd>
               <dt className="text-fg-muted">Also covers</dt>
-              <dd className="font-mono text-xs">{(MAPPED[current.id] ?? []).join(", ") || "—"}</dd>
+              <dd className="font-mono text-xs">{(MAPPED[current.id] ?? []).join(", ") || "–"}</dd>
             </dl>
             <div className="flex flex-col gap-1">
               <h3 className="text-xs font-semibold text-fg">Tests</h3>
@@ -686,7 +686,7 @@ const POLICIES: Policy[] = [
   { id: "pol-aup", name: "Acceptable use policy", version: "v2.6", owner: PEOPLE[5], approved: "Aug 1, 2026", nextReview: "Aug 2027", ack: 81, pending: 41, status: "published", frameworks: ["ISO 27001", "SOC 2"] },
   { id: "pol-ir", name: "Incident response plan", version: "v5.0", owner: PEOPLE[4], approved: "Oct 2, 2025", nextReview: "Oct 2026", ack: 100, pending: 0, status: "review-due", frameworks: ["ISO 27001", "SOC 2", "PCI DSS"] },
   { id: "pol-dp", name: "Data protection and privacy policy", version: "v2.0", owner: PEOPLE[3], approved: "May 24, 2026", nextReview: "May 2027", ack: 89, pending: 23, status: "published", frameworks: ["GDPR", "ISO 27001"] },
-  { id: "pol-crypto", name: "Cryptography and key management", version: "v1.3 draft", owner: PEOPLE[5], approved: "—", nextReview: "—", ack: 0, pending: 0, status: "draft", frameworks: ["ISO 27001", "PCI DSS"] },
+  { id: "pol-crypto", name: "Cryptography and key management", version: "v1.3 draft", owner: PEOPLE[5], approved: "–", nextReview: "–", ack: 0, pending: 0, status: "draft", frameworks: ["ISO 27001", "PCI DSS"] },
   { id: "pol-vm", name: "Vulnerability management standard", version: "v2.4", owner: PEOPLE[7], approved: "Jun 9, 2026", nextReview: "Jun 2027", ack: 97, pending: 2, status: "published", frameworks: ["ISO 27001", "PCI DSS", "SOC 2"] },
   { id: "pol-bc", name: "Business continuity and backup", version: "v1.8", owner: PEOPLE[2], approved: "Sep 12, 2025", nextReview: "Sep 2026", ack: 92, pending: 8, status: "review-due", frameworks: ["ISO 27001", "SOC 2"] },
   { id: "pol-ret", name: "Data retention schedule", version: "v1.2", owner: PEOPLE[3], approved: "Feb 2, 2026", nextReview: "Feb 2027", ack: 76, pending: 52, status: "published", frameworks: ["GDPR"] },

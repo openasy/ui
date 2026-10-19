@@ -636,14 +636,14 @@ interface HistoryEvent {
 }
 
 const HISTORY: HistoryEvent[] = [
-  { id: "h1", time: "Today 13:53", rule: "Host CPU above 85%", severity: "high", from: "pending", to: "firing", duration: "—" },
-  { id: "h2", time: "Today 13:51", rule: "Crypto miner detected", severity: "critical", from: "pending", to: "firing", duration: "—", ackBy: PEOPLE[4] },
-  { id: "h3", time: "Today 13:49", rule: "orders-api p95 above SLO", severity: "critical", from: "pending", to: "firing", duration: "—" },
+  { id: "h1", time: "Today 13:53", rule: "Host CPU above 85%", severity: "high", from: "pending", to: "firing", duration: "–" },
+  { id: "h2", time: "Today 13:51", rule: "Crypto miner detected", severity: "critical", from: "pending", to: "firing", duration: "–", ackBy: PEOPLE[4] },
+  { id: "h3", time: "Today 13:49", rule: "orders-api p95 above SLO", severity: "critical", from: "pending", to: "firing", duration: "–" },
   { id: "h4", time: "Today 11:20", rule: "Container restart loop", severity: "medium", from: "firing", to: "resolved", duration: "24 m", ackBy: PEOPLE[2] },
   { id: "h5", time: "Today 09:02", rule: "VPN failed sign-ins", severity: "medium", from: "firing", to: "resolved", duration: "6 m", ackBy: PEOPLE[4] },
   { id: "h6", time: "Yesterday 22:41", rule: "Disk will fill in 4 h", severity: "high", from: "firing", to: "resolved", duration: "1 h 12 m", ackBy: PEOPLE[6] },
   { id: "h7", time: "Yesterday 18:05", rule: "5xx ratio above 1% · billing-svc", severity: "medium", from: "firing", to: "resolved", duration: "9 m", ackBy: PEOPLE[3] },
-  { id: "h8", time: "Yesterday 14:30", rule: "edge-fra-02 heartbeat missing", severity: "high", from: "firing", to: "silenced", duration: "—" },
+  { id: "h8", time: "Yesterday 14:30", rule: "edge-fra-02 heartbeat missing", severity: "high", from: "firing", to: "silenced", duration: "–" },
   { id: "h9", time: "Oct 17 03:12", rule: "SSH brute force", severity: "high", from: "firing", to: "resolved", duration: "18 m", ackBy: PEOPLE[4] },
   { id: "h10", time: "Oct 16 16:44", rule: "Queue lag > 10k · topic orders", severity: "medium", from: "firing", to: "resolved", duration: "41 m", ackBy: PEOPLE[0] },
 ];
@@ -715,7 +715,7 @@ function HistoryPage() {
             { id: "severity", header: "Severity", cell: (h) => <SeverityBadge severity={h.severity} /> },
             { id: "change", header: "Change", cell: (h) => <span className="flex items-center gap-1"><StatusBadge tone={TO_TONE[h.from] ?? "neutral"}>{STATE[h.from].label}</StatusBadge><span aria-hidden>→</span><StatusBadge tone={TO_TONE[h.to] ?? "neutral"}>{h.to[0]!.toUpperCase() + h.to.slice(1)}</StatusBadge></span> },
             { id: "duration", header: "Duration", align: "right", mono: true, cell: (h) => h.duration, description: "Time from firing to resolved." },
-            { id: "ack", header: "Acknowledged by", cell: (h) => (h.ackBy ? <span className="flex items-center gap-1.5"><Avatar name={h.ackBy} size="sm" /><span className="text-xs">{h.ackBy}</span></span> : <span className="text-xs text-fg-muted">—</span>) },
+            { id: "ack", header: "Acknowledged by", cell: (h) => (h.ackBy ? <span className="flex items-center gap-1.5"><Avatar name={h.ackBy} size="sm" /><span className="text-xs">{h.ackBy}</span></span> : <span className="text-xs text-fg-muted">–</span>) },
           ]}
         />
       </Panel>

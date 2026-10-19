@@ -14,7 +14,7 @@ const BRANDS: Record<string, Partial<Brand>> = {
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#0b7366"/><path d="M7 16l5-9 5 9z" fill="#fff"/></svg>',
       ),
   },
-  bank: { name: "Bankası SOC", organization: "Güvenlik Operasyon Merkezi", accent: "#7a4fd1", fontFamily: "system-ui, sans-serif" },
+  bank: { name: "Northwind SOC", organization: "Security Operations Center", accent: "#7a4fd1", fontFamily: "system-ui, sans-serif" },
 };
 
 const withBrand: Decorator = (Story, context) => {
@@ -30,6 +30,17 @@ const withBrand: Decorator = (Story, context) => {
 
 const preview: Preview = {
   decorators: [withBrand],
+  // Full-page screens must never scroll sideways; wide tables scroll inside their own box.
+  async afterEach({ parameters, canvasElement }) {
+    if (parameters.layout !== "fullscreen") return;
+    if (canvasElement.querySelector('[data-testid="not-designed"]')) {
+      throw new Error("A nav item opens a page that has not been designed yet.");
+    }
+    const doc = canvasElement.ownerDocument.documentElement;
+    if (doc.scrollWidth > doc.clientWidth + 1) {
+      throw new Error(`Page overflows horizontally: content is ${doc.scrollWidth}px wide in a ${doc.clientWidth}px viewport.`);
+    }
+  },
   globalTypes: {
     theme: {
       description: "Colour theme",
@@ -51,7 +62,7 @@ const preview: Preview = {
         items: [
           { value: "openasy", title: "OpenAsy (default)" },
           { value: "acme", title: "Acme Shield (teal, custom logo)" },
-          { value: "bank", title: "Bankası SOC (purple, system font)" },
+          { value: "bank", title: "Northwind SOC (purple, system font)" },
         ],
         dynamicTitle: true,
       },
@@ -64,7 +75,7 @@ const preview: Preview = {
     a11y: { test: "error" },
     options: {
       storySort: {
-        order: ["Introduction", "Quality", "Foundations", "Layout", "Data", "Charts", "Filters", "Inputs", "Feedback", "Products", "Identity"],
+        order: ["Introduction", "Quality", "Platform", "Foundations", "Layout", "Data", "Charts", "Filters", "Inputs", "Feedback", "Products", "Identity"],
       },
     },
   },

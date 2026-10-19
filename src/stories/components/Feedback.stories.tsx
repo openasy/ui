@@ -25,11 +25,11 @@ export const AllTones: Story = {
       <Callout tone="info" title="Agent 0.5 is available" action={<Button size="sm">Upgrade</Button>}>
         Adds eBPF network events.
       </Callout>
-      <Callout tone="success" title="Profile sent to deniz.kaya@example.com" />
+      <Callout tone="success" title="Profile sent to dana.kim@example.com" />
       <Callout tone="warning" title="4 certificates expire within 30 days">
         Owners get an email 14 and 3 days before.
       </Callout>
-      <Callout tone="danger" title="Node ist-01 stopped reporting">
+      <Callout tone="danger" title="Node lon-01 stopped reporting">
         Last heartbeat 6 minutes ago. Existing tunnels may still be up.
       </Callout>
       <Callout tone="critical" title="Malware quarantined on api-prod-03">
@@ -80,7 +80,7 @@ export const Badges: Story = {
       <div className="flex flex-wrap gap-1.5">
         <EntityChip kind="host" value="api-prod-03" href="#host" />
         <EntityChip kind="container" value="orders-api:2.14.1" href="#c" />
-        <EntityChip kind="user" value="deniz.kaya" href="#u" />
+        <EntityChip kind="user" value="dana.kim" href="#u" />
         <EntityChip kind="ip" value="198.51.100.201" href="#ip" />
         <EntityChip kind="cve" value="CVE-2024-6387" href="#cve" />
         <EntityChip kind="repo" value="orders-api" />

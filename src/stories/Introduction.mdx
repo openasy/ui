@@ -4,11 +4,13 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # OpenAsy UI
 
-`@openasy/ui` is the React component library shared by every OpenAsy product: VPN, Infrastructure, Logs,
-Metrics, Alerts, SIEM, Vulnerabilities, Audit, SAST, DAST, Malware, Posture, Secrets, Runtime, Access,
-Compliance, Incidents and Identity. Each product ships on its own and integrates with the others, so they
-all share one shell, one table, one set of charts and one vocabulary for severity.
+`@openasy/ui` is the React component library shared by every OpenAsy product — 38 of them across operations
+(VPN, Infrastructure, Logs, Metrics, Traces, Errors, Uptime, Alerts…), security (SIEM, Vulnerabilities, SAST, DAST,
+Runtime, Network IDS, Deception, Attack Simulation…), identity and platform (Identity, Automation, Assistant). Each
+product ships on its own and integrates with the others, so they all share one shell, one table, one set of charts
+and one vocabulary for severity.
 
+- **Platform → Breach coverage** — would we catch a breach? Every ATT&CK stage, which product detects it, and a scenario you can replay with products switched off.
 - **Products** — every product screen built only from the components in this library.
 - **Quality → Test results** — the unit, interaction and accessibility results of the CI run that built this page, with coverage.
 - **Toolbar** — switch **Theme** (light/dark) and **Brand** (white-label examples) for any story.
@@ -42,7 +44,7 @@ import `@openasy/ui/theme.css` to reuse the tokens.
 | Area | Components |
 | --- | --- |
 | Shell | `BrandProvider`, `AppShell`, `ProductSwitcher`, `PageHeader`, `Panel` |
-| Data | `DataTable` (sort, select, paginate, loading, empty), `KpiCard`, `KpiGrid`, `EntityChip`, `Avatar` |
+| Data | `DataTable` (sort, select, paginate, header tooltips, resize, pin, hide, sticky header, remembered layout), `KpiCard`, `KpiGrid`, `EntityChip`, `Avatar`, `InfoTip` |
 | Charts | `TimeSeriesChart` (crosshair, legend toggle, stacked, threshold, keyboard), `ChartSync`, `StackedBarChart`, `Heatmap`, `Sparkline`, `BarList` |
 | Filters | `FilterBar`, `TimeRangePicker`, `FacetFilter`, `FilterChip`, `QueryBar`, `SearchInput` |
 | Inputs | `Button`, `IconButton`, `TextField`, `SelectField`, `Checkbox`, `Switch`, `SegmentedControl`, `Tabs` |

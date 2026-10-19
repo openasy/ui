@@ -148,7 +148,7 @@ describe("AppShell", () => {
   it("renders navigation, marks the active item and calls onNavigate", async () => {
     const onNavigate = vi.fn();
     const { user } = renderUI(
-      <AppShell product="infrastructure" nav={nav} activeNav="hosts" onNavigate={onNavigate} user={{ name: "Elif Arslan", role: "Owner" }}>
+      <AppShell product="infrastructure" nav={nav} activeNav="hosts" onNavigate={onNavigate} user={{ name: "Emily Clark", role: "Owner" }}>
         <p>content</p>
       </AppShell>,
     );
@@ -160,6 +160,31 @@ describe("AppShell", () => {
     expect(screen.getByText("content")).toBeInTheDocument();
     expect(screen.getByText("Owner")).toBeInTheDocument();
     expect(screen.queryByText("Powered by OpenAsy")).not.toBeInTheDocument();
+  });
+
+  it("opens and closes the mobile navigation drawer", async () => {
+    const onNavigate = vi.fn();
+    const { user } = renderUI(
+      <AppShell product="logs" nav={nav} activeNav="overview" onNavigate={onNavigate}>
+        <p>content</p>
+      </AppShell>,
+    );
+    const navEl = screen.getByRole("navigation", { name: "Logs navigation" });
+    expect(navEl).not.toHaveAttribute("data-open");
+    await user.click(screen.getByRole("button", { name: "Open navigation" }));
+    expect(navEl).toHaveAttribute("data-open", "true");
+    expect(screen.getByRole("button", { name: "Close navigation" })).toHaveAttribute("aria-expanded", "true");
+    await user.keyboard("{Escape}");
+    expect(navEl).not.toHaveAttribute("data-open");
+    await user.click(screen.getByRole("button", { name: "Open navigation" }));
+    await user.click(screen.getByTestId("drawer-backdrop"));
+    expect(navEl).not.toHaveAttribute("data-open");
+    await user.click(screen.getByRole("button", { name: "Open navigation" }));
+    await user.keyboard("a");
+    expect(navEl).toHaveAttribute("data-open", "true");
+    await user.click(within(navEl).getByRole("link", { name: /Hosts/ }));
+    expect(onNavigate).toHaveBeenCalledWith("hosts");
+    expect(navEl).not.toHaveAttribute("data-open");
   });
 
   it("follows hrefs when no onNavigate is given", () => {

@@ -64,7 +64,7 @@ export const FormControls: Story = {
     const [mfa, setMfa] = useState(true);
     return (
       <div className="grid max-w-3xl gap-4 md:grid-cols-2">
-        <TextField label="Email" defaultValue="deniz.kaya@example.com" hint="Used for sign-in and certificate notices." />
+        <TextField label="Email" defaultValue="dana.kim@example.com" hint="Used for sign-in and certificate notices." />
         <TextField label="Network" mono defaultValue="172.16.20.0/24" adornment={<span className="rounded bg-accent-soft px-1.5 text-2xs font-medium text-accent-text">256 addresses</span>} />
         <TextField label="Port" mono defaultValue="70000" error="Use a port between 1 and 65535." />
         <SelectField

@@ -105,7 +105,7 @@ export function TestResultsView({ summary, base = "reports" }: { summary: Summar
           {failures.map((f, i) => (
             <Callout key={i} tone="danger" title={f.title}>
               <span className="font-mono text-xs">{f.file}</span>
-              <pre className="mt-1 max-h-40 overflow-auto font-mono text-2xs whitespace-pre-wrap text-fg">{f.message}</pre>
+              <pre tabIndex={0} aria-label={`Failure output for ${f.title}`} className="mt-1 max-h-40 overflow-auto font-mono text-2xs whitespace-pre-wrap text-fg">{f.message}</pre>
             </Callout>
           ))}
         </div>

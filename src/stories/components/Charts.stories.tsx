@@ -56,7 +56,7 @@ export const StackedWithThreshold: Story = {
     stacked: true,
     threshold: { value: 160, label: "license 160" },
     series: [
-      { id: "ist", name: "ist-01", data: wave(N, { base: 70, amp: 40, seed: 9 }) },
+      { id: "ist", name: "lon-01", data: wave(N, { base: 70, amp: 40, seed: 9 }) },
       { id: "fra", name: "fra-01", data: wave(N, { base: 30, amp: 15, seed: 10, phase: 0.5 }) },
     ],
   },

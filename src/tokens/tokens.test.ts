@@ -80,10 +80,16 @@ describe("severity", () => {
 });
 
 describe("products", () => {
-  it("registers 18 products with unique images", () => {
-    expect(PRODUCT_IDS).toHaveLength(18);
+  it("registers 38 products with unique images and matching ids", () => {
+    expect(PRODUCT_IDS).toHaveLength(38);
     expect(PRODUCT_LIST.map((p) => p.id)).toEqual([...PRODUCT_IDS]);
-    expect(new Set(PRODUCT_LIST.map((p) => p.image)).size).toBe(18);
+    expect(new Set(PRODUCT_LIST.map((p) => p.image)).size).toBe(38);
+    PRODUCT_LIST.forEach((p) => expect(PRODUCTS[p.id].id).toBe(p.id));
+  });
+
+  it("groups every product", () => {
+    const groups = new Set(PRODUCT_LIST.map((p) => p.group));
+    expect([...groups].sort()).toEqual(["identity", "operations", "platform", "security"]);
   });
 
   it("looks a product up by id", () => {

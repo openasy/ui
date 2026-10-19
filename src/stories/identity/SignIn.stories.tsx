@@ -122,7 +122,7 @@ export const Default: Story = {
     await expect(c.getByRole("heading", { level: 1, name: /^Sign in to / })).toBeInTheDocument();
     await userEvent.click(c.getByRole("button", { name: "Sign in" }));
     await expect(c.getByRole("alert")).toHaveTextContent("Enter your email and password.");
-    await userEvent.type(c.getByLabelText("Email"), "elif.arslan@example.com");
+    await userEvent.type(c.getByLabelText("Email"), "emily.clark@example.com");
     await userEvent.type(c.getByLabelText("Password"), "correct horse battery");
     await userEvent.click(c.getByRole("button", { name: "Sign in" }));
     await expect(c.queryByRole("alert")).not.toBeInTheDocument();
@@ -203,7 +203,7 @@ export const MfaStep: Story = {
       <AuthLayout>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-lg font-semibold text-fg">Two-step verification</h1>
-          <p className="text-sm text-fg-muted">Enter the 6-digit code from your authenticator app for elif.arslan@example.com.</p>
+          <p className="text-sm text-fg-muted">Enter the 6-digit code from your authenticator app for emily.clark@example.com.</p>
         </div>
         {verified && (
           <Callout tone="success" title="Verified">

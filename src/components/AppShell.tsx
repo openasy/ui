@@ -1,6 +1,6 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { Check, ChevronsUpDown, Plug, Settings, type LucideIcon } from "lucide-react";
+import { Check, ChevronsUpDown, Menu, Plug, Settings, X, type LucideIcon } from "lucide-react";
 import { cn } from "../lib/cn";
 import { PRODUCTS, type ProductId } from "../tokens/products";
 import { useBrand } from "./BrandProvider";
@@ -99,7 +99,7 @@ export function ProductSwitcher({ product, connected, available = [], onSwitch, 
         <Popover.Content
           align="start"
           sideOffset={4}
-          className="oa-root z-50 w-72 rounded-lg border border-line bg-surface p-1 shadow-overlay"
+          className="oa-root z-50 max-h-[min(70vh,560px)] w-72 overflow-y-auto rounded-lg border border-line bg-surface p-1 shadow-overlay"
         >
           <p className="px-2 pt-1.5 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">{brand.name} products</p>
           <ul aria-label="Connected products">
@@ -193,21 +193,41 @@ export function AppShell({
   className,
 }: AppShellProps) {
   const { brand } = useBrand();
+  const [drawer, setDrawer] = useState(false);
+  const navigate = onNavigate
+    ? (id: string) => {
+        setDrawer(false);
+        onNavigate(id);
+      }
+    : undefined;
+  useEffect(() => {
+    if (!drawer) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setDrawer(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [drawer]);
+  const name = PRODUCTS[product].name;
   return (
-    <div className={cn("flex min-h-screen flex-wrap items-stretch bg-canvas text-fg", className)}>
+    <div className={cn("flex min-h-screen bg-canvas text-fg", className)}>
+      {/* Fixed 224 px sidebar on md+; an off-canvas drawer on small screens. */}
       <nav
-        aria-label={`${PRODUCTS[product].name} navigation`}
-        className="flex max-w-full shrink-0 grow basis-[196px] flex-col gap-3 border-r border-line bg-surface px-2 py-2.5 md:grow-0"
+        aria-label={`${name} navigation`}
+        data-open={drawer || undefined}
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 flex w-56 shrink-0 flex-col gap-3 overflow-y-auto border-r border-line bg-surface px-2 py-2.5 transition-transform",
+          "md:sticky md:top-0 md:z-auto md:h-screen md:translate-x-0 md:visible",
+          drawer ? "visible translate-x-0 shadow-modal" : "invisible -translate-x-full",
+        )}
       >
         <ProductSwitcher product={product} connected={connectedProducts} available={availableProducts} onSwitch={onSwitchProduct} />
         <div className="flex flex-col gap-px">
           {nav.map((item) => (
-            <NavLink key={item.id} item={item} active={item.id === activeNav} onNavigate={onNavigate} />
+            <NavLink key={item.id} item={item} active={item.id === activeNav} onNavigate={navigate} />
           ))}
         </div>
         <div className="mt-auto flex flex-col gap-px border-t border-line pt-2">
           {footerNav.map((item) => (
-            <NavLink key={item.id} item={item} active={item.id === activeNav} onNavigate={onNavigate} />
+            <NavLink key={item.id} item={item} active={item.id === activeNav} onNavigate={navigate} />
           ))}
           {user && (
             <div className="mt-1 flex items-center gap-2 px-1.5 py-1">
@@ -218,12 +238,26 @@ export function AppShell({
               </span>
             </div>
           )}
-          {!brand.hidePoweredBy && brand.name !== "OpenAsy" && (
-            <span className="px-2 pt-1 text-2xs text-fg-subtle">Powered by OpenAsy</span>
-          )}
+          {!brand.hidePoweredBy && brand.name !== "OpenAsy" && <span className="px-2 pt-1 text-2xs text-fg-subtle">Powered by OpenAsy</span>}
         </div>
       </nav>
-      <main className="flex min-w-0 shrink grow-[999] basis-[560px] flex-col gap-3 px-4 pt-3 pb-6">{children}</main>
+      {drawer && <div aria-hidden data-testid="drawer-backdrop" className="fixed inset-0 z-30 bg-black/30 md:hidden" onClick={() => setDrawer(false)} />}
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-20 flex h-11 items-center gap-2 border-b border-line bg-surface px-2 md:hidden">
+          <button
+            type="button"
+            aria-label={drawer ? "Close navigation" : "Open navigation"}
+            aria-expanded={drawer}
+            onClick={() => setDrawer((d) => !d)}
+            className="grid size-8 place-items-center rounded-md text-fg hover:bg-subtle"
+          >
+            {drawer ? <X aria-hidden className="size-4" /> : <Menu aria-hidden className="size-4" />}
+          </button>
+          <BrandMark product={product} />
+          <span className="text-sm font-semibold">{name}</span>
+        </header>
+        <main className="flex min-w-0 flex-1 flex-col gap-3 px-4 pt-3 pb-6">{children}</main>
+      </div>
     </div>
   );
 }

@@ -50,14 +50,14 @@ export function wave(count: number, o: WaveOptions): number[] {
 }
 
 export const PEOPLE = [
-  "Deniz Kaya",
-  "Elif Arslan",
-  "Mert Yıldız",
-  "Selin Çelik",
-  "Burak Öz",
-  "Ayşe Demir",
-  "Can Şahin",
-  "Zeynep Aydın",
+  "Dana Kim",
+  "Emily Clark",
+  "Mark Wilson",
+  "Sarah Chen",
+  "Ben Ortiz",
+  "Amy Davis",
+  "Chris Shaw",
+  "Zoe Adams",
 ] as const;
 
 export const HOSTS = [
@@ -72,8 +72,7 @@ export const HOSTS = [
 ] as const;
 
 export function emailOf(name: string): string {
-  const map: Record<string, string> = { ı: "i", ş: "s", ç: "c", ö: "o", ü: "u", ğ: "g", İ: "i" };
-  return `${name.toLowerCase().replace(/[ışçöüğİ]/g, (c) => map[c] ?? c).replace(" ", ".")}@example.com`;
+  return `${name.toLowerCase().replace(" ", ".")}@example.com`;
 }
 
 export const DOC_IPS = ["203.0.113.24", "198.51.100.7", "203.0.113.181", "198.51.100.96", "203.0.113.9", "192.0.2.44", "198.51.100.201"] as const;
@@ -81,4 +80,4 @@ export const DOC_IPS = ["203.0.113.24", "198.51.100.7", "203.0.113.181", "198.51
 export const CONNECTED = ["infrastructure", "logs", "metrics", "alerts", "vulnerabilities", "incidents"] as const;
 export const AVAILABLE = ["vpn", "siem", "audit", "sast", "dast", "malware", "posture", "secrets", "runtime", "access", "compliance", "identity"] as const;
 
-export const USER = { name: "Elif Arslan", role: "Owner" };
+export const USER = { name: "Emily Clark", role: "Owner" };

@@ -187,8 +187,8 @@ describe("Panel and EmptyState", () => {
 
 describe("Avatar", () => {
   it.each([
-    ["Deniz Kaya", "DK"],
-    ["mert.yildiz", "MY"],
+    ["Dana Kim", "DK"],
+    ["mark.wilson", "MW"],
     ["admin", "AD"],
     ["  ", "?"],
   ])("initials(%s) = %s", (name, out) => {
@@ -196,8 +196,8 @@ describe("Avatar", () => {
   });
 
   it("is labelled with the full name", () => {
-    renderUI(<Avatar name="Elif Arslan" size="sm" />);
-    expect(screen.getByRole("img", { name: "Elif Arslan" })).toHaveTextContent("EA");
+    renderUI(<Avatar name="Emily Clark" size="sm" />);
+    expect(screen.getByRole("img", { name: "Emily Clark" })).toHaveTextContent("EC");
   });
 });
 

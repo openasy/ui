@@ -21,6 +21,7 @@ export * from "./components/Tabs";
 export * from "./components/Kpi";
 export * from "./components/Filters";
 export * from "./components/DataTable";
+export * from "./components/InfoTip";
 export * from "./components/EntityChip";
 
 export * from "./charts/ChartSync";

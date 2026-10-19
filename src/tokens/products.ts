@@ -104,7 +104,7 @@ export const PRODUCTS: Record<ProductId, ProductInfo> = {
   metrics: { id: "metrics", name: "Metrics", group: "operations", icon: ChartLine, image: "ghcr.io/openasy/metrics", summary: "Time series, dashboards and PromQL. Grafana can read it as-is." },
   alerts: { id: "alerts", name: "Alerts", group: "operations", icon: Bell, image: "ghcr.io/openasy/alerts", summary: "Rules, routing, silences and on-call for any source." },
   siem: { id: "siem", name: "SIEM", group: "security", icon: Radar, image: "ghcr.io/openasy/siem", summary: "Sigma detection rules over security events, correlated into signals." },
-  vulnerabilities: { id: "vulnerabilities", name: "Vulnerabilities", group: "security", icon: Bug, image: "ghcr.io/openasy/vulns", summary: "OS package and container image CVEs, ranked by exploitability." },
+  vulnerabilities: { id: "vulnerabilities", name: "Vulnerabilities", group: "security", icon: Bug, image: "ghcr.io/openasy/vulns", agentImage: "ghcr.io/openasy/vulns-agent", summary: "OS package and container image CVEs, ranked by exploitability." },
   audit: { id: "audit", name: "Audit", group: "security", icon: Package, image: "ghcr.io/openasy/audit", summary: "Dependency advisories for npm, pip, Go, Cargo and Composer." },
   sast: { id: "sast", name: "SAST", group: "security", icon: Code, image: "ghcr.io/openasy/sast", summary: "Static analysis of source code on every push and pull request." },
   dast: { id: "dast", name: "DAST", group: "security", icon: Globe, image: "ghcr.io/openasy/dast", summary: "Scans running web apps and APIs from the outside." },

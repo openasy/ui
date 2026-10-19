@@ -126,7 +126,7 @@ const IMAGES = [
   "redis:7.4-alpine",
   "nginx:1.27",
   "otel/opentelemetry-collector:0.110.0",
-  "openasy/agent:3.2.0",
+  "ghcr.io/openasy/agent:3.2.0",
 ];
 
 const containers: Container[] = (() => {

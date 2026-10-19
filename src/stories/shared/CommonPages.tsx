@@ -135,7 +135,7 @@ export function IntegrationsPage({ product }: { product: ProductId }) {
                   <P.icon aria-hidden className="size-4 text-fg-muted" />
                   <span className="flex min-w-0 grow flex-col">
                     <span className="text-sm font-medium">{P.name}</span>
-                    <span className="truncate font-mono text-2xs text-fg-muted">{P.image}.ops.example.com</span>
+                    <span className="truncate font-mono text-2xs text-fg-muted">{P.image.split("/").pop()}.ops.example.com</span>
                   </span>
                   <StatusBadge tone="success">Linked</StatusBadge>
                   <Button size="xs">Unlink {P.name}</Button>
@@ -152,7 +152,7 @@ export function IntegrationsPage({ product }: { product: ProductId }) {
           </Panel>
           <Panel title="REST API" description="Every screen is backed by a public API.">
             <div className="flex flex-col gap-2 text-sm">
-              <code className="rounded-md bg-subtle px-2 py-1.5 font-mono text-xs">https://{PRODUCTS[product].image.split("/")[1]}.example.com/api/v1</code>
+              <code className="rounded-md bg-subtle px-2 py-1.5 font-mono text-xs">https://{PRODUCTS[product].image.split("/").pop()}.example.com/api/v1</code>
               <Button size="sm" icon={<Copy />}>Copy base URL</Button>
               <a href="#openapi" className="text-xs text-accent-text">
                 OpenAPI 3.1 specification
@@ -260,7 +260,7 @@ export function SettingsPage({ product }: { product: ProductId }) {
             }}
           >
             <TextField label="Workspace name" defaultValue={`${brand.organization ?? "Acme Corp"} · ${name}`} />
-            <TextField label="Public URL" mono defaultValue={`https://${PRODUCTS[product].image.split("/")[1]}.example.com`} />
+            <TextField label="Public URL" mono defaultValue={`https://${PRODUCTS[product].image.split("/").pop()}.example.com`} />
             <SelectField
               label="Time zone"
               defaultValue="UTC"

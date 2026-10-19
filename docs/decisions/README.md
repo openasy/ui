@@ -23,5 +23,6 @@ Architecture decision records for OpenAsy. Each one says what we decided, why, a
 | 0017 | [Every product can be monitored](./0017-self-observability.md) | Operations | Accepted |
 | 0018 | [One application per product; agents on hosts are separate](./0018-one-application-per-product.md) | Architecture | Accepted |
 | 0019 | [Versioning: independent SemVer per product, monthly releases](./0019-versioning-and-releases.md) | Engineering | Accepted |
+| 0020 | [Long-term support: one LTS line per year](./0020-long-term-support.md) | Engineering | Accepted |
 
 To propose a change, open a pull request that adds a new record or updates the status of an existing one.

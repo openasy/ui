@@ -56,14 +56,14 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --oa-canvas: #0b0f14;
-  --oa-surface: #12181f;
-  --oa-subtle: #1a222b;
-  --oa-line: #29323d;
-  --oa-line-strong: #3a4552;
-  --oa-fg: #e8ecf1;
-  --oa-fg-muted: #aab4c0;
-  --oa-fg-subtle: #8c97a4;
+  --oa-canvas: #0f1a2e;
+  --oa-surface: #16233b;
+  --oa-subtle: #1e2d4a;
+  --oa-line: #2b3b5a;
+  --oa-line-strong: #3c4e72;
+  --oa-fg: #e8eef7;
+  --oa-fg-muted: #b0bdd3;
+  --oa-fg-subtle: #93a2bd;
 
   --oa-accent: #7096ff;
 
@@ -81,8 +81,8 @@
   --oa-chart-2: #e8923f;
   --oa-chart-3: #34b3a1;
   --oa-chart-4: #a585f0;
-  --oa-chart-grid: #1f2831;
-  --oa-chart-axis: #3a4552;
+  --oa-chart-grid: #22324f;
+  --oa-chart-axis: #3c4e72;
 
   --oa-seq-0: #16203a;
   --oa-seq-1: #1d2f63;

@@ -1,0 +1,112 @@
+import { Meta, Markdown } from "@storybook/addon-docs/blocks";
+import adr01 from "../../../docs/decisions/0001-standalone-and-together.md?raw";
+import adr02 from "../../../docs/decisions/0002-authentication.md?raw";
+import adr03 from "../../../docs/decisions/0003-authorization.md?raw";
+import adr04 from "../../../docs/decisions/0004-customization.md?raw";
+import adr05 from "../../../docs/decisions/0005-accessibility.md?raw";
+import adr06 from "../../../docs/decisions/0006-languages.md?raw";
+import adr07 from "../../../docs/decisions/0007-theme.md?raw";
+import adr08 from "../../../docs/decisions/0008-open-source.md?raw";
+import adr09 from "../../../docs/decisions/0009-latest-libraries.md?raw";
+import adr10 from "../../../docs/decisions/0010-forward-only-upgrades.md?raw";
+import adr11 from "../../../docs/decisions/0011-sqlite-by-default.md?raw";
+import adr12 from "../../../docs/decisions/0012-backups.md?raw";
+import adr13 from "../../../docs/decisions/0013-secure-by-default.md?raw";
+import adr14 from "../../../docs/decisions/0014-api-first.md?raw";
+import adr15 from "../../../docs/decisions/0015-data-ownership.md?raw";
+import adr16 from "../../../docs/decisions/0016-one-container-per-product.md?raw";
+import adr17 from "../../../docs/decisions/0017-self-observability.md?raw";
+
+<Meta title="Platform/Design decisions" />
+
+# Design decisions
+
+What every OpenAsy product is built to do, and why. The source of truth is `docs/decisions/` in this repository; change a decision with a pull request.
+
+| # | Decision | Area | Status |
+| --- | --- | --- | --- |
+| 0001 | Every product runs alone, with the others and with third-party tools | Architecture | Accepted |
+| 0002 | Authentication: local accounts, MFA and single sign-on | Security | Accepted |
+| 0003 | Authorization: per-product roles and scoped tokens | Security | Accepted |
+| 0004 | Customization: white-label and feature switches | Product | Accepted (white-label) · Planned (feature switches) |
+| 0005 | Accessibility: WCAG 2.2 AA, tested in CI | Quality | Accepted |
+| 0006 | Languages: English first, ready for translation | Product | Planned |
+| 0007 | Theme: light, dark and follow the system | Product | Accepted (light, dark) · Planned (follow system) |
+| 0008 | Open source: Apache-2.0, developed in public | Project | Accepted |
+| 0009 | Use the latest libraries | Engineering | Accepted |
+| 0010 | Forward-only upgrades, no backward compatibility | Engineering | Accepted |
+| 0011 | SQLite by default | Architecture | Accepted |
+| 0012 | Daily backups and point-in-time restore | Operations | Planned |
+| 0013 | Secure by default | Security | Accepted |
+| 0014 | API-first | Architecture | Accepted |
+| 0015 | Your data stays yours | Privacy | Accepted |
+| 0016 | One container per product, signed | Operations | Accepted |
+| 0017 | Every product can be monitored | Operations | Accepted |
+
+---
+
+<Markdown>{adr01}</Markdown>
+
+---
+
+<Markdown>{adr02}</Markdown>
+
+---
+
+<Markdown>{adr03}</Markdown>
+
+---
+
+<Markdown>{adr04}</Markdown>
+
+---
+
+<Markdown>{adr05}</Markdown>
+
+---
+
+<Markdown>{adr06}</Markdown>
+
+---
+
+<Markdown>{adr07}</Markdown>
+
+---
+
+<Markdown>{adr08}</Markdown>
+
+---
+
+<Markdown>{adr09}</Markdown>
+
+---
+
+<Markdown>{adr10}</Markdown>
+
+---
+
+<Markdown>{adr11}</Markdown>
+
+---
+
+<Markdown>{adr12}</Markdown>
+
+---
+
+<Markdown>{adr13}</Markdown>
+
+---
+
+<Markdown>{adr14}</Markdown>
+
+---
+
+<Markdown>{adr15}</Markdown>
+
+---
+
+<Markdown>{adr16}</Markdown>
+
+---
+
+<Markdown>{adr17}</Markdown>

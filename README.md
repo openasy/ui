@@ -6,6 +6,11 @@ one set of charts, one set of filters and one vocabulary for severity, from VPN 
 **Storybook:** https://openasy.github.io/ui/ (every component, every product screen, and the latest test results under
 _Quality → Test results_).
 
+## Design decisions
+
+What every OpenAsy product is built to do, and why, is recorded in [`docs/decisions/`](./docs/decisions/README.md)
+and shown in Storybook under _Platform → Design decisions_.
+
 ## Install
 
 ```bash

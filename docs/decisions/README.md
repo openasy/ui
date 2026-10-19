@@ -10,8 +10,8 @@ Architecture decision records for OpenAsy. Each one says what we decided, why, a
 | 0004 | [Customization: white-label and feature switches](./0004-customization.md) | Product | Accepted (white-label) · Planned (feature switches) |
 | 0005 | [Accessibility: WCAG 2.2 AA, tested in CI](./0005-accessibility.md) | Quality | Accepted |
 | 0006 | [Languages: English first, ready for translation](./0006-languages.md) | Product | Planned |
-| 0007 | [Theme: light, dark and follow the system](./0007-theme.md) | Product | Accepted (light, dark) · Planned (follow system) |
-| 0008 | [Open source: Apache-2.0, developed in public](./0008-open-source.md) | Project | Accepted |
+| 0007 | [Theme: light, dark and follow the system](./0007-theme.md) | Product | Accepted |
+| 0008 | [Open source: AGPL-3.0 products, Apache-2.0 library, developed in public](./0008-open-source.md) | Project | Accepted |
 | 0009 | [Use the latest libraries](./0009-latest-libraries.md) | Engineering | Accepted |
 | 0010 | [Forward-only upgrades, no backward compatibility](./0010-forward-only-upgrades.md) | Engineering | Accepted |
 | 0011 | [SQLite by default](./0011-sqlite-by-default.md) | Architecture | Accepted |

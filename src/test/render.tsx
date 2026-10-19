@@ -1,7 +1,8 @@
 import type { ReactElement } from "react";
 import { render, type RenderOptions } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { BrandProvider, type Brand, type ThemeMode } from "../components/BrandProvider";
+import { BrandProvider, type Brand } from "../components/BrandProvider";
+import type { ThemeMode } from "../components/Theme";
 
 /** Render inside the brand/theme root, like every real screen. */
 export function renderUI(ui: ReactElement, opts: RenderOptions & { brand?: Partial<Brand>; theme?: ThemeMode } = {}) {

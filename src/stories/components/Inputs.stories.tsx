@@ -6,6 +6,7 @@ import { Button, IconButton } from "../../components/Button";
 import { Checkbox, SearchInput, SelectField, Switch, TextField } from "../../components/Controls";
 import { SegmentedControl } from "../../components/SegmentedControl";
 import { Tabs } from "../../components/Tabs";
+import { ThemeToggle, type ThemePreference } from "../../components/Theme";
 
 const meta = {
   title: "Inputs/Button",
@@ -126,5 +127,19 @@ export const SegmentsAndTabs: Story = {
     await expect(c.getByRole("radio", { name: "Kubernetes" })).toHaveAttribute("aria-checked", "true");
     await userEvent.click(c.getByRole("tab", { name: /Admin/ }));
     await expect(c.getByRole("tab", { name: /Admin/ })).toHaveAttribute("aria-selected", "true");
+  },
+};
+
+export const ThemeSwitch: Story = {
+  name: "Theme toggle",
+  render: () => {
+    const [theme, setTheme] = useState<ThemePreference>("system");
+    return <ThemeToggle value={theme} onChange={setTheme} />;
+  },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await expect(c.getByRole("radio", { name: "System" })).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(c.getByRole("radio", { name: "Dark" }));
+    await expect(c.getByRole("radio", { name: "Dark" })).toHaveAttribute("aria-checked", "true");
   },
 };

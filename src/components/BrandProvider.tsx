@@ -1,5 +1,6 @@
-import { createContext, useContext, useMemo, type CSSProperties, type ReactNode } from "react";
+import { createContext, useContext, useLayoutEffect, useMemo, useRef, type CSSProperties, type ReactNode } from "react";
 import { cn } from "../lib/cn";
+import { useResolvedTheme, type ThemeMode, type ThemePreference } from "./Theme";
 
 export interface Brand {
   /** Shown in the shell and on the sign-in page, e.g. "Acme Security". */
@@ -20,10 +21,9 @@ export interface Brand {
 
 export const DEFAULT_BRAND: Brand = { name: "OpenAsy", organization: "Acme Corp" };
 
-export type ThemeMode = "light" | "dark";
-
 interface BrandContextValue {
   brand: Brand;
+  /** The theme on screen; "system" is already resolved to light or dark. */
   theme: ThemeMode;
 }
 
@@ -31,7 +31,13 @@ const BrandContext = createContext<BrandContextValue>({ brand: DEFAULT_BRAND, th
 
 export interface BrandProviderProps {
   brand?: Partial<Brand>;
-  theme?: ThemeMode;
+  /** "system" follows the operating system and is the default (ADR 0007). */
+  theme?: ThemePreference;
+  /**
+   * Set when the provider wraps the whole page. The theme then goes on <html>, where
+   * `themeScript()` in <head> already put it before the first paint, so nothing flashes.
+   */
+  root?: boolean;
   className?: string;
   style?: CSSProperties;
   children: ReactNode;
@@ -41,15 +47,26 @@ export interface BrandProviderProps {
  * Root of every OpenAsy screen. Applies the theme, the brand accent and font,
  * and exposes the brand to the shell and sign-in components.
  */
-export function BrandProvider({ brand, theme = "light", className, style, children }: BrandProviderProps) {
+export function BrandProvider({ brand, theme: preference = "system", root, className, style, children }: BrandProviderProps) {
+  const theme = useResolvedTheme(preference);
   const value = useMemo<BrandContextValue>(() => ({ brand: { ...DEFAULT_BRAND, ...brand }, theme }), [brand, theme]);
+  const applied = useRef(false);
+  useIsomorphicLayoutEffect(() => {
+    if (!root) return;
+    const html = document.documentElement;
+    // Hydration renders the server's guess first; themeScript() already set the right theme, so keep it.
+    const first = !applied.current;
+    applied.current = true;
+    if (first && html.dataset.theme) return;
+    html.dataset.theme = theme;
+  }, [root, theme]);
   const vars: Record<string, string> = {};
   if (value.brand.accent) vars["--oa-accent"] = value.brand.accent;
   if (value.brand.fontFamily) vars["--oa-font-sans"] = value.brand.fontFamily;
   return (
     <BrandContext.Provider value={value}>
       <div
-        data-theme={theme}
+        data-theme={root ? undefined : theme}
         data-oa-brand=""
         className={cn("oa-root", className)}
         style={{ ...(vars as CSSProperties), ...style }}
@@ -59,6 +76,8 @@ export function BrandProvider({ brand, theme = "light", className, style, childr
     </BrandContext.Provider>
   );
 }
+
+const useIsomorphicLayoutEffect = typeof window === "undefined" ? () => {} : useLayoutEffect;
 
 export function useBrand(): BrandContextValue {
   return useContext(BrandContext);

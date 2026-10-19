@@ -1,6 +1,6 @@
 # 0007. Theme: light, dark and follow the system
 
-- **Status:** Accepted (light, dark) · Planned (follow system)
+- **Status:** Accepted
 - **Area:** Product
 
 ## Context
@@ -10,7 +10,8 @@ People work in bright offices and in dark NOCs.
 ## Decision
 
 - Every colour is a token with a light and a dark value; components never use raw colours.
-- `BrandProvider` takes `theme="light" | "dark"`. A `"system"` value that follows `prefers-color-scheme` is planned and will be the default.
+- `BrandProvider` takes `theme="system" | "light" | "dark"`. `"system"` follows `prefers-color-scheme` and is the default.
+- People choose with `ThemeToggle` (system, light, dark). The choice is remembered in the browser; prerendered pages apply it before the first paint with `themeScript()`.
 
 ## Consequences
 

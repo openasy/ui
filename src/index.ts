@@ -7,6 +7,7 @@ export * from "./tokens/levels";
 export * from "./tokens/products";
 
 export * from "./components/BrandProvider";
+export * from "./components/Theme";
 export * from "./components/AppShell";
 export * from "./components/Avatar";
 export * from "./components/PageHeader";

@@ -5,6 +5,7 @@ export * from "./lib/format";
 export { smoothPath, linearPath, niceScale, indexFromPointer, colorAt, CHART_COLORS, SEQUENTIAL_RAMP } from "./lib/chart";
 export * from "./tokens/levels";
 export * from "./tokens/products";
+export * from "./tokens/breach";
 
 export * from "./components/BrandProvider";
 export * from "./components/Theme";

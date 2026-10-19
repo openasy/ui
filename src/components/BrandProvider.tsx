@@ -31,7 +31,7 @@ const BrandContext = createContext<BrandContextValue>({ brand: DEFAULT_BRAND, th
 
 export interface BrandProviderProps {
   brand?: Partial<Brand>;
-  /** "system" follows the operating system and is the default (ADR 0007). */
+  /** "system" follows the operating system and is the default (platform decision 0007). */
   theme?: ThemePreference;
   /**
    * Set when the provider wraps the whole page. The theme then goes on <html>, where

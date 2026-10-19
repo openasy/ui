@@ -1,28 +1,20 @@
-# Design decisions
+# UI design decisions
 
-Architecture decision records for OpenAsy. Each one says what we decided, why, and what follows from it.
+Decisions about how `@openasy/ui` is built: tokens, theming, testing and distribution.
 
-| # | Decision | Area | Status |
-| --- | --- | --- | --- |
-| 0001 | [Every product runs alone, with the others and with third-party tools](./0001-standalone-and-together.md) | Architecture | Accepted |
-| 0002 | [Authentication: local accounts, MFA and single sign-on](./0002-authentication.md) | Security | Accepted |
-| 0003 | [Authorization: per-product roles and scoped tokens](./0003-authorization.md) | Security | Accepted |
-| 0004 | [Customization: white-label and feature switches](./0004-customization.md) | Product | Accepted (white-label) · Planned (feature switches) |
-| 0005 | [Accessibility: WCAG 2.2 AA, tested in CI](./0005-accessibility.md) | Quality | Accepted |
-| 0006 | [Languages: English first, ready for translation](./0006-languages.md) | Product | Planned |
-| 0007 | [Theme: light, dark and follow the system](./0007-theme.md) | Product | Accepted |
-| 0008 | [Open source: AGPL-3.0 products, Apache-2.0 library, developed in public](./0008-open-source.md) | Project | Accepted |
-| 0009 | [Use the latest libraries](./0009-latest-libraries.md) | Engineering | Accepted |
-| 0010 | [Forward-only upgrades, no backward compatibility](./0010-forward-only-upgrades.md) | Engineering | Accepted |
-| 0011 | [SQLite by default](./0011-sqlite-by-default.md) | Architecture | Accepted |
-| 0012 | [Daily backups and point-in-time restore](./0012-backups.md) | Operations | Planned |
-| 0013 | [Secure by default](./0013-secure-by-default.md) | Security | Accepted |
-| 0014 | [API-first](./0014-api-first.md) | Architecture | Accepted |
-| 0015 | [Your data stays yours](./0015-data-ownership.md) | Privacy | Accepted |
-| 0016 | [One container per product, signed](./0016-one-container-per-product.md) | Operations | Accepted |
-| 0017 | [Every product can be monitored](./0017-self-observability.md) | Operations | Accepted |
-| 0018 | [One application per product; agents on hosts are separate](./0018-one-application-per-product.md) | Architecture | Accepted |
-| 0019 | [Versioning: independent SemVer per product, monthly releases](./0019-versioning-and-releases.md) | Engineering | Accepted |
-| 0020 | [Long-term support: one LTS line per year](./0020-long-term-support.md) | Engineering | Accepted |
+The decisions every OpenAsy product follows (running alone or together, security, licences, versions, backups and
+more) are kept with the site, in [openasy.github.io `docs/decisions`](https://github.com/openasy/openasy.github.io/tree/main/docs/decisions),
+and shown at [openasy.github.io/principles](https://openasy.github.io/principles). They are referred to here as
+"platform decision NNNN". Records 0001 to 0020 used to live in this folder; they kept their numbers when they moved.
 
-To propose a change, open a pull request that adds a new record or updates the status of an existing one.
+Each record has a **Decision** status (`Proposed`, `Accepted`, `Superseded by NNNN`) and an **Implementation** status
+(`Not started`, `In progress`, `Implemented`) with **Where** naming what ships it.
+
+| # | Decision | Area | Decision status | Implementation |
+| --- | --- | --- | --- | --- |
+| 0001 | [Design tokens are CSS variables](./0001-tokens-as-css-variables.md) | Styling | Accepted | Implemented |
+| 0002 | [How the theme is chosen and applied](./0002-theme-switching.md) | Behaviour | Accepted | Implemented |
+| 0003 | [Every story is an accessibility test](./0003-accessibility-in-every-story.md) | Quality | Accepted | Implemented |
+| 0004 | [Distributed as a GitHub release asset](./0004-distribution.md) | Engineering | Accepted | Implemented |
+
+To propose a change, open a pull request that adds a record or changes the status of an existing one.

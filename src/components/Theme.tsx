@@ -3,7 +3,7 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { SegmentedControl } from "./SegmentedControl";
 
 export type ThemeMode = "light" | "dark";
-/** What the person chose; "system" follows the operating system (ADR 0007). */
+/** What the person chose; "system" follows the operating system (platform decision 0007). */
 export type ThemePreference = "system" | ThemeMode;
 
 export const THEME_STORAGE_KEY = "oa-theme";

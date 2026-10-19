@@ -47,9 +47,9 @@ export interface ProductInfo {
   name: string;
   group: ProductGroup;
   icon: LucideIcon;
-  /** Container image published for the product (ADR 0016). */
+  /** Container image published for the product (platform decision 0016). */
   image: string;
-  /** Image of the agent that runs on hosts, for products that have one (ADR 0018). */
+  /** Image of the agent that runs on hosts, for products that have one (platform decision 0018). */
   agentImage?: string;
   summary: string;
 }

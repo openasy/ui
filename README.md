@@ -8,8 +8,10 @@ _Quality → Test results_).
 
 ## Design decisions
 
-What every OpenAsy product is built to do, and why, is recorded in [`docs/decisions/`](./docs/decisions/README.md)
-and shown in Storybook under _Platform → Design decisions_.
+What every OpenAsy product is built to do, and why, is recorded with the site in
+[openasy.github.io `docs/decisions`](https://github.com/openasy/openasy.github.io/tree/main/docs/decisions) and shown at
+[openasy.github.io/principles](https://openasy.github.io/principles). Decisions about this library itself are in
+[`docs/decisions/`](./docs/decisions/README.md) and in Storybook under _Platform → Design decisions_.
 
 ## Install
 

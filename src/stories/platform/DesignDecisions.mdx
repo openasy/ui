@@ -1,130 +1,36 @@
 import { Meta, Markdown } from "@storybook/addon-docs/blocks";
-import adr01 from "../../../docs/decisions/0001-standalone-and-together.md?raw";
-import adr02 from "../../../docs/decisions/0002-authentication.md?raw";
-import adr03 from "../../../docs/decisions/0003-authorization.md?raw";
-import adr04 from "../../../docs/decisions/0004-customization.md?raw";
-import adr05 from "../../../docs/decisions/0005-accessibility.md?raw";
-import adr06 from "../../../docs/decisions/0006-languages.md?raw";
-import adr07 from "../../../docs/decisions/0007-theme.md?raw";
-import adr08 from "../../../docs/decisions/0008-open-source.md?raw";
-import adr09 from "../../../docs/decisions/0009-latest-libraries.md?raw";
-import adr10 from "../../../docs/decisions/0010-forward-only-upgrades.md?raw";
-import adr11 from "../../../docs/decisions/0011-sqlite-by-default.md?raw";
-import adr12 from "../../../docs/decisions/0012-backups.md?raw";
-import adr13 from "../../../docs/decisions/0013-secure-by-default.md?raw";
-import adr14 from "../../../docs/decisions/0014-api-first.md?raw";
-import adr15 from "../../../docs/decisions/0015-data-ownership.md?raw";
-import adr16 from "../../../docs/decisions/0016-one-container-per-product.md?raw";
-import adr17 from "../../../docs/decisions/0017-self-observability.md?raw";
-import adr18 from "../../../docs/decisions/0018-one-application-per-product.md?raw";
-import adr19 from "../../../docs/decisions/0019-versioning-and-releases.md?raw";
-import adr20 from "../../../docs/decisions/0020-long-term-support.md?raw";
+import ui01 from "../../../docs/decisions/0001-tokens-as-css-variables.md?raw";
+import ui02 from "../../../docs/decisions/0002-theme-switching.md?raw";
+import ui03 from "../../../docs/decisions/0003-accessibility-in-every-story.md?raw";
+import ui04 from "../../../docs/decisions/0004-distribution.md?raw";
 
 <Meta title="Platform/Design decisions" />
 
 # Design decisions
 
-What every OpenAsy product is built to do, and why. The source of truth is `docs/decisions/` in this repository; change a decision with a pull request.
+The decisions every OpenAsy product follows are on the site: [openasy.github.io/principles](https://openasy.github.io/principles), with each record's decision and implementation status.
 
-| # | Decision | Area | Status |
-| --- | --- | --- | --- |
-| 0001 | Every product runs alone, with the others and with third-party tools | Architecture | Accepted |
-| 0002 | Authentication: local accounts, MFA and single sign-on | Security | Accepted |
-| 0003 | Authorization: per-product roles and scoped tokens | Security | Accepted |
-| 0004 | Customization: white-label and feature switches | Product | Accepted (white-label) · Planned (feature switches) |
-| 0005 | Accessibility: WCAG 2.2 AA, tested in CI | Quality | Accepted |
-| 0006 | Languages: English first, ready for translation | Product | Planned |
-| 0007 | Theme: light, dark and follow the system | Product | Accepted |
-| 0008 | Open source: AGPL-3.0 products, Apache-2.0 library, developed in public | Project | Accepted |
-| 0009 | Use the latest libraries | Engineering | Accepted |
-| 0010 | Forward-only upgrades, no backward compatibility | Engineering | Accepted |
-| 0011 | SQLite by default | Architecture | Accepted |
-| 0012 | Daily backups and point-in-time restore | Operations | Planned |
-| 0013 | Secure by default | Security | Accepted |
-| 0014 | API-first | Architecture | Accepted |
-| 0015 | Your data stays yours | Privacy | Accepted |
-| 0016 | One container per product, signed | Operations | Accepted |
-| 0017 | Every product can be monitored | Operations | Accepted |
-| 0018 | One application per product; agents on hosts are separate | Architecture | Accepted |
-| 0019 | Versioning: independent SemVer per product, monthly releases | Engineering | Accepted |
-| 0020 | Long-term support: one LTS line per year | Engineering | Accepted |
+This page shows the decisions about how this library is built. The source of truth is `docs/decisions/` in this repository; change a decision with a pull request.
+
+| # | Decision | Area | Decision status | Implementation |
+| --- | --- | --- | --- | --- |
+| 0001 | Design tokens are CSS variables | Styling | Accepted | Implemented |
+| 0002 | How the theme is chosen and applied | Behaviour | Accepted | Implemented |
+| 0003 | Every story is an accessibility test | Quality | Accepted | Implemented |
+| 0004 | Distributed as a GitHub release asset | Engineering | Accepted | Implemented |
 
 ---
 
-<Markdown>{adr01}</Markdown>
+<Markdown>{ui01}</Markdown>
 
 ---
 
-<Markdown>{adr02}</Markdown>
+<Markdown>{ui02}</Markdown>
 
 ---
 
-<Markdown>{adr03}</Markdown>
+<Markdown>{ui03}</Markdown>
 
 ---
 
-<Markdown>{adr04}</Markdown>
-
----
-
-<Markdown>{adr05}</Markdown>
-
----
-
-<Markdown>{adr06}</Markdown>
-
----
-
-<Markdown>{adr07}</Markdown>
-
----
-
-<Markdown>{adr08}</Markdown>
-
----
-
-<Markdown>{adr09}</Markdown>
-
----
-
-<Markdown>{adr10}</Markdown>
-
----
-
-<Markdown>{adr11}</Markdown>
-
----
-
-<Markdown>{adr12}</Markdown>
-
----
-
-<Markdown>{adr13}</Markdown>
-
----
-
-<Markdown>{adr14}</Markdown>
-
----
-
-<Markdown>{adr15}</Markdown>
-
----
-
-<Markdown>{adr16}</Markdown>
-
----
-
-<Markdown>{adr17}</Markdown>
-
----
-
-<Markdown>{adr18}</Markdown>
-
----
-
-<Markdown>{adr19}</Markdown>
-
----
-
-<Markdown>{adr20}</Markdown>
+<Markdown>{ui04}</Markdown>

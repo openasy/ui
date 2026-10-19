@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Chromium for story tests
+        run: npx playwright install --with-deps chromium
+
+      - run: npm run typecheck
+
+      - name: Unit, interaction and accessibility tests with coverage
+        run: npm run test:ci
+
+      - name: Summarise results
+        if: always()
+        run: |
+          npm run report
+          node -e '
+            const s = require("./reports/summary.json");
+            const c = s.coverage ?? {};
+            const row = (k) => c[k] ? `| ${k} | ${c[k].pct}% |` : "";
+            console.log([
+              `### Tests: ${s.totals.passed}/${s.totals.tests} passed${s.totals.failed ? ` · ${s.totals.failed} failed` : ""}`,
+              "", "| Coverage | |", "| --- | --- |",
+              row("lines"), row("statements"), row("functions"), row("branches"),
+            ].join("\n"));
+          ' >> "$GITHUB_STEP_SUMMARY"
+
+      - run: npm run build
+
+      - run: npm run build-storybook
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/

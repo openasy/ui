@@ -1,0 +1,73 @@
+@import "tailwindcss" source("../");
+@import "./theme.css";
+
+@source not "../**/*.test.tsx";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --font-sans: var(--oa-font-sans);
+  --font-mono: var(--oa-font-mono);
+
+  --color-canvas: var(--oa-canvas);
+  --color-surface: var(--oa-surface);
+  --color-subtle: var(--oa-subtle);
+  --color-line: var(--oa-line);
+  --color-line-strong: var(--oa-line-strong);
+  --color-fg: var(--oa-fg);
+  --color-fg-muted: var(--oa-fg-muted);
+  --color-fg-subtle: var(--oa-fg-subtle);
+
+  --color-accent: var(--oa-accent);
+  --color-accent-hover: var(--oa-accent-hover);
+  --color-accent-soft: var(--oa-accent-soft);
+  --color-accent-text: var(--oa-accent-text);
+  --color-accent-contrast: var(--oa-accent-contrast);
+
+  --color-success: var(--oa-success);
+  --color-success-soft: var(--oa-success-soft);
+  --color-warning: var(--oa-warning);
+  --color-warning-text: var(--oa-warning-text);
+  --color-warning-soft: var(--oa-warning-soft);
+  --color-danger: var(--oa-danger);
+  --color-danger-text: var(--oa-danger-text);
+  --color-danger-soft: var(--oa-danger-soft);
+  --color-critical: var(--oa-critical);
+
+  --color-chart-1: var(--oa-chart-1);
+  --color-chart-2: var(--oa-chart-2);
+  --color-chart-3: var(--oa-chart-3);
+  --color-chart-4: var(--oa-chart-4);
+  --color-chart-grid: var(--oa-chart-grid);
+  --color-chart-axis: var(--oa-chart-axis);
+
+  --shadow-raised: var(--oa-shadow-1);
+  --shadow-overlay: var(--oa-shadow-2);
+  --shadow-modal: var(--oa-shadow-3);
+  --shadow-ring: var(--oa-ring);
+
+  --text-2xs: 11px;
+  --text-2xs--line-height: 14px;
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 18px;
+  --text-base: 14px;
+  --text-base--line-height: 20px;
+}
+
+@layer base {
+  .oa-root {
+    font-family: var(--oa-font-sans);
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--oa-fg);
+    background: var(--oa-canvas);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .oa-root :focus-visible {
+    outline: none;
+    box-shadow: var(--oa-ring);
+  }
+}

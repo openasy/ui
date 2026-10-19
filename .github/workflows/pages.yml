@@ -1,0 +1,64 @@
+name: Storybook on GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      tests_failed: ${{ steps.tests.outputs.failed }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      # Tests may fail; the results are still published so the failure is visible on the site.
+      - name: Run tests and write reports
+        id: tests
+        run: |
+          if npm run test:ci; then echo "failed=false" >> "$GITHUB_OUTPUT"; else echo "failed=true" >> "$GITHUB_OUTPUT"; fi
+          npm run report
+
+      - name: Build Storybook (includes /reports)
+        run: npm run build-storybook
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: storybook-static
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Fail if tests failed
+        if: needs.build.outputs.tests_failed == 'true'
+        run: |
+          echo "::error::Tests failed. See Quality → Test results on the published Storybook."
+          exit 1

@@ -1,0 +1,108 @@
+/*
+ * OpenAsy design tokens.
+ *
+ * Every colour is a CSS variable so a product can be white-labelled at runtime:
+ * set --oa-accent (and optionally --oa-font-sans) on any element and the derived
+ * tones (hover, soft, text-on-soft, focus ring) follow automatically.
+ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --oa-font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --oa-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --oa-canvas: #f5f6f8;
+  --oa-surface: #ffffff;
+  --oa-subtle: #eef0f3;
+  --oa-line: #d9dde3;
+  --oa-line-strong: #b7bec8;
+  --oa-fg: #11161d;
+  --oa-fg-muted: #4a5361;
+  --oa-fg-subtle: #5f6876;
+
+  --oa-accent: #1f4fd8;
+
+  --oa-success: #137a3f;
+  --oa-success-soft: #e2f3e9;
+  --oa-warning: #9a5b00;
+  --oa-warning-text: #8a5100;
+  --oa-warning-soft: #fcf0da;
+  --oa-danger: #c0282d;
+  --oa-danger-text: #a11a20;
+  --oa-danger-soft: #fbe6e6;
+  --oa-critical: #8e1219;
+
+  --oa-chart-1: #1f4fd8;
+  --oa-chart-2: #c76a12;
+  --oa-chart-3: #0f8c7c;
+  --oa-chart-4: #7a4fd1;
+  --oa-chart-grid: #eef0f3;
+  --oa-chart-axis: #b7bec8;
+
+  --oa-seq-0: #eef2fd;
+  --oa-seq-1: #c9d7f7;
+  --oa-seq-2: #9db5f0;
+  --oa-seq-3: #5f84e3;
+  --oa-seq-4: #1f4fd8;
+  --oa-seq-5: #15379a;
+
+  --oa-shadow-1: 0 1px 2px rgb(17 22 29 / 0.06);
+  --oa-shadow-2: 0 6px 16px rgb(17 22 29 / 0.12);
+  --oa-shadow-3: 0 20px 48px rgb(17 22 29 / 0.18);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --oa-canvas: #0b0f14;
+  --oa-surface: #12181f;
+  --oa-subtle: #1a222b;
+  --oa-line: #29323d;
+  --oa-line-strong: #3a4552;
+  --oa-fg: #e8ecf1;
+  --oa-fg-muted: #aab4c0;
+  --oa-fg-subtle: #8c97a4;
+
+  --oa-accent: #7096ff;
+
+  --oa-success: #4cc38a;
+  --oa-success-soft: #12301f;
+  --oa-warning: #e8a33d;
+  --oa-warning-text: #f0b85e;
+  --oa-warning-soft: #3a2a0f;
+  --oa-danger: #f2555a;
+  --oa-danger-text: #ff8a8e;
+  --oa-danger-soft: #3d1517;
+  --oa-critical: #ff6b70;
+
+  --oa-chart-1: #7096ff;
+  --oa-chart-2: #e8923f;
+  --oa-chart-3: #34b3a1;
+  --oa-chart-4: #a585f0;
+  --oa-chart-grid: #1f2831;
+  --oa-chart-axis: #3a4552;
+
+  --oa-seq-0: #16203a;
+  --oa-seq-1: #1d2f63;
+  --oa-seq-2: #27458f;
+  --oa-seq-3: #3a63c4;
+  --oa-seq-4: #5f84e3;
+  --oa-seq-5: #9db5f0;
+
+  --oa-shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --oa-shadow-2: 0 8px 20px rgb(0 0 0 / 0.5);
+  --oa-shadow-3: 0 24px 56px rgb(0 0 0 / 0.6);
+}
+
+/* Derived from the accent, so a brand only sets one colour. */
+:root,
+[data-theme],
+[data-oa-brand] {
+  --oa-accent-hover: color-mix(in oklab, var(--oa-accent) 86%, black);
+  --oa-accent-soft: color-mix(in oklab, var(--oa-accent) 12%, var(--oa-surface));
+  --oa-accent-text: color-mix(in oklab, var(--oa-accent) 82%, var(--oa-fg));
+  --oa-accent-contrast: #ffffff;
+  --oa-ring: 0 0 0 2px var(--oa-surface), 0 0 0 4px var(--oa-accent);
+}

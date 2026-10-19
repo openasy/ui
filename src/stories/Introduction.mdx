@@ -1,0 +1,70 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introduction" />
+
+# OpenAsy UI
+
+`@openasy/ui` is the React component library shared by every OpenAsy product: VPN, Infrastructure, Logs,
+Metrics, Alerts, SIEM, Vulnerabilities, Audit, SAST, DAST, Malware, Posture, Secrets, Runtime, Access,
+Compliance, Incidents and Identity. Each product ships on its own and integrates with the others, so they
+all share one shell, one table, one set of charts and one vocabulary for severity.
+
+- **Products** — every product screen built only from the components in this library.
+- **Quality → Test results** — the unit, interaction and accessibility results of the CI run that built this page, with coverage.
+- **Toolbar** — switch **Theme** (light/dark) and **Brand** (white-label examples) for any story.
+
+## Install
+
+```bash
+npm install @openasy/ui
+```
+
+```tsx
+import "@openasy/ui/styles.css";
+import { BrandProvider, AppShell, PageHeader, KpiCard, TimeSeriesChart } from "@openasy/ui";
+
+export function App() {
+  return (
+    <BrandProvider theme="light" brand={{ name: "Acme Shield", accent: "#0f8c7c", logoUrl: "/logo.svg" }}>
+      <AppShell product="logs" nav={[{ id: "explorer", label: "Explorer" }]} activeNav="explorer">
+        <PageHeader title="Explorer" />
+      </AppShell>
+    </BrandProvider>
+  );
+}
+```
+
+Requirements: React 19. Built with Vite 8, Tailwind CSS 4 and TypeScript. Apps that use Tailwind themselves can
+import `@openasy/ui/theme.css` to reuse the tokens.
+
+## What is shared
+
+| Area | Components |
+| --- | --- |
+| Shell | `BrandProvider`, `AppShell`, `ProductSwitcher`, `PageHeader`, `Panel` |
+| Data | `DataTable` (sort, select, paginate, loading, empty), `KpiCard`, `KpiGrid`, `EntityChip`, `Avatar` |
+| Charts | `TimeSeriesChart` (crosshair, legend toggle, stacked, threshold, keyboard), `ChartSync`, `StackedBarChart`, `Heatmap`, `Sparkline`, `BarList` |
+| Filters | `FilterBar`, `TimeRangePicker`, `FacetFilter`, `FilterChip`, `QueryBar`, `SearchInput` |
+| Inputs | `Button`, `IconButton`, `TextField`, `SelectField`, `Checkbox`, `Switch`, `SegmentedControl`, `Tabs` |
+| Feedback | `Callout`, `Badge`, `StatusBadge`, `SeverityBadge`, `LevelBadge`, `EmptyState` |
+
+## Standard levels
+
+Every product uses the same words and colours for how bad something is. Map product-specific values with
+`toLogLevel()` (accepts `err`, `warning`, `panic`, syslog 0–7…) and `toSeverity()` (accepts CVSS scores).
+
+- **Log levels**: `trace`, `debug`, `info`, `warn`, `error`, `fatal` → `<LevelBadge />`
+- **Severities**: `critical`, `high`, `medium`, `low`, `info` → `<SeverityBadge />`
+- **Tones** for state: `neutral`, `info`, `success`, `warning`, `danger`, `critical` → `<StatusBadge />`, `<Callout />`
+
+Each level also has its own shape, so the scale reads without colour.
+
+## White-label
+
+`BrandProvider` takes a `brand` with `name`, `organization`, `logoUrl`, `logoDarkUrl`, `accent`, `fontFamily`
+and `hidePoweredBy`. Only the accent colour is needed: hover, soft and focus tones are derived from it with
+`color-mix()`. See **Identity → Branding** for the settings screen.
+
+## Licence
+
+Apache-2.0.

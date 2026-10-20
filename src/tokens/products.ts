@@ -49,7 +49,7 @@ export interface ProductInfo {
   icon: LucideIcon;
   /** Container image published for the product (platform decision 0016). */
   image: string;
-  /** Image of the agent that runs on hosts, for products that have one (platform decision 0018). */
+  /** Image of the agent or server that runs outside the product, for products that have one (platform decision 0018). */
   agentImage?: string;
   summary: string;
 }
@@ -98,7 +98,7 @@ export const PRODUCT_IDS = [
 export type ProductId = (typeof PRODUCT_IDS)[number];
 
 export const PRODUCTS: Record<ProductId, ProductInfo> = {
-  vpn: { id: "vpn", name: "VPN", group: "operations", icon: Shield, image: "ghcr.io/openasy/vpn-manager", agentImage: "ghcr.io/openasy/vpn-server", summary: "OpenVPN server and manager with split tunnel and per-group access." },
+  vpn: { id: "vpn", name: "VPN", group: "operations", icon: Shield, image: "ghcr.io/openasy/vpn", agentImage: "ghcr.io/openasy/vpn-server", summary: "OpenVPN server and manager with split tunnel and per-group access." },
   infrastructure: { id: "infrastructure", name: "Infrastructure", group: "operations", icon: Server, image: "ghcr.io/openasy/infra", agentImage: "ghcr.io/openasy/infra-agent", summary: "Hosts, containers and Kubernetes: inventory, health and the shared asset list." },
   logs: { id: "logs", name: "Logs", group: "operations", icon: ScrollText, image: "ghcr.io/openasy/logs", summary: "Collect, search and keep logs from every host and service." },
   metrics: { id: "metrics", name: "Metrics", group: "operations", icon: ChartLine, image: "ghcr.io/openasy/metrics", summary: "Time series, dashboards and PromQL. Grafana can read it as-is." },

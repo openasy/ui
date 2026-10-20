@@ -2,7 +2,7 @@
 
 - **Decision:** Accepted
 - **Implementation:** Implemented
-- **Where:** `.github/workflows/release.yml`; `vpn-manager` installs 0.1.0 this way
+- **Where:** `.github/workflows/release.yml`; `vpn` (then `vpn-manager`) installed 0.1.0 this way
 - **Area:** Engineering
 
 ## Context

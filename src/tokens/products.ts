@@ -99,7 +99,7 @@ export type ProductId = (typeof PRODUCT_IDS)[number];
 
 export const PRODUCTS: Record<ProductId, ProductInfo> = {
   vpn: { id: "vpn", name: "VPN", group: "operations", icon: Shield, image: "ghcr.io/openasy/vpn-manager", agentImage: "ghcr.io/openasy/vpn-server", summary: "OpenVPN server and manager with split tunnel and per-group access." },
-  infrastructure: { id: "infrastructure", name: "Infrastructure", group: "operations", icon: Server, image: "ghcr.io/openasy/infra", summary: "Hosts, containers and Kubernetes: inventory, health and the shared asset list." },
+  infrastructure: { id: "infrastructure", name: "Infrastructure", group: "operations", icon: Server, image: "ghcr.io/openasy/infra", agentImage: "ghcr.io/openasy/infra-agent", summary: "Hosts, containers and Kubernetes: inventory, health and the shared asset list." },
   logs: { id: "logs", name: "Logs", group: "operations", icon: ScrollText, image: "ghcr.io/openasy/logs", summary: "Collect, search and keep logs from every host and service." },
   metrics: { id: "metrics", name: "Metrics", group: "operations", icon: ChartLine, image: "ghcr.io/openasy/metrics", summary: "Time series, dashboards and PromQL. Grafana can read it as-is." },
   alerts: { id: "alerts", name: "Alerts", group: "operations", icon: Bell, image: "ghcr.io/openasy/alerts", summary: "Rules, routing, silences and on-call for any source." },

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, within } from "storybook/test";
+import { expect, fn, userEvent, within } from "storybook/test";
 import { Activity, LayoutGrid, Server, Users } from "lucide-react";
 import { AppShell } from "../../components/AppShell";
 import { PageHeader } from "../../components/PageHeader";
@@ -23,6 +23,8 @@ const meta = {
     product: "vpn",
     nav,
     activeNav: "overview",
+    // Stays on the story; a product's links go to its page paths, /people.
+    onNavigate: fn(),
     connectedProducts: [...CONNECTED],
     availableProducts: [...AVAILABLE],
     user: USER,

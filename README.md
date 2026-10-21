@@ -18,7 +18,7 @@ What every OpenAsy product is built to do, and why, is recorded with the site in
 Each release attaches the built package to its [GitHub release](https://github.com/openasy/ui/releases); no registry or token is needed.
 
 ```bash
-npm install https://github.com/openasy/ui/releases/download/v0.1.0/openasy-ui-0.1.0.tgz
+npm install https://github.com/openasy/ui/releases/download/v0.2.0/openasy-ui-0.2.0.tgz
 ```
 
 ```tsx
@@ -45,6 +45,7 @@ Peer dependency: React 19.
 | Inputs | `Button`, `IconButton`, `TextField`, `SelectField`, `Checkbox`, `Switch`, `SegmentedControl`, `Tabs` |
 | Feedback | `Callout`, `Badge`, `StatusBadge`, `SeverityBadge`, `LevelBadge`, `EmptyState` |
 | Tokens | `LOG_LEVELS`, `SEVERITIES`, `toLogLevel()`, `toSeverity()`, `PRODUCTS`, format helpers |
+| Routing | `navigate()`, `usePath()`, `followLinks()` |
 
 ### Standard levels
 
@@ -54,6 +55,14 @@ Peer dependency: React 19.
 
 Every product maps its own values onto these (`toLogLevel("warning")`, `toSeverity(9.8)`), so an error looks
 the same everywhere.
+
+### Routing
+
+Pages are paths, `/people/abc`, never `#/people/abc`, so every page can be linked, bookmarked and opened in a new
+tab. The product's server answers each page path with its `index.html`. At start, `followLinks(["people", "groups"])`
+opens links to those pages without a reload and turns an old `/#/people/abc` address into `/people/abc`; other links,
+such as `/api` or another product, are left to the browser. `usePath()` gives the current path, `navigate("/people")`
+opens a page from code. `AppShell` links each item to `/<id>` unless it has its own `href`.
 
 ### White-label
 

@@ -9,6 +9,7 @@ import { Avatar } from "./Avatar";
 export interface NavItem {
   id: string;
   label: ReactNode;
+  /** Where the link goes; /<id> by default, a page path of the product. */
   href?: string;
   count?: ReactNode;
   icon?: LucideIcon;
@@ -29,6 +30,8 @@ export interface AppShellProps {
   /** Products that could be linked; shown under "Not connected". */
   availableProducts?: ProductId[];
   onSwitchProduct?: (id: ProductId) => void;
+  /** Called by the Connect button of a product under "Not connected". */
+  onConnectProduct?: (id: ProductId) => void;
   user?: ShellUser;
   /** Extra links above Integrations and Settings. */
   footerNav?: NavItem[];
@@ -68,11 +71,12 @@ export interface ProductSwitcherProps {
   connected?: ProductId[];
   available?: ProductId[];
   onSwitch?: (id: ProductId) => void;
+  onConnect?: (id: ProductId) => void;
   defaultOpen?: boolean;
 }
 
 /** Shows the current product; opens a menu of linked OpenAsy products when there are any. */
-export function ProductSwitcher({ product, connected, available = [], onSwitch, defaultOpen }: ProductSwitcherProps) {
+export function ProductSwitcher({ product, connected, available = [], onSwitch, onConnect, defaultOpen }: ProductSwitcherProps) {
   const { brand } = useBrand();
   const [open, setOpen] = useState(defaultOpen ?? false);
   const info = PRODUCTS[product];
@@ -136,9 +140,16 @@ export function ProductSwitcher({ product, connected, available = [], onSwitch, 
                     <li key={id} className="flex h-8 items-center gap-2 px-2 text-sm text-fg-muted">
                       <P.icon aria-hidden className="size-4" />
                       <span className="grow">{P.name}</span>
-                      <a href="#connect" className="text-xs font-medium text-accent">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onConnect?.(id);
+                          setOpen(false);
+                        }}
+                        className="text-xs font-medium text-accent hover:underline"
+                      >
                         Connect
-                      </a>
+                      </button>
                     </li>
                   );
                 })}
@@ -155,7 +166,7 @@ function NavLink({ item, active, onNavigate }: { item: NavItem; active: boolean;
   const Icon = item.icon;
   return (
     <a
-      href={item.href ?? `#${item.id}`}
+      href={item.href ?? `/${item.id}`}
       aria-current={active ? "page" : undefined}
       onClick={(e) => {
         if (onNavigate) {
@@ -187,6 +198,7 @@ export function AppShell({
   connectedProducts,
   availableProducts,
   onSwitchProduct,
+  onConnectProduct,
   user,
   footerNav = DEFAULT_FOOTER,
   children,
@@ -219,7 +231,7 @@ export function AppShell({
           drawer ? "visible translate-x-0 shadow-modal" : "invisible -translate-x-full",
         )}
       >
-        <ProductSwitcher product={product} connected={connectedProducts} available={availableProducts} onSwitch={onSwitchProduct} />
+        <ProductSwitcher product={product} connected={connectedProducts} available={availableProducts} onSwitch={onSwitchProduct} onConnect={onConnectProduct} />
         <div className="flex flex-col gap-px">
           {nav.map((item) => (
             <NavLink key={item.id} item={item} active={item.id === activeNav} onNavigate={navigate} />

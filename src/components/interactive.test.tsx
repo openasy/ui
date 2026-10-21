@@ -196,6 +196,15 @@ describe("AppShell", () => {
     expect(screen.getByRole("link", { name: "X" })).toHaveAttribute("href", "/x");
   });
 
+  it("links each item to its page path by default", () => {
+    renderUI(
+      <AppShell product="logs" nav={[{ id: "hosts", label: "Hosts" }]}>
+        <p />
+      </AppShell>,
+    );
+    expect(screen.getByRole("link", { name: "Hosts" })).toHaveAttribute("href", "/hosts");
+  });
+
   it("shows white-label name, logo and a powered-by line", () => {
     const { container } = renderUI(
       <AppShell product="vpn" nav={nav}>
@@ -230,6 +239,14 @@ describe("AppShell", () => {
     await user.click(within(list).getByRole("button", { name: "Metrics" }));
     expect(onSwitch).toHaveBeenCalledWith("metrics");
     expect(screen.queryByRole("list", { name: "Connected products" })).not.toBeInTheDocument();
+  });
+
+  it("ProductSwitcher asks to connect an available product", async () => {
+    const onConnect = vi.fn();
+    const { user } = renderUI(<ProductSwitcher product="logs" connected={["metrics"]} available={["vpn"]} onConnect={onConnect} />);
+    await user.click(screen.getByRole("button", { name: /^Switch product, current: Logs/ }));
+    await user.click(await screen.findByRole("button", { name: "Connect" }));
+    expect(onConnect).toHaveBeenCalledWith("vpn");
   });
 
   it("BrandMark falls back to the product glyph and accepts a class", () => {

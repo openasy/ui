@@ -2,6 +2,7 @@ import "./styles/index.css";
 
 export { cn } from "./lib/cn";
 export * from "./lib/format";
+export * from "./lib/routing";
 export { smoothPath, linearPath, niceScale, indexFromPointer, colorAt, CHART_COLORS, SEQUENTIAL_RAMP } from "./lib/chart";
 export * from "./tokens/levels";
 export * from "./tokens/products";

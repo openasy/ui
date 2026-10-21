@@ -18,18 +18,24 @@ What every OpenAsy product is built to do, and why, is recorded with the site in
 Each release attaches the built package to its [GitHub release](https://github.com/openasy/ui/releases); no registry or token is needed.
 
 ```bash
-npm install https://github.com/openasy/ui/releases/download/v0.2.0/openasy-ui-0.2.0.tgz
+npm install https://github.com/openasy/ui/releases/download/v0.3.0/openasy-ui-0.3.0.tgz
 ```
 
 ```tsx
 import "@openasy/ui/styles.css";
-import { BrandProvider, AppShell, PageHeader } from "@openasy/ui";
+import { BrandProvider, AppShell, PageHeader, useThemePreference } from "@openasy/ui";
 
-<BrandProvider theme="light" brand={{ name: "Acme Shield", accent: "#0f8c7c" }}>
-  <AppShell product="logs" nav={[{ id: "explorer", label: "Explorer" }]} activeNav="explorer">
-    <PageHeader title="Explorer" />
-  </AppShell>
-</BrandProvider>;
+function App() {
+  // System, light or dark, remembered in this browser; AppShell shows the toggle.
+  const [theme, setTheme] = useThemePreference();
+  return (
+    <BrandProvider theme={theme} brand={{ name: "Acme Shield", accent: "#0f8c7c" }}>
+      <AppShell product="logs" nav={[{ id: "explorer", label: "Explorer" }]} activeNav="explorer" theme={theme} onThemeChange={setTheme}>
+        <PageHeader title="Explorer" />
+      </AppShell>
+    </BrandProvider>
+  );
+}
 ```
 
 Peer dependency: React 19.
@@ -43,7 +49,7 @@ Peer dependency: React 19.
 | Charts | `TimeSeriesChart`, `ChartSync`, `StackedBarChart`, `Heatmap`, `Sparkline`, `BarList` |
 | Filters | `FilterBar`, `TimeRangePicker`, `FacetFilter`, `FilterChip`, `QueryBar`, `SearchInput` |
 | Inputs | `Button`, `IconButton`, `TextField`, `SelectField`, `Checkbox`, `Switch`, `SegmentedControl`, `Tabs` |
-| Feedback | `Callout`, `Badge`, `StatusBadge`, `SeverityBadge`, `LevelBadge`, `EmptyState` |
+| Feedback | `Callout`, `Dialog`, `Badge`, `StatusBadge`, `SeverityBadge`, `LevelBadge`, `EmptyState` |
 | Tokens | `LOG_LEVELS`, `SEVERITIES`, `toLogLevel()`, `toSeverity()`, `PRODUCTS`, format helpers |
 | Routing | `navigate()`, `usePath()`, `followLinks()` |
 
@@ -55,6 +61,13 @@ Peer dependency: React 19.
 
 Every product maps its own values onto these (`toLogLevel("warning")`, `toSeverity(9.8)`), so an error looks
 the same everywhere.
+
+### Adding things
+
+Adding or creating something opens a `Dialog` over the page, never a form inside it. With `onSubmit` its body and
+footer are one form; the primary button goes last in `footer`. A value shown once, such as a token, stays in the same
+dialog with `icon` and `iconTone="success"` until it is copied. Escape and the close button close it, a click outside
+does not, so a half-filled form is not lost.
 
 ### Routing
 

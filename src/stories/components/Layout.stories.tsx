@@ -75,6 +75,21 @@ export const Standalone: Story = {
   ),
 };
 
+/** With theme and onThemeChange, the sidebar offers system, light and dark. */
+export const WithThemeToggle: Story = {
+  args: { theme: "system", onThemeChange: fn() },
+  render: (args) => (
+    <AppShell {...args}>
+      <PageHeader title="Overview" description="The theme toggle sits under the user" />
+    </AppShell>
+  ),
+  play: async ({ args, canvasElement }) => {
+    const c = within(canvasElement);
+    await userEvent.click(c.getByRole("radio", { name: "Dark" }));
+    await expect(args.onThemeChange).toHaveBeenCalledWith("dark");
+  },
+};
+
 export const Header: Story = {
   name: "PageHeader",
   parameters: { layout: "padded" },

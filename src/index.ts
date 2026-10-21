@@ -16,6 +16,7 @@ export * from "./components/PageHeader";
 export * from "./components/Button";
 export * from "./components/Badge";
 export * from "./components/Callout";
+export * from "./components/Dialog";
 export * from "./components/Panel";
 export * from "./components/EmptyState";
 export * from "./components/Controls";

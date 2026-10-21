@@ -5,6 +5,7 @@ import { cn } from "../lib/cn";
 import { PRODUCTS, type ProductId } from "../tokens/products";
 import { useBrand } from "./BrandProvider";
 import { Avatar } from "./Avatar";
+import { ThemeToggle, type ThemePreference } from "./Theme";
 
 export interface NavItem {
   id: string;
@@ -35,6 +36,9 @@ export interface AppShellProps {
   user?: ShellUser;
   /** Extra links above Integrations and Settings. */
   footerNav?: NavItem[];
+  /** The person's theme choice. With onThemeChange, the sidebar shows a theme toggle. */
+  theme?: ThemePreference;
+  onThemeChange?: (next: ThemePreference) => void;
   children: ReactNode;
   className?: string;
 }
@@ -201,6 +205,8 @@ export function AppShell({
   onConnectProduct,
   user,
   footerNav = DEFAULT_FOOTER,
+  theme,
+  onThemeChange,
   children,
   className,
 }: AppShellProps) {
@@ -250,6 +256,7 @@ export function AppShell({
               </span>
             </div>
           )}
+          {theme && onThemeChange && <ThemeToggle value={theme} onChange={onThemeChange} className="mx-1.5 mt-1 self-start" />}
           {!brand.hidePoweredBy && brand.name !== "OpenAsy" && <span className="px-2 pt-1 text-2xs text-fg-subtle">Powered by OpenAsy</span>}
         </div>
       </nav>

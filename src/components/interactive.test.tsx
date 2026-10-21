@@ -196,6 +196,27 @@ describe("AppShell", () => {
     expect(screen.getByRole("link", { name: "X" })).toHaveAttribute("href", "/x");
   });
 
+  it("shows a theme toggle only when given the theme and a handler", async () => {
+    const onThemeChange = vi.fn();
+    const { unmount } = renderUI(
+      <AppShell product="logs" nav={nav}>
+        <p />
+      </AppShell>,
+    );
+    expect(screen.queryByRole("radiogroup", { name: "Theme" })).not.toBeInTheDocument();
+    unmount();
+    const { user } = renderUI(
+      <AppShell product="logs" nav={nav} theme="system" onThemeChange={onThemeChange}>
+        <p />
+      </AppShell>,
+    );
+    const navEl = screen.getByRole("navigation", { name: "Logs navigation" });
+    const group = within(navEl).getByRole("radiogroup", { name: "Theme" });
+    expect(within(group).getByRole("radio", { name: "System" })).toHaveAttribute("aria-checked", "true");
+    await user.click(within(group).getByRole("radio", { name: "Dark" }));
+    expect(onThemeChange).toHaveBeenCalledWith("dark");
+  });
+
   it("links each item to its page path by default", () => {
     renderUI(
       <AppShell product="logs" nav={[{ id: "hosts", label: "Hosts" }]}>

@@ -19,4 +19,4 @@ Platform decision 0007 asks for system, light and dark, with system as the defau
 ## Consequences
 
 - Embedded uses (Storybook, a product inside another page) keep the theme on the provider's own element.
-- A product offers the toggle by passing `theme` and `onThemeChange` from `useThemePreference()` to `AppShell`, which shows it at the bottom of the sidebar.
+- A product offers the toggle by passing `theme` and `onThemeChange` from `useThemePreference()` to `AppShell`, which shows it as `ThemeMenu`, one button on the right of the top bar.

@@ -1,5 +1,7 @@
-import { useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
+import * as Popover from "@radix-ui/react-popover";
 import { Monitor, Moon, Sun } from "lucide-react";
+import { cn } from "../lib/cn";
 import { SegmentedControl } from "./SegmentedControl";
 
 export type ThemeMode = "light" | "dark";
@@ -110,5 +112,68 @@ export function ThemeToggle({ value, onChange, className }: ThemeToggleProps) {
       }))}
       className={className}
     />
+  );
+}
+
+/**
+ * One button that shows the current theme and opens a menu of system, light
+ * and dark. The shell puts it on the right of its top bar.
+ */
+export function ThemeMenu({ value, onChange, className }: ThemeToggleProps) {
+  const [open, setOpen] = useState(false);
+  const items = useRef<Array<HTMLButtonElement | null>>([]);
+  const current = OPTIONS.find((o) => o.value === value) ?? OPTIONS[0];
+  const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const at = items.current.findIndex((el) => el === document.activeElement);
+    const next = (at + (e.key === "ArrowDown" ? 1 : OPTIONS.length - 1)) % OPTIONS.length;
+    items.current[next]?.focus();
+  };
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger aria-label={`Theme: ${current.name}`} title="Theme" className={cn("grid size-10 place-items-center rounded-md", className)}>
+        <current.Icon aria-hidden className="size-[18px]" />
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          align="end"
+          sideOffset={4}
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            items.current[OPTIONS.findIndex((o) => o.value === current.value)]?.focus();
+          }}
+          className="oa-root z-50 w-44 rounded-lg border border-line bg-surface p-1 shadow-overlay"
+        >
+          <div role="menu" aria-label="Theme" onKeyDown={onKey} className="flex flex-col gap-0.5">
+            {OPTIONS.map(({ value: v, name, Icon }, i) => {
+              const on = v === value;
+              return (
+                <button
+                  key={v}
+                  ref={(el) => {
+                    items.current[i] = el;
+                  }}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={on}
+                  onClick={() => {
+                    onChange(v);
+                    setOpen(false);
+                  }}
+                  className={cn(
+                    "flex h-9 items-center gap-2.5 rounded-md px-2.5 text-left text-sm",
+                    on ? "bg-accent-soft font-medium text-accent-text" : "text-fg hover:bg-subtle",
+                  )}
+                >
+                  <Icon aria-hidden className="size-4 shrink-0" />
+                  {name}
+                </button>
+              );
+            })}
+          </div>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }

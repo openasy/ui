@@ -27,7 +27,7 @@ export function PageHeader({ title, description, breadcrumbs, meta, actions, chi
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="flex min-w-0 grow flex-col gap-0.5">
           {breadcrumbs && breadcrumbs.length > 0 && (
-            <nav aria-label="Breadcrumb">
+            <nav aria-label="Breadcrumb" className="pb-1">
               <ol className="flex flex-wrap items-center gap-1 text-xs text-fg-muted">
                 {breadcrumbs.map((c, i) => (
                   <Fragment key={i}>

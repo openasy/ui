@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
-import { Activity, LayoutGrid, Server, Users } from "lucide-react";
+import { Activity, Globe, KeyRound, LayoutGrid, LogIn, Server, Settings2, TriangleAlert, Users } from "lucide-react";
 import { AppShell } from "../../components/AppShell";
 import { PageHeader } from "../../components/PageHeader";
 import { Panel } from "../../components/Panel";
@@ -75,18 +75,65 @@ export const Standalone: Story = {
   ),
 };
 
-/** With theme and onThemeChange, the sidebar offers system, light and dark. */
+/** With theme and onThemeChange, the top bar offers system, light and dark from a menu on the right. */
 export const WithThemeToggle: Story = {
   args: { theme: "system", onThemeChange: fn() },
   render: (args) => (
     <AppShell {...args}>
-      <PageHeader title="Overview" description="The theme toggle sits under the user" />
+      <PageHeader title="Overview" description="The theme menu sits on the right of the top bar" />
     </AppShell>
   ),
   play: async ({ args, canvasElement }) => {
     const c = within(canvasElement);
-    await userEvent.click(c.getByRole("radio", { name: "Dark" }));
+    await userEvent.click(c.getByRole("button", { name: "Theme: System" }));
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(await body.findByRole("menuitemradio", { name: "Dark" }));
     await expect(args.onThemeChange).toHaveBeenCalledWith("dark");
+  },
+};
+
+/**
+ * A product menu in two groups, as Uptime has it. Counts that need action are
+ * red and become a dot on the icon rail, which tablets show and desktops get
+ * with Collapse.
+ */
+export const WithSettingsGroup: Story = {
+  args: {
+    product: "uptime",
+    navLabel: "Monitoring",
+    activeNav: "checks",
+    nav: [
+      { id: "checks", label: "Checks", icon: Activity, count: 6 },
+      { id: "outages", label: "Outages", shortLabel: "Outages", icon: TriangleAlert, count: 1, attention: true },
+      { id: "status", label: "Status page", shortLabel: "Status", icon: Globe },
+    ],
+    footerNav: [
+      { id: "setup", label: "Setup", icon: Settings2 },
+      { id: "members", label: "Members", icon: Users },
+      { id: "signin", label: "Sign-in", icon: LogIn },
+      { id: "tokens", label: "API tokens", shortLabel: "Tokens", icon: KeyRound },
+    ],
+  },
+  render: (args) => (
+    <AppShell {...args}>
+      <PageHeader
+        title="Checks"
+        description="6 checks · last result 2 min ago"
+        breadcrumbs={[{ label: "Uptime", href: "#" }, { label: "Checks" }]}
+        actions={
+          <Button size="sm" variant="primary">
+            Add check
+          </Button>
+        }
+      />
+      <Panel title="Content">The page fills the space next to the menu at every width.</Panel>
+    </AppShell>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const nav = c.getByRole("navigation", { name: "Uptime navigation" });
+    await expect(within(nav).getByRole("group", { name: "Settings" })).toBeInTheDocument();
+    await expect(within(nav).getByRole("link", { name: /^Checks/ })).toHaveAttribute("aria-current", "page");
   },
 };
 

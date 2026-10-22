@@ -6,7 +6,7 @@ import { renderUI } from "../test/render";
 import { Checkbox, SearchInput, SelectField, Switch, TextField } from "./Controls";
 import { SegmentedControl } from "./SegmentedControl";
 import { Tabs } from "./Tabs";
-import { AppShell, BrandMark, ProductSwitcher } from "./AppShell";
+import { AppShell, BrandMark, NAV_COLLAPSED_KEY, ProductSwitcher } from "./AppShell";
 import { PageHeader } from "./PageHeader";
 import { KpiCard, KpiGrid } from "./Kpi";
 import { FacetFilter, FilterBar, FilterChip, QueryBar, TimeRangePicker } from "./Filters";
@@ -203,18 +203,110 @@ describe("AppShell", () => {
         <p />
       </AppShell>,
     );
-    expect(screen.queryByRole("radiogroup", { name: "Theme" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Theme/ })).not.toBeInTheDocument();
     unmount();
     const { user } = renderUI(
       <AppShell product="logs" nav={nav} theme="system" onThemeChange={onThemeChange}>
         <p />
       </AppShell>,
     );
-    const navEl = screen.getByRole("navigation", { name: "Logs navigation" });
-    const group = within(navEl).getByRole("radiogroup", { name: "Theme" });
-    expect(within(group).getByRole("radio", { name: "System" })).toHaveAttribute("aria-checked", "true");
-    await user.click(within(group).getByRole("radio", { name: "Dark" }));
+    await user.click(within(screen.getByRole("banner")).getByRole("button", { name: "Theme: System" }));
+    const menu = await screen.findByRole("menu", { name: "Theme" });
+    expect(within(menu).getByRole("menuitemradio", { name: "System" })).toHaveAttribute("aria-checked", "true");
+    expect(within(menu).getByRole("menuitemradio", { name: "System" })).toHaveFocus();
+    await user.keyboard("{ArrowDown}");
+    expect(within(menu).getByRole("menuitemradio", { name: "Light" })).toHaveFocus();
+    await user.keyboard("{ArrowUp}{ArrowUp}");
+    expect(within(menu).getByRole("menuitemradio", { name: "Dark" })).toHaveFocus();
+    await user.click(within(menu).getByRole("menuitemradio", { name: "Dark" }));
     expect(onThemeChange).toHaveBeenCalledWith("dark");
+    expect(screen.queryByRole("menu", { name: "Theme" })).not.toBeInTheDocument();
+  });
+
+  it("shows the account in a top bar menu", async () => {
+    const { user } = renderUI(
+      <AppShell product="logs" nav={nav} user={{ name: "Emily Clark", role: "Owner" }}>
+        <p />
+      </AppShell>,
+    );
+    await user.click(screen.getByRole("button", { name: /^Account: Emily Clark/ }));
+    const menu = await screen.findByRole("dialog", { name: "Account" });
+    expect(within(menu).getByText("Owner")).toBeInTheDocument();
+  });
+
+  it("groups settings under their own heading", () => {
+    renderUI(
+      <AppShell product="uptime" nav={nav} navLabel="Monitoring" footerNav={[{ id: "members", label: "Members" }]}>
+        <p />
+      </AppShell>,
+    );
+    const navEl = screen.getByRole("navigation", { name: "Uptime navigation" });
+    expect(within(within(navEl).getByRole("group", { name: "Monitoring" })).getByRole("link", { name: /^Hosts/ })).toBeInTheDocument();
+    expect(within(within(navEl).getByRole("group", { name: "Settings" })).getByRole("link", { name: "Members" })).toBeInTheDocument();
+  });
+
+  it("marks a count that needs action and shows a short label for the rail", () => {
+    renderUI(
+      <AppShell product="uptime" nav={[{ id: "outages", label: "Outages", shortLabel: "Out", count: 1, attention: true, icon: Server }]}>
+        <p />
+      </AppShell>,
+    );
+    const link = screen.getByRole("link", { name: /^Outages/ });
+    expect(link).toHaveAttribute("data-short", "true");
+    expect(within(link).getByText("1")).toHaveClass("bg-danger");
+    expect(link.querySelector(".oa-nav-dot")).toBeInTheDocument();
+  });
+
+  it("filters a long menu", async () => {
+    const many = Array.from({ length: 8 }, (_, i) => ({ id: `p${i}`, label: `Page ${i}` }));
+    const { user } = renderUI(
+      <AppShell product="logs" nav={many}>
+        <p />
+      </AppShell>,
+    );
+    await user.type(screen.getByRole("searchbox", { name: "Filter the menu" }), "page 3");
+    const navEl = screen.getByRole("navigation", { name: "Logs navigation" });
+    expect(within(navEl).getByRole("link", { name: "Page 3" })).toBeInTheDocument();
+    expect(within(navEl).queryByRole("link", { name: "Page 4" })).not.toBeInTheDocument();
+    await user.clear(screen.getByRole("searchbox", { name: "Filter the menu" }));
+    await user.type(screen.getByRole("searchbox", { name: "Filter the menu" }), "nothing");
+    expect(within(navEl).getByText("No page matches.")).toBeInTheDocument();
+  });
+
+  it("collapses the menu to the rail and remembers it", async () => {
+    window.localStorage.removeItem(NAV_COLLAPSED_KEY);
+    const { user, unmount } = renderUI(
+      <AppShell product="logs" nav={nav}>
+        <p />
+      </AppShell>,
+    );
+    const navEl = screen.getByRole("navigation", { name: "Logs navigation" });
+    expect(navEl).not.toHaveAttribute("data-collapsed");
+    await user.click(screen.getByRole("button", { name: "Collapse the menu" }));
+    expect(navEl).toHaveAttribute("data-collapsed", "true");
+    expect(window.localStorage.getItem(NAV_COLLAPSED_KEY)).toBe("1");
+    unmount();
+    renderUI(
+      <AppShell product="logs" nav={nav}>
+        <p />
+      </AppShell>,
+    );
+    await user.click(screen.getByRole("button", { name: "Expand the menu" }));
+    expect(screen.getByRole("navigation", { name: "Logs navigation" })).not.toHaveAttribute("data-collapsed");
+    expect(window.localStorage.getItem(NAV_COLLAPSED_KEY)).toBeNull();
+  });
+
+  it("opens the products menu from the top bar", async () => {
+    const onSwitch = vi.fn();
+    const { user } = renderUI(
+      <AppShell product="logs" nav={nav} connectedProducts={["metrics"]} onSwitchProduct={onSwitch}>
+        <p />
+      </AppShell>,
+    );
+    await user.click(screen.getByRole("button", { name: "Switch product, current: Logs" }));
+    const list = await screen.findByRole("list", { name: "Connected products" });
+    await user.click(within(list).getByRole("button", { name: "Metrics" }));
+    expect(onSwitch).toHaveBeenCalledWith("metrics");
   });
 
   it("links each item to its page path by default", () => {

@@ -71,3 +71,119 @@
     box-shadow: var(--oa-ring);
   }
 }
+
+/*
+ * The shell (AppShell). The top bar stays dark in both themes. The product
+ * menu is a labelled icon rail from tablet to desktop width, and on desktops
+ * when the person collapses it; below tablet width it is a drawer. These
+ * rules sit outside the layers so they win over the utility classes.
+ */
+.oa-topbar {
+  background: var(--oa-topbar);
+  color: var(--oa-topbar-fg);
+}
+.oa-topbar-muted {
+  color: var(--oa-topbar-muted);
+}
+.oa-topbar-button {
+  color: var(--oa-topbar-fg);
+}
+.oa-topbar-button:hover {
+  background: var(--oa-topbar-hover);
+}
+.oa-topbar-theme [role="radio"][aria-checked="true"] {
+  background: var(--oa-topbar);
+  box-shadow: none;
+}
+
+.oa-nav-short,
+.oa-nav-dot {
+  display: none;
+}
+
+@media (min-width: 48rem) and (max-width: 63.999rem) {
+  .oa-shell-nav {
+    width: 5.25rem;
+    padding-inline: 0.5rem;
+  }
+  .oa-shell-nav :is(.oa-nav-head-text, .oa-nav-filter, .oa-nav-section, .oa-nav-count, .oa-nav-extra) {
+    display: none;
+  }
+  .oa-shell-nav .oa-nav-head {
+    justify-content: center;
+  }
+  .oa-shell-nav .oa-nav-link {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    min-height: 3.5rem;
+    padding: 0.375rem 0.125rem;
+    font-size: 11px;
+    line-height: 13px;
+    font-weight: 500;
+    text-align: center;
+  }
+  .oa-shell-nav .oa-nav-link::before {
+    inset-block: 0.75rem;
+  }
+  .oa-shell-nav .oa-nav-label {
+    flex-grow: 0;
+    max-width: 100%;
+  }
+  .oa-shell-nav .oa-nav-link[data-short] .oa-nav-label {
+    display: none;
+  }
+  .oa-shell-nav .oa-nav-short {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .oa-shell-nav .oa-nav-dot {
+    display: block;
+  }
+}
+
+@media (min-width: 64rem) {
+  .oa-shell-nav[data-collapsed] {
+    width: 5.25rem;
+    padding-inline: 0.5rem;
+  }
+  .oa-shell-nav[data-collapsed] :is(.oa-nav-head-text, .oa-nav-filter, .oa-nav-section, .oa-nav-count, .oa-nav-extra) {
+    display: none;
+  }
+  .oa-shell-nav[data-collapsed] .oa-nav-head {
+    justify-content: center;
+  }
+  .oa-shell-nav[data-collapsed] .oa-nav-link {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    min-height: 3.5rem;
+    padding: 0.375rem 0.125rem;
+    font-size: 11px;
+    line-height: 13px;
+    font-weight: 500;
+    text-align: center;
+  }
+  .oa-shell-nav[data-collapsed] .oa-nav-link::before {
+    inset-block: 0.75rem;
+  }
+  .oa-shell-nav[data-collapsed] .oa-nav-label {
+    flex-grow: 0;
+    max-width: 100%;
+  }
+  .oa-shell-nav[data-collapsed] .oa-nav-link[data-short] .oa-nav-label,
+  .oa-shell-nav[data-collapsed] .oa-nav-collapse .oa-nav-label {
+    display: none;
+  }
+  .oa-shell-nav[data-collapsed] .oa-nav-short {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .oa-shell-nav[data-collapsed] .oa-nav-dot {
+    display: block;
+  }
+}

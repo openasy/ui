@@ -16,5 +16,6 @@ Each record has a **Decision** status (`Proposed`, `Accepted`, `Superseded by NN
 | 0002 | [How the theme is chosen and applied](./0002-theme-switching.md) | Behaviour | Accepted | Implemented |
 | 0003 | [Every story is an accessibility test](./0003-accessibility-in-every-story.md) | Quality | Accepted | Implemented |
 | 0004 | [Distributed as a GitHub release asset](./0004-distribution.md) | Engineering | Accepted | Implemented |
+| 0005 | [The shell is laid out like a cloud portal](./0005-portal-shell.md) | Layout | Accepted | Implemented |
 
 To propose a change, open a pull request that adds a record or changes the status of an existing one.

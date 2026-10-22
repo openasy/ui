@@ -51,6 +51,11 @@
   --oa-shadow-1: 0 1px 2px rgb(17 22 29 / 0.06);
   --oa-shadow-2: 0 6px 16px rgb(17 22 29 / 0.12);
   --oa-shadow-3: 0 20px 48px rgb(17 22 29 / 0.18);
+
+  --oa-topbar: #11161d;
+  --oa-topbar-fg: #ffffff;
+  --oa-topbar-muted: #b0bdd3;
+  --oa-topbar-hover: #1e2d4a;
 }
 
 [data-theme="dark"] {
@@ -94,6 +99,11 @@
   --oa-shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
   --oa-shadow-2: 0 8px 20px rgb(0 0 0 / 0.5);
   --oa-shadow-3: 0 24px 56px rgb(0 0 0 / 0.6);
+
+  --oa-topbar: #0a1220;
+  --oa-topbar-fg: #e8eef7;
+  --oa-topbar-muted: #93a2bd;
+  --oa-topbar-hover: #1e2d4a;
 }
 
 /* Derived from the accent, so a brand only sets one colour. */

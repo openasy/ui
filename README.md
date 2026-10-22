@@ -69,6 +69,15 @@ footer are one form; the primary button goes last in `footer`. A value shown onc
 dialog with `icon` and `iconTone="success"` until it is copied. Escape and the close button close it, a click outside
 does not, so a half-filled form is not lost.
 
+### Shell
+
+`AppShell` frames every product like a cloud portal. A dark top bar holds the products menu (`connectedProducts`),
+the brand and product name, an optional `search` field, the theme menu and the account menu. The product
+menu on the left shows the product, `nav` (headed by `navLabel` when given) and `footerNav` under `footerLabel`
+("Settings"), with a filter once it has eight links or more. A `count` with `attention` is shown in red. From 768 to
+1023 px the menu is an icon rail with labels (`shortLabel` when set); on wider screens Collapse turns it into the rail
+and the choice is remembered in this browser. Below 768 px it is a drawer opened from the top bar.
+
 ### Routing
 
 Pages are paths, `/people/abc`, never `#/people/abc`, so every page can be linked, bookmarked and opened in a new

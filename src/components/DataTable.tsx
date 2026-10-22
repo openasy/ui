@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp, ArrowUpDown, EllipsisVertical, EyeOff, Pin, PinOff,
 import { cn } from "../lib/cn";
 import { Button } from "./Button";
 import { InfoTip } from "./InfoTip";
+import { useT } from "./Locale";
 
 export type SortDirection = "asc" | "desc";
 export type PinSide = "left" | "right";
@@ -123,6 +124,7 @@ export function DataTable<T>({
   persistKey,
   className,
 }: DataTableProps<T>) {
+  const t = useT();
   const uid = useId();
   const [sort, setSort] = useState(defaultSort ?? null);
   const [page, setPage] = useState(0);
@@ -283,9 +285,9 @@ export function DataTable<T>({
       {layout.hidden.length > 0 && (
         <div className="flex items-center gap-2 border-b border-line px-2.5 py-1 text-xs text-fg-muted">
           <EyeOff aria-hidden className="size-3.5" />
-          {layout.hidden.length} hidden
+          {t("table.hidden", { count: layout.hidden.length })}
           <button type="button" onClick={showAll} className="font-medium text-accent-text hover:underline">
-            Show all columns
+            {t("table.showAll")}
           </button>
         </div>
       )}
@@ -312,7 +314,7 @@ export function DataTable<T>({
                 <th scope="col" className={cn("bg-canvas px-2.5 py-1.5 text-left", anyPinned && "sticky left-0 z-10")}>
                   <input
                     type="checkbox"
-                    aria-label="Select all rows on this page"
+                    aria-label={t("table.selectAll")}
                     checked={allOnPage}
                     ref={(el) => {
                       if (el) el.indeterminate = !allOnPage && someOnPage;
@@ -360,7 +362,7 @@ export function DataTable<T>({
                           {c.header}
                         </span>
                       )}
-                      {c.description && <InfoTip content={c.description} label={`About ${labelOf(c)}`} />}
+                      {c.description && <InfoTip content={c.description} label={t("table.about", { column: labelOf(c) })} />}
                       {pin && <Pin aria-hidden className="size-3 shrink-0 text-fg-muted" data-testid={`pinned-${c.id}`} />}
                       {columnMenu && (
                         <ColumnMenu
@@ -380,7 +382,7 @@ export function DataTable<T>({
                       <span
                         role="separator"
                         aria-orientation="vertical"
-                        aria-label={`Resize ${labelOf(c)}`}
+                        aria-label={t("table.resize", { column: labelOf(c) })}
                         aria-valuenow={Math.round(widthOf(c.id))}
                         aria-valuemin={c.minWidth ?? DEFAULT_MIN}
                         aria-valuemax={2000}
@@ -411,7 +413,7 @@ export function DataTable<T>({
             {!loading && visible.length === 0 && (
               <tr>
                 <td colSpan={colCount} className="text-center text-sm text-fg-muted">
-                  {empty ?? <p className="py-8">No results</p>}
+                  {empty ?? <p className="py-8">{t("table.noResults")}</p>}
                 </td>
               </tr>
             )}
@@ -449,7 +451,7 @@ export function DataTable<T>({
                       <td className={cn(cellPad, anyPinned && cn("sticky left-0 z-[1]", rowBg))} onClick={(e) => e.stopPropagation()}>
                         <input
                           type="checkbox"
-                          aria-label={`Select row ${id}`}
+                          aria-label={t("table.selectRow", { id })}
                           checked={selected}
                           onChange={() => setSelection(selected ? selection.filter((s) => s !== id) : [...selection, id])}
                           className="size-3.5 accent-[var(--oa-accent)]"
@@ -487,15 +489,13 @@ export function DataTable<T>({
       </div>
       {pageSize && sorted.length > pageSize && (
         <div className="flex items-center justify-between border-t border-line px-2.5 py-1.5 text-xs text-fg-muted">
-          <span>
-            {safePage * pageSize + 1}–{Math.min(sorted.length, (safePage + 1) * pageSize)} of {sorted.length}
-          </span>
+          <span>{t("table.range", { from: safePage * pageSize + 1, to: Math.min(sorted.length, (safePage + 1) * pageSize), total: sorted.length })}</span>
           <div className="flex gap-1">
             <Button size="xs" disabled={safePage === 0} onClick={() => setPage(safePage - 1)}>
-              Previous
+              {t("table.previous")}
             </Button>
             <Button size="xs" disabled={safePage >= pageCount - 1} onClick={() => setPage(safePage + 1)}>
-              Next
+              {t("table.next")}
             </Button>
           </div>
         </div>
@@ -517,6 +517,7 @@ interface ColumnMenuProps {
 }
 
 function ColumnMenu({ name, sortable, pin, hideable, resized, onSort, onPin, onHide, onReset }: ColumnMenuProps) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const act = (fn: () => void) => () => {
     fn();
@@ -527,49 +528,49 @@ function ColumnMenu({ name, sortable, pin, hideable, resized, onSort, onPin, onH
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger
         type="button"
-        aria-label={`${name} column options`}
+        aria-label={t("table.columnOptions", { column: name })}
         className="inline-grid size-5 shrink-0 place-items-center rounded text-fg-muted opacity-0 group-hover/th:opacity-100 hover:bg-subtle hover:text-fg focus-visible:opacity-100 data-[state=open]:opacity-100"
       >
         <EllipsisVertical aria-hidden className="size-3.5" />
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content align="start" sideOffset={4} className="oa-root z-50 w-48 rounded-lg border border-line bg-surface p-1 shadow-overlay">
-          <div role="menu" aria-label={`${name} column options`}>
+          <div role="menu" aria-label={t("table.columnOptions", { column: name })}>
             {sortable && (
               <>
                 <button type="button" role="menuitem" className={item} onClick={act(() => onSort("asc"))}>
-                  <ArrowUp aria-hidden className="size-3.5 text-fg-muted" /> Sort ascending
+                  <ArrowUp aria-hidden className="size-3.5 text-fg-muted" /> {t("table.sortAscending")}
                 </button>
                 <button type="button" role="menuitem" className={item} onClick={act(() => onSort("desc"))}>
-                  <ArrowDown aria-hidden className="size-3.5 text-fg-muted" /> Sort descending
+                  <ArrowDown aria-hidden className="size-3.5 text-fg-muted" /> {t("table.sortDescending")}
                 </button>
                 <div role="separator" className="my-1 h-px bg-line" />
               </>
             )}
             {pin !== "left" && (
               <button type="button" role="menuitem" className={item} onClick={act(() => onPin("left"))}>
-                <Pin aria-hidden className="size-3.5 text-fg-muted" /> Pin to left
+                <Pin aria-hidden className="size-3.5 text-fg-muted" /> {t("table.pinLeft")}
               </button>
             )}
             {pin !== "right" && (
               <button type="button" role="menuitem" className={item} onClick={act(() => onPin("right"))}>
-                <Pin aria-hidden className="size-3.5 text-fg-muted" /> Pin to right
+                <Pin aria-hidden className="size-3.5 text-fg-muted" /> {t("table.pinRight")}
               </button>
             )}
             {pin && (
               <button type="button" role="menuitem" className={item} onClick={act(() => onPin(null))}>
-                <PinOff aria-hidden className="size-3.5 text-fg-muted" /> Unpin
+                <PinOff aria-hidden className="size-3.5 text-fg-muted" /> {t("table.unpin")}
               </button>
             )}
             {(hideable || resized) && <div role="separator" className="my-1 h-px bg-line" />}
             {resized && (
               <button type="button" role="menuitem" className={item} onClick={act(onReset)}>
-                <RotateCcw aria-hidden className="size-3.5 text-fg-muted" /> Reset column widths
+                <RotateCcw aria-hidden className="size-3.5 text-fg-muted" /> {t("table.resetWidths")}
               </button>
             )}
             {hideable && (
               <button type="button" role="menuitem" className={item} onClick={act(onHide)}>
-                <EyeOff aria-hidden className="size-3.5 text-fg-muted" /> Hide column
+                <EyeOff aria-hidden className="size-3.5 text-fg-muted" /> {t("table.hideColumn")}
               </button>
             )}
           </div>

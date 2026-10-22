@@ -3,6 +3,7 @@ import * as Popover from "@radix-ui/react-popover";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "../lib/cn";
 import { SegmentedControl } from "./SegmentedControl";
+import { useT } from "./Locale";
 
 export type ThemeMode = "light" | "dark";
 /** What the person chose; "system" follows the operating system (platform decision 0007). */
@@ -83,9 +84,9 @@ export function themeScript(storageKey: string = THEME_STORAGE_KEY): string {
 }
 
 const OPTIONS = [
-  { value: "system", name: "System", Icon: Monitor },
-  { value: "light", name: "Light", Icon: Sun },
-  { value: "dark", name: "Dark", Icon: Moon },
+  { value: "system", name: "theme.system", Icon: Monitor },
+  { value: "light", name: "theme.light", Icon: Sun },
+  { value: "dark", name: "theme.dark", Icon: Moon },
 ] as const;
 
 export interface ThemeToggleProps {
@@ -96,17 +97,18 @@ export interface ThemeToggleProps {
 
 /** System, light or dark, as three icon buttons. */
 export function ThemeToggle({ value, onChange, className }: ThemeToggleProps) {
+  const t = useT();
   return (
     <SegmentedControl
-      label="Theme"
+      label={t("theme.label")}
       value={value}
       onChange={onChange}
       options={OPTIONS.map(({ value, name, Icon }) => ({
         value,
         label: (
-          <span title={name} className="flex items-center">
+          <span title={t(name)} className="flex items-center">
             <Icon aria-hidden className="size-3.5" />
-            <span className="sr-only">{name}</span>
+            <span className="sr-only">{t(name)}</span>
           </span>
         ),
       }))}
@@ -120,6 +122,7 @@ export function ThemeToggle({ value, onChange, className }: ThemeToggleProps) {
  * and dark. The shell puts it on the right of its top bar.
  */
 export function ThemeMenu({ value, onChange, className }: ThemeToggleProps) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const items = useRef<Array<HTMLButtonElement | null>>([]);
   const current = OPTIONS.find((o) => o.value === value) ?? OPTIONS[0];
@@ -132,7 +135,7 @@ export function ThemeMenu({ value, onChange, className }: ThemeToggleProps) {
   };
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger aria-label={`Theme: ${current.name}`} title="Theme" className={cn("grid size-10 place-items-center rounded-md", className)}>
+      <Popover.Trigger aria-label={`${t("theme.label")}: ${t(current.name)}`} title={t("theme.label")} className={cn("grid size-10 place-items-center rounded-md", className)}>
         <current.Icon aria-hidden className="size-[18px]" />
       </Popover.Trigger>
       <Popover.Portal>
@@ -145,7 +148,7 @@ export function ThemeMenu({ value, onChange, className }: ThemeToggleProps) {
           }}
           className="oa-root z-50 w-44 rounded-lg border border-line bg-surface p-1 shadow-overlay"
         >
-          <div role="menu" aria-label="Theme" onKeyDown={onKey} className="flex flex-col gap-0.5">
+          <div role="menu" aria-label={t("theme.label")} onKeyDown={onKey} className="flex flex-col gap-0.5">
             {OPTIONS.map(({ value: v, name, Icon }, i) => {
               const on = v === value;
               return (
@@ -167,7 +170,7 @@ export function ThemeMenu({ value, onChange, className }: ThemeToggleProps) {
                   )}
                 >
                   <Icon aria-hidden className="size-4 shrink-0" />
-                  {name}
+                  {t(name)}
                 </button>
               );
             })}

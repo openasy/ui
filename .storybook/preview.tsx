@@ -1,6 +1,7 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
 import "../src/styles/index.css";
 import { BrandProvider, type Brand } from "../src/components/BrandProvider";
+import type { Locale } from "../src/lib/i18n";
 
 const BRANDS: Record<string, Partial<Brand>> = {
   openasy: { name: "OpenAsy", organization: "Acme Corp" },
@@ -20,9 +21,10 @@ const BRANDS: Record<string, Partial<Brand>> = {
 const withBrand: Decorator = (Story, context) => {
   const theme = (context.globals.theme as "light" | "dark") ?? "light";
   const brand = BRANDS[(context.globals.brand as string) ?? "openasy"];
+  const locale = (context.globals.locale as Locale) ?? "en";
   const fullscreen = context.parameters.layout === "fullscreen";
   return (
-    <BrandProvider brand={brand} theme={theme} style={{ minHeight: fullscreen ? "100vh" : undefined, padding: fullscreen ? 0 : 16 }}>
+    <BrandProvider brand={brand} theme={theme} locale={locale} style={{ minHeight: fullscreen ? "100vh" : undefined, padding: fullscreen ? 0 : 16 }}>
       <Story />
     </BrandProvider>
   );
@@ -54,6 +56,19 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    locale: {
+      description: "Language of the library's own words",
+      toolbar: {
+        title: "Language",
+        icon: "globe",
+        items: [
+          { value: "en", title: "English" },
+          { value: "tr", title: "Türkçe" },
+          { value: "de", title: "Deutsch" },
+        ],
+        dynamicTitle: true,
+      },
+    },
     brand: {
       description: "White-label brand",
       toolbar: {
@@ -68,7 +83,7 @@ const preview: Preview = {
       },
     },
   },
-  initialGlobals: { theme: "light", brand: "openasy" },
+  initialGlobals: { theme: "light", brand: "openasy", locale: "en" },
   parameters: {
     layout: "padded",
     controls: { expanded: true, matchers: { color: /(background|color|accent)$/i } },

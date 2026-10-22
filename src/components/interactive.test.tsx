@@ -347,6 +347,18 @@ describe("AppShell", () => {
     expect(screen.getByRole("link", { name: "Hosts" })).toHaveAttribute("href", "/hosts");
   });
 
+  it("shows the OpenAsy mark and wordmark when the brand is OpenAsy", () => {
+    const { container } = renderUI(
+      <AppShell product="logs" nav={nav}>
+        <p />
+      </AppShell>,
+    );
+    const banner = screen.getByRole("banner");
+    expect(banner).toHaveTextContent("OpenAsy");
+    expect(banner.querySelector(".oa-topbar-wordmark")).toHaveTextContent("Asy");
+    expect(container.querySelector('header svg rect[fill="#1f4fd8"]')).toBeInTheDocument();
+  });
+
   it("shows white-label name, logo and a powered-by line", () => {
     const { container } = renderUI(
       <AppShell product="vpn" nav={nav}>

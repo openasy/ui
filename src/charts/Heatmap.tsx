@@ -2,6 +2,7 @@ import { useState } from "react";
 import { cn } from "../lib/cn";
 import { SEQUENTIAL_RAMP } from "../lib/chart";
 import { formatNumber } from "../lib/format";
+import { useT } from "../components/Locale";
 
 export interface HeatmapProps {
   label: string;
@@ -20,12 +21,13 @@ export interface HeatmapProps {
 
 /** Magnitude over two dimensions in one sequential hue, light to dark. */
 export function Heatmap({ label, rows, columns, values, format = (v) => formatNumber(v), unit = "", cellHeight = 20, className }: HeatmapProps) {
+  const t = useT();
   const [hover, setHover] = useState<{ r: number; c: number } | null>(null);
   const max = Math.max(1, ...values.flat());
   const level = (v: number) => (v <= 0 ? 0 : Math.min(SEQUENTIAL_RAMP.length - 1, 1 + Math.floor((v / max) * (SEQUENTIAL_RAMP.length - 1))));
   const readout = hover
     ? `${columns[hover.c]} · ${rows[hover.r]} · ${format(values[hover.r]?.[hover.c] ?? 0)}${unit ? ` ${unit}` : ""}`
-    : "Hover a cell";
+    : t("chart.hoverCell");
   return (
     <figure className={cn("m-0 flex min-w-0 flex-col gap-1.5", className)} aria-label={label}>
       <figcaption aria-live="polite" className="text-right font-mono text-2xs text-fg-muted" data-testid="heatmap-readout">

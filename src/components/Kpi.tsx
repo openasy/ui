@@ -3,6 +3,7 @@ import { ArrowDown, ArrowUp, Minus } from "lucide-react";
 import { cn } from "../lib/cn";
 import { Sparkline } from "../charts/Sparkline";
 import { TONE_CLASSES, type Tone } from "../tokens/levels";
+import { useT } from "./Locale";
 
 export interface KpiDelta {
   /** Display text, e.g. "+12 vs. yesterday". */
@@ -33,6 +34,7 @@ const intentClass = { good: "text-success", bad: "text-danger-text", neutral: "t
 
 /** A headline number. Use KpiGrid to lay several out. */
 export function KpiCard({ label, value, unit, delta, tone, trend, trendColor, footer, href, className }: KpiCardProps) {
+  const t = useT();
   const DirIcon = delta?.direction === "up" ? ArrowUp : delta?.direction === "down" ? ArrowDown : Minus;
   const body = (
     <>
@@ -43,7 +45,7 @@ export function KpiCard({ label, value, unit, delta, tone, trend, trendColor, fo
         </span>
         {unit && <span className="text-xs text-fg-muted">{unit}</span>}
       </div>
-      {trend && trend.length > 1 && <Sparkline data={trend} height={28} color={trendColor} label={typeof label === "string" ? `${label} trend` : "Trend"} />}
+      {trend && trend.length > 1 && <Sparkline data={trend} height={28} color={trendColor} label={typeof label === "string" ? t("common.labelTrend", { label }) : t("common.trend")} />}
       {delta && (
         <span className={cn("flex items-center gap-1 text-xs", intentClass[delta.intent ?? "neutral"])}>
           {delta.direction && <DirIcon aria-hidden className="size-3" />}

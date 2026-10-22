@@ -85,6 +85,9 @@
 .oa-topbar-muted {
   color: var(--oa-topbar-muted);
 }
+.oa-topbar-wordmark {
+  color: #7ea2ff;
+}
 .oa-topbar-button {
   color: var(--oa-topbar-fg);
 }

@@ -2,6 +2,7 @@ import { useId, useState, type ReactNode } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { Info } from "lucide-react";
 import { cn } from "../lib/cn";
+import { useT } from "./Locale";
 
 export interface InfoTipProps {
   /** What the tooltip explains, e.g. a column or a metric. */
@@ -15,14 +16,15 @@ export interface InfoTipProps {
  * Small info icon that explains something on hover or keyboard focus.
  * Rendered in a portal, so it is never clipped by scrolling tables.
  */
-export function InfoTip({ content, label = "More information", className }: InfoTipProps) {
+export function InfoTip({ content, label, className }: InfoTipProps) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const id = useId();
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger
         type="button"
-        aria-label={label}
+        aria-label={label ?? t("common.moreInformation")}
         aria-describedby={open ? id : undefined}
         onPointerEnter={() => setOpen(true)}
         onPointerLeave={() => setOpen(false)}

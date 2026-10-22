@@ -4,6 +4,7 @@ import { colorAt, indexFromPointer, niceScale, smoothPath, type Point } from "..
 import { formatNumber } from "../lib/format";
 import { useChartSync } from "./ChartSync";
 import { ChartLegend, ChartTooltip } from "./parts";
+import { useT } from "../components/Locale";
 
 export interface TimeSeries {
   id: string;
@@ -58,6 +59,7 @@ export function TimeSeriesChart({
   defaultHidden = [],
   className,
 }: TimeSeriesChartProps) {
+  const t = useT();
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const sync = useChartSync();
   const [localHover, setLocalHover] = useState<number | null>(null);
@@ -227,7 +229,7 @@ export function TimeSeriesChart({
             <div
               role="slider"
               tabIndex={0}
-              aria-label={`${label}. Use arrow keys to read values.`}
+              aria-label={t("chart.readValues", { label })}
               aria-valuemin={0}
               aria-valuemax={Math.max(0, n - 1)}
               aria-valuenow={hoverIndex ?? n - 1}

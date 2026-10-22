@@ -5,6 +5,7 @@ import { Activity, Globe, KeyRound, LayoutGrid, LogIn, Server, Settings2, Triang
 import { AppShell, type AppShellProps } from "../../components/AppShell";
 import { BrandProvider, useBrand } from "../../components/BrandProvider";
 import type { ThemePreference } from "../../components/Theme";
+import { toLocale } from "../../lib/i18n";
 import { PageHeader } from "../../components/PageHeader";
 import { Panel } from "../../components/Panel";
 import { Button } from "../../components/Button";
@@ -83,11 +84,11 @@ export const Standalone: Story = {
  * useThemePreference: the choice is applied here and passed on to the args.
  */
 function LiveShell(args: AppShellProps) {
-  const { brand } = useBrand();
+  const { brand, locale } = useBrand();
   const [theme, setTheme] = useState<ThemePreference>(args.theme ?? "system");
-  const [language, setLanguage] = useState(args.language ?? "en");
+  const [language, setLanguage] = useState(args.language ?? locale);
   return (
-    <BrandProvider brand={brand} theme={theme} style={{ minHeight: "100vh" }}>
+    <BrandProvider brand={brand} theme={theme} locale={toLocale(language)} style={{ minHeight: "100vh" }}>
       <AppShell
         {...args}
         theme={theme}
@@ -101,7 +102,7 @@ function LiveShell(args: AppShellProps) {
           args.onLanguageChange?.(code);
         }}
       >
-        <PageHeader title="Overview" description="The language and theme menus sit on the right of the top bar" />
+        <PageHeader title="Overview" description="The language and theme menus sit on the right of the top bar; the shell follows the language" />
       </AppShell>
     </BrandProvider>
   );
@@ -112,12 +113,6 @@ export const WithThemeAndLanguage: Story = {
   args: {
     theme: "system",
     onThemeChange: fn(),
-    language: "en",
-    languages: [
-      { code: "en", name: "English" },
-      { code: "tr", name: "Türkçe" },
-      { code: "de", name: "Deutsch" },
-    ],
     onLanguageChange: fn(),
   },
   render: (args) => <LiveShell {...args} />,
@@ -131,7 +126,9 @@ export const WithThemeAndLanguage: Story = {
     await userEvent.click(c.getByRole("button", { name: "Language: English" }));
     await userEvent.click(await body.findByRole("menuitemradio", { name: "Türkçe" }));
     await expect(args.onLanguageChange).toHaveBeenCalledWith("tr");
-    await expect(c.getByRole("button", { name: "Language: Türkçe" })).toBeInTheDocument();
+    // The shell's own words follow the chosen language.
+    await expect(c.getByRole("button", { name: "Dil: Türkçe" })).toBeInTheDocument();
+    await expect(c.getByRole("group", { name: "Ayarlar" })).toBeInTheDocument();
   },
 };
 

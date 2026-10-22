@@ -9,6 +9,7 @@ import {
   type Severity,
   type Tone,
 } from "../tokens/levels";
+import { useT } from "./Locale";
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   tone?: Tone;
@@ -68,18 +69,20 @@ export interface SeverityBadgeProps extends Omit<BadgeProps, "tone" | "children"
 
 /** Standard severity for findings, alerts and signals. */
 export function SeverityBadge({ severity, compact, className, ...rest }: SeverityBadgeProps) {
+  const t = useT();
   const meta = SEVERITY_META[severity];
+  const name = t(`severity.${severity}`);
   return (
     <Badge
       tone={meta.tone}
       className={cn("font-semibold", className)}
       role={compact ? "img" : undefined}
-      aria-label={compact ? `Severity ${meta.label}` : undefined}
+      aria-label={compact ? t("severity.label", { level: name }) : undefined}
       data-severity={severity}
       {...rest}
     >
       <LevelGlyph shape={meta.shape} />
-      {!compact && meta.label}
+      {!compact && name}
     </Badge>
   );
 }

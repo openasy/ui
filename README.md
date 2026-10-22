@@ -78,6 +78,22 @@ menu on the left shows the product, `nav` (headed by `navLabel` when given) and 
 1023 px the menu is an icon rail with labels (`shortLabel` when set); on wider screens Collapse turns it into the rail
 and the choice is remembered in this browser. Below 768 px it is a drawer opened from the top bar.
 
+### Languages
+
+The library's own words (shell, tables, filters, dialogs, charts, severities) come in English, Turkish and German.
+`BrandProvider` takes `locale`; `useLocalePreference()` remembers the person's choice and starts from the browser's
+language. Pass `onLanguageChange` to `AppShell` and the top bar offers a language menu next to the theme:
+
+```tsx
+const [locale, setLocale] = useLocalePreference();
+<BrandProvider locale={locale}>
+  <AppShell product="logs" nav={nav} onLanguageChange={(code) => setLocale(toLocale(code))}>…</AppShell>
+</BrandProvider>
+```
+
+`useT()` returns `t(key, vars)` for a product that wants the same words. On the OpenAsy brand the top bar shows the
+OpenAsy mark (`OpenAsyMark`) and wordmark; a white-label brand shows its own logo.
+
 ### Routing
 
 Pages are paths, `/people/abc`, never `#/people/abc`, so every page can be linked, bookmarked and opened in a new

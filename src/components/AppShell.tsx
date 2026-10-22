@@ -4,6 +4,8 @@ import { Check, ChevronsLeft, ChevronsRight, ChevronsUpDown, Grip, Menu, Plug, S
 import { cn } from "../lib/cn";
 import { PRODUCTS, type ProductId } from "../tokens/products";
 import { useBrand } from "./BrandProvider";
+import { useT } from "./Locale";
+import { LOCALES, LOCALE_NAMES } from "../lib/i18n";
 import { Avatar } from "./Avatar";
 import { LanguageMenu, type Language } from "./LanguageMenu";
 import { ThemeMenu, type ThemePreference } from "./Theme";
@@ -41,16 +43,19 @@ export interface AppShellProps {
   /** Called by the Connect button of a product under "Not connected". */
   onConnectProduct?: (id: ProductId) => void;
   user?: ShellUser;
-  /** Settings links, in their own group under nav. */
+  /** Settings links, in their own group under nav; Integrations and Settings by default. */
   footerNav?: NavItem[];
-  /** Heading of the footerNav group. */
+  /** Heading of the footerNav group; "Settings" in the locale by default. */
   footerLabel?: string;
   /** A search field for the top bar, shown from tablet width up. */
   search?: ReactNode;
   /** The person's theme choice. With onThemeChange, the top bar shows a theme menu on the right. */
   theme?: ThemePreference;
   onThemeChange?: (next: ThemePreference) => void;
-  /** The language shown. With languages and onLanguageChange, the top bar shows a language menu next to the theme. */
+  /**
+   * With onLanguageChange, the top bar shows a language menu next to the theme. The language
+   * is the BrandProvider locale and the languages are LOCALES unless given here.
+   */
   language?: string;
   languages?: Language[];
   onLanguageChange?: (code: string) => void;
@@ -58,10 +63,6 @@ export interface AppShellProps {
   className?: string;
 }
 
-const DEFAULT_FOOTER: NavItem[] = [
-  { id: "integrations", label: "Integrations", icon: Plug },
-  { id: "settings", label: "Settings", icon: Settings },
-];
 
 /** The menu offers a filter once it holds this many links. */
 const FILTER_FROM = 8;
@@ -91,6 +92,17 @@ export function BrandMark({ product, size = 24, className }: { product: ProductI
   );
 }
 
+/** The OpenAsy mark: an open ring, the gap is "open" and the dot a product joining in. */
+export function OpenAsyMark({ size = 24, className }: { size?: number; className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden className={cn("shrink-0", className)}>
+      <rect width="32" height="32" rx="8" fill="#1f4fd8" />
+      <path d="M24 16A8 8 0 1 1 16 8" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="21.66" cy="10.34" r="2.1" fill="#fff" />
+    </svg>
+  );
+}
+
 /** The products menu: the linked products to switch to, then the ones that could be connected. */
 function ProductMenu({
   product,
@@ -108,16 +120,17 @@ function ProductMenu({
   close: () => void;
 }) {
   const { brand } = useBrand();
+  const t = useT();
   const items = [product, ...connected.filter((p) => p !== product)];
   return (
     <Popover.Content
       align="start"
       sideOffset={4}
-      aria-label={`${brand.name} products`}
+      aria-label={t("shell.products", { brand: brand.name })}
       className="oa-root z-50 max-h-[min(70vh,560px)] w-72 overflow-y-auto rounded-lg border border-line bg-surface p-1 shadow-overlay"
     >
-      <p className="px-2 pt-1.5 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">{brand.name} products</p>
-      <ul aria-label="Connected products">
+      <p className="px-2 pt-1.5 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">{t("shell.products", { brand: brand.name })}</p>
+      <ul aria-label={t("shell.connectedProducts")}>
         {items.map((id) => {
           const P = PRODUCTS[id];
           const on = id === product;
@@ -143,8 +156,8 @@ function ProductMenu({
       {available.length > 0 && (
         <>
           <div className="my-1 h-px bg-line" />
-          <p className="px-2 pt-1 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">Not connected</p>
-          <ul aria-label="Available products">
+          <p className="px-2 pt-1 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">{t("shell.notConnected")}</p>
+          <ul aria-label={t("shell.availableProducts")}>
             {available.map((id) => {
               const P = PRODUCTS[id];
               return (
@@ -159,7 +172,7 @@ function ProductMenu({
                     }}
                     className="text-xs font-medium text-accent hover:underline"
                   >
-                    Connect
+                    {t("shell.connect")}
                   </button>
                 </li>
               );
@@ -183,6 +196,7 @@ export interface ProductSwitcherProps {
 /** Shows the current product; opens a menu of linked OpenAsy products when there are any. */
 export function ProductSwitcher({ product, connected, available, onSwitch, onConnect, defaultOpen }: ProductSwitcherProps) {
   const { brand } = useBrand();
+  const t = useT();
   const [open, setOpen] = useState(defaultOpen ?? false);
   const info = PRODUCTS[product];
   const label = (
@@ -200,7 +214,7 @@ export function ProductSwitcher({ product, connected, available, onSwitch, onCon
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger className="flex h-10 w-full items-center gap-2 rounded-lg border border-line bg-surface px-1.5 hover:bg-subtle">
-        <span className="sr-only">Switch product, current:</span> {label}
+        <span className="sr-only">{t("shell.switchProduct")}</span> {label}
         <ChevronsUpDown aria-hidden className="size-3.5 shrink-0 text-fg-muted" />
       </Popover.Trigger>
       <Popover.Portal>
@@ -312,8 +326,8 @@ export function AppShell({
   onSwitchProduct,
   onConnectProduct,
   user,
-  footerNav = DEFAULT_FOOTER,
-  footerLabel = "Settings",
+  footerNav: footerNavProp,
+  footerLabel: footerLabelProp,
   search,
   theme,
   onThemeChange,
@@ -323,7 +337,15 @@ export function AppShell({
   children,
   className,
 }: AppShellProps) {
-  const { brand } = useBrand();
+  const { brand, locale } = useBrand();
+  const t = useT();
+  const footerNav = footerNavProp ?? [
+    { id: "integrations", label: t("shell.integrations"), icon: Plug },
+    { id: "settings", label: t("shell.settings"), icon: Settings },
+  ];
+  const footerLabel = footerLabelProp ?? t("shell.settings");
+  // OpenAsy itself shows its own mark and wordmark; a white-label brand keeps its logo or the product glyph.
+  const openasy = brand.name === "OpenAsy" && !brand.logoUrl;
   const [drawer, setDrawer] = useState(false);
   const [products, setProducts] = useState(false);
   const [collapsed, setCollapsed] = useCollapsed();
@@ -354,7 +376,7 @@ export function AppShell({
       <header className="oa-topbar sticky top-0 z-30 flex h-12 shrink-0 items-center gap-1 px-2">
         <button
           type="button"
-          aria-label={drawer ? "Close navigation" : "Open navigation"}
+          aria-label={drawer ? t("shell.closeNavigation") : t("shell.openNavigation")}
           aria-expanded={drawer}
           onClick={() => setDrawer((d) => !d)}
           className="oa-topbar-button grid size-10 place-items-center rounded-md md:hidden"
@@ -365,7 +387,9 @@ export function AppShell({
           <Popover.Root open={products} onOpenChange={setProducts}>
             <Popover.Trigger className="oa-topbar-button hidden size-10 place-items-center rounded-md md:grid">
               <Grip aria-hidden className="size-[18px]" />
-              <span className="sr-only">Switch product, current: {name}</span>
+              <span className="sr-only">
+                {t("shell.switchProduct")} {name}
+              </span>
             </Popover.Trigger>
             <Popover.Portal>
               <ProductMenu
@@ -380,8 +404,16 @@ export function AppShell({
           </Popover.Root>
         )}
         <span className="flex min-w-0 items-center gap-2 px-1.5">
-          <BrandMark product={product} />
-          <span className="hidden text-base font-semibold sm:inline">{brand.name}</span>
+          {openasy ? <OpenAsyMark /> : <BrandMark product={product} />}
+          <span className="hidden text-base font-semibold tracking-tight sm:inline">
+            {openasy ? (
+              <>
+                Open<span className="oa-topbar-wordmark">Asy</span>
+              </>
+            ) : (
+              brand.name
+            )}
+          </span>
           <span aria-hidden className="oa-topbar-muted hidden sm:inline">
             /
           </span>
@@ -389,14 +421,19 @@ export function AppShell({
         </span>
         <div className="mx-auto hidden max-w-xl min-w-0 flex-1 px-4 md:block">{search}</div>
         <span className="flex-1 md:hidden" />
-        {language !== undefined && languages && languages.length > 1 && onLanguageChange && (
-          <LanguageMenu value={language} languages={languages} onChange={onLanguageChange} className="oa-topbar-button" />
+        {onLanguageChange && (
+          <LanguageMenu
+            value={language ?? locale}
+            languages={languages ?? LOCALES.map((code) => ({ code, name: LOCALE_NAMES[code] }))}
+            onChange={onLanguageChange}
+            className="oa-topbar-button"
+          />
         )}
         {withTheme && <ThemeMenu value={theme} onChange={onThemeChange} className="oa-topbar-button" />}
         {user && (
           <Popover.Root>
             <Popover.Trigger className="oa-topbar-button flex h-10 items-center gap-2 rounded-md px-1.5 text-left">
-              <span className="sr-only">Account:</span>{" "}
+              <span className="sr-only">{t("shell.account")}:</span>{" "}
               <span className="hidden flex-col leading-tight lg:flex">
                 <span className="text-sm font-medium">{user.name}</span>{" "}
                 {user.role && <span className="oa-topbar-muted text-2xs">{user.role}</span>}
@@ -407,7 +444,7 @@ export function AppShell({
               <Popover.Content
                 align="end"
                 sideOffset={4}
-                aria-label="Account"
+                aria-label={t("shell.account")}
                 className="oa-root z-50 flex w-64 items-center gap-2 rounded-lg border border-line bg-surface p-3 shadow-overlay"
               >
                 <Avatar name={user.name} />
@@ -423,7 +460,7 @@ export function AppShell({
 
       <div className="flex min-h-0 flex-1">
         <nav
-          aria-label={`${name} navigation`}
+          aria-label={t("shell.navigation", { product: name })}
           data-open={drawer || undefined}
           data-collapsed={collapsed || undefined}
           className={cn(
@@ -446,8 +483,8 @@ export function AppShell({
               <Search aria-hidden className="size-3.5" />
               <input
                 type="search"
-                aria-label="Filter the menu"
-                placeholder="Filter the menu"
+                aria-label={t("shell.filterMenu")}
+                placeholder={t("shell.filterMenu")}
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
                 className="min-w-0 flex-1 bg-transparent text-fg outline-none"
@@ -457,19 +494,19 @@ export function AppShell({
           <NavGroup label={navLabel} items={shownNav} activeNav={activeNav} onNavigate={navigate} />
           {shownNav.length > 0 && shownFooter.length > 0 && <div aria-hidden className="oa-nav-rule mx-3 my-2 h-px bg-line" />}
           <NavGroup label={footerLabel} items={shownFooter} activeNav={activeNav} onNavigate={navigate} />
-          {q && shownNav.length + shownFooter.length === 0 && <p className="px-2.5 py-2 text-sm text-fg-muted">No page matches.</p>}
+          {q && shownNav.length + shownFooter.length === 0 && <p className="px-2.5 py-2 text-sm text-fg-muted">{t("shell.noMatch")}</p>}
           <div className="mt-auto flex flex-col gap-1 border-t border-subtle pt-3">
             <button
               type="button"
-              aria-label={collapsed ? "Expand the menu" : "Collapse the menu"}
+              aria-label={collapsed ? t("shell.expandMenu") : t("shell.collapseMenu")}
               aria-pressed={collapsed}
               onClick={() => setCollapsed(!collapsed)}
               className="oa-nav-link oa-nav-collapse hidden min-h-10 items-center gap-3 rounded-md px-2.5 text-base font-medium text-fg-muted hover:bg-subtle lg:flex"
             >
               {collapsed ? <ChevronsRight aria-hidden className="size-[18px] shrink-0" /> : <ChevronsLeft aria-hidden className="size-[18px] shrink-0" />}
-              <span className="oa-nav-label grow text-left">Collapse</span>
+              <span className="oa-nav-label grow text-left">{t("shell.collapse")}</span>
             </button>
-            {!brand.hidePoweredBy && brand.name !== "OpenAsy" && <span className="oa-nav-extra px-2.5 pt-1 text-2xs text-fg-subtle">Powered by OpenAsy</span>}
+            {!brand.hidePoweredBy && brand.name !== "OpenAsy" && <span className="oa-nav-extra px-2.5 pt-1 text-2xs text-fg-subtle">{t("shell.poweredBy")}</span>}
           </div>
         </nav>
         {drawer && <div aria-hidden data-testid="drawer-backdrop" className="fixed inset-0 z-30 bg-black/30 md:hidden" onClick={() => setDrawer(false)} />}

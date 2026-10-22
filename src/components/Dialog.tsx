@@ -3,6 +3,7 @@ import * as RadixDialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { cn } from "../lib/cn";
 import { IconButton } from "./Button";
+import { useT } from "./Locale";
 
 export interface DialogProps {
   open: boolean;
@@ -30,6 +31,7 @@ const TONE = { neutral: "bg-subtle text-fg-muted", success: "bg-success-soft tex
  * a click outside does not, so a half-filled form is not lost.
  */
 export function Dialog({ open, onOpenChange, title, description, icon, iconTone = "neutral", footer, onSubmit, size = "md", children, className }: DialogProps) {
+  const t = useT();
   const body = (
     <>
       {children !== undefined && <div className="flex min-h-0 flex-col gap-3 overflow-y-auto px-5 pt-4 pb-5">{children}</div>}
@@ -57,7 +59,7 @@ export function Dialog({ open, onOpenChange, title, description, icon, iconTone 
               {description !== undefined && <RadixDialog.Description className="text-fg-muted">{description}</RadixDialog.Description>}
             </div>
             <RadixDialog.Close asChild>
-              <IconButton label="Close" className="-mt-1 -mr-2 shrink-0">
+              <IconButton label={t("common.close")} className="-mt-1 -mr-2 shrink-0">
                 <X aria-hidden className="size-4" />
               </IconButton>
             </RadixDialog.Close>

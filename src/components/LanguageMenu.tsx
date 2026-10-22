@@ -2,6 +2,7 @@ import { useRef, useState, type KeyboardEvent } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { Check, Languages } from "lucide-react";
 import { cn } from "../lib/cn";
+import { useT } from "./Locale";
 
 export interface Language {
   /** A language tag, such as "en" or "tr". */
@@ -22,6 +23,7 @@ export interface LanguageMenuProps {
  * to the theme menu when a product gives it languages.
  */
 export function LanguageMenu({ value, languages, onChange, className }: LanguageMenuProps) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const items = useRef<Array<HTMLButtonElement | null>>([]);
   const current = languages.find((l) => l.code === value);
@@ -35,8 +37,8 @@ export function LanguageMenu({ value, languages, onChange, className }: Language
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger
-        aria-label={current ? `Language: ${current.name}` : "Language"}
-        title="Language"
+        aria-label={current ? `${t("shell.language")}: ${current.name}` : t("shell.language")}
+        title={t("shell.language")}
         className={cn("grid size-10 place-items-center rounded-md", className)}
       >
         <Languages aria-hidden className="size-[18px]" />
@@ -51,7 +53,7 @@ export function LanguageMenu({ value, languages, onChange, className }: Language
           }}
           className="oa-root z-50 w-48 rounded-lg border border-line bg-surface p-1 shadow-overlay"
         >
-          <div role="menu" aria-label="Language" onKeyDown={onKey} className="flex flex-col gap-0.5">
+          <div role="menu" aria-label={t("shell.language")} onKeyDown={onKey} className="flex flex-col gap-0.5">
             {languages.map((l, i) => {
               const on = l.code === value;
               return (

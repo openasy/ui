@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CircleCheck, CircleX, Info, OctagonAlert, TriangleAlert, X } from "lucide-react";
 import { cn } from "../lib/cn";
 import type { Tone } from "../tokens/levels";
+import { useT } from "./Locale";
 
 export type CalloutTone = Exclude<Tone, "neutral">;
 
@@ -25,6 +26,7 @@ const styles: Record<CalloutTone, { box: string; icon: string; Icon: typeof Info
 
 /** Inline message for a whole page or section. Danger and critical are announced. */
 export function Callout({ tone = "info", title, children, action, onDismiss, className }: CalloutProps) {
+  const t = useT();
   const s = styles[tone];
   const urgent = tone === "danger" || tone === "critical";
   return (
@@ -42,7 +44,7 @@ export function Callout({ tone = "info", title, children, action, onDismiss, cla
       {onDismiss && (
         <button
           type="button"
-          aria-label="Dismiss"
+          aria-label={t("common.dismiss")}
           onClick={onDismiss}
           className="-m-1 grid size-6 shrink-0 place-items-center rounded text-fg-muted hover:bg-black/5"
         >

@@ -1,5 +1,6 @@
 import { createContext, useContext, useLayoutEffect, useMemo, useRef, type CSSProperties, type ReactNode } from "react";
 import { cn } from "../lib/cn";
+import type { Locale } from "../lib/i18n";
 import { useResolvedTheme, type ThemeMode, type ThemePreference } from "./Theme";
 
 export interface Brand {
@@ -25,14 +26,18 @@ interface BrandContextValue {
   brand: Brand;
   /** The theme on screen; "system" is already resolved to light or dark. */
   theme: ThemeMode;
+  /** The language the library's own words are shown in. */
+  locale: Locale;
 }
 
-const BrandContext = createContext<BrandContextValue>({ brand: DEFAULT_BRAND, theme: "light" });
+const BrandContext = createContext<BrandContextValue>({ brand: DEFAULT_BRAND, theme: "light", locale: "en" });
 
 export interface BrandProviderProps {
   brand?: Partial<Brand>;
   /** "system" follows the operating system and is the default (platform decision 0007). */
   theme?: ThemePreference;
+  /** Language of the library's own words (menus, tables, filters); English by default. */
+  locale?: Locale;
   /**
    * Set when the provider wraps the whole page. The theme then goes on <html>, where
    * `themeScript()` in <head> already put it before the first paint, so nothing flashes.
@@ -47,9 +52,9 @@ export interface BrandProviderProps {
  * Root of every OpenAsy screen. Applies the theme, the brand accent and font,
  * and exposes the brand to the shell and sign-in components.
  */
-export function BrandProvider({ brand, theme: preference = "system", root, className, style, children }: BrandProviderProps) {
+export function BrandProvider({ brand, theme: preference = "system", locale = "en", root, className, style, children }: BrandProviderProps) {
   const theme = useResolvedTheme(preference);
-  const value = useMemo<BrandContextValue>(() => ({ brand: { ...DEFAULT_BRAND, ...brand }, theme }), [brand, theme]);
+  const value = useMemo<BrandContextValue>(() => ({ brand: { ...DEFAULT_BRAND, ...brand }, theme, locale }), [brand, theme, locale]);
   const applied = useRef(false);
   useIsomorphicLayoutEffect(() => {
     if (!root) return;
@@ -60,6 +65,9 @@ export function BrandProvider({ brand, theme: preference = "system", root, class
     if (first && html.dataset.theme) return;
     html.dataset.theme = theme;
   }, [root, theme]);
+  useIsomorphicLayoutEffect(() => {
+    if (root) document.documentElement.lang = locale;
+  }, [root, locale]);
   const vars: Record<string, string> = {};
   if (value.brand.accent) vars["--oa-accent"] = value.brand.accent;
   if (value.brand.fontFamily) vars["--oa-font-sans"] = value.brand.fontFamily;
@@ -67,6 +75,7 @@ export function BrandProvider({ brand, theme: preference = "system", root, class
     <BrandContext.Provider value={value}>
       <div
         data-theme={root ? undefined : theme}
+        lang={root ? undefined : locale}
         data-oa-brand=""
         className={cn("oa-root", className)}
         style={{ ...(vars as CSSProperties), ...style }}

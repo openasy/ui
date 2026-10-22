@@ -1,7 +1,10 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { Activity, Globe, KeyRound, LayoutGrid, LogIn, Server, Settings2, TriangleAlert, Users } from "lucide-react";
-import { AppShell } from "../../components/AppShell";
+import { AppShell, type AppShellProps } from "../../components/AppShell";
+import { BrandProvider, useBrand } from "../../components/BrandProvider";
+import type { ThemePreference } from "../../components/Theme";
 import { PageHeader } from "../../components/PageHeader";
 import { Panel } from "../../components/Panel";
 import { Button } from "../../components/Button";
@@ -75,20 +78,60 @@ export const Standalone: Story = {
   ),
 };
 
-/** With theme and onThemeChange, the top bar offers system, light and dark from a menu on the right. */
-export const WithThemeToggle: Story = {
-  args: { theme: "system", onThemeChange: fn() },
-  render: (args) => (
-    <AppShell {...args}>
-      <PageHeader title="Overview" description="The theme menu sits on the right of the top bar" />
-    </AppShell>
-  ),
+/**
+ * A shell that really switches theme and language, as a product does with
+ * useThemePreference: the choice is applied here and passed on to the args.
+ */
+function LiveShell(args: AppShellProps) {
+  const { brand } = useBrand();
+  const [theme, setTheme] = useState<ThemePreference>(args.theme ?? "system");
+  const [language, setLanguage] = useState(args.language ?? "en");
+  return (
+    <BrandProvider brand={brand} theme={theme} style={{ minHeight: "100vh" }}>
+      <AppShell
+        {...args}
+        theme={theme}
+        onThemeChange={(next) => {
+          setTheme(next);
+          args.onThemeChange?.(next);
+        }}
+        language={language}
+        onLanguageChange={(code) => {
+          setLanguage(code);
+          args.onLanguageChange?.(code);
+        }}
+      >
+        <PageHeader title="Overview" description="The language and theme menus sit on the right of the top bar" />
+      </AppShell>
+    </BrandProvider>
+  );
+}
+
+/** With theme and onThemeChange the top bar offers system, light and dark; with languages, a language menu next to it. */
+export const WithThemeAndLanguage: Story = {
+  args: {
+    theme: "system",
+    onThemeChange: fn(),
+    language: "en",
+    languages: [
+      { code: "en", name: "English" },
+      { code: "tr", name: "Türkçe" },
+      { code: "de", name: "Deutsch" },
+    ],
+    onLanguageChange: fn(),
+  },
+  render: (args) => <LiveShell {...args} />,
   play: async ({ args, canvasElement }) => {
     const c = within(canvasElement);
-    await userEvent.click(c.getByRole("button", { name: "Theme: System" }));
     const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(c.getByRole("button", { name: "Theme: System" }));
     await userEvent.click(await body.findByRole("menuitemradio", { name: "Dark" }));
     await expect(args.onThemeChange).toHaveBeenCalledWith("dark");
+    await expect(c.getByRole("button", { name: "Theme: Dark" })).toBeInTheDocument();
+    await userEvent.click(c.getByRole("button", { name: "Language: English" }));
+    await userEvent.click(await body.findByRole("menuitemradio", { name: "Türkçe" }));
+    await expect(args.onLanguageChange).toHaveBeenCalledWith("tr");
+    await expect(c.getByRole("button", { name: "Language: Türkçe" })).toBeInTheDocument();
   },
 };
 

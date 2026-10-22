@@ -10,6 +10,7 @@ export * from "./tokens/breach";
 
 export * from "./components/BrandProvider";
 export * from "./components/Theme";
+export * from "./components/LanguageMenu";
 export * from "./components/AppShell";
 export * from "./components/Avatar";
 export * from "./components/PageHeader";

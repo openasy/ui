@@ -234,6 +234,35 @@ describe("AppShell", () => {
     expect(within(menu).getByText("Owner")).toBeInTheDocument();
   });
 
+  it("shows a language menu only when given languages and a handler", async () => {
+    const languages = [
+      { code: "en", name: "English" },
+      { code: "tr", name: "Türkçe" },
+    ];
+    const { unmount } = renderUI(
+      <AppShell product="logs" nav={nav}>
+        <p />
+      </AppShell>,
+    );
+    expect(screen.queryByRole("button", { name: /^Language/ })).not.toBeInTheDocument();
+    unmount();
+    const onLanguageChange = vi.fn();
+    const { user } = renderUI(
+      <AppShell product="logs" nav={nav} language="en" languages={languages} onLanguageChange={onLanguageChange}>
+        <p />
+      </AppShell>,
+    );
+    await user.click(within(screen.getByRole("banner")).getByRole("button", { name: "Language: English" }));
+    const menu = await screen.findByRole("menu", { name: "Language" });
+    expect(within(menu).getByRole("menuitemradio", { name: "English" })).toHaveAttribute("aria-checked", "true");
+    expect(within(menu).getByRole("menuitemradio", { name: "English" })).toHaveFocus();
+    await user.keyboard("{ArrowDown}");
+    expect(within(menu).getByRole("menuitemradio", { name: "Türkçe" })).toHaveFocus();
+    await user.click(within(menu).getByRole("menuitemradio", { name: "Türkçe" }));
+    expect(onLanguageChange).toHaveBeenCalledWith("tr");
+    expect(screen.queryByRole("menu", { name: "Language" })).not.toBeInTheDocument();
+  });
+
   it("groups settings under their own heading", () => {
     renderUI(
       <AppShell product="uptime" nav={nav} navLabel="Monitoring" footerNav={[{ id: "members", label: "Members" }]}>

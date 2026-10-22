@@ -11,7 +11,7 @@ The first shell put everything in a 224 px sidebar: the product switcher, the pa
 
 ## Decision
 
-- A dark top bar spans the window in both themes (`--oa-topbar` tokens). It holds the products menu, the brand and product name, an optional `search` field, then on the right the theme menu (`ThemeMenu`: one button showing the current theme, opening system, light and dark) and the account menu.
+- A dark top bar spans the window in both themes (`--oa-topbar` tokens). It holds the products menu, the brand and product name, an optional `search` field, then on the right a language menu (`LanguageMenu`, only when the product passes `language`, `languages` and `onLanguageChange`), the theme menu (`ThemeMenu`: one button showing the current theme, opening system, light and dark) and the account menu.
 - The product menu on the left starts with the product and the organization, then `nav` (with an optional `navLabel` heading) and `footerNav` under its own heading, `footerLabel`, "Settings" by default. With eight links or more it offers a filter.
 - A `count` marked `attention` is red, so an open outage or a failed job stands out from a plain total.
 - From 768 to 1023 px the menu is an 84 px icon rail with labels, using `shortLabel` when set and a dot for counts that need attention. On wider screens it is 256 px and Collapse turns it into the rail; the choice is kept in `localStorage` under `oa-nav-collapsed`. Below 768 px it is a drawer opened from the top bar.

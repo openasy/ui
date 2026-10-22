@@ -72,7 +72,7 @@ does not, so a half-filled form is not lost.
 ### Shell
 
 `AppShell` frames every product like a cloud portal. A dark top bar holds the products menu (`connectedProducts`),
-the brand and product name, an optional `search` field, the theme menu and the account menu. The product
+the brand and product name, an optional `search` field, a language menu when the product passes `languages`, the theme menu and the account menu. The product
 menu on the left shows the product, `nav` (headed by `navLabel` when given) and `footerNav` under `footerLabel`
 ("Settings"), with a filter once it has eight links or more. A `count` with `attention` is shown in red. From 768 to
 1023 px the menu is an icon rail with labels (`shortLabel` when set); on wider screens Collapse turns it into the rail

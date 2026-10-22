@@ -5,6 +5,7 @@ import { cn } from "../lib/cn";
 import { PRODUCTS, type ProductId } from "../tokens/products";
 import { useBrand } from "./BrandProvider";
 import { Avatar } from "./Avatar";
+import { LanguageMenu, type Language } from "./LanguageMenu";
 import { ThemeMenu, type ThemePreference } from "./Theme";
 
 export interface NavItem {
@@ -49,6 +50,10 @@ export interface AppShellProps {
   /** The person's theme choice. With onThemeChange, the top bar shows a theme menu on the right. */
   theme?: ThemePreference;
   onThemeChange?: (next: ThemePreference) => void;
+  /** The language shown. With languages and onLanguageChange, the top bar shows a language menu next to the theme. */
+  language?: string;
+  languages?: Language[];
+  onLanguageChange?: (code: string) => void;
   children: ReactNode;
   className?: string;
 }
@@ -292,7 +297,7 @@ function textOf(label: ReactNode): string {
 
 /**
  * The frame of every product, laid out like a cloud portal: a top bar with the
- * products menu, the theme and the account, a menu for the product on the left, and the
+ * products menu, the language, the theme and the account, a menu for the product on the left, and the
  * page filling the rest. The menu is a labelled icon rail on tablets (and on
  * desktops when collapsed) and a drawer on phones.
  */
@@ -312,6 +317,9 @@ export function AppShell({
   search,
   theme,
   onThemeChange,
+  language,
+  languages,
+  onLanguageChange,
   children,
   className,
 }: AppShellProps) {
@@ -381,6 +389,9 @@ export function AppShell({
         </span>
         <div className="mx-auto hidden max-w-xl min-w-0 flex-1 px-4 md:block">{search}</div>
         <span className="flex-1 md:hidden" />
+        {language !== undefined && languages && languages.length > 1 && onLanguageChange && (
+          <LanguageMenu value={language} languages={languages} onChange={onLanguageChange} className="oa-topbar-button" />
+        )}
         {withTheme && <ThemeMenu value={theme} onChange={onThemeChange} className="oa-topbar-button" />}
         {user && (
           <Popover.Root>

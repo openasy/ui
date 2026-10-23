@@ -107,6 +107,10 @@ const t = useT();
 t("hosts.count", { n: 3 });
 ```
 
+Plural forms use i18next's suffixes: `"hosts_one": "{{count}} host"` and `"hosts_other": "{{count}} hosts"` are read as
+`t("hosts", { count })`, and each language may have its own forms. `useAgo()` gives `ago(iso)`, such as "5 min ago",
+in the page's language.
+
 A product that is not translated yet keeps its words in `messages/en.json` alone and passes `{ en }`; it offers no
 language menu until it has more languages.
 

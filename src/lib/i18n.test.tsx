@@ -9,7 +9,7 @@ import { SeverityBadge } from "../components/Badge";
 import { TimeRangePicker } from "../components/Filters";
 import { BrandProvider } from "../components/BrandProvider";
 import { defineMessages, useLocalePreference } from "../components/Locale";
-import { LOCALE_STORAGE_KEY, UI_MESSAGES, messageProblems, toLocale, translate } from "./i18n";
+import { LOCALE_STORAGE_KEY, UI_MESSAGES, formatAgo, messageProblems, toLocale, translate } from "./i18n";
 
 afterEach(() => {
   localStorage.clear();
@@ -25,6 +25,28 @@ describe("translate", () => {
 
   it("has every message in every locale, with the same placeholders", () => {
     expect(messageProblems(UI_MESSAGES)).toEqual([]);
+  });
+
+  it("says how long ago a time was, in the locale", () => {
+    const now = Date.parse("2026-10-23T12:00:00Z");
+    expect(formatAgo("en", null, now)).toBe("never");
+    expect(formatAgo("en", "2026-10-23T11:59:30Z", now)).toBe("just now");
+    expect(formatAgo("tr", "2026-10-23T11:55:00Z", now)).toBe("5 dk önce");
+    expect(formatAgo("de", "2026-10-21T12:00:00Z", now)).toBe("vor 2 T.");
+  });
+
+  it("reads plural forms by their base name, and lets each language have its own forms", () => {
+    const useFilesT = defineMessages("plural-test", { en: { files_one: "{{count}} file", files_other: "{{count}} files" } });
+    function Files({ n }: { n: number }) {
+      const t = useFilesT();
+      return <p>{t("files", { count: n })}</p>;
+    }
+    const { rerender } = render(<BrandProvider><Files n={1} /></BrandProvider>);
+    expect(screen.getByText("1 file")).toBeInTheDocument();
+    rerender(<BrandProvider><Files n={3} /></BrandProvider>);
+    expect(screen.getByText("3 files")).toBeInTheDocument();
+    expect(messageProblems({ en: { files_one: "{{count}} file", files_other: "{{count}} files" }, tr: { files_other: "{{count}} dosya" } })).toEqual([]);
+    expect(messageProblems({ en: { files_one: "{{count}} file", files_other: "{{count}} files" }, tr: {} })).toEqual(["files: no tr text"]);
   });
 
   it("names the messages a language misses, adds or fills differently", () => {

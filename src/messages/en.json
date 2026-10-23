@@ -84,5 +84,12 @@
     "medium": "Medium",
     "low": "Low",
     "info": "Info"
+  },
+  "time": {
+    "never": "never",
+    "justNow": "just now",
+    "minutesAgo": "{{n}} min ago",
+    "hoursAgo": "{{n}} h ago",
+    "daysAgo": "{{n}} d ago"
   }
 }

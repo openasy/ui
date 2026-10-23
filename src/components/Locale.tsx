@@ -1,5 +1,5 @@
 import { useMemo, useSyncExternalStore } from "react";
-import { addMessages, fixedT, LOCALE_STORAGE_KEY, toLocale, type Locale, type MessageKey, type Messages, type Translate, type UiMessageKey } from "../lib/i18n";
+import { addMessages, fixedT, formatAgo, LOCALE_STORAGE_KEY, toLocale, type Locale, type MessageKey, type Messages, type Translate, type UiMessageKey } from "../lib/i18n";
 import { useBrand } from "./BrandProvider";
 
 const CHANGE_EVENT = "oa-locale-change";
@@ -65,4 +65,10 @@ export function defineMessages<M extends Messages>(ns: string, bundles: { en: M 
     const { locale } = useBrand();
     return useMemo(() => fixedT(locale, ns), [locale]);
   };
+}
+
+/** `ago(iso)`: how long ago a time was, such as "5 min ago", in the locale of the nearest BrandProvider. */
+export function useAgo(): (iso: string | null | undefined) => string {
+  const { locale } = useBrand();
+  return useMemo(() => (iso: string | null | undefined) => formatAgo(locale, iso), [locale]);
 }

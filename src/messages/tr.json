@@ -84,5 +84,12 @@
     "medium": "Orta",
     "low": "Düşük",
     "info": "Bilgi"
+  },
+  "time": {
+    "never": "hiç",
+    "justNow": "az önce",
+    "minutesAgo": "{{n}} dk önce",
+    "hoursAgo": "{{n}} sa önce",
+    "daysAgo": "{{n}} gün önce"
   }
 }

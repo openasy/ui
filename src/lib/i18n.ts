@@ -23,9 +23,13 @@ export interface Messages {
   [key: string]: string | Messages;
 }
 
-/** "group.name" for every string in a Messages tree. */
+/** i18next's plural forms: "file_one" and "file_other" are read as t("file", { count }). */
+type PluralSuffix = "zero" | "one" | "two" | "few" | "many" | "other";
+type PluralBase<K extends string> = K extends `${infer B}_${PluralSuffix}` ? B : K;
+
+/** "group.name" for every string in a Messages tree; plural forms count once, by their base name. */
 export type MessageKey<M> = {
-  [K in keyof M & string]: M[K] extends string ? K : `${K}.${MessageKey<M[K]>}`;
+  [K in keyof M & string]: M[K] extends string ? PluralBase<K> : `${K}.${MessageKey<M[K]>}`;
 }[keyof M & string];
 
 /** Values for the {{name}} placeholders of a message. */
@@ -98,6 +102,9 @@ function flatten(messages: Messages, prefix = ""): Map<string, string> {
   return out;
 }
 
+/** "a.file_one" and "a.file_other" are both "a.file": languages have different plural forms. */
+const pluralBase = (key: string) => key.replace(/_(zero|one|two|few|many|other)$/, "");
+
 const placeholders = (text: string) => [...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]).sort().join(",");
 
 /**
@@ -105,18 +112,39 @@ const placeholders = (text: string) => [...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)
  * {{placeholders}} than in English. A product's test expects this to be empty.
  */
 export function messageProblems(bundles: MessageBundles): string[] {
-  const problems: string[] = [];
+  const problems = new Set<string>();
+  for (const [key, text] of flatten(bundles.en)) if (!text) problems.add(`${key}: no en text`);
   const english = flatten(bundles.en);
   for (const locale of LOCALES) {
     const messages = bundles[locale];
     if (locale === "en" || !messages) continue;
     const other = flatten(messages);
+    const otherBases = new Set([...other.keys()].map(pluralBase));
+    const englishBases = new Set([...english.keys()].map(pluralBase));
     for (const [key, text] of english) {
+      if (pluralBase(key) !== key) {
+        if (!otherBases.has(pluralBase(key))) problems.add(`${pluralBase(key)}: no ${locale} text`);
+        continue;
+      }
       const translated = other.get(key);
-      if (!translated) problems.push(`${key}: no ${locale} text`);
-      else if (placeholders(translated) !== placeholders(text)) problems.push(`${key}: ${locale} uses other placeholders than en`);
+      if (!translated) problems.add(`${key}: no ${locale} text`);
+      else if (placeholders(translated) !== placeholders(text)) problems.add(`${key}: ${locale} uses other placeholders than en`);
     }
-    for (const key of other.keys()) if (!english.has(key)) problems.push(`${key}: in ${locale} but not in en`);
+    for (const key of other.keys()) {
+      if (!englishBases.has(pluralBase(key))) problems.add(`${key}: in ${locale} but not in en`);
+      else if (!other.get(key)) problems.add(`${key}: no ${locale} text`);
+    }
   }
-  return problems;
+  return [...problems];
+}
+
+/** How long ago a time was, such as "5 min ago", in the locale; "never" without one. useAgo() gives it for a page. */
+export function formatAgo(locale: Locale, iso: string | null | undefined, now = Date.now()): string {
+  const t = fixedT(locale, "ui");
+  if (!iso) return t("time.never");
+  const s = Math.round((now - Date.parse(iso)) / 1000);
+  if (s < 60) return t("time.justNow");
+  if (s < 3600) return t("time.minutesAgo", { n: Math.round(s / 60) });
+  if (s < 86_400) return t("time.hoursAgo", { n: Math.round(s / 3600) });
+  return t("time.daysAgo", { n: Math.round(s / 86_400) });
 }

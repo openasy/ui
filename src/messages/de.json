@@ -84,5 +84,12 @@
     "medium": "Mittel",
     "low": "Niedrig",
     "info": "Info"
+  },
+  "time": {
+    "never": "nie",
+    "justNow": "gerade eben",
+    "minutesAgo": "vor {{n}} Min.",
+    "hoursAgo": "vor {{n}} Std.",
+    "daysAgo": "vor {{n}} T."
   }
 }

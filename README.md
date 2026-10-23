@@ -91,7 +91,16 @@ const [locale, setLocale] = useLocalePreference();
 </BrandProvider>
 ```
 
-`useT()` returns `t(key, vars)` for a product that wants the same words. On the OpenAsy brand the top bar shows the
+A product translates its own pages with a catalogue of the same shape and `useMessages()`; `catalogueProblems()`
+in a test catches a message missing in a language:
+
+```tsx
+const MESSAGES = { hosts: { en: "{n} hosts", tr: "{n} sunucu", de: "{n} Hosts" } } satisfies Catalogue;
+const t = useMessages(MESSAGES);
+t("hosts", { n: 3 });
+```
+
+`useT()` returns `t(key, vars)` for a product that wants the library's own words. On the OpenAsy brand the top bar shows the
 OpenAsy mark (`OpenAsyMark`) and wordmark; a white-label brand shows its own logo.
 
 ### Routing

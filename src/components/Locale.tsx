@@ -1,5 +1,5 @@
 import { useCallback, useSyncExternalStore } from "react";
-import { LOCALE_STORAGE_KEY, toLocale, translate, type Locale, type MessageKey } from "../lib/i18n";
+import { LOCALE_STORAGE_KEY, toLocale, translate, translateFrom, type Catalogue, type Locale, type MessageKey } from "../lib/i18n";
 import { useBrand } from "./BrandProvider";
 
 const CHANGE_EVENT = "oa-locale-change";
@@ -48,4 +48,13 @@ export function useLocalePreference(storageKey: string = LOCALE_STORAGE_KEY): [L
 export function useT(): (key: MessageKey, vars?: Record<string, string | number>) => string {
   const { locale } = useBrand();
   return useCallback((key, vars) => translate(locale, key, vars), [locale]);
+}
+
+/**
+ * `t(key, vars)` for a product's own catalogue, in the locale of the nearest BrandProvider.
+ * Define the catalogue outside the component so `t` stays the same between renders.
+ */
+export function useMessages<K extends string>(catalogue: Catalogue<K>): (key: K, vars?: Record<string, string | number>) => string {
+  const { locale } = useBrand();
+  return useCallback((key, vars) => translateFrom(catalogue, locale, key, vars), [catalogue, locale]);
 }

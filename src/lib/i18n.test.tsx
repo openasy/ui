@@ -8,8 +8,8 @@ import { DataTable } from "../components/DataTable";
 import { SeverityBadge } from "../components/Badge";
 import { TimeRangePicker } from "../components/Filters";
 import { BrandProvider } from "../components/BrandProvider";
-import { useLocalePreference } from "../components/Locale";
-import { LOCALES, LOCALE_STORAGE_KEY, MESSAGES, toLocale, translate } from "./i18n";
+import { useLocalePreference, useMessages } from "../components/Locale";
+import { LOCALE_STORAGE_KEY, MESSAGES, catalogueProblems, toLocale, translate, translateFrom } from "./i18n";
 
 afterEach(() => {
   localStorage.clear();
@@ -24,13 +24,17 @@ describe("translate", () => {
   });
 
   it("has every message in every locale, with the same placeholders", () => {
-    for (const [key, byLocale] of Object.entries(MESSAGES)) {
-      const names = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
-      for (const locale of LOCALES) {
-        expect(byLocale[locale], `${key} in ${locale}`).toBeTruthy();
-        expect(names(byLocale[locale]), `${key} in ${locale}`).toEqual(names(byLocale.en));
-      }
-    }
+    expect(catalogueProblems(MESSAGES)).toEqual([]);
+  });
+
+  it("names the messages a catalogue misses or fills differently", () => {
+    const catalogue = {
+      ok: { en: "{n} hosts", tr: "{n} sunucu", de: "{n} Hosts" },
+      gap: { en: "Hosts", tr: "", de: "Hosts" },
+      drift: { en: "{n} hosts", tr: "{count} sunucu", de: "{n} Hosts" },
+    };
+    expect(catalogueProblems(catalogue)).toEqual(["gap: no tr text", "drift: tr uses other placeholders than en"]);
+    expect(translateFrom(catalogue, "tr", "gap")).toBe("Hosts");
   });
 
   it("reads a locale from a language tag", () => {
@@ -109,5 +113,21 @@ describe("useLocalePreference", () => {
     unmount();
     render(<Picker />);
     expect(screen.getByRole("button", { name: "Dil: Türkçe" })).toBeInTheDocument();
+  });
+});
+
+const PAGE = { title: { en: "{n} hosts", tr: "{n} sunucu", de: "{n} Hosts" } };
+
+function Page() {
+  const t = useMessages(PAGE);
+  return <h1>{t("title", { n: 3 })}</h1>;
+}
+
+describe("useMessages", () => {
+  it("reads a product's own catalogue in the BrandProvider locale", () => {
+    const { rerender } = render(<BrandProvider locale="tr"><Page /></BrandProvider>);
+    expect(screen.getByRole("heading")).toHaveTextContent("3 sunucu");
+    rerender(<BrandProvider locale="de"><Page /></BrandProvider>);
+    expect(screen.getByRole("heading")).toHaveTextContent("3 Hosts");
   });
 });

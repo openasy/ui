@@ -12,7 +12,11 @@ export const LOCALE_NAMES: Record<Locale, string> = { en: "English", tr: "Türk�
 
 export const LOCALE_STORAGE_KEY = "oa-locale";
 
-type Catalogue = Record<Locale, string>;
+/** One message in every locale. */
+export type Translations = Record<Locale, string>;
+
+/** A product's own messages, keyed like MESSAGES. Read them with useMessages(). */
+export type Catalogue<K extends string = string> = Record<K, Translations>;
 
 /** {name} in a message is replaced by the value given for it. */
 export const MESSAGES = {
@@ -92,7 +96,7 @@ export const MESSAGES = {
   "severity.medium": { en: "Medium", tr: "Orta", de: "Mittel" },
   "severity.low": { en: "Low", tr: "Düşük", de: "Niedrig" },
   "severity.info": { en: "Info", tr: "Bilgi", de: "Info" },
-} satisfies Record<string, Catalogue>;
+} satisfies Catalogue;
 
 export type MessageKey = keyof typeof MESSAGES;
 
@@ -102,8 +106,31 @@ export function toLocale(tag: string | null | undefined): Locale {
   return (LOCALES as readonly string[]).includes(base ?? "") ? (base as Locale) : "en";
 }
 
-/** The message in the locale, with each {name} filled in. */
-export function translate(locale: Locale, key: MessageKey, vars?: Record<string, string | number>): string {
-  const text: string = MESSAGES[key][locale] ?? MESSAGES[key].en;
+/** The message of a catalogue in the locale, English when it is missing, with each {name} filled in. */
+export function translateFrom<K extends string>(catalogue: Catalogue<K>, locale: Locale, key: K, vars?: Record<string, string | number>): string {
+  const text: string = catalogue[key][locale] || catalogue[key].en;
   return vars ? text.replace(/\{(\w+)\}/g, (m, name: string) => (name in vars ? String(vars[name]) : m)) : text;
+}
+
+/** A library message in the locale, with each {name} filled in. */
+export function translate(locale: Locale, key: MessageKey, vars?: Record<string, string | number>): string {
+  return translateFrom(MESSAGES, locale, key, vars);
+}
+
+const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort().join(",");
+
+/**
+ * What is wrong with a catalogue: a message missing in a locale, or using other {placeholders}
+ * than its English text. A product's test expects this to be empty.
+ */
+export function catalogueProblems(catalogue: Catalogue): string[] {
+  const problems: string[] = [];
+  for (const [key, byLocale] of Object.entries(catalogue)) {
+    for (const locale of LOCALES) {
+      const text = byLocale[locale];
+      if (!text) problems.push(`${key}: no ${locale} text`);
+      else if (placeholders(text) !== placeholders(byLocale.en)) problems.push(`${key}: ${locale} uses other placeholders than en`);
+    }
+  }
+  return problems;
 }

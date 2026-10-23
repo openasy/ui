@@ -50,16 +50,128 @@ interface Exposure {
 }
 
 const exposures: Exposure[] = [
-  { id: "ex-27", severity: "critical", finding: "Elasticsearch without auth", detail: "GET /_cat/indices returns 41 indices", host: "staging-admin.example.com", ip: "203.0.113.57", port: 9200, service: "http", technology: "Elasticsearch 7.10.2", firstSeen: "Today 06:00", isNew: true },
-  { id: "ex-26", severity: "critical", finding: "RDP open to internet", detail: "NLA enabled · no IP allow list", host: "win-build-02.example.com", ip: "198.51.100.34", port: 3389, service: "ms-wbt-server", technology: "Windows Server 2019", firstSeen: "3 days ago" },
-  { id: "ex-25", severity: "high", finding: "Subdomain takeover candidate", detail: "CNAME to unclaimed acme-docs.s3-website bucket", host: "docs-old.example.com", ip: "203.0.113.200", port: 443, service: "https", technology: "Amazon S3 website", firstSeen: "Today 06:00", isNew: true },
-  { id: "ex-24", severity: "high", finding: "Expired TLS on mail.example.com", detail: "Let's Encrypt R11 · expired 2 days ago", host: "mail.example.com", ip: "198.51.100.12", port: 465, service: "smtps", technology: "Postfix 3.7", firstSeen: "2 days ago" },
-  { id: "ex-23", severity: "high", finding: "Redis exposed without password", detail: "INFO returns redis_version:6.2.6", host: "cache-eu.example.com", ip: "203.0.113.88", port: 6379, service: "redis", technology: "Redis 6.2.6", firstSeen: "6 days ago" },
-  { id: "ex-22", severity: "medium", finding: "Grafana login page exposed", detail: "Anonymous access disabled · version banner visible", host: "grafana.example.com", ip: "198.51.100.71", port: 3000, service: "http", technology: "Grafana 10.2.3", firstSeen: "12 days ago" },
-  { id: "ex-21", severity: "medium", finding: "SSH allows password authentication", detail: "PasswordAuthentication yes", host: "bastion-02.example.com", ip: "192.0.2.15", port: 22, service: "ssh", technology: "OpenSSH 8.9p1", firstSeen: "20 days ago" },
-  { id: "ex-20", severity: "medium", finding: "TLS 1.0 still accepted", detail: "TLS_RSA_WITH_AES_128_CBC_SHA negotiated", host: "legacy-api.example.com", ip: "203.0.113.140", port: 443, service: "https", technology: "nginx 1.18.0", firstSeen: "1 month ago" },
-  { id: "ex-19", severity: "low", finding: "Server version disclosed in headers", detail: "Server: Apache/2.4.52 (Ubuntu)", host: "www.example.com", ip: "198.51.100.10", port: 443, service: "https", technology: "Apache 2.4.52", firstSeen: "2 months ago" },
-  { id: "ex-18", severity: "low", finding: "Missing DMARC policy", detail: "_dmarc TXT record not found", host: "marketing.example.com", ip: "192.0.2.80", port: 53, service: "dns", technology: "DNS", firstSeen: "2 months ago" },
+  {
+    id: "ex-27",
+    severity: "critical",
+    finding: "Elasticsearch without auth",
+    detail: "GET /_cat/indices returns 41 indices",
+    host: "staging-admin.example.com",
+    ip: "203.0.113.57",
+    port: 9200,
+    service: "http",
+    technology: "Elasticsearch 7.10.2",
+    firstSeen: "Today 06:00",
+    isNew: true,
+  },
+  {
+    id: "ex-26",
+    severity: "critical",
+    finding: "RDP open to internet",
+    detail: "NLA enabled · no IP allow list",
+    host: "win-build-02.example.com",
+    ip: "198.51.100.34",
+    port: 3389,
+    service: "ms-wbt-server",
+    technology: "Windows Server 2019",
+    firstSeen: "3 days ago",
+  },
+  {
+    id: "ex-25",
+    severity: "high",
+    finding: "Subdomain takeover candidate",
+    detail: "CNAME to unclaimed acme-docs.s3-website bucket",
+    host: "docs-old.example.com",
+    ip: "203.0.113.200",
+    port: 443,
+    service: "https",
+    technology: "Amazon S3 website",
+    firstSeen: "Today 06:00",
+    isNew: true,
+  },
+  {
+    id: "ex-24",
+    severity: "high",
+    finding: "Expired TLS on mail.example.com",
+    detail: "Let's Encrypt R11 · expired 2 days ago",
+    host: "mail.example.com",
+    ip: "198.51.100.12",
+    port: 465,
+    service: "smtps",
+    technology: "Postfix 3.7",
+    firstSeen: "2 days ago",
+  },
+  {
+    id: "ex-23",
+    severity: "high",
+    finding: "Redis exposed without password",
+    detail: "INFO returns redis_version:6.2.6",
+    host: "cache-eu.example.com",
+    ip: "203.0.113.88",
+    port: 6379,
+    service: "redis",
+    technology: "Redis 6.2.6",
+    firstSeen: "6 days ago",
+  },
+  {
+    id: "ex-22",
+    severity: "medium",
+    finding: "Grafana login page exposed",
+    detail: "Anonymous access disabled · version banner visible",
+    host: "grafana.example.com",
+    ip: "198.51.100.71",
+    port: 3000,
+    service: "http",
+    technology: "Grafana 10.2.3",
+    firstSeen: "12 days ago",
+  },
+  {
+    id: "ex-21",
+    severity: "medium",
+    finding: "SSH allows password authentication",
+    detail: "PasswordAuthentication yes",
+    host: "bastion-02.example.com",
+    ip: "192.0.2.15",
+    port: 22,
+    service: "ssh",
+    technology: "OpenSSH 8.9p1",
+    firstSeen: "20 days ago",
+  },
+  {
+    id: "ex-20",
+    severity: "medium",
+    finding: "TLS 1.0 still accepted",
+    detail: "TLS_RSA_WITH_AES_128_CBC_SHA negotiated",
+    host: "legacy-api.example.com",
+    ip: "203.0.113.140",
+    port: 443,
+    service: "https",
+    technology: "nginx 1.18.0",
+    firstSeen: "1 month ago",
+  },
+  {
+    id: "ex-19",
+    severity: "low",
+    finding: "Server version disclosed in headers",
+    detail: "Server: Apache/2.4.52 (Ubuntu)",
+    host: "www.example.com",
+    ip: "198.51.100.10",
+    port: 443,
+    service: "https",
+    technology: "Apache 2.4.52",
+    firstSeen: "2 months ago",
+  },
+  {
+    id: "ex-18",
+    severity: "low",
+    finding: "Missing DMARC policy",
+    detail: "_dmarc TXT record not found",
+    host: "marketing.example.com",
+    ip: "192.0.2.80",
+    port: 53,
+    service: "dns",
+    technology: "DNS",
+    firstSeen: "2 months ago",
+  },
 ];
 
 const portStats = [
@@ -178,10 +290,17 @@ function ExposuresPage() {
         <SearchInput label="Search hosts, IPs, ports" className="w-64" value={q} onChange={(e) => setQ(e.target.value)} />
       </FilterBar>
       <Callout tone="warning" title="New since last scan: staging-admin.example.com appeared" action={<Button size="sm">Review changes</Button>}>
-        Resolves to 203.0.113.57 with port 9200 open: Elasticsearch 7.10.2 answers without authentication. Also new: docs-old.example.com points at an unclaimed bucket.
+        Resolves to 203.0.113.57 with port 9200 open: Elasticsearch 7.10.2 answers without authentication. Also new: docs-old.example.com points at an unclaimed
+        bucket.
       </Callout>
       <KpiGrid>
-        <KpiCard label="Internet-facing assets" value="312" unit="hosts and services" trend={wave(14, { base: 300, amp: 8, seed: 11 })} delta={{ label: "+4 vs. last week", direction: "up" }} />
+        <KpiCard
+          label="Internet-facing assets"
+          value="312"
+          unit="hosts and services"
+          trend={wave(14, { base: 300, amp: 8, seed: 11 })}
+          delta={{ label: "+4 vs. last week", direction: "up" }}
+        />
         <KpiCard label="New this week" value="9" unit="assets" delta={{ label: "2 with open findings", intent: "bad" }} />
         <KpiCard
           label="Critical exposures"
@@ -217,7 +336,6 @@ function ExposuresPage() {
       </div>
     </>
   );
-  
 }
 
 /* ------------------------------------------------------------------ */
@@ -239,18 +357,160 @@ interface Asset {
 }
 
 const ASSETS: Asset[] = [
-  { id: "as1", host: "www.example.com", ip: "198.51.100.10", kind: "web", ports: [80, 443], tech: "Apache 2.4.52", cloud: "Hetzner", owner: "Web team", findings: 1, firstSeen: "2 y ago", known: true },
-  { id: "as2", host: "api.example.com", ip: "198.51.100.11", kind: "api", ports: [443], tech: "nginx 1.25 · Node 22", cloud: "AWS eu-central-1", owner: "Platform", findings: 0, firstSeen: "2 y ago", known: true },
-  { id: "as3", host: "staging-admin.example.com", ip: "203.0.113.57", kind: "database", ports: [443, 9200], tech: "Elasticsearch 7.10.2", cloud: "AWS eu-west-1", findings: 1, firstSeen: "Today", known: false },
-  { id: "as4", host: "mail.example.com", ip: "198.51.100.12", kind: "mail", ports: [25, 465, 587, 993], tech: "Postfix 3.7 · Dovecot", cloud: "Hetzner", owner: "IT", findings: 1, firstSeen: "2 y ago", known: true },
-  { id: "as5", host: "win-build-02.example.com", ip: "198.51.100.34", kind: "remote access", ports: [3389], tech: "Windows Server 2019", cloud: "Azure westeurope", owner: "Build", findings: 1, firstSeen: "3 d ago", known: false },
-  { id: "as6", host: "docs-old.example.com", ip: "203.0.113.200", kind: "storage", ports: [80, 443], tech: "Amazon S3 website", cloud: "AWS us-east-1", findings: 1, firstSeen: "Today", known: false },
-  { id: "as7", host: "cache-eu.example.com", ip: "203.0.113.88", kind: "database", ports: [6379], tech: "Redis 6.2.6", cloud: "AWS eu-central-1", owner: "Platform", findings: 1, firstSeen: "6 d ago", known: true },
-  { id: "as8", host: "grafana.example.com", ip: "198.51.100.71", kind: "web", ports: [443, 3000], tech: "Grafana 10.2.3", cloud: "AWS eu-central-1", owner: "SRE", findings: 1, firstSeen: "1 y ago", known: true },
-  { id: "as9", host: "bastion-02.example.com", ip: "192.0.2.15", kind: "remote access", ports: [22], tech: "OpenSSH 8.9p1", cloud: "Hetzner", owner: "SRE", findings: 1, firstSeen: "1 y ago", known: true },
-  { id: "as10", host: "vpn.example.com", ip: "192.0.2.20", kind: "remote access", ports: [443, 1194], tech: "OpenVPN 2.6", cloud: "Hetzner", owner: "IT", findings: 0, firstSeen: "2 y ago", known: true },
-  { id: "as11", host: "ns1.example.com", ip: "192.0.2.53", kind: "dns", ports: [53], tech: "PowerDNS 4.8", cloud: "Hetzner", owner: "IT", findings: 0, firstSeen: "2 y ago", known: true },
-  { id: "as12", host: "legacy-api.example.com", ip: "203.0.113.140", kind: "api", ports: [443], tech: "nginx 1.18.0", cloud: "OVH", owner: "Payments", findings: 1, firstSeen: "3 y ago", known: true },
+  {
+    id: "as1",
+    host: "www.example.com",
+    ip: "198.51.100.10",
+    kind: "web",
+    ports: [80, 443],
+    tech: "Apache 2.4.52",
+    cloud: "Hetzner",
+    owner: "Web team",
+    findings: 1,
+    firstSeen: "2 y ago",
+    known: true,
+  },
+  {
+    id: "as2",
+    host: "api.example.com",
+    ip: "198.51.100.11",
+    kind: "api",
+    ports: [443],
+    tech: "nginx 1.25 · Node 22",
+    cloud: "AWS eu-central-1",
+    owner: "Platform",
+    findings: 0,
+    firstSeen: "2 y ago",
+    known: true,
+  },
+  {
+    id: "as3",
+    host: "staging-admin.example.com",
+    ip: "203.0.113.57",
+    kind: "database",
+    ports: [443, 9200],
+    tech: "Elasticsearch 7.10.2",
+    cloud: "AWS eu-west-1",
+    findings: 1,
+    firstSeen: "Today",
+    known: false,
+  },
+  {
+    id: "as4",
+    host: "mail.example.com",
+    ip: "198.51.100.12",
+    kind: "mail",
+    ports: [25, 465, 587, 993],
+    tech: "Postfix 3.7 · Dovecot",
+    cloud: "Hetzner",
+    owner: "IT",
+    findings: 1,
+    firstSeen: "2 y ago",
+    known: true,
+  },
+  {
+    id: "as5",
+    host: "win-build-02.example.com",
+    ip: "198.51.100.34",
+    kind: "remote access",
+    ports: [3389],
+    tech: "Windows Server 2019",
+    cloud: "Azure westeurope",
+    owner: "Build",
+    findings: 1,
+    firstSeen: "3 d ago",
+    known: false,
+  },
+  {
+    id: "as6",
+    host: "docs-old.example.com",
+    ip: "203.0.113.200",
+    kind: "storage",
+    ports: [80, 443],
+    tech: "Amazon S3 website",
+    cloud: "AWS us-east-1",
+    findings: 1,
+    firstSeen: "Today",
+    known: false,
+  },
+  {
+    id: "as7",
+    host: "cache-eu.example.com",
+    ip: "203.0.113.88",
+    kind: "database",
+    ports: [6379],
+    tech: "Redis 6.2.6",
+    cloud: "AWS eu-central-1",
+    owner: "Platform",
+    findings: 1,
+    firstSeen: "6 d ago",
+    known: true,
+  },
+  {
+    id: "as8",
+    host: "grafana.example.com",
+    ip: "198.51.100.71",
+    kind: "web",
+    ports: [443, 3000],
+    tech: "Grafana 10.2.3",
+    cloud: "AWS eu-central-1",
+    owner: "SRE",
+    findings: 1,
+    firstSeen: "1 y ago",
+    known: true,
+  },
+  {
+    id: "as9",
+    host: "bastion-02.example.com",
+    ip: "192.0.2.15",
+    kind: "remote access",
+    ports: [22],
+    tech: "OpenSSH 8.9p1",
+    cloud: "Hetzner",
+    owner: "SRE",
+    findings: 1,
+    firstSeen: "1 y ago",
+    known: true,
+  },
+  {
+    id: "as10",
+    host: "vpn.example.com",
+    ip: "192.0.2.20",
+    kind: "remote access",
+    ports: [443, 1194],
+    tech: "OpenVPN 2.6",
+    cloud: "Hetzner",
+    owner: "IT",
+    findings: 0,
+    firstSeen: "2 y ago",
+    known: true,
+  },
+  {
+    id: "as11",
+    host: "ns1.example.com",
+    ip: "192.0.2.53",
+    kind: "dns",
+    ports: [53],
+    tech: "PowerDNS 4.8",
+    cloud: "Hetzner",
+    owner: "IT",
+    findings: 0,
+    firstSeen: "2 y ago",
+    known: true,
+  },
+  {
+    id: "as12",
+    host: "legacy-api.example.com",
+    ip: "203.0.113.140",
+    kind: "api",
+    ports: [443],
+    tech: "nginx 1.18.0",
+    cloud: "OVH",
+    owner: "Payments",
+    findings: 1,
+    firstSeen: "3 y ago",
+    known: true,
+  },
 ];
 
 function AssetsPage() {
@@ -258,9 +518,26 @@ function AssetsPage() {
   const [unknown, setUnknown] = useState(false);
   const [query, setQuery] = useState("");
   const [claimed, setClaimed] = useState<Record<string, string>>({});
-  const rows = ASSETS.filter((a) => (kind.length === 0 || kind.includes(a.kind)) && (!unknown || !(a.owner || claimed[a.id])) && (!query || `${a.host} ${a.ip} ${a.tech}`.toLowerCase().includes(query.toLowerCase())));
+  const rows = ASSETS.filter(
+    (a) =>
+      (kind.length === 0 || kind.includes(a.kind)) &&
+      (!unknown || !(a.owner || claimed[a.id])) &&
+      (!query || `${a.host} ${a.ip} ${a.tech}`.toLowerCase().includes(query.toLowerCase())),
+  );
   const cols: Column<Asset>[] = [
-    { id: "host", header: "Asset", pinned: "left", width: "24%", sortValue: (a) => a.host, cell: (a) => <span className="flex flex-col items-start gap-0.5"><EntityChip kind="host" value={a.host} hideKind /><EntityChip kind="ip" value={a.ip} hideKind /></span> },
+    {
+      id: "host",
+      header: "Asset",
+      pinned: "left",
+      width: "24%",
+      sortValue: (a) => a.host,
+      cell: (a) => (
+        <span className="flex flex-col items-start gap-0.5">
+          <EntityChip kind="host" value={a.host} hideKind />
+          <EntityChip kind="ip" value={a.ip} hideKind />
+        </span>
+      ),
+    },
     { id: "kind", header: "Type", cell: (a) => <Badge>{a.kind}</Badge> },
     { id: "ports", header: "Open ports", mono: true, cell: (a) => a.ports.join(", ") },
     { id: "tech", header: "Technology", cell: (a) => <span className="text-xs">{a.tech}</span> },
@@ -278,13 +555,23 @@ function AssetsPage() {
           </Button>
         ),
     },
-    { id: "findings", header: "Findings", align: "right", mono: true, sortValue: (a) => a.findings, cell: (a) => (a.findings ? <Badge tone="danger">{a.findings}</Badge> : <span className="text-fg-subtle">0</span>) },
+    {
+      id: "findings",
+      header: "Findings",
+      align: "right",
+      mono: true,
+      sortValue: (a) => a.findings,
+      cell: (a) => (a.findings ? <Badge tone="danger">{a.findings}</Badge> : <span className="text-fg-subtle">0</span>),
+    },
     { id: "first", header: "First seen", cell: (a) => (a.known ? <span className="text-xs">{a.firstSeen}</span> : <Badge tone="info">{a.firstSeen}</Badge>) },
   ];
   const kinds = [...new Set(ASSETS.map((a) => a.kind))];
   return (
     <>
-      <PageHeader title="Assets" description="Everything reachable from the internet under 14 root domains and 6 IP ranges, found from DNS, CT logs and port scans." />
+      <PageHeader
+        title="Assets"
+        description="Everything reachable from the internet under 14 root domains and 6 IP ranges, found from DNS, CT logs and port scans."
+      />
       <KpiGrid>
         <KpiCard label="Assets" value="312" unit="hosts and services" />
         <KpiCard label="No owner" value={`${ASSETS.filter((a) => !a.owner && !claimed[a.id]).length}`} tone="warning" delta={{ label: "Likely shadow IT" }} />
@@ -293,11 +580,24 @@ function AssetsPage() {
       </KpiGrid>
       <FilterBar onClear={kind.length || unknown || query ? () => (setKind([]), setUnknown(false), setQuery("")) : undefined}>
         <SearchInput label="Search assets" value={query} onChange={(e) => setQuery(e.target.value)} className="w-60" />
-        <FacetFilter label="Type" selected={kind} onChange={setKind} options={kinds.map((k) => ({ value: k, count: ASSETS.filter((a) => a.kind === k).length }))} />
+        <FacetFilter
+          label="Type"
+          selected={kind}
+          onChange={setKind}
+          options={kinds.map((k) => ({ value: k, count: ASSETS.filter((a) => a.kind === k).length }))}
+        />
         <Switch checked={unknown} onCheckedChange={setUnknown} label="Only without owner" />
       </FilterBar>
       <Panel title="Assets" description={`${rows.length} shown`} flush>
-        <DataTable label="Assets" columns={cols} rows={rows} getRowId={(a) => a.id} defaultSort={{ id: "findings", direction: "desc" }} minWidth={1100} empty={<p className="py-8">No assets match</p>} />
+        <DataTable
+          label="Assets"
+          columns={cols}
+          rows={rows}
+          getRowId={(a) => a.id}
+          defaultSort={{ id: "findings", direction: "desc" }}
+          minWidth={1100}
+          empty={<p className="py-8">No assets match</p>}
+        />
       </Panel>
     </>
   );
@@ -322,8 +622,28 @@ interface Domain {
 const DOMAINS: Domain[] = [
   { name: "example.com", registrar: "Gandi", expires: "Mar 2028", expiresDays: 520, subdomains: 184, dnssec: true, spf: true, dmarc: "reject", lookalikes: 3 },
   { name: "example.net", registrar: "Gandi", expires: "Mar 2028", expiresDays: 520, subdomains: 12, dnssec: true, spf: true, dmarc: "reject", lookalikes: 0 },
-  { name: "shop.example.com", registrar: "Gandi", expires: "Mar 2028", expiresDays: 520, subdomains: 38, dnssec: true, spf: true, dmarc: "quarantine", lookalikes: 1 },
-  { name: "marketing.example.com", registrar: "Gandi", expires: "Mar 2028", expiresDays: 520, subdomains: 21, dnssec: false, spf: true, dmarc: "missing", lookalikes: 0 },
+  {
+    name: "shop.example.com",
+    registrar: "Gandi",
+    expires: "Mar 2028",
+    expiresDays: 520,
+    subdomains: 38,
+    dnssec: true,
+    spf: true,
+    dmarc: "quarantine",
+    lookalikes: 1,
+  },
+  {
+    name: "marketing.example.com",
+    registrar: "Gandi",
+    expires: "Mar 2028",
+    expiresDays: 520,
+    subdomains: 21,
+    dnssec: false,
+    spf: true,
+    dmarc: "missing",
+    lookalikes: 0,
+  },
   { name: "example.org", registrar: "Namecheap", expires: "Nov 2026", expiresDays: 24, subdomains: 4, dnssec: false, spf: false, dmarc: "none", lookalikes: 0 },
   { name: "example.io", registrar: "Namecheap", expires: "Jan 2027", expiresDays: 88, subdomains: 9, dnssec: false, spf: true, dmarc: "none", lookalikes: 2 },
 ];
@@ -336,21 +656,61 @@ function DomainsPage() {
   const cols: Column<Domain>[] = [
     { id: "name", header: "Domain", width: "22%", cell: (d) => <EntityChip kind="url" value={d.name} hideKind /> },
     { id: "sub", header: "Subdomains", align: "right", mono: true, sortValue: (d) => d.subdomains, cell: (d) => d.subdomains },
-    { id: "exp", header: "Registration", sortValue: (d) => d.expiresDays, cell: (d) => (d.expiresDays < 30 ? <Badge tone="danger">{d.expires} · {d.expiresDays} d</Badge> : <span className="text-xs">{d.expires}</span>) },
+    {
+      id: "exp",
+      header: "Registration",
+      sortValue: (d) => d.expiresDays,
+      cell: (d) =>
+        d.expiresDays < 30 ? (
+          <Badge tone="danger">
+            {d.expires} · {d.expiresDays} d
+          </Badge>
+        ) : (
+          <span className="text-xs">{d.expires}</span>
+        ),
+    },
     { id: "dnssec", header: "DNSSEC", cell: (d) => (d.dnssec ? <StatusBadge tone="success">On</StatusBadge> : <StatusBadge tone="warning">Off</StatusBadge>) },
     { id: "spf", header: "SPF", cell: (d) => (d.spf ? <StatusBadge tone="success">Valid</StatusBadge> : <StatusBadge tone="danger">Missing</StatusBadge>) },
-    { id: "dmarc", header: "DMARC", description: "reject is the goal; none only reports; missing lets anyone send as this domain.", cell: (d) => <Badge tone={DMARC_TONE[d.dmarc]}>p={d.dmarc}</Badge> },
-    { id: "look", header: "Look-alikes", align: "right", mono: true, sortValue: (d) => d.lookalikes, cell: (d) => (d.lookalikes ? <Badge tone="warning">{d.lookalikes}</Badge> : 0) },
+    {
+      id: "dmarc",
+      header: "DMARC",
+      description: "reject is the goal; none only reports; missing lets anyone send as this domain.",
+      cell: (d) => <Badge tone={DMARC_TONE[d.dmarc]}>p={d.dmarc}</Badge>,
+    },
+    {
+      id: "look",
+      header: "Look-alikes",
+      align: "right",
+      mono: true,
+      sortValue: (d) => d.lookalikes,
+      cell: (d) => (d.lookalikes ? <Badge tone="warning">{d.lookalikes}</Badge> : 0),
+    },
   ];
   return (
     <>
-      <PageHeader title="Domains" description="Root domains you own, their mail security records and registered look-alikes." actions={<Button variant="primary" icon={<Plus />}>Add domain</Button>} />
+      <PageHeader
+        title="Domains"
+        description="Root domains you own, their mail security records and registered look-alikes."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add domain
+          </Button>
+        }
+      />
       <Callout tone="danger" title="example.org registration expires in 24 days">
         Auto-renew is off at Namecheap. If it lapses, anyone can register it and receive mail sent to it.
       </Callout>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Root domains" flush>
-          <DataTable label="Domains" columns={cols} rows={DOMAINS} getRowId={(d) => d.name} onRowClick={(d) => setActive(d.name)} activeRowId={active} minWidth={820} />
+          <DataTable
+            label="Domains"
+            columns={cols}
+            rows={DOMAINS}
+            getRowId={(d) => d.name}
+            onRowClick={(d) => setActive(d.name)}
+            activeRowId={active}
+            minWidth={820}
+          />
         </Panel>
         <Panel title="Look-alike domains" description={cur ? `Registered by others, similar to ${cur.name}` : undefined} aria-label="Look-alike domains">
           {cur && cur.lookalikes > 0 ? (
@@ -407,15 +767,30 @@ function CertificatesPage() {
       id: "exp",
       header: "Expires",
       sortValue: (c) => c.expiresDays,
-      cell: (c) => (c.expiresDays < 0 ? <Badge tone="critical">Expired {-c.expiresDays} d ago</Badge> : c.expiresDays <= 14 ? <Badge tone="warning">{c.expiresDays} days</Badge> : <span className="text-xs">{c.expiresDays} days</span>),
+      cell: (c) =>
+        c.expiresDays < 0 ? (
+          <Badge tone="critical">Expired {-c.expiresDays} d ago</Badge>
+        ) : c.expiresDays <= 14 ? (
+          <Badge tone="warning">{c.expiresDays} days</Badge>
+        ) : (
+          <span className="text-xs">{c.expiresDays} days</span>
+        ),
     },
     { id: "grade", header: "TLS grade", cell: (c) => <Badge tone={c.grade === "F" ? "danger" : c.grade === "B" ? "warning" : "success"}>{c.grade}</Badge> },
-    { id: "ct", header: "CT log", description: "Unexpected: issued by a CA you have not used before, or for a name not in the asset list. Could be shadow IT or a mis-issued certificate.", cell: (c) => (c.ct === "unexpected" ? <Badge tone="warning">Unexpected</Badge> : <Badge>Known</Badge>) },
+    {
+      id: "ct",
+      header: "CT log",
+      description: "Unexpected: issued by a CA you have not used before, or for a name not in the asset list. Could be shadow IT or a mis-issued certificate.",
+      cell: (c) => (c.ct === "unexpected" ? <Badge tone="warning">Unexpected</Badge> : <Badge>Known</Badge>),
+    },
     { id: "seen", header: "First seen", cell: (c) => <span className="text-xs">{c.seen}</span> },
   ];
   return (
     <>
-      <PageHeader title="Certificates" description="Certificates on internet-facing hosts plus every certificate issued for your domains in Certificate Transparency logs." />
+      <PageHeader
+        title="Certificates"
+        description="Certificates on internet-facing hosts plus every certificate issued for your domains in Certificate Transparency logs."
+      />
       <KpiGrid>
         <KpiCard label="Certificates" value="58" unit="in use" />
         <KpiCard label="Expired" value="1" tone="critical" delta={{ label: "mail.example.com", intent: "bad" }} />
@@ -426,7 +801,14 @@ function CertificatesPage() {
         <Switch checked={expiring} onCheckedChange={setExpiring} label="Expired or expiring in 14 days" />
       </FilterBar>
       <Panel title="Certificates" description={`${rows.length} shown`} flush>
-        <DataTable label="External certificates" columns={cols} rows={rows} getRowId={(c) => c.id} defaultSort={{ id: "exp", direction: "asc" }} minWidth={900} />
+        <DataTable
+          label="External certificates"
+          columns={cols}
+          rows={rows}
+          getRowId={(c) => c.id}
+          defaultSort={{ id: "exp", direction: "asc" }}
+          minWidth={900}
+        />
       </Panel>
     </>
   );
@@ -468,23 +850,65 @@ function ScansPage() {
     { id: "assets", header: "Assets", align: "right", mono: true, cell: (r) => r.assets },
     { id: "new", header: "New", align: "right", mono: true, cell: (r) => (r.newAssets ? <Badge tone="info">+{r.newAssets}</Badge> : 0) },
     { id: "findings", header: "Findings", align: "right", mono: true, cell: (r) => r.findings },
-    { id: "status", header: "Status", cell: (r) => <StatusBadge tone={r.status === "success" ? "success" : r.status === "partial" ? "warning" : "danger"}>{r.status}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      cell: (r) => <StatusBadge tone={r.status === "success" ? "success" : r.status === "partial" ? "warning" : "danger"}>{r.status}</StatusBadge>,
+    },
   ];
   return (
     <>
-      <PageHeader title="Scans" description="Scans run as a scheduled CI job from GitHub Actions. Nothing to host; results are pushed here." actions={<Button variant="primary" icon={<Play />}>Run scan now</Button>} />
+      <PageHeader
+        title="Scans"
+        description="Scans run as a scheduled CI job from GitHub Actions. Nothing to host; results are pushed here."
+        actions={
+          <Button variant="primary" icon={<Play />}>
+            Run scan now
+          </Button>
+        }
+      />
       <Callout tone="warning" title="scan-296 failed: runner lost network after 2 min">
         The next scheduled scan succeeded. scan-298 was partial because 14 hosts rate-limited the scanner.
       </Callout>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Scan history" flush>
-          <DataTable label="Scan history" columns={cols} rows={SCAN_RUNS} getRowId={(r) => r.id} defaultSort={{ id: "started", direction: "desc" }} minWidth={820} />
+          <DataTable
+            label="Scan history"
+            columns={cols}
+            rows={SCAN_RUNS}
+            getRowId={(r) => r.id}
+            defaultSort={{ id: "started", direction: "desc" }}
+            minWidth={820}
+          />
         </Panel>
         <Panel title="Scan settings" aria-label="Scan settings">
           <form className="flex flex-col gap-2.5" onSubmit={(e) => (e.preventDefault(), setSaved(true))}>
-            <SelectField label="Schedule" defaultValue="daily" options={[{ value: "daily", label: "Daily at 06:00 UTC" }, { value: "twice", label: "Twice daily" }, { value: "weekly", label: "Weekly" }]} />
-            <SelectField label="Ports" value={ports} onChange={(e) => (setPorts(e.target.value), setSaved(false))} options={[{ value: "top-100", label: "Top 100" }, { value: "top-1000", label: "Top 1000" }, { value: "all", label: "All 65,535" }]} />
-            <TextField label="Packets per second" value={rate} onChange={(e) => (setRate(e.target.value), setSaved(false))} mono hint="Lower this if hosts rate-limit the scanner" />
+            <SelectField
+              label="Schedule"
+              defaultValue="daily"
+              options={[
+                { value: "daily", label: "Daily at 06:00 UTC" },
+                { value: "twice", label: "Twice daily" },
+                { value: "weekly", label: "Weekly" },
+              ]}
+            />
+            <SelectField
+              label="Ports"
+              value={ports}
+              onChange={(e) => (setPorts(e.target.value), setSaved(false))}
+              options={[
+                { value: "top-100", label: "Top 100" },
+                { value: "top-1000", label: "Top 1000" },
+                { value: "all", label: "All 65,535" },
+              ]}
+            />
+            <TextField
+              label="Packets per second"
+              value={rate}
+              onChange={(e) => (setRate(e.target.value), setSaved(false))}
+              mono
+              hint="Lower this if hosts rate-limit the scanner"
+            />
             <Switch checked onCheckedChange={() => {}} label="Rescan within 10 min of a new CT log entry" />
             <div className="flex items-center gap-2 border-t border-line pt-2">
               <Button type="submit" variant="primary">
@@ -521,7 +945,15 @@ interface SurfaceChange {
 
 const CHANGES: SurfaceChange[] = [
   { id: "ch1", kind: "added", asset: "staging-admin.example.com", what: "New host", after: "203.0.113.57 · 443, 9200", scan: "scan-301" },
-  { id: "ch2", kind: "changed", asset: "docs-old.example.com", what: "CNAME target unclaimed", before: "acme-docs.s3-website (owned)", after: "acme-docs.s3-website (no bucket)", scan: "scan-301" },
+  {
+    id: "ch2",
+    kind: "changed",
+    asset: "docs-old.example.com",
+    what: "CNAME target unclaimed",
+    before: "acme-docs.s3-website (owned)",
+    after: "acme-docs.s3-website (no bucket)",
+    scan: "scan-301",
+  },
   { id: "ch3", kind: "added", asset: "pay.example.com", what: "New certificate in CT log", after: "Google Trust Services WR3", scan: "scan-300" },
   { id: "ch4", kind: "changed", asset: "grafana.example.com", what: "Version changed", before: "Grafana 10.1.5", after: "Grafana 10.2.3", scan: "scan-299" },
   { id: "ch5", kind: "removed", asset: "beta.example.com", what: "Host no longer resolves", before: "198.51.100.90", scan: "scan-299" },

@@ -64,16 +64,106 @@ interface Match {
 }
 
 const matches: Match[] = [
-  { id: "m1", type: "ip", value: "203.0.113.24", product: "Network IDS", confidence: 95, tlp: "CLEAR", actor: "Emotet · epoch 5", feed: "abuse.ch Feodo", firstSeen: "13:12" },
-  { id: "m2", type: "ip", value: "198.51.100.201", product: "VPN sign-in", confidence: 80, tlp: "GREEN", actor: "Credential stuffing botnet", feed: "AlienVault OTX", firstSeen: "12:47" },
-  { id: "m3", type: "domain", value: "acme-login.example.com", product: "SIEM", confidence: 88, tlp: "AMBER", actor: "Phishing kit · EvilProxy", feed: "MISP community", firstSeen: "11:30" },
-  { id: "m4", type: "url", value: "http://cdn.example.com/wp-content/x.php", product: "WAF", confidence: 72, tlp: "CLEAR", actor: "Webshell campaign", feed: "abuse.ch URLhaus", firstSeen: "10:58" },
-  { id: "m5", type: "hash", value: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", product: "SIEM", confidence: 99, tlp: "CLEAR", actor: "AsyncRAT", feed: "abuse.ch MalwareBazaar", firstSeen: "09:41" },
+  {
+    id: "m1",
+    type: "ip",
+    value: "203.0.113.24",
+    product: "Network IDS",
+    confidence: 95,
+    tlp: "CLEAR",
+    actor: "Emotet · epoch 5",
+    feed: "abuse.ch Feodo",
+    firstSeen: "13:12",
+  },
+  {
+    id: "m2",
+    type: "ip",
+    value: "198.51.100.201",
+    product: "VPN sign-in",
+    confidence: 80,
+    tlp: "GREEN",
+    actor: "Credential stuffing botnet",
+    feed: "AlienVault OTX",
+    firstSeen: "12:47",
+  },
+  {
+    id: "m3",
+    type: "domain",
+    value: "acme-login.example.com",
+    product: "SIEM",
+    confidence: 88,
+    tlp: "AMBER",
+    actor: "Phishing kit · EvilProxy",
+    feed: "MISP community",
+    firstSeen: "11:30",
+  },
+  {
+    id: "m4",
+    type: "url",
+    value: "http://cdn.example.com/wp-content/x.php",
+    product: "WAF",
+    confidence: 72,
+    tlp: "CLEAR",
+    actor: "Webshell campaign",
+    feed: "abuse.ch URLhaus",
+    firstSeen: "10:58",
+  },
+  {
+    id: "m5",
+    type: "hash",
+    value: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    product: "SIEM",
+    confidence: 99,
+    tlp: "CLEAR",
+    actor: "AsyncRAT",
+    feed: "abuse.ch MalwareBazaar",
+    firstSeen: "09:41",
+  },
   { id: "m6", type: "ip", value: "192.0.2.44", product: "WAF", confidence: 64, tlp: "GREEN", actor: "Mass scanner", feed: "internal", firstSeen: "09:02" },
-  { id: "m7", type: "domain", value: "update-check.example.com", product: "Network IDS", confidence: 91, tlp: "RED", actor: "Campaign ACME-2026-07", feed: "internal", firstSeen: "08:15" },
-  { id: "m8", type: "url", value: "https://files.example.com/invoice_0921.zip", product: "SIEM", confidence: 77, tlp: "AMBER", actor: "Qakbot distribution", feed: "MISP community", firstSeen: "07:33" },
-  { id: "m9", type: "ip", value: "198.51.100.96", product: "VPN sign-in", confidence: 58, tlp: "CLEAR", actor: "Tor exit node", feed: "AlienVault OTX", firstSeen: "06:50" },
-  { id: "m10", type: "hash", value: "5d41402abc4b2a76b9719d911017c592", product: "Network IDS", confidence: 83, tlp: "GREEN", actor: "Cobalt Strike beacon", feed: "abuse.ch ThreatFox", firstSeen: "05:12" },
+  {
+    id: "m7",
+    type: "domain",
+    value: "update-check.example.com",
+    product: "Network IDS",
+    confidence: 91,
+    tlp: "RED",
+    actor: "Campaign ACME-2026-07",
+    feed: "internal",
+    firstSeen: "08:15",
+  },
+  {
+    id: "m8",
+    type: "url",
+    value: "https://files.example.com/invoice_0921.zip",
+    product: "SIEM",
+    confidence: 77,
+    tlp: "AMBER",
+    actor: "Qakbot distribution",
+    feed: "MISP community",
+    firstSeen: "07:33",
+  },
+  {
+    id: "m9",
+    type: "ip",
+    value: "198.51.100.96",
+    product: "VPN sign-in",
+    confidence: 58,
+    tlp: "CLEAR",
+    actor: "Tor exit node",
+    feed: "AlienVault OTX",
+    firstSeen: "06:50",
+  },
+  {
+    id: "m10",
+    type: "hash",
+    value: "5d41402abc4b2a76b9719d911017c592",
+    product: "Network IDS",
+    confidence: 83,
+    tlp: "GREEN",
+    actor: "Cobalt Strike beacon",
+    feed: "abuse.ch ThreatFox",
+    firstSeen: "05:12",
+  },
 ];
 
 const columns: Column<Match>[] = [
@@ -132,18 +222,150 @@ interface Indicator {
 }
 
 const INDICATORS: Indicator[] = [
-  { id: "i-48149", type: "ip", value: "203.0.113.24", source: "abuse.ch Feodo", confidence: 95, tlp: "CLEAR", tags: ["botnet-c2", "emotet"], added: "Oct 18", expires: "in 29 d", hits: 14 },
-  { id: "i-48148", type: "domain", value: "update-check.example.com", source: "Internal", confidence: 91, tlp: "RED", tags: ["c2", "acme-2026-07"], added: "Oct 18", expires: "in 89 d", hits: 6 },
-  { id: "i-48147", type: "url", value: "https://files.example.com/invoice_0921.zip", source: "MISP community", confidence: 77, tlp: "AMBER", tags: ["qakbot", "dropper"], added: "Oct 17", expires: "in 6 d", hits: 2 },
-  { id: "i-48146", type: "hash", value: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", source: "abuse.ch MalwareBazaar", confidence: 99, tlp: "CLEAR", tags: ["asyncrat"], added: "Oct 17", expires: "never", hits: 1 },
-  { id: "i-48145", type: "ip", value: "198.51.100.201", source: "AlienVault OTX", confidence: 80, tlp: "GREEN", tags: ["credential-stuffing"], added: "Oct 16", expires: "in 27 d", hits: 31 },
-  { id: "i-48144", type: "domain", value: "acme-login.example.com", source: "MISP community", confidence: 88, tlp: "AMBER", tags: ["phishing", "evilproxy"], added: "Oct 16", expires: "in 74 d", hits: 4 },
-  { id: "i-48143", type: "ip", value: "192.0.2.44", source: "Internal", confidence: 64, tlp: "GREEN", tags: ["scanner"], added: "Oct 15", expires: "in 2 d", hits: 212 },
-  { id: "i-48142", type: "url", value: "http://cdn.example.com/wp-content/x.php", source: "abuse.ch URLhaus", confidence: 72, tlp: "CLEAR", tags: ["webshell"], added: "Oct 15", expires: "in 13 d", hits: 3 },
-  { id: "i-48141", type: "hash", value: "5d41402abc4b2a76b9719d911017c592", source: "abuse.ch ThreatFox", confidence: 83, tlp: "GREEN", tags: ["cobalt-strike"], added: "Oct 14", expires: "never", hits: 1 },
-  { id: "i-48140", type: "ip", value: "198.51.100.96", source: "AlienVault OTX", confidence: 58, tlp: "CLEAR", tags: ["tor-exit"], added: "Oct 14", expires: "in 1 d", hits: 9 },
-  { id: "i-48139", type: "domain", value: "pay-portal.example.com", source: "CISA KEV", confidence: 70, tlp: "CLEAR", tags: ["phishing"], added: "Oct 13", expires: "in 60 d", hits: 0 },
-  { id: "i-48138", type: "ip", value: "203.0.113.181", source: "Deception", confidence: 100, tlp: "AMBER", tags: ["canary-trigger"], added: "Oct 12", expires: "in 88 d", hits: 2 },
+  {
+    id: "i-48149",
+    type: "ip",
+    value: "203.0.113.24",
+    source: "abuse.ch Feodo",
+    confidence: 95,
+    tlp: "CLEAR",
+    tags: ["botnet-c2", "emotet"],
+    added: "Oct 18",
+    expires: "in 29 d",
+    hits: 14,
+  },
+  {
+    id: "i-48148",
+    type: "domain",
+    value: "update-check.example.com",
+    source: "Internal",
+    confidence: 91,
+    tlp: "RED",
+    tags: ["c2", "acme-2026-07"],
+    added: "Oct 18",
+    expires: "in 89 d",
+    hits: 6,
+  },
+  {
+    id: "i-48147",
+    type: "url",
+    value: "https://files.example.com/invoice_0921.zip",
+    source: "MISP community",
+    confidence: 77,
+    tlp: "AMBER",
+    tags: ["qakbot", "dropper"],
+    added: "Oct 17",
+    expires: "in 6 d",
+    hits: 2,
+  },
+  {
+    id: "i-48146",
+    type: "hash",
+    value: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    source: "abuse.ch MalwareBazaar",
+    confidence: 99,
+    tlp: "CLEAR",
+    tags: ["asyncrat"],
+    added: "Oct 17",
+    expires: "never",
+    hits: 1,
+  },
+  {
+    id: "i-48145",
+    type: "ip",
+    value: "198.51.100.201",
+    source: "AlienVault OTX",
+    confidence: 80,
+    tlp: "GREEN",
+    tags: ["credential-stuffing"],
+    added: "Oct 16",
+    expires: "in 27 d",
+    hits: 31,
+  },
+  {
+    id: "i-48144",
+    type: "domain",
+    value: "acme-login.example.com",
+    source: "MISP community",
+    confidence: 88,
+    tlp: "AMBER",
+    tags: ["phishing", "evilproxy"],
+    added: "Oct 16",
+    expires: "in 74 d",
+    hits: 4,
+  },
+  {
+    id: "i-48143",
+    type: "ip",
+    value: "192.0.2.44",
+    source: "Internal",
+    confidence: 64,
+    tlp: "GREEN",
+    tags: ["scanner"],
+    added: "Oct 15",
+    expires: "in 2 d",
+    hits: 212,
+  },
+  {
+    id: "i-48142",
+    type: "url",
+    value: "http://cdn.example.com/wp-content/x.php",
+    source: "abuse.ch URLhaus",
+    confidence: 72,
+    tlp: "CLEAR",
+    tags: ["webshell"],
+    added: "Oct 15",
+    expires: "in 13 d",
+    hits: 3,
+  },
+  {
+    id: "i-48141",
+    type: "hash",
+    value: "5d41402abc4b2a76b9719d911017c592",
+    source: "abuse.ch ThreatFox",
+    confidence: 83,
+    tlp: "GREEN",
+    tags: ["cobalt-strike"],
+    added: "Oct 14",
+    expires: "never",
+    hits: 1,
+  },
+  {
+    id: "i-48140",
+    type: "ip",
+    value: "198.51.100.96",
+    source: "AlienVault OTX",
+    confidence: 58,
+    tlp: "CLEAR",
+    tags: ["tor-exit"],
+    added: "Oct 14",
+    expires: "in 1 d",
+    hits: 9,
+  },
+  {
+    id: "i-48139",
+    type: "domain",
+    value: "pay-portal.example.com",
+    source: "CISA KEV",
+    confidence: 70,
+    tlp: "CLEAR",
+    tags: ["phishing"],
+    added: "Oct 13",
+    expires: "in 60 d",
+    hits: 0,
+  },
+  {
+    id: "i-48138",
+    type: "ip",
+    value: "203.0.113.181",
+    source: "Deception",
+    confidence: 100,
+    tlp: "AMBER",
+    tags: ["canary-trigger"],
+    added: "Oct 12",
+    expires: "in 88 d",
+    hits: 2,
+  },
 ];
 
 type FeedStatus = "synced" | "slow" | "failing" | "paused";
@@ -172,15 +394,143 @@ interface Feed {
 }
 
 const FEEDS: Feed[] = [
-  { id: "feodo", name: "abuse.ch Feodo", format: "CSV", url: "https://feodotracker.abuse.ch/downloads/ipblocklist.csv", interval: "15 min", indicators: 4_210, added24h: 38, lastSync: "4 min ago", status: "synced", enabled: true, minConfidence: 75, defaultTlp: "CLEAR", history: wave(24, { base: 40, amp: 15, seed: 81 }) },
-  { id: "urlhaus", name: "abuse.ch URLhaus", format: "CSV", url: "https://urlhaus.abuse.ch/downloads/csv_recent/", interval: "15 min", indicators: 9_812, added24h: 412, lastSync: "4 min ago", status: "synced", enabled: true, minConfidence: 60, defaultTlp: "CLEAR", history: wave(24, { base: 400, amp: 120, seed: 82 }) },
-  { id: "threatfox", name: "abuse.ch ThreatFox", format: "JSON", url: "https://threatfox-api.abuse.ch/api/v1/", interval: "30 min", indicators: 5_120, added24h: 201, lastSync: "9 min ago", status: "synced", enabled: true, minConfidence: 50, defaultTlp: "CLEAR", history: wave(24, { base: 200, amp: 60, seed: 83 }) },
-  { id: "bazaar", name: "abuse.ch MalwareBazaar", format: "JSON", url: "https://mb-api.abuse.ch/api/v1/", interval: "1 h", indicators: 2_338, added24h: 96, lastSync: "22 min ago", status: "synced", enabled: true, minConfidence: 80, defaultTlp: "CLEAR", history: wave(24, { base: 90, amp: 30, seed: 84 }) },
-  { id: "otx", name: "AlienVault OTX", format: "TAXII 2.1", url: "https://otx.example.com/taxii/root/collections/", interval: "30 min", indicators: 14_902, added24h: 288, lastSync: "11 min ago", status: "synced", enabled: true, minConfidence: 60, defaultTlp: "GREEN", history: wave(24, { base: 280, amp: 90, seed: 85 }) },
-  { id: "misp", name: "MISP community", format: "STIX 2.1", url: "https://misp.example.com/events/restSearch", interval: "1 h", indicators: 9_117, added24h: 12, lastSync: "2 h ago", status: "slow", enabled: true, minConfidence: 50, defaultTlp: "AMBER", error: "Last 3 pulls took over 14 min; the server returned HTTP 429 twice.", history: wave(24, { base: 60, amp: 30, seed: 86, spike: -55, spikeAt: 18 }) },
-  { id: "kev", name: "CISA KEV", format: "JSON", url: "https://www.example.com/kev/known_exploited_vulnerabilities.json", interval: "6 h", indicators: 1_262, added24h: 3, lastSync: "1 h ago", status: "synced", enabled: true, minConfidence: 100, defaultTlp: "CLEAR", history: wave(24, { base: 2, amp: 2, seed: 87 }) },
-  { id: "partner", name: "Partner ISAC", format: "TAXII 2.1", url: "https://isac.example.com/taxii2/", interval: "1 h", indicators: 0, added24h: 0, lastSync: "3 d ago", status: "failing", enabled: true, minConfidence: 70, defaultTlp: "AMBER", error: "401 Unauthorized: API key expired on Oct 16.", history: Array(24).fill(0) },
-  { id: "internal", name: "Internal", format: "Native", url: "Incidents, Deception and analyst submissions", interval: "Live", indicators: 1_388, added24h: 17, lastSync: "Live", status: "synced", enabled: true, minConfidence: 0, defaultTlp: "AMBER", history: wave(24, { base: 1, amp: 1, seed: 88, spike: 6, spikeAt: 13, spikeLen: 2 }) },
+  {
+    id: "feodo",
+    name: "abuse.ch Feodo",
+    format: "CSV",
+    url: "https://feodotracker.abuse.ch/downloads/ipblocklist.csv",
+    interval: "15 min",
+    indicators: 4_210,
+    added24h: 38,
+    lastSync: "4 min ago",
+    status: "synced",
+    enabled: true,
+    minConfidence: 75,
+    defaultTlp: "CLEAR",
+    history: wave(24, { base: 40, amp: 15, seed: 81 }),
+  },
+  {
+    id: "urlhaus",
+    name: "abuse.ch URLhaus",
+    format: "CSV",
+    url: "https://urlhaus.abuse.ch/downloads/csv_recent/",
+    interval: "15 min",
+    indicators: 9_812,
+    added24h: 412,
+    lastSync: "4 min ago",
+    status: "synced",
+    enabled: true,
+    minConfidence: 60,
+    defaultTlp: "CLEAR",
+    history: wave(24, { base: 400, amp: 120, seed: 82 }),
+  },
+  {
+    id: "threatfox",
+    name: "abuse.ch ThreatFox",
+    format: "JSON",
+    url: "https://threatfox-api.abuse.ch/api/v1/",
+    interval: "30 min",
+    indicators: 5_120,
+    added24h: 201,
+    lastSync: "9 min ago",
+    status: "synced",
+    enabled: true,
+    minConfidence: 50,
+    defaultTlp: "CLEAR",
+    history: wave(24, { base: 200, amp: 60, seed: 83 }),
+  },
+  {
+    id: "bazaar",
+    name: "abuse.ch MalwareBazaar",
+    format: "JSON",
+    url: "https://mb-api.abuse.ch/api/v1/",
+    interval: "1 h",
+    indicators: 2_338,
+    added24h: 96,
+    lastSync: "22 min ago",
+    status: "synced",
+    enabled: true,
+    minConfidence: 80,
+    defaultTlp: "CLEAR",
+    history: wave(24, { base: 90, amp: 30, seed: 84 }),
+  },
+  {
+    id: "otx",
+    name: "AlienVault OTX",
+    format: "TAXII 2.1",
+    url: "https://otx.example.com/taxii/root/collections/",
+    interval: "30 min",
+    indicators: 14_902,
+    added24h: 288,
+    lastSync: "11 min ago",
+    status: "synced",
+    enabled: true,
+    minConfidence: 60,
+    defaultTlp: "GREEN",
+    history: wave(24, { base: 280, amp: 90, seed: 85 }),
+  },
+  {
+    id: "misp",
+    name: "MISP community",
+    format: "STIX 2.1",
+    url: "https://misp.example.com/events/restSearch",
+    interval: "1 h",
+    indicators: 9_117,
+    added24h: 12,
+    lastSync: "2 h ago",
+    status: "slow",
+    enabled: true,
+    minConfidence: 50,
+    defaultTlp: "AMBER",
+    error: "Last 3 pulls took over 14 min; the server returned HTTP 429 twice.",
+    history: wave(24, { base: 60, amp: 30, seed: 86, spike: -55, spikeAt: 18 }),
+  },
+  {
+    id: "kev",
+    name: "CISA KEV",
+    format: "JSON",
+    url: "https://www.example.com/kev/known_exploited_vulnerabilities.json",
+    interval: "6 h",
+    indicators: 1_262,
+    added24h: 3,
+    lastSync: "1 h ago",
+    status: "synced",
+    enabled: true,
+    minConfidence: 100,
+    defaultTlp: "CLEAR",
+    history: wave(24, { base: 2, amp: 2, seed: 87 }),
+  },
+  {
+    id: "partner",
+    name: "Partner ISAC",
+    format: "TAXII 2.1",
+    url: "https://isac.example.com/taxii2/",
+    interval: "1 h",
+    indicators: 0,
+    added24h: 0,
+    lastSync: "3 d ago",
+    status: "failing",
+    enabled: true,
+    minConfidence: 70,
+    defaultTlp: "AMBER",
+    error: "401 Unauthorized: API key expired on Oct 16.",
+    history: Array(24).fill(0),
+  },
+  {
+    id: "internal",
+    name: "Internal",
+    format: "Native",
+    url: "Incidents, Deception and analyst submissions",
+    interval: "Live",
+    indicators: 1_388,
+    added24h: 17,
+    lastSync: "Live",
+    status: "synced",
+    enabled: true,
+    minConfidence: 0,
+    defaultTlp: "AMBER",
+    history: wave(24, { base: 1, amp: 1, seed: 88, spike: 6, spikeAt: 13, spikeLen: 2 }),
+  },
 ];
 
 interface Actor {
@@ -309,23 +659,111 @@ interface Sighting {
 
 const SIGHTINGS: Record<string, Sighting[]> = {
   "203.0.113.24": [
-    { id: "s1", time: "Oct 19 13:58", product: "Deception", asset: HOSTS[0], assetKind: "host", context: "Canary database login with svc_reporting", action: "Alerted" },
-    { id: "s2", time: "Oct 19 13:12", product: "Network IDS", asset: HOSTS[3], assetKind: "host", context: "ET MALWARE Feodo Tracker C2 · tcp/443 outbound", action: "Alerted" },
-    { id: "s3", time: "Oct 19 12:40", product: "WAF", asset: "api.example.com", assetKind: "url", context: "942100 SQLi via libinjection on /v1/orders", action: "Blocked" },
-    { id: "s4", time: "Oct 19 11:02", product: "WAF", asset: "api.example.com", assetKind: "url", context: "942160 Blind SQLi sleep() on /v1/orders", action: "Blocked" },
-    { id: "s5", time: "Oct 18 22:15", product: "VPN sign-in", asset: "dana.kim", assetKind: "user", context: "Real IP of a VPN session · lon-01", action: "Logged" },
-    { id: "s6", time: "Oct 18 09:30", product: "SIEM", asset: HOSTS[7], assetKind: "host", context: "nginx access log · 403 · 1,204 requests", action: "Logged" },
+    {
+      id: "s1",
+      time: "Oct 19 13:58",
+      product: "Deception",
+      asset: HOSTS[0],
+      assetKind: "host",
+      context: "Canary database login with svc_reporting",
+      action: "Alerted",
+    },
+    {
+      id: "s2",
+      time: "Oct 19 13:12",
+      product: "Network IDS",
+      asset: HOSTS[3],
+      assetKind: "host",
+      context: "ET MALWARE Feodo Tracker C2 · tcp/443 outbound",
+      action: "Alerted",
+    },
+    {
+      id: "s3",
+      time: "Oct 19 12:40",
+      product: "WAF",
+      asset: "api.example.com",
+      assetKind: "url",
+      context: "942100 SQLi via libinjection on /v1/orders",
+      action: "Blocked",
+    },
+    {
+      id: "s4",
+      time: "Oct 19 11:02",
+      product: "WAF",
+      asset: "api.example.com",
+      assetKind: "url",
+      context: "942160 Blind SQLi sleep() on /v1/orders",
+      action: "Blocked",
+    },
+    {
+      id: "s5",
+      time: "Oct 18 22:15",
+      product: "VPN sign-in",
+      asset: "dana.kim",
+      assetKind: "user",
+      context: "Real IP of a VPN session · lon-01",
+      action: "Logged",
+    },
+    {
+      id: "s6",
+      time: "Oct 18 09:30",
+      product: "SIEM",
+      asset: HOSTS[7],
+      assetKind: "host",
+      context: "nginx access log · 403 · 1,204 requests",
+      action: "Logged",
+    },
   ],
   "update-check.example.com": [
-    { id: "s7", time: "Oct 19 08:15", product: "Network IDS", asset: HOSTS[4], assetKind: "host", context: "DNS TXT queries · 2,413 in 41 min", action: "Alerted" },
+    {
+      id: "s7",
+      time: "Oct 19 08:15",
+      product: "Network IDS",
+      asset: HOSTS[4],
+      assetKind: "host",
+      context: "DNS TXT queries · 2,413 in 41 min",
+      action: "Alerted",
+    },
     { id: "s8", time: "Oct 19 08:02", product: "SIEM", asset: HOSTS[4], assetKind: "host", context: "Process curl resolved the domain", action: "Logged" },
     { id: "s9", time: "Oct 18 23:44", product: "Network IDS", asset: HOSTS[2], assetKind: "host", context: "TLS SNI match · JA3 72a589da…", action: "Alerted" },
   ],
   "198.51.100.201": [
-    { id: "s10", time: "Oct 19 13:58", product: "Deception", asset: "backup-svc AWS key", assetKind: "url", context: "Canary AWS key used: sts:GetCallerIdentity", action: "Alerted" },
-    { id: "s11", time: "Oct 19 13:53", product: "VPN sign-in", asset: "ben.ortiz", assetKind: "user", context: "Failed sign-in: wrong TOTP code (3 of 5)", action: "Blocked" },
-    { id: "s12", time: "Oct 19 12:47", product: "VPN sign-in", asset: "sarah.chen", assetKind: "user", context: "Password spray · 41 accounts in 10 min", action: "Blocked" },
-    { id: "s13", time: "Oct 19 14:02", product: "WAF", asset: "app.example.com", assetKind: "url", context: "941100 XSS via libinjection on /login", action: "Blocked" },
+    {
+      id: "s10",
+      time: "Oct 19 13:58",
+      product: "Deception",
+      asset: "backup-svc AWS key",
+      assetKind: "url",
+      context: "Canary AWS key used: sts:GetCallerIdentity",
+      action: "Alerted",
+    },
+    {
+      id: "s11",
+      time: "Oct 19 13:53",
+      product: "VPN sign-in",
+      asset: "ben.ortiz",
+      assetKind: "user",
+      context: "Failed sign-in: wrong TOTP code (3 of 5)",
+      action: "Blocked",
+    },
+    {
+      id: "s12",
+      time: "Oct 19 12:47",
+      product: "VPN sign-in",
+      asset: "sarah.chen",
+      assetKind: "user",
+      context: "Password spray · 41 accounts in 10 min",
+      action: "Blocked",
+    },
+    {
+      id: "s13",
+      time: "Oct 19 14:02",
+      product: "WAF",
+      asset: "app.example.com",
+      assetKind: "url",
+      context: "941100 XSS via libinjection on /login",
+      action: "Blocked",
+    },
   ],
 };
 
@@ -389,14 +827,24 @@ function IndicatorsPage() {
         </span>
       ),
     },
-    { id: "tlp", header: "TLP", description: "Traffic Light Protocol: who this indicator may be shared with.", sortValue: (i) => i.tlp, cell: (i) => <TlpBadge tlp={i.tlp} /> },
+    {
+      id: "tlp",
+      header: "TLP",
+      description: "Traffic Light Protocol: who this indicator may be shared with.",
+      sortValue: (i) => i.tlp,
+      cell: (i) => <TlpBadge tlp={i.tlp} />,
+    },
     { id: "hits", header: "Hits · 30 d", align: "right", mono: true, sortValue: (i) => i.hits, cell: (i) => i.hits },
     { id: "added", header: "Added", mono: true, cell: (i) => i.added },
     {
       id: "expires",
       header: "Expires",
       description: "Indicators age out so stale IPs stop alerting. IPs default to 30 days, hashes never.",
-      cell: (i) => <span className={i.expires === "in 1 d" || i.expires === "in 2 d" ? "whitespace-nowrap text-warning-text" : "whitespace-nowrap text-fg-muted"}>{i.expires}</span>,
+      cell: (i) => (
+        <span className={i.expires === "in 1 d" || i.expires === "in 2 d" ? "whitespace-nowrap text-warning-text" : "whitespace-nowrap text-fg-muted"}>
+          {i.expires}
+        </span>
+      ),
     },
   ];
   const add = (e: FormEvent) => {
@@ -404,7 +852,21 @@ function IndicatorsPage() {
     if (!draft.value.trim()) return;
     const id = `i-${48150 + rows.length - INDICATORS.length}`;
     setRows((rs) => [
-      { id, type: draft.type, value: draft.value.trim(), source: "Analyst · Emily Clark", confidence: Number(draft.confidence), tlp: draft.tlp, tags: draft.tags.split(",").map((t) => t.trim()).filter(Boolean), added: "Oct 19", expires: draft.expiry === "0" ? "never" : `in ${draft.expiry} d`, hits: 0 },
+      {
+        id,
+        type: draft.type,
+        value: draft.value.trim(),
+        source: "Analyst · Emily Clark",
+        confidence: Number(draft.confidence),
+        tlp: draft.tlp,
+        tags: draft.tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+        added: "Oct 19",
+        expires: draft.expiry === "0" ? "never" : `in ${draft.expiry} d`,
+        hits: 0,
+      },
       ...rs,
     ]);
     setNotice(`Added ${draft.value.trim()} · pushed to SIEM, WAF and Network IDS`);
@@ -432,20 +894,84 @@ function IndicatorsPage() {
       />
       <KpiGrid>
         <KpiCard label="Active" value="48,149" trend={wave(14, { base: 47000, amp: 900, seed: 61 })} delta={{ label: "+1,204 today", direction: "up" }} />
-        <KpiCard label="By type" value="61%" unit="IPs" footer={<span className="font-mono text-2xs text-fg-muted">IP 29.4k · domain 9.8k · URL 6.1k · hash 2.8k</span>} />
+        <KpiCard
+          label="By type"
+          value="61%"
+          unit="IPs"
+          footer={<span className="font-mono text-2xs text-fg-muted">IP 29.4k · domain 9.8k · URL 6.1k · hash 2.8k</span>}
+        />
         <KpiCard label="Expiring · 7 d" value="3,812" unit="indicators" tone="warning" delta={{ label: "Mostly scanner IPs from OTX" }} />
         <KpiCard label="Analyst added" value="212" unit="this quarter" delta={{ label: "TLP:AMBER by default" }} />
       </KpiGrid>
       {adding && (
-        <Panel title="Add indicator" description="Pushed to every connected product within a minute" actions={<Button size="sm" variant="ghost" onClick={() => setAdding(false)}>Cancel</Button>}>
-          <form aria-label="Add indicator" className="grid gap-2.5 md:grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]" onSubmit={add}>
-            <SelectField label="Type" value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value as IocType })} options={[{ value: "ip", label: "IP address" }, { value: "domain", label: "Domain" }, { value: "url", label: "URL" }, { value: "hash", label: "File hash" }]} />
-            <TextField label="Value" mono placeholder="198.51.100.23 or bad.example.com" value={draft.value} onChange={(e) => setDraft({ ...draft, value: e.target.value })} />
-            <SelectField label="TLP" value={draft.tlp} onChange={(e) => setDraft({ ...draft, tlp: e.target.value as Tlp })} options={(["CLEAR", "GREEN", "AMBER", "RED"] as Tlp[]).map((t) => ({ value: t, label: `TLP:${t}` }))} />
-            <SelectField label="Confidence" value={draft.confidence} onChange={(e) => setDraft({ ...draft, confidence: e.target.value })} options={[{ value: "100", label: "100 · confirmed" }, { value: "80", label: "80 · high" }, { value: "60", label: "60 · medium" }, { value: "40", label: "40 · low" }]} />
-            <SelectField label="Expires" value={draft.expiry} onChange={(e) => setDraft({ ...draft, expiry: e.target.value })} options={[{ value: "7", label: "7 days" }, { value: "30", label: "30 days" }, { value: "90", label: "90 days" }, { value: "0", label: "Never" }]} />
+        <Panel
+          title="Add indicator"
+          description="Pushed to every connected product within a minute"
+          actions={
+            <Button size="sm" variant="ghost" onClick={() => setAdding(false)}>
+              Cancel
+            </Button>
+          }
+        >
+          <form
+            aria-label="Add indicator"
+            className="grid gap-2.5 md:grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]"
+            onSubmit={add}
+          >
+            <SelectField
+              label="Type"
+              value={draft.type}
+              onChange={(e) => setDraft({ ...draft, type: e.target.value as IocType })}
+              options={[
+                { value: "ip", label: "IP address" },
+                { value: "domain", label: "Domain" },
+                { value: "url", label: "URL" },
+                { value: "hash", label: "File hash" },
+              ]}
+            />
+            <TextField
+              label="Value"
+              mono
+              placeholder="198.51.100.23 or bad.example.com"
+              value={draft.value}
+              onChange={(e) => setDraft({ ...draft, value: e.target.value })}
+            />
+            <SelectField
+              label="TLP"
+              value={draft.tlp}
+              onChange={(e) => setDraft({ ...draft, tlp: e.target.value as Tlp })}
+              options={(["CLEAR", "GREEN", "AMBER", "RED"] as Tlp[]).map((t) => ({ value: t, label: `TLP:${t}` }))}
+            />
+            <SelectField
+              label="Confidence"
+              value={draft.confidence}
+              onChange={(e) => setDraft({ ...draft, confidence: e.target.value })}
+              options={[
+                { value: "100", label: "100 · confirmed" },
+                { value: "80", label: "80 · high" },
+                { value: "60", label: "60 · medium" },
+                { value: "40", label: "40 · low" },
+              ]}
+            />
+            <SelectField
+              label="Expires"
+              value={draft.expiry}
+              onChange={(e) => setDraft({ ...draft, expiry: e.target.value })}
+              options={[
+                { value: "7", label: "7 days" },
+                { value: "30", label: "30 days" },
+                { value: "90", label: "90 days" },
+                { value: "0", label: "Never" },
+              ]}
+            />
             <div className="md:col-span-2 lg:col-span-4">
-              <TextField label="Tags" placeholder="phishing, acme-2026-07" hint="Comma separated. Tags link indicators to actors and campaigns." value={draft.tags} onChange={(e) => setDraft({ ...draft, tags: e.target.value })} />
+              <TextField
+                label="Tags"
+                placeholder="phishing, acme-2026-07"
+                hint="Comma separated. Tags link indicators to actors and campaigns."
+                value={draft.tags}
+                onChange={(e) => setDraft({ ...draft, tags: e.target.value })}
+              />
             </div>
             <div className="flex items-end">
               <Button type="submit" variant="primary">
@@ -458,8 +984,18 @@ function IndicatorsPage() {
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       <FilterBar onClear={types.length || tlps.length || q ? () => (setTypes([]), setTlps([]), setQ("")) : undefined}>
         <SearchInput label="Search value, tag or source" className="w-64" value={q} onChange={(e) => setQ(e.target.value)} />
-        <FacetFilter label="Type" selected={types} onChange={setTypes} options={(["ip", "domain", "url", "hash"] as IocType[]).map((t) => ({ value: t, count: rows.filter((r) => r.type === t).length }))} />
-        <FacetFilter label="TLP" selected={tlps} onChange={setTlps} options={(["CLEAR", "GREEN", "AMBER", "RED"] as Tlp[]).map((t) => ({ value: t, label: `TLP:${t}`, count: rows.filter((r) => r.tlp === t).length }))} />
+        <FacetFilter
+          label="Type"
+          selected={types}
+          onChange={setTypes}
+          options={(["ip", "domain", "url", "hash"] as IocType[]).map((t) => ({ value: t, count: rows.filter((r) => r.type === t).length }))}
+        />
+        <FacetFilter
+          label="TLP"
+          selected={tlps}
+          onChange={setTlps}
+          options={(["CLEAR", "GREEN", "AMBER", "RED"] as Tlp[]).map((t) => ({ value: t, label: `TLP:${t}`, count: rows.filter((r) => r.tlp === t).length }))}
+        />
       </FilterBar>
       {selected.length > 0 && (
         <div role="toolbar" aria-label="Bulk actions" className="flex items-center gap-2 rounded-lg border border-accent bg-accent-soft px-3 py-1.5 text-sm">
@@ -476,7 +1012,18 @@ function IndicatorsPage() {
         </div>
       )}
       <Panel title="Indicator store" description={`${shown.length} of ${rows.length} shown · newest first`} flush>
-        <DataTable label="Indicators" columns={cols} rows={shown} getRowId={(i) => i.id} selectable selectedIds={selected} onSelectionChange={setSelected} pageSize={10} minWidth={1080} empty={<p className="py-8">No indicators match</p>} />
+        <DataTable
+          label="Indicators"
+          columns={cols}
+          rows={shown}
+          getRowId={(i) => i.id}
+          selectable
+          selectedIds={selected}
+          onSelectionChange={setSelected}
+          pageSize={10}
+          minWidth={1080}
+          empty={<p className="py-8">No indicators match</p>}
+        />
       </Panel>
     </>
   );
@@ -501,10 +1048,25 @@ function FeedsPage() {
         </span>
       ),
     },
-    { id: "status", header: "Status", sortValue: (x) => x.status, cell: (x) => (x.enabled ? <StatusBadge tone={FEED_STATUS[x.status].tone}>{FEED_STATUS[x.status].label}</StatusBadge> : <StatusBadge tone="neutral">Paused</StatusBadge>) },
+    {
+      id: "status",
+      header: "Status",
+      sortValue: (x) => x.status,
+      cell: (x) =>
+        x.enabled ? (
+          <StatusBadge tone={FEED_STATUS[x.status].tone}>{FEED_STATUS[x.status].label}</StatusBadge>
+        ) : (
+          <StatusBadge tone="neutral">Paused</StatusBadge>
+        ),
+    },
     { id: "ind", header: "Indicators", align: "right", mono: true, sortValue: (x) => x.indicators, cell: (x) => x.indicators.toLocaleString("en-US") },
     { id: "added", header: "New · 24 h", align: "right", mono: true, sortValue: (x) => x.added24h, cell: (x) => x.added24h },
-    { id: "trend", header: "Ingested · 24 h", width: "120px", cell: (x) => <Sparkline data={x.history} label={`Indicators ingested per hour from ${x.name}`} height={20} /> },
+    {
+      id: "trend",
+      header: "Ingested · 24 h",
+      width: "120px",
+      cell: (x) => <Sparkline data={x.history} label={`Indicators ingested per hour from ${x.name}`} height={20} />,
+    },
     { id: "interval", header: "Every", mono: true, cell: (x) => x.interval },
     { id: "sync", header: "Last sync", align: "right", cell: (x) => <span className="whitespace-nowrap text-fg-muted">{x.lastSync}</span> },
     {
@@ -523,7 +1085,15 @@ function FeedsPage() {
   ];
   return (
     <>
-      <PageHeader title="Feeds" description="Where indicators come from. Feeds are pulled on a schedule, normalised to STIX 2.1 and scored." actions={<Button variant="primary" icon={<Plus />}>Add feed</Button>} />
+      <PageHeader
+        title="Feeds"
+        description="Where indicators come from. Feeds are pulled on a schedule, normalised to STIX 2.1 and scored."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add feed
+          </Button>
+        }
+      />
       <KpiGrid>
         <KpiCard label="Feeds" value="9" unit="7 healthy" tone="warning" delta={{ label: "1 slow · 1 failing", intent: "bad" }} />
         <KpiCard label="Ingested · 24 h" value="1,067" unit="new indicators" trend={wave(24, { base: 45, amp: 18, seed: 89 })} />
@@ -531,7 +1101,15 @@ function FeedsPage() {
         <KpiCard label="False positive reports" value="4" unit="this month" delta={{ label: "All from OTX scanner pulses" }} />
       </KpiGrid>
       {rows.some((r) => r.status === "failing") && (
-        <Callout tone="danger" title="Partner ISAC has not synced for 3 days" action={<Button size="sm" onClick={() => setActive("partner")}>Fix credentials</Button>}>
+        <Callout
+          tone="danger"
+          title="Partner ISAC has not synced for 3 days"
+          action={
+            <Button size="sm" onClick={() => setActive("partner")}>
+              Fix credentials
+            </Button>
+          }
+        >
           The TAXII server answers 401 Unauthorized. The API key expired on Oct 16.
         </Callout>
       )}
@@ -539,16 +1117,48 @@ function FeedsPage() {
         <Panel title="Configured feeds" flush>
           <DataTable label="Feeds" columns={cols} rows={rows} getRowId={(x) => x.id} activeRowId={active} minWidth={900} />
         </Panel>
-        <Panel title={f.name} description={f.format} actions={f.enabled ? <StatusBadge tone={FEED_STATUS[f.status].tone}>{FEED_STATUS[f.status].label}</StatusBadge> : <StatusBadge tone="neutral">Paused</StatusBadge>} aria-label="Feed configuration">
+        <Panel
+          title={f.name}
+          description={f.format}
+          actions={
+            f.enabled ? (
+              <StatusBadge tone={FEED_STATUS[f.status].tone}>{FEED_STATUS[f.status].label}</StatusBadge>
+            ) : (
+              <StatusBadge tone="neutral">Paused</StatusBadge>
+            )
+          }
+          aria-label="Feed configuration"
+        >
           <div className="flex flex-col gap-2.5">
             {f.error && <Callout tone={f.status === "failing" ? "danger" : "warning"} title={f.error} />}
             <TextField key={`${f.id}-url`} label="Endpoint" mono defaultValue={f.url} />
             <div className="grid grid-cols-2 gap-2.5">
-              <SelectField key={`${f.id}-int`} label="Pull every" defaultValue={f.interval} options={["Live", "15 min", "30 min", "1 h", "6 h", "24 h"].map((v) => ({ value: v, label: v }))} />
-              <SelectField key={`${f.id}-tlp`} label="Default TLP" defaultValue={f.defaultTlp} options={(["CLEAR", "GREEN", "AMBER", "RED"] as Tlp[]).map((t) => ({ value: t, label: `TLP:${t}` }))} />
+              <SelectField
+                key={`${f.id}-int`}
+                label="Pull every"
+                defaultValue={f.interval}
+                options={["Live", "15 min", "30 min", "1 h", "6 h", "24 h"].map((v) => ({ value: v, label: v }))}
+              />
+              <SelectField
+                key={`${f.id}-tlp`}
+                label="Default TLP"
+                defaultValue={f.defaultTlp}
+                options={(["CLEAR", "GREEN", "AMBER", "RED"] as Tlp[]).map((t) => ({ value: t, label: `TLP:${t}` }))}
+              />
             </div>
-            <TextField key={`${f.id}-conf`} label="Minimum confidence" type="number" defaultValue={f.minConfidence} hint="Indicators below this score are stored but never alert." />
-            <Switch checked={f.enabled} onCheckedChange={(v) => update({ enabled: v })} label="Pull this feed" description="Paused feeds keep their indicators until they expire." />
+            <TextField
+              key={`${f.id}-conf`}
+              label="Minimum confidence"
+              type="number"
+              defaultValue={f.minConfidence}
+              hint="Indicators below this score are stored but never alert."
+            />
+            <Switch
+              checked={f.enabled}
+              onCheckedChange={(v) => update({ enabled: v })}
+              label="Pull this feed"
+              description="Paused feeds keep their indicators until they expire."
+            />
             <div className="flex flex-wrap items-center gap-2 border-t border-line pt-2.5">
               <Button
                 size="sm"
@@ -614,7 +1224,13 @@ function MatchesPage() {
         <SearchInput label="Search indicators or actors" className="w-64" value={q} onChange={(e) => setQ(e.target.value)} />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Indicators" value="48,149" unit="active" trend={wave(14, { base: 47000, amp: 900, seed: 61 })} delta={{ label: "+1,204 today", direction: "up" }} />
+        <KpiCard
+          label="Indicators"
+          value="48,149"
+          unit="active"
+          trend={wave(14, { base: 47000, amp: 900, seed: 61 })}
+          delta={{ label: "+1,204 today", direction: "up" }}
+        />
         <KpiCard label="Feeds healthy" value="8" unit="of 9" tone="warning" delta={{ label: "MISP community syncing slowly", intent: "bad" }} />
         <KpiCard
           label="Matches · 24 h"
@@ -642,7 +1258,16 @@ function MatchesPage() {
             ]}
           />
         </Panel>
-        <Panel title="Feeds" description="9 configured · 5 shown" actions={<Button size="sm" variant="ghost">Manage</Button>} flush>
+        <Panel
+          title="Feeds"
+          description="9 configured · 5 shown"
+          actions={
+            <Button size="sm" variant="ghost">
+              Manage
+            </Button>
+          }
+          flush
+        >
           <ul aria-label="Threat intel feeds" className="flex flex-col">
             {feeds.map((f) => (
               <li key={f.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-subtle px-3 py-1.5 last:border-0">
@@ -662,7 +1287,15 @@ function MatchesPage() {
         </Panel>
       </div>
       <Panel title="Matches" description={`${rows.length} of ${matches.length} shown`} flush>
-        <DataTable label="Matches" columns={columns} rows={rows} getRowId={(m) => m.id} defaultSort={{ id: "first", direction: "desc" }} minWidth={1000} empty={<p className="py-8">No matches of this type</p>} />
+        <DataTable
+          label="Matches"
+          columns={columns}
+          rows={rows}
+          getRowId={(m) => m.id}
+          defaultSort={{ id: "first", direction: "desc" }}
+          minWidth={1000}
+          empty={<p className="py-8">No matches of this type</p>}
+        />
       </Panel>
     </>
   );
@@ -687,19 +1320,48 @@ function ActorsPage() {
     },
     { id: "kind", header: "Kind", sortValue: (x) => x.kind, cell: (x) => <Badge variant="outline">{x.kind}</Badge> },
     { id: "ind", header: "Indicators", align: "right", mono: true, sortValue: (x) => x.indicators, cell: (x) => x.indicators.toLocaleString("en-US") },
-    { id: "m30", header: "Matches · 30 d", align: "right", mono: true, sortValue: (x) => x.matches30d, cell: (x) => <span className={x.matches30d >= 5 ? "text-danger-text" : undefined}>{x.matches30d}</span> },
+    {
+      id: "m30",
+      header: "Matches · 30 d",
+      align: "right",
+      mono: true,
+      sortValue: (x) => x.matches30d,
+      cell: (x) => <span className={x.matches30d >= 5 ? "text-danger-text" : undefined}>{x.matches30d}</span>,
+    },
     { id: "last", header: "Last seen", cell: (x) => <span className="whitespace-nowrap text-fg-muted">{x.lastSeen}</span> },
   ];
   return (
     <>
-      <PageHeader title="Actors" description="Groups, malware families and campaigns, with the ATT&CK techniques we have seen in our own telemetry." actions={<Button variant="primary" icon={<Plus />}>New campaign</Button>} />
+      <PageHeader
+        title="Actors"
+        description="Groups, malware families and campaigns, with the ATT&CK techniques we have seen in our own telemetry."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New campaign
+          </Button>
+        }
+      />
       <FilterBar onClear={kinds.length ? () => setKinds([]) : undefined}>
         <SearchInput label="Search actors or aliases" className="w-60" />
-        <FacetFilter label="Kind" selected={kinds} onChange={setKinds} options={["Group", "Malware", "Campaign"].map((k) => ({ value: k, count: ACTORS.filter((x) => x.kind === k).length }))} />
+        <FacetFilter
+          label="Kind"
+          selected={kinds}
+          onChange={setKinds}
+          options={["Group", "Malware", "Campaign"].map((k) => ({ value: k, count: ACTORS.filter((x) => x.kind === k).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Tracked actors" description="Select one to see its profile" flush>
-          <DataTable label="Actors" columns={cols} rows={rows} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={active} defaultSort={{ id: "m30", direction: "desc" }} minWidth={620} />
+          <DataTable
+            label="Actors"
+            columns={cols}
+            rows={rows}
+            getRowId={(x) => x.id}
+            onRowClick={(x) => setActive(x.id)}
+            activeRowId={active}
+            defaultSort={{ id: "m30", direction: "desc" }}
+            minWidth={620}
+          />
         </Panel>
         <Panel title={a.name} description={`${a.kind} · ${a.motivation} · ${a.origin}`} aria-label="Actor profile">
           <div className="flex flex-col gap-2.5">
@@ -744,7 +1406,9 @@ function ActorsPage() {
                         <span className="text-2xs text-fg-muted">{t.tactic}</span>
                       </span>
                     </td>
-                    <td className="py-1.5 text-right">{t.seen ? <StatusBadge tone="danger">Seen</StatusBadge> : <span className="text-xs text-fg-muted">Not seen</span>}</td>
+                    <td className="py-1.5 text-right">
+                      {t.seen ? <StatusBadge tone="danger">Seen</StatusBadge> : <span className="text-xs text-fg-muted">Not seen</span>}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -784,7 +1448,13 @@ function SightingsPage() {
     { id: "product", header: "Product", sortValue: (s) => s.product, cell: (s) => <Badge variant="outline">{s.product}</Badge> },
     { id: "asset", header: "Asset", cell: (s) => <EntityChip kind={s.assetKind} value={s.asset} /> },
     { id: "context", header: "What happened", cell: (s) => <span className="text-xs">{s.context}</span> },
-    { id: "action", header: "Outcome", description: "What the product did when it saw the indicator.", sortValue: (s) => s.action, cell: (s) => <StatusBadge tone={ACTION_TONE[s.action]}>{s.action}</StatusBadge> },
+    {
+      id: "action",
+      header: "Outcome",
+      description: "What the product did when it saw the indicator.",
+      sortValue: (s) => s.action,
+      cell: (s) => <StatusBadge tone={ACTION_TONE[s.action]}>{s.action}</StatusBadge>,
+    },
   ];
   return (
     <>
@@ -799,7 +1469,11 @@ function SightingsPage() {
         <FacetFilter label="Product" selected={products} onChange={setProducts} options={byProduct.map((p) => ({ value: p.id, count: p.value }))} />
       </FilterBar>
       <div className="grid gap-2.5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <Panel title={<span className="font-mono">{ioc}</span>} description={ind ? `${ind.source} · ${ind.tags.map((t) => `#${t}`).join(" ")}` : "Analyst indicator"} aria-label="Indicator summary">
+        <Panel
+          title={<span className="font-mono">{ioc}</span>}
+          description={ind ? `${ind.source} · ${ind.tags.map((t) => `#${t}`).join(" ")}` : "Analyst indicator"}
+          aria-label="Indicator summary"
+        >
           <dl className="grid grid-cols-2 gap-2 text-sm">
             <div>
               <dt className="text-2xs text-fg-muted">Sightings</dt>

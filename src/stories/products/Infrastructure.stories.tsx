@@ -82,9 +82,7 @@ const hosts: Host[] = (() => {
       cpu: state === "unreachable" ? 0 : cpu,
       mem: state === "unreachable" ? 0 : mem,
       containers: role === "db" ? 2 : role === "edge" ? 4 : Math.round(3 + r() * 11),
-      cves: hot
-        ? { critical: 2, high: 5 }
-        : { critical: r() > 0.88 ? 1 : 0, high: r() > 0.6 ? Math.round(1 + r() * 4) : 0 },
+      cves: hot ? { critical: 2, high: 5 } : { critical: r() > 0.88 ? 1 : 0, high: r() > 0.6 ? Math.round(1 + r() * 4) : 0 },
       malware: hot ? 1 : 0,
       uptime: `${Math.round(2 + r() * 60)} d`,
     };
@@ -184,9 +182,7 @@ function UsageBar({ value, label }: { value: number; label: string }) {
       <span aria-hidden className="h-1.5 w-16 overflow-hidden rounded-full bg-subtle">
         <span className="block h-full rounded-full" style={{ width: `${Math.min(100, value)}%`, background: cpuColor(value) }} />
       </span>
-      <span className={cn("w-9 text-right font-mono text-xs tabular-nums", value >= 85 ? "font-semibold text-warning-text" : "text-fg")}>
-        {value}%
-      </span>
+      <span className={cn("w-9 text-right font-mono text-xs tabular-nums", value >= 85 ? "font-semibold text-warning-text" : "text-fg")}>{value}%</span>
     </span>
   );
 }
@@ -207,11 +203,7 @@ function Findings({ h }: { h: Host }) {
   return (
     <span className="flex flex-wrap gap-1">
       {total > 0 && (
-        <a
-          href={`#vulnerabilities?host=${h.name}`}
-          onClick={(e) => e.stopPropagation()}
-          className="no-underline"
-        >
+        <a href={`#vulnerabilities?host=${h.name}`} onClick={(e) => e.stopPropagation()} className="no-underline">
           <Badge tone={h.cves.critical ? "danger" : "warning"} icon={<Bug aria-hidden className="size-3" />}>
             {total} CVE{total > 1 ? "s" : ""}
             <span className="sr-only"> on {h.name}, open in Vulnerabilities</span>
@@ -219,11 +211,7 @@ function Findings({ h }: { h: Host }) {
         </a>
       )}
       {h.malware > 0 && (
-        <a
-          href={`#malware?host=${h.name}`}
-          onClick={(e) => e.stopPropagation()}
-          className="no-underline"
-        >
+        <a href={`#malware?host=${h.name}`} onClick={(e) => e.stopPropagation()} className="no-underline">
           <Badge tone="critical" icon={<Biohazard aria-hidden className="size-3" />}>
             Malware
             <span className="sr-only"> on {h.name}, open in Malware</span>
@@ -244,7 +232,11 @@ function hostColumns(onOpen: (h: Host) => void): Column<Host>[] {
       sortValue: (h) => h.name,
       cell: (h) => (
         <span className="flex min-w-0 flex-col">
-          <button type="button" onClick={(e) => (e.stopPropagation(), onOpen(h))} className="truncate text-left font-mono text-xs font-medium text-fg hover:underline">
+          <button
+            type="button"
+            onClick={(e) => (e.stopPropagation(), onOpen(h))}
+            className="truncate text-left font-mono text-xs font-medium text-fg hover:underline"
+          >
             {h.name}
           </button>
           <span className="truncate text-2xs text-fg-muted">
@@ -254,8 +246,18 @@ function hostColumns(onOpen: (h: Host) => void): Column<Host>[] {
       ),
     },
     { id: "role", header: "Role", sortValue: (h) => h.role, cell: (h) => <Badge mono>{h.role}</Badge> },
-    { id: "cpu", header: "CPU", sortValue: (h) => h.cpu, cell: (h) => (h.state === "unreachable" ? <span className="text-xs text-fg-muted">No data</span> : <UsageBar label="CPU" value={h.cpu} />) },
-    { id: "mem", header: "Memory", sortValue: (h) => h.mem, cell: (h) => (h.state === "unreachable" ? <span className="text-xs text-fg-muted">No data</span> : <UsageBar label="Memory" value={h.mem} />) },
+    {
+      id: "cpu",
+      header: "CPU",
+      sortValue: (h) => h.cpu,
+      cell: (h) => (h.state === "unreachable" ? <span className="text-xs text-fg-muted">No data</span> : <UsageBar label="CPU" value={h.cpu} />),
+    },
+    {
+      id: "mem",
+      header: "Memory",
+      sortValue: (h) => h.mem,
+      cell: (h) => (h.state === "unreachable" ? <span className="text-xs text-fg-muted">No data</span> : <UsageBar label="Memory" value={h.mem} />),
+    },
     { id: "containers", header: "Containers", align: "right", mono: true, sortValue: (h) => h.containers, cell: (h) => h.containers },
     { id: "findings", header: "Findings", sortValue: (h) => h.cves.critical * 100 + h.cves.high + h.malware * 1000, cell: (h) => <Findings h={h} /> },
   ];
@@ -528,7 +530,13 @@ function HostsPage() {
       </FilterBar>
       <KpiGrid minWidth={170}>
         <KpiCard label="Hosts reporting" value="47" unit="of 48" delta={{ label: "edge-fra-02 silent 14 m", intent: "bad" }} />
-        <KpiCard label="Avg CPU" value="41" unit="%" trend={wave(24, { base: 38, amp: 6, seed: 2, spike: 8 })} delta={{ label: "+6 pts in 1 h", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="Avg CPU"
+          value="41"
+          unit="%"
+          trend={wave(24, { base: 38, amp: 6, seed: 2, spike: 8 })}
+          delta={{ label: "+6 pts in 1 h", direction: "up", intent: "bad" }}
+        />
         <KpiCard label="Avg memory" value="57" unit="%" trend={wave(24, { base: 55, amp: 3, seed: 3 })} delta={{ label: "flat", direction: "flat" }} />
         <KpiCard label="Containers" value="312" unit="9 restarting" delta={{ label: "+14 since deploy", direction: "up" }} />
         <KpiCard label="Hosts with findings" value="19" tone="danger" unit="2 critical" delta={{ label: "1 malware", intent: "bad" }} />
@@ -568,7 +576,15 @@ function HostsPage() {
           )}
           {view === "containers" && (
             <Panel title="Containers" description="312 running across 47 hosts" flush>
-              <DataTable label="Containers" columns={containerColumns} rows={containers} getRowId={(c) => c.id} defaultSort={{ id: "cpu", direction: "desc" }} pageSize={10} minWidth={820} />
+              <DataTable
+                label="Containers"
+                columns={containerColumns}
+                rows={containers}
+                getRowId={(c) => c.id}
+                defaultSort={{ id: "cpu", direction: "desc" }}
+                pageSize={10}
+                minWidth={820}
+              />
             </Panel>
           )}
           {view === "kubernetes" && (
@@ -581,7 +597,6 @@ function HostsPage() {
       </div>
     </>
   );
-  
 }
 
 /** Kubernetes: clusters, then nodes with pod capacity. */
@@ -631,11 +646,17 @@ function KubernetesPage() {
           />
         }
       >
-        <DataTable label="Kubernetes nodes" columns={k8sColumns} rows={rows} getRowId={(k) => k.id} defaultSort={{ id: "cpu", direction: "desc" }} minWidth={760} />
+        <DataTable
+          label="Kubernetes nodes"
+          columns={k8sColumns}
+          rows={rows}
+          getRowId={(k) => k.id}
+          defaultSort={{ id: "cpu", direction: "desc" }}
+          minWidth={760}
+        />
       </Panel>
     </>
   );
-  
 }
 
 /* ---------------------------------------------------------------- overview */
@@ -643,14 +664,24 @@ function KubernetesPage() {
 function OverviewPage() {
   const [range, setRange] = useState("1h");
   const byRole = ROLES.map((r) => ({ id: r, label: r, value: hosts.filter((h) => h.role === r).length }));
-  const byState = (["running", "degraded", "unreachable"] as const).map((s) => ({ id: s, label: STATE_META[s].label, value: hosts.filter((h) => h.state === s).length, color: `var(--oa-${STATE_META[s].tone})` }));
+  const byState = (["running", "degraded", "unreachable"] as const).map((s) => ({
+    id: s,
+    label: STATE_META[s].label,
+    value: hosts.filter((h) => h.state === s).length,
+    color: `var(--oa-${STATE_META[s].tone})`,
+  }));
   const top = [...hosts].sort((a, b) => b.cpu - a.cpu).slice(0, 6);
   const cols: Column<Host>[] = [
     { id: "name", header: "Host", cell: (h) => <EntityChip kind="host" value={h.name} hideKind /> },
     { id: "role", header: "Role", cell: (h) => <Badge mono>{h.role}</Badge> },
     { id: "cpu", header: "CPU", cell: (h) => <UsageBar label="CPU" value={h.cpu} /> },
     { id: "mem", header: "Memory", cell: (h) => <UsageBar label="Memory" value={h.mem} /> },
-    { id: "trend", header: "CPU · 1 h", width: "130px", cell: (h) => <Sparkline data={wave(30, { base: h.cpu, amp: 6, seed: Number(h.id.slice(1)) + 3 })} label={`CPU trend for ${h.name}`} height={22} /> },
+    {
+      id: "trend",
+      header: "CPU · 1 h",
+      width: "130px",
+      cell: (h) => <Sparkline data={wave(30, { base: h.cpu, amp: 6, seed: Number(h.id.slice(1)) + 3 })} label={`CPU trend for ${h.name}`} height={22} />,
+    },
   ];
   return (
     <>
@@ -664,8 +695,18 @@ function OverviewPage() {
       <KpiGrid>
         <KpiCard label="Hosts" value="48" unit={`${hosts.filter((h) => h.state === "running").length} running`} />
         <KpiCard label="Containers" value="312" unit="running" delta={{ label: "3 restarting" }} />
-        <KpiCard label="Avg. CPU" value={`${Math.round(hosts.reduce((s, h) => s + h.cpu, 0) / hosts.length)}`} unit="%" trend={wave(30, { base: 42, amp: 6, seed: 31 })} />
-        <KpiCard label="Unreachable" value={`${hosts.filter((h) => h.state === "unreachable").length}`} tone="danger" delta={{ label: "edge-fra-02 since 11:20", intent: "bad" }} />
+        <KpiCard
+          label="Avg. CPU"
+          value={`${Math.round(hosts.reduce((s, h) => s + h.cpu, 0) / hosts.length)}`}
+          unit="%"
+          trend={wave(30, { base: 42, amp: 6, seed: 31 })}
+        />
+        <KpiCard
+          label="Unreachable"
+          value={`${hosts.filter((h) => h.state === "unreachable").length}`}
+          tone="danger"
+          delta={{ label: "edge-fra-02 since 11:20", intent: "bad" }}
+        />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="By role">
@@ -699,7 +740,12 @@ function ContainersPage() {
   const [image, setImage] = useState<string[]>([]);
   const [q, setQ] = useState("");
   const [items, setItems] = useState(containers);
-  const rows = items.filter((c) => (state.length === 0 || state.includes(c.state)) && (image.length === 0 || image.includes(c.image)) && (!q || `${c.name} ${c.host}`.includes(q.toLowerCase())));
+  const rows = items.filter(
+    (c) =>
+      (state.length === 0 || state.includes(c.state)) &&
+      (image.length === 0 || image.includes(c.image)) &&
+      (!q || `${c.name} ${c.host}`.includes(q.toLowerCase())),
+  );
   const cols: Column<Container>[] = [
     ...containerColumns,
     {
@@ -717,16 +763,40 @@ function ContainersPage() {
   ];
   return (
     <>
-      <PageHeader title="Containers" description="312 containers on 48 hosts, from the Docker and containerd APIs. 40 shown." actions={<SearchInput label="Search containers" value={q} onChange={(e) => setQ(e.target.value)} className="w-60" />} />
+      <PageHeader
+        title="Containers"
+        description="312 containers on 48 hosts, from the Docker and containerd APIs. 40 shown."
+        actions={<SearchInput label="Search containers" value={q} onChange={(e) => setQ(e.target.value)} className="w-60" />}
+      />
       <Callout tone="danger" title="kworkerd on api-prod-03 uses 312% CPU from an unpinned alpine image">
         Not part of any deployment. Runtime and Malware both flagged it.
       </Callout>
       <FilterBar onClear={state.length || image.length ? () => (setState([]), setImage([])) : undefined}>
-        <FacetFilter label="State" selected={state} onChange={setState} options={(["running", "restarting", "exited"] as const).map((s) => ({ value: s, count: items.filter((c) => c.state === s).length }))} />
-        <FacetFilter label="Image" selected={image} onChange={setImage} searchable options={[...new Set(items.map((c) => c.image))].map((i) => ({ value: i, count: items.filter((c) => c.image === i).length }))} />
+        <FacetFilter
+          label="State"
+          selected={state}
+          onChange={setState}
+          options={(["running", "restarting", "exited"] as const).map((s) => ({ value: s, count: items.filter((c) => c.state === s).length }))}
+        />
+        <FacetFilter
+          label="Image"
+          selected={image}
+          onChange={setImage}
+          searchable
+          options={[...new Set(items.map((c) => c.image))].map((i) => ({ value: i, count: items.filter((c) => c.image === i).length }))}
+        />
       </FilterBar>
       <Panel title="Containers" description={`${rows.length} shown`} flush>
-        <DataTable label="Containers" columns={cols} rows={rows} getRowId={(c) => c.id} defaultSort={{ id: "cpu", direction: "desc" }} pageSize={15} minWidth={880} empty={<p className="py-8">No containers match</p>} />
+        <DataTable
+          label="Containers"
+          columns={cols}
+          rows={rows}
+          getRowId={(c) => c.id}
+          defaultSort={{ id: "cpu", direction: "desc" }}
+          pageSize={15}
+          minWidth={880}
+          empty={<p className="py-8">No containers match</p>}
+        />
       </Panel>
     </>
   );
@@ -768,9 +838,25 @@ function ProcessesPage() {
   const cols: Column<HostProc>[] = [
     { id: "pid", header: "PID", mono: true, align: "right", width: "70px", cell: (p) => p.pid },
     { id: "name", header: "Name", mono: true, cell: (p) => p.name },
-    { id: "cmd", header: "Command", width: "40%", cell: (p) => <span className="block truncate font-mono text-xs" title={p.cmd}>{p.cmd}</span> },
+    {
+      id: "cmd",
+      header: "Command",
+      width: "40%",
+      cell: (p) => (
+        <span className="block truncate font-mono text-xs" title={p.cmd}>
+          {p.cmd}
+        </span>
+      ),
+    },
     { id: "user", header: "User", mono: true, cell: (p) => p.user },
-    { id: "cpu", header: "CPU %", align: "right", mono: true, sortValue: (p) => p.cpu, cell: (p) => <span className={p.cpu > 100 ? "text-danger-text" : undefined}>{p.cpu.toFixed(1)}</span> },
+    {
+      id: "cpu",
+      header: "CPU %",
+      align: "right",
+      mono: true,
+      sortValue: (p) => p.cpu,
+      cell: (p) => <span className={p.cpu > 100 ? "text-danger-text" : undefined}>{p.cpu.toFixed(1)}</span>,
+    },
     { id: "mem", header: "Memory", align: "right", mono: true, sortValue: (p) => p.memMb, cell: (p) => `${p.memMb} MB` },
     { id: "threads", header: "Threads", align: "right", mono: true, cell: (p) => p.threads },
   ];
@@ -778,14 +864,30 @@ function ProcessesPage() {
     <>
       <PageHeader title="Processes" description="Top processes per host, sampled every 15 s by the agent." />
       <FilterBar>
-        <SelectField label="Host" value={host} onChange={(e) => setHost(e.target.value)} options={Object.keys(HOST_PROCS).map((h) => ({ value: h, label: h }))} />
+        <SelectField
+          label="Host"
+          value={host}
+          onChange={(e) => setHost(e.target.value)}
+          options={Object.keys(HOST_PROCS).map((h) => ({ value: h, label: h }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title={`Processes on ${host}`} flush>
-          <DataTable label="Host processes" columns={cols} rows={procs} getRowId={(p) => `${p.pid}`} defaultSort={{ id: "cpu", direction: "desc" }} minWidth={860} />
+          <DataTable
+            label="Host processes"
+            columns={cols}
+            rows={procs}
+            getRowId={(p) => `${p.pid}`}
+            defaultSort={{ id: "cpu", direction: "desc" }}
+            minWidth={860}
+          />
         </Panel>
         <Panel title="CPU by process" description={host}>
-          <BarList label={`CPU by process on ${host}`} items={procs.map((p) => ({ id: `${p.pid}`, label: p.name, value: p.cpu }))} format={(v) => `${v.toFixed(1)}%`} />
+          <BarList
+            label={`CPU by process on ${host}`}
+            items={procs.map((p) => ({ id: `${p.pid}`, label: p.name, value: p.cpu }))}
+            format={(v) => `${v.toFixed(1)}%`}
+          />
         </Panel>
       </div>
     </>
@@ -831,15 +933,37 @@ function NetworkPage() {
     { id: "port", header: "Port", mono: true, cell: (f) => f.port },
     { id: "rate", header: "Rate", align: "right", mono: true, cell: (f) => f.rate },
     { id: "bytes", header: "Bytes · 1 h", align: "right", mono: true, sortValue: (f) => f.bytes, cell: (f) => formatBytes(f.bytes) },
-    { id: "exp", header: "Baseline", description: "Expected flows have been seen daily for 14 days. New flows to the internet are flagged.", cell: (f) => (f.expected ? <Badge>Expected</Badge> : <Badge tone="danger">New</Badge>) },
+    {
+      id: "exp",
+      header: "Baseline",
+      description: "Expected flows have been seen daily for 14 days. New flows to the internet are flagged.",
+      cell: (f) => (f.expected ? <Badge>Expected</Badge> : <Badge tone="danger">New</Badge>),
+    },
   ];
   return (
     <>
       <PageHeader title="Network map" description="Flows between hosts from eBPF socket stats, grouped by zone. Select a host to see only its flows." />
-      <Panel title="Zones" description={selected ? `Showing flows of ${selected}` : "All flows"} actions={selected && <Button size="sm" variant="ghost" onClick={() => setSelected(null)}>Show all</Button>}>
+      <Panel
+        title="Zones"
+        description={selected ? `Showing flows of ${selected}` : "All flows"}
+        actions={
+          selected && (
+            <Button size="sm" variant="ghost" onClick={() => setSelected(null)}>
+              Show all
+            </Button>
+          )
+        }
+      >
         <div className="grid gap-2.5 md:grid-cols-4">
           {ZONES.map((z) => (
-            <section key={z.id} aria-label={`${z.name} zone`} className={cn("flex min-w-0 flex-col gap-1.5 rounded-md border p-2", z.id === "internet" ? "border-danger/40 bg-danger-soft" : "border-line bg-canvas")}>
+            <section
+              key={z.id}
+              aria-label={`${z.name} zone`}
+              className={cn(
+                "flex min-w-0 flex-col gap-1.5 rounded-md border p-2",
+                z.id === "internet" ? "border-danger/40 bg-danger-soft" : "border-line bg-canvas",
+              )}
+            >
               <h3 className="text-xs font-semibold text-fg-muted uppercase">{z.name}</h3>
               {z.hosts.map((h) => {
                 const bad = FLOWS.some((f) => !f.expected && (f.from === h || f.to === h));
@@ -849,7 +973,10 @@ function NetworkPage() {
                     type="button"
                     aria-pressed={selected === h}
                     onClick={() => setSelected(selected === h ? null : h)}
-                    className={cn("flex min-w-0 items-center justify-between gap-1 rounded border px-2 py-1 text-left font-mono text-xs", selected === h ? "border-accent bg-accent-soft" : "border-line bg-surface hover:bg-subtle")}
+                    className={cn(
+                      "flex min-w-0 items-center justify-between gap-1 rounded border px-2 py-1 text-left font-mono text-xs",
+                      selected === h ? "border-accent bg-accent-soft" : "border-line bg-surface hover:bg-subtle",
+                    )}
                   >
                     <span className="truncate">{h}</span>
                     {bad && <span aria-label="has unexpected flows" role="img" className="size-2 shrink-0 rounded-full bg-danger" />}
@@ -864,7 +991,15 @@ function NetworkPage() {
         <Switch checked={unexpected} onCheckedChange={setUnexpected} label="Only flows not in baseline" />
       </FilterBar>
       <Panel title="Flows" description={`${rows.length} flows`} flush>
-        <DataTable label="Network flows" columns={cols} rows={rows} getRowId={(f) => f.id} defaultSort={{ id: "bytes", direction: "desc" }} minWidth={820} empty={<p className="py-8">No flows</p>} />
+        <DataTable
+          label="Network flows"
+          columns={cols}
+          rows={rows}
+          getRowId={(f) => f.id}
+          defaultSort={{ id: "bytes", direction: "desc" }}
+          minWidth={820}
+          empty={<p className="py-8">No flows</p>}
+        />
       </Panel>
     </>
   );

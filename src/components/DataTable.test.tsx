@@ -10,7 +10,11 @@ interface Host {
   os: string;
 }
 
-const hosts: Host[] = Array.from({ length: 12 }, (_, i) => ({ name: `host-${String(i + 1).padStart(2, "0")}`, cpu: (i * 37) % 100, os: i % 2 ? "Debian" : "Ubuntu" }));
+const hosts: Host[] = Array.from({ length: 12 }, (_, i) => ({
+  name: `host-${String(i + 1).padStart(2, "0")}`,
+  cpu: (i * 37) % 100,
+  os: i % 2 ? "Debian" : "Ubuntu",
+}));
 
 const columns: Column<Host>[] = [
   { id: "name", header: "Host", cell: (h) => h.name, sortValue: (h) => h.name, mono: true },
@@ -70,7 +74,9 @@ describe("DataTable", () => {
 
   it("selects rows, selects a page and reports selection (uncontrolled)", async () => {
     const onSel = vi.fn();
-    const { user } = renderUI(<DataTable label="Hosts" columns={columns} rows={hosts} getRowId={(h) => h.name} pageSize={5} selectable onSelectionChange={onSel} />);
+    const { user } = renderUI(
+      <DataTable label="Hosts" columns={columns} rows={hosts} getRowId={(h) => h.name} pageSize={5} selectable onSelectionChange={onSel} />,
+    );
     await user.click(screen.getByRole("checkbox", { name: "Select row host-02" }));
     expect(onSel).toHaveBeenLastCalledWith(["host-02"]);
     const all = screen.getByRole("checkbox", { name: "Select all rows on this page" }) as HTMLInputElement;
@@ -91,7 +97,15 @@ describe("DataTable", () => {
       return (
         <>
           <span data-testid="count">{sel.length}</span>
-          <DataTable label="Hosts" columns={columns} rows={hosts.slice(0, 3)} getRowId={(h) => h.name} selectable selectedIds={sel} onSelectionChange={setSel} />
+          <DataTable
+            label="Hosts"
+            columns={columns}
+            rows={hosts.slice(0, 3)}
+            getRowId={(h) => h.name}
+            selectable
+            selectedIds={sel}
+            onSelectionChange={setSel}
+          />
         </>
       );
     }
@@ -104,13 +118,45 @@ describe("DataTable", () => {
   it("calls onRowClick and highlights the active row", async () => {
     const onRowClick = vi.fn();
     const { user } = renderUI(
-      <DataTable label="Hosts" columns={columns} rows={hosts.slice(0, 3)} getRowId={(h) => h.name} onRowClick={onRowClick} activeRowId="host-02" density="comfortable" selectable />,
+      <DataTable
+        label="Hosts"
+        columns={columns}
+        rows={hosts.slice(0, 3)}
+        getRowId={(h) => h.name}
+        onRowClick={onRowClick}
+        activeRowId="host-02"
+        density="comfortable"
+        selectable
+      />,
     );
     await user.click(screen.getByText("host-03"));
     expect(onRowClick).toHaveBeenCalledWith(hosts[2]);
     expect(bodyRows()[1]!.className).toContain("bg-accent-soft");
     await user.click(screen.getByRole("checkbox", { name: "Select row host-01" }));
     expect(onRowClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("leaves a click on a button in a cell to the button", async () => {
+    const onRowClick = vi.fn();
+    const onRestart = vi.fn();
+    const withButton = [
+      ...columns,
+      {
+        id: "act",
+        header: "",
+        cell: (h: (typeof hosts)[number]) => (
+          <button type="button" onClick={() => onRestart(h.name)}>
+            Restart {h.name}
+          </button>
+        ),
+      },
+    ];
+    const { user } = renderUI(<DataTable label="Hosts" columns={withButton} rows={hosts.slice(0, 2)} getRowId={(h) => h.name} onRowClick={onRowClick} />);
+    await user.click(screen.getByRole("button", { name: "Restart host-02" }));
+    expect(onRestart).toHaveBeenCalledWith("host-02");
+    expect(onRowClick).not.toHaveBeenCalled();
+    await user.click(screen.getByText("host-02"));
+    expect(onRowClick).toHaveBeenCalledWith(hosts[1]);
   });
 
   it("activates clickable rows from the keyboard", async () => {
@@ -149,11 +195,7 @@ describe("DataTable", () => {
   });
 
   describe("column tools", () => {
-    const described: Column<Host>[] = [
-      { ...columns[0]!, description: "Hostname reported by the agent" },
-      { ...columns[1]!, minWidth: 80 },
-      columns[2]!,
-    ];
+    const described: Column<Host>[] = [{ ...columns[0]!, description: "Hostname reported by the agent" }, { ...columns[1]!, minWidth: 80 }, columns[2]!];
 
     it("explains a column in a tooltip on hover and focus", async () => {
       const { user } = renderUI(<DataTable label="Hosts" columns={described} rows={hosts.slice(0, 2)} getRowId={(h) => h.name} />);
@@ -200,7 +242,9 @@ describe("DataTable", () => {
     });
 
     it("pins, unpins and hides columns from the column menu, and shows them again", async () => {
-      const { user } = renderUI(<DataTable label="Hosts" columns={columns} rows={hosts.slice(0, 2)} getRowId={(h) => h.name} selectable onRowClick={() => {}} />);
+      const { user } = renderUI(
+        <DataTable label="Hosts" columns={columns} rows={hosts.slice(0, 2)} getRowId={(h) => h.name} selectable onRowClick={() => {}} />,
+      );
       await user.click(screen.getByRole("button", { name: "OS column options" }));
       await user.click(await screen.findByRole("menuitem", { name: "Pin to left" }));
       const headers = screen.getAllByRole("columnheader");
@@ -280,7 +324,9 @@ describe("DataTable", () => {
     });
 
     it("can turn the menu and resizing off and keep a sticky header", () => {
-      renderUI(<DataTable label="Hosts" columns={columns} rows={hosts} getRowId={(h) => h.name} columnMenu={false} resizable={false} stickyHeader maxHeight={200} />);
+      renderUI(
+        <DataTable label="Hosts" columns={columns} rows={hosts} getRowId={(h) => h.name} columnMenu={false} resizable={false} stickyHeader maxHeight={200} />,
+      );
       expect(screen.queryByRole("button", { name: /column options/ })).not.toBeInTheDocument();
       expect(screen.queryByRole("separator")).not.toBeInTheDocument();
       expect(screen.getByRole("table").parentElement!.style.maxHeight).toBe("200px");

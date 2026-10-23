@@ -58,7 +58,15 @@ const initialCanaries: Canary[] = [
   { id: "c-04", name: "svc_reporting", type: "db-user", where: "postgres://db-prod-02/orders", host: HOSTS[6], status: "triggered", checked: "2 min ago" },
   { id: "c-05", name: "bastion-legacy", type: "ssh-host", where: "192.0.2.120:22", status: "armed", checked: "5 min ago" },
   { id: "c-06", name: "CI deploy key", type: "aws-key", where: "repo: infra/terraform/.env.example", status: "armed", checked: "6 min ago" },
-  { id: "c-07", name: "Kubeconfig admin", type: "dns-token", where: "worker-prod-04:/root/.kube/config", host: HOSTS[3], status: "armed", checked: "7 min ago" },
+  {
+    id: "c-07",
+    name: "Kubeconfig admin",
+    type: "dns-token",
+    where: "worker-prod-04:/root/.kube/config",
+    host: HOSTS[3],
+    status: "armed",
+    checked: "7 min ago",
+  },
   { id: "c-08", name: "Board minutes draft", type: "pdf-doc", where: "s3://example-docs/board/minutes-draft.pdf", status: "armed", checked: "9 min ago" },
 ];
 
@@ -110,8 +118,22 @@ interface Trigger {
 }
 
 const triggers: Trigger[] = [
-  { id: "t-2", canary: "backup-svc AWS key", time: "13:58:12", ip: "198.51.100.201", ua: "aws-cli/2.17.4 Python/3.11 Linux/6.1", detail: "sts:GetCallerIdentity, then s3:ListBuckets in eu-central-1" },
-  { id: "t-1", canary: "svc_reporting", time: "13:41:05", ip: "203.0.113.24", ua: "psql 16.3", detail: "Login to orders, SELECT on customers (blocked by decoy role)" },
+  {
+    id: "t-2",
+    canary: "backup-svc AWS key",
+    time: "13:58:12",
+    ip: "198.51.100.201",
+    ua: "aws-cli/2.17.4 Python/3.11 Linux/6.1",
+    detail: "sts:GetCallerIdentity, then s3:ListBuckets in eu-central-1",
+  },
+  {
+    id: "t-1",
+    canary: "svc_reporting",
+    time: "13:41:05",
+    ip: "203.0.113.24",
+    ua: "psql 16.3",
+    detail: "Login to orders, SELECT on customers (blocked by decoy role)",
+  },
 ];
 
 /** Canaries: tripwires that only an attacker would touch, with triggers and a quick deploy form. */
@@ -144,12 +166,26 @@ function CanariesPage() {
           </Button>
         }
       />
-      <Callout tone="critical" title="Canary AWS key used from 198.51.100.201. This only happens in a breach." action={<Button size="sm" variant="danger">Open incident</Button>}>
+      <Callout
+        tone="critical"
+        title="Canary AWS key used from 198.51.100.201. This only happens in a breach."
+        action={
+          <Button size="sm" variant="danger">
+            Open incident
+          </Button>
+        }
+      >
         The key planted in ~deploy/.aws/credentials on api-prod-01 has no permissions and appears nowhere else. Someone read that file.
       </Callout>
       <KpiGrid>
         <KpiCard label="Canaries deployed" value="36" unit="5 types" delta={{ label: "+4 this week", direction: "up", intent: "good" }} />
-        <KpiCard label="Triggered · 30 d" value="2" unit="both today" tone="critical" delta={{ label: "First triggers since May", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="Triggered · 30 d"
+          value="2"
+          unit="both today"
+          tone="critical"
+          delta={{ label: "First triggers since May", direction: "up", intent: "bad" }}
+        />
         <KpiCard label="Mean time to trigger" value="17" unit="min after access" delta={{ label: "From file read to first API call" }} />
         <KpiCard label="Health checks" value="100%" unit="36 of 36 reachable" delta={{ label: "Checked every 5 min" }} />
       </KpiGrid>
@@ -200,7 +236,12 @@ function CanariesPage() {
           </Panel>
           <Panel title="Deploy a canary" description="Plant it where only an intruder would look">
             <form className="flex flex-col gap-2.5" onSubmit={deploy} aria-label="Deploy a canary">
-              <SelectField label="Type" value={type} onChange={(e) => setType(e.target.value as CanaryType)} options={TYPES.map((t) => ({ value: t.value, label: t.label }))} />
+              <SelectField
+                label="Type"
+                value={type}
+                onChange={(e) => setType(e.target.value as CanaryType)}
+                options={TYPES.map((t) => ({ value: t.value, label: t.label }))}
+              />
               <TextField
                 label="Location"
                 mono
@@ -220,7 +261,6 @@ function CanariesPage() {
       </div>
     </>
   );
-  
 }
 
 /* ------------------------------------------------------------------ */
@@ -278,14 +318,36 @@ function TriggersPage() {
   const cur = TRIGGER_EVENTS.find((t) => t.id === active);
   const cols: Column<TriggerEvent>[] = [
     { id: "time", header: "Time", mono: true, width: "110px", cell: (t) => t.time },
-    { id: "canary", header: "Canary", cell: (t) => <span className="flex flex-col"><span className="font-medium">{t.canary}</span><span className="text-2xs text-fg-muted">{typeLabel(t.type)}</span></span> },
-    { id: "ip", header: "Source", cell: (t) => <span className="flex flex-col items-start gap-0.5"><EntityChip kind="ip" value={t.ip} hideKind /><span className="text-2xs text-fg-muted">{t.geo}</span></span> },
+    {
+      id: "canary",
+      header: "Canary",
+      cell: (t) => (
+        <span className="flex flex-col">
+          <span className="font-medium">{t.canary}</span>
+          <span className="text-2xs text-fg-muted">{typeLabel(t.type)}</span>
+        </span>
+      ),
+    },
+    {
+      id: "ip",
+      header: "Source",
+      cell: (t) => (
+        <span className="flex flex-col items-start gap-0.5">
+          <EntityChip kind="ip" value={t.ip} hideKind />
+          <span className="text-2xs text-fg-muted">{t.geo}</span>
+        </span>
+      ),
+    },
     {
       id: "verdict",
       header: "Verdict",
       cell: (t) => {
         const v = verdict[t.id] ?? t.verdict;
-        return <StatusBadge tone={v === "open" ? "critical" : v === "incident" ? "info" : "neutral"}>{v === "open" ? "Needs triage" : v === "incident" ? "Incident" : "Test"}</StatusBadge>;
+        return (
+          <StatusBadge tone={v === "open" ? "critical" : v === "incident" ? "info" : "neutral"}>
+            {v === "open" ? "Needs triage" : v === "incident" ? "Incident" : "Test"}
+          </StatusBadge>
+        );
       },
     },
   ];
@@ -300,7 +362,15 @@ function TriggersPage() {
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Triggers" flush>
-          <DataTable label="Canary triggers" columns={cols} rows={TRIGGER_EVENTS} getRowId={(t) => t.id} onRowClick={(t) => setActive(t.id)} activeRowId={active} minWidth={620} />
+          <DataTable
+            label="Canary triggers"
+            columns={cols}
+            rows={TRIGGER_EVENTS}
+            getRowId={(t) => t.id}
+            onRowClick={(t) => setActive(t.id)}
+            activeRowId={active}
+            minWidth={620}
+          />
         </Panel>
         <Panel title="What happened" description={cur ? `${cur.canary} · ${cur.ip}` : undefined} aria-label="Trigger detail">
           {cur && (
@@ -347,12 +417,60 @@ interface DecoyCred {
 }
 
 const CREDS: DecoyCred[] = [
-  { id: "k1", kind: "AWS access key", identity: "AKIA…7QZD · backup-svc", seeded: "api-prod-01 ~deploy/.aws", places: 1, lastRotated: "Aug 2", status: "triggered" },
-  { id: "k2", kind: "AWS access key", identity: "AKIA…L2WM · ci-deploy", seeded: "infra/terraform/.env.example", places: 1, lastRotated: "Sep 18", status: "armed" },
-  { id: "k3", kind: "Database user", identity: "svc_reporting @ db-prod-02", seeded: "/etc/reports/db.conf on 3 hosts", places: 3, lastRotated: "Jul 30", status: "triggered" },
-  { id: "k4", kind: "AD account", identity: "EXAMPLE\\svc_backup_admin", seeded: "LSASS on 12 Windows hosts", places: 12, lastRotated: "Oct 1", status: "armed" },
-  { id: "k5", kind: "API token", identity: "Stripe-like sk_live_…canary", seeded: "payments-api .env (staging)", places: 1, lastRotated: "Sep 4", status: "armed" },
-  { id: "k6", kind: "SSH key", identity: "id_ed25519 · root@bastion-legacy", seeded: "worker-prod-* /root/.ssh", places: 6, lastRotated: "Aug 21", status: "armed" },
+  {
+    id: "k1",
+    kind: "AWS access key",
+    identity: "AKIA…7QZD · backup-svc",
+    seeded: "api-prod-01 ~deploy/.aws",
+    places: 1,
+    lastRotated: "Aug 2",
+    status: "triggered",
+  },
+  {
+    id: "k2",
+    kind: "AWS access key",
+    identity: "AKIA…L2WM · ci-deploy",
+    seeded: "infra/terraform/.env.example",
+    places: 1,
+    lastRotated: "Sep 18",
+    status: "armed",
+  },
+  {
+    id: "k3",
+    kind: "Database user",
+    identity: "svc_reporting @ db-prod-02",
+    seeded: "/etc/reports/db.conf on 3 hosts",
+    places: 3,
+    lastRotated: "Jul 30",
+    status: "triggered",
+  },
+  {
+    id: "k4",
+    kind: "AD account",
+    identity: "EXAMPLE\\svc_backup_admin",
+    seeded: "LSASS on 12 Windows hosts",
+    places: 12,
+    lastRotated: "Oct 1",
+    status: "armed",
+  },
+  {
+    id: "k5",
+    kind: "API token",
+    identity: "Stripe-like sk_live_…canary",
+    seeded: "payments-api .env (staging)",
+    places: 1,
+    lastRotated: "Sep 4",
+    status: "armed",
+  },
+  {
+    id: "k6",
+    kind: "SSH key",
+    identity: "id_ed25519 · root@bastion-legacy",
+    seeded: "worker-prod-* /root/.ssh",
+    places: 6,
+    lastRotated: "Aug 21",
+    status: "armed",
+  },
 ];
 
 function CredentialsPage() {
@@ -363,7 +481,16 @@ function CredentialsPage() {
     { id: "seeded", header: "Seeded in", width: "26%", cell: (k) => <span className="block truncate text-xs">{k.seeded}</span> },
     { id: "places", header: "Places", align: "right", mono: true, cell: (k) => k.places },
     { id: "rotated", header: "Last rotated", cell: (k) => <span className="text-xs">{rotated.includes(k.id) ? "Just now" : k.lastRotated}</span> },
-    { id: "status", header: "Status", cell: (k) => (k.status === "triggered" && !rotated.includes(k.id) ? <StatusBadge tone="critical">Triggered</StatusBadge> : <StatusBadge tone="success">Armed</StatusBadge>) },
+    {
+      id: "status",
+      header: "Status",
+      cell: (k) =>
+        k.status === "triggered" && !rotated.includes(k.id) ? (
+          <StatusBadge tone="critical">Triggered</StatusBadge>
+        ) : (
+          <StatusBadge tone="success">Armed</StatusBadge>
+        ),
+    },
     {
       id: "act",
       header: "",
@@ -378,7 +505,15 @@ function CredentialsPage() {
   ];
   return (
     <>
-      <PageHeader title="Decoy credentials" description="Credentials with no real permissions, planted where attackers harvest secrets. Any use is reported with the source." actions={<Button variant="primary" icon={<Plus />}>New decoy credential</Button>} />
+      <PageHeader
+        title="Decoy credentials"
+        description="Credentials with no real permissions, planted where attackers harvest secrets. Any use is reported with the source."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New decoy credential
+          </Button>
+        }
+      />
       <Callout tone="info" title="Decoys never grant access">
         AWS keys belong to a user with an explicit deny-all policy. The decoy DB role can only read a schema of generated fake customers.
       </Callout>
@@ -406,27 +541,123 @@ interface DecoyHost {
 }
 
 const DECOY_HOSTS: DecoyHost[] = [
-  { id: "h1", name: "db-backup-02", ip: "192.0.2.121", persona: "PostgreSQL 14 on Ubuntu 22.04", services: ["22/ssh", "5432/postgres"], segment: "prod-db", touches7d: 1, lastTouch: "Oct 18 · 23:12", enabled: true },
-  { id: "h2", name: "bastion-legacy", ip: "192.0.2.120", persona: "OpenSSH 7.4 on CentOS 7", services: ["22/ssh"], segment: "dmz", touches7d: 0, lastTouch: "never", enabled: true },
-  { id: "h3", name: "fs02", ip: "192.0.2.140", persona: "Windows Server 2016 file share", services: ["445/smb", "3389/rdp"], segment: "corp", touches7d: 0, lastTouch: "Sep 2", enabled: true },
-  { id: "h4", name: "jenkins-old", ip: "192.0.2.150", persona: "Jenkins 2.346 login page", services: ["8080/http"], segment: "build", touches7d: 2, lastTouch: "Oct 17 · 04:40", enabled: true },
-  { id: "h5", name: "redis-cache-03", ip: "192.0.2.160", persona: "Redis 5.0 without auth", services: ["6379/redis"], segment: "prod-app", touches7d: 0, lastTouch: "never", enabled: false },
+  {
+    id: "h1",
+    name: "db-backup-02",
+    ip: "192.0.2.121",
+    persona: "PostgreSQL 14 on Ubuntu 22.04",
+    services: ["22/ssh", "5432/postgres"],
+    segment: "prod-db",
+    touches7d: 1,
+    lastTouch: "Oct 18 · 23:12",
+    enabled: true,
+  },
+  {
+    id: "h2",
+    name: "bastion-legacy",
+    ip: "192.0.2.120",
+    persona: "OpenSSH 7.4 on CentOS 7",
+    services: ["22/ssh"],
+    segment: "dmz",
+    touches7d: 0,
+    lastTouch: "never",
+    enabled: true,
+  },
+  {
+    id: "h3",
+    name: "fs02",
+    ip: "192.0.2.140",
+    persona: "Windows Server 2016 file share",
+    services: ["445/smb", "3389/rdp"],
+    segment: "corp",
+    touches7d: 0,
+    lastTouch: "Sep 2",
+    enabled: true,
+  },
+  {
+    id: "h4",
+    name: "jenkins-old",
+    ip: "192.0.2.150",
+    persona: "Jenkins 2.346 login page",
+    services: ["8080/http"],
+    segment: "build",
+    touches7d: 2,
+    lastTouch: "Oct 17 · 04:40",
+    enabled: true,
+  },
+  {
+    id: "h5",
+    name: "redis-cache-03",
+    ip: "192.0.2.160",
+    persona: "Redis 5.0 without auth",
+    services: ["6379/redis"],
+    segment: "prod-app",
+    touches7d: 0,
+    lastTouch: "never",
+    enabled: false,
+  },
 ];
 
 function HostsPage() {
   const [enabled, setEnabled] = useState<Record<string, boolean>>(Object.fromEntries(DECOY_HOSTS.map((h) => [h.id, h.enabled])));
   const cols: Column<DecoyHost>[] = [
-    { id: "name", header: "Decoy", cell: (h) => <span className="flex flex-col items-start gap-0.5"><EntityChip kind="host" value={h.name} hideKind /><span className="font-mono text-2xs text-fg-muted">{h.ip}</span></span> },
+    {
+      id: "name",
+      header: "Decoy",
+      cell: (h) => (
+        <span className="flex flex-col items-start gap-0.5">
+          <EntityChip kind="host" value={h.name} hideKind />
+          <span className="font-mono text-2xs text-fg-muted">{h.ip}</span>
+        </span>
+      ),
+    },
     { id: "persona", header: "Looks like", cell: (h) => <span className="text-xs">{h.persona}</span> },
-    { id: "services", header: "Services", cell: (h) => <span className="flex flex-wrap gap-1">{h.services.map((s) => <Badge key={s} mono>{s}</Badge>)}</span> },
+    {
+      id: "services",
+      header: "Services",
+      cell: (h) => (
+        <span className="flex flex-wrap gap-1">
+          {h.services.map((s) => (
+            <Badge key={s} mono>
+              {s}
+            </Badge>
+          ))}
+        </span>
+      ),
+    },
     { id: "segment", header: "Segment", mono: true, cell: (h) => h.segment },
-    { id: "touches", header: "Touches · 7 d", align: "right", mono: true, sortValue: (h) => h.touches7d, cell: (h) => (h.touches7d ? <Badge tone="danger">{h.touches7d}</Badge> : 0) },
+    {
+      id: "touches",
+      header: "Touches · 7 d",
+      align: "right",
+      mono: true,
+      sortValue: (h) => h.touches7d,
+      cell: (h) => (h.touches7d ? <Badge tone="danger">{h.touches7d}</Badge> : 0),
+    },
     { id: "last", header: "Last touch", cell: (h) => <span className="text-xs">{h.lastTouch}</span> },
-    { id: "on", header: "Enabled", cell: (h) => <Switch checked={enabled[h.id] ?? false} onCheckedChange={(v) => setEnabled((e) => ({ ...e, [h.id]: v }))} label={<span className="sr-only">Enable {h.name}</span>} /> },
+    {
+      id: "on",
+      header: "Enabled",
+      cell: (h) => (
+        <Switch
+          checked={enabled[h.id] ?? false}
+          onCheckedChange={(v) => setEnabled((e) => ({ ...e, [h.id]: v }))}
+          label={<span className="sr-only">Enable {h.name}</span>}
+        />
+      ),
+    },
   ];
   return (
     <>
-      <PageHeader title="Decoy hosts" description="Lightweight fake services in each network segment. Nothing should ever connect to them." actions={<Button variant="primary" icon={<Plus />}>New decoy host</Button>} />
+      <PageHeader
+        title="Decoy hosts"
+        description="Lightweight fake services in each network segment. Nothing should ever connect to them."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New decoy host
+          </Button>
+        }
+      />
       <KpiGrid>
         <KpiCard label="Decoy hosts" value={`${Object.values(enabled).filter(Boolean).length}`} unit="running" />
         <KpiCard label="Segments covered" value="5" unit="of 6" tone="warning" delta={{ label: "guest Wi-Fi has none" }} />
@@ -454,11 +685,46 @@ interface CanaryTemplate {
 }
 
 const CANARY_TEMPLATES: CanaryTemplate[] = [
-  { id: "ct1", name: "AWS credentials file", type: "aws-key", file: "~/.aws/credentials", preview: "[default]\naws_access_key_id = AKIA{{random}}\naws_secret_access_key = {{random}}\nregion = eu-central-1", used: 9 },
-  { id: "ct2", name: "Kubeconfig with admin context", type: "dns-token", file: "~/.kube/config", preview: "apiVersion: v1\nclusters:\n- cluster:\n    server: https://{{token}}.canary.example.com\n  name: prod-admin\ncurrent-context: prod-admin", used: 6 },
-  { id: "ct3", name: ".env with database URL", type: "db-user", file: ".env", preview: "DATABASE_URL=postgres://svc_reporting:{{password}}@db-prod-02:5432/orders\nREDIS_URL=redis://redis-cache-03:6379", used: 7 },
-  { id: "ct4", name: "Payroll spreadsheet (PDF)", type: "pdf-doc", file: "Payroll-{{quarter}}.pdf", preview: "PDF with a remote image beacon. Opening it in any viewer that loads images calls home with the reader's IP.", used: 4 },
-  { id: "ct5", name: "SSH known host", type: "ssh-host", file: "~/.ssh/config", preview: "Host bastion-legacy\n  HostName 192.0.2.120\n  User root\n  IdentityFile ~/.ssh/id_legacy", used: 5 },
+  {
+    id: "ct1",
+    name: "AWS credentials file",
+    type: "aws-key",
+    file: "~/.aws/credentials",
+    preview: "[default]\naws_access_key_id = AKIA{{random}}\naws_secret_access_key = {{random}}\nregion = eu-central-1",
+    used: 9,
+  },
+  {
+    id: "ct2",
+    name: "Kubeconfig with admin context",
+    type: "dns-token",
+    file: "~/.kube/config",
+    preview: "apiVersion: v1\nclusters:\n- cluster:\n    server: https://{{token}}.canary.example.com\n  name: prod-admin\ncurrent-context: prod-admin",
+    used: 6,
+  },
+  {
+    id: "ct3",
+    name: ".env with database URL",
+    type: "db-user",
+    file: ".env",
+    preview: "DATABASE_URL=postgres://svc_reporting:{{password}}@db-prod-02:5432/orders\nREDIS_URL=redis://redis-cache-03:6379",
+    used: 7,
+  },
+  {
+    id: "ct4",
+    name: "Payroll spreadsheet (PDF)",
+    type: "pdf-doc",
+    file: "Payroll-{{quarter}}.pdf",
+    preview: "PDF with a remote image beacon. Opening it in any viewer that loads images calls home with the reader's IP.",
+    used: 4,
+  },
+  {
+    id: "ct5",
+    name: "SSH known host",
+    type: "ssh-host",
+    file: "~/.ssh/config",
+    preview: "Host bastion-legacy\n  HostName 192.0.2.120\n  User root\n  IdentityFile ~/.ssh/id_legacy",
+    used: 5,
+  },
 ];
 
 function TemplatesPage() {
@@ -473,10 +739,21 @@ function TemplatesPage() {
   ];
   return (
     <>
-      <PageHeader title="Templates" description="Realistic bait files. Each deploy generates unique values, so a trigger tells you exactly which copy was read." />
+      <PageHeader
+        title="Templates"
+        description="Realistic bait files. Each deploy generates unique values, so a trigger tells you exactly which copy was read."
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Templates" flush>
-          <DataTable label="Canary templates" columns={cols} rows={CANARY_TEMPLATES} getRowId={(t) => t.id} onRowClick={(t) => (setActive(t.id), setCopied(false))} activeRowId={active} minWidth={560} />
+          <DataTable
+            label="Canary templates"
+            columns={cols}
+            rows={CANARY_TEMPLATES}
+            getRowId={(t) => t.id}
+            onRowClick={(t) => (setActive(t.id), setCopied(false))}
+            activeRowId={active}
+            minWidth={560}
+          />
         </Panel>
         <Panel
           title="Preview"
@@ -490,7 +767,11 @@ function TemplatesPage() {
         >
           {cur && (
             <div className="flex flex-col gap-2">
-              <pre tabIndex={0} aria-label={`Contents of ${cur.name}`} className="overflow-x-auto rounded border border-line bg-subtle p-2 font-mono text-xs whitespace-pre-wrap">
+              <pre
+                tabIndex={0}
+                aria-label={`Contents of ${cur.name}`}
+                className="overflow-x-auto rounded border border-line bg-subtle p-2 font-mono text-xs whitespace-pre-wrap"
+              >
                 {cur.preview}
               </pre>
               {copied && (

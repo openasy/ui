@@ -1,7 +1,22 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
-import { Bell, CircleCheck, Compass, Download, GitCommitHorizontal, Inbox, Plus, RotateCcw, Save, ScrollText, Tag, Upload, UserPlus, Waypoints } from "lucide-react";
+import {
+  Bell,
+  CircleCheck,
+  Compass,
+  Download,
+  GitCommitHorizontal,
+  Inbox,
+  Plus,
+  RotateCcw,
+  Save,
+  ScrollText,
+  Tag,
+  Upload,
+  UserPlus,
+  Waypoints,
+} from "lucide-react";
 import { ProductApp } from "../ProductFrame";
 import { PageHeader } from "../../components/PageHeader";
 import { Button } from "../../components/Button";
@@ -103,7 +118,7 @@ const issues: Issue[] = [
         context: [
           [40, "  const cart = useCart();"],
           [41, "  const total = formatTotal(cart);"],
-          [42, "  return <Panel title=\"Order summary\">{total}</Panel>;"],
+          [42, '  return <Panel title="Order summary">{total}</Panel>;'],
         ],
       },
       { fn: "renderWithHooks", file: "node_modules/react-dom/cjs/react-dom-client.production.js", line: 5521, inApp: false },
@@ -122,7 +137,7 @@ const issues: Issue[] = [
     id: "ORD-3A9",
     short: "ORD-3A9",
     type: "pq: deadlock detected",
-    message: "while updating tuple (412,7) in relation \"orders\"",
+    message: 'while updating tuple (412,7) in relation "orders"',
     culprit: "internal/store/orders.go:214",
     level: "fatal",
     events: 312,
@@ -141,11 +156,17 @@ const issues: Issue[] = [
         context: [
           [212, "\tq := `UPDATE orders SET status = $1 WHERE id = $2`"],
           [213, "\tif _, err := tx.ExecContext(ctx, q, status, id); err != nil {"],
-          [214, "\t\treturn fmt.Errorf(\"update status: %w\", err)"],
+          [214, '\t\treturn fmt.Errorf("update status: %w", err)'],
           [215, "\t}"],
         ],
       },
-      { fn: "(*Handler).PatchStatus", file: "internal/api/orders.go", line: 132, inApp: true, context: [[132, "\tif err := h.store.UpdateStatus(ctx, id, body.Status); err != nil {"]] },
+      {
+        fn: "(*Handler).PatchStatus",
+        file: "internal/api/orders.go",
+        line: 132,
+        inApp: true,
+        context: [[132, "\tif err := h.store.UpdateStatus(ctx, id, body.Status); err != nil {"]],
+      },
       { fn: "database/sql.(*Tx).ExecContext", file: "database/sql/sql.go", line: 2589, inApp: false },
       { fn: "github.com/lib/pq.(*conn).Exec", file: "github.com/lib/pq/conn.go", line: 912, inApp: false },
       { fn: "net/http.HandlerFunc.ServeHTTP", file: "net/http/server.go", line: 2220, inApp: false },
@@ -174,7 +195,16 @@ const issues: Issue[] = [
     assignee: PEOPLE[1],
     tags: { browser: "Safari 18.0", os: "iOS 18.0", release: "web@3.41.2", environment: "production", url: "/orders" },
     frames: [
-      { fn: "loadRoute", file: "src/routes/lazy.ts", line: 12, inApp: true, context: [[11, "export const loadRoute = (name: string) =>"], [12, "  import(`./pages/${name}.tsx`);"]] },
+      {
+        fn: "loadRoute",
+        file: "src/routes/lazy.ts",
+        line: 12,
+        inApp: true,
+        context: [
+          [11, "export const loadRoute = (name: string) =>"],
+          [12, "  import(`./pages/${name}.tsx`);"],
+        ],
+      },
       { fn: "__webpack_require__.e", file: "webpack/runtime/ensure chunk", line: 6, inApp: false },
     ],
     breadcrumbs: [
@@ -197,7 +227,16 @@ const issues: Issue[] = [
     release: "accounts@1.8.0",
     tags: { runtime: "CPython 3.12.6", os: "linux 6.8", release: "accounts@1.8.0", environment: "production", host: "api-prod-05" },
     frames: [
-      { fn: "validate_postal_code", file: "app/validators/address.py", line: 57, inApp: true, context: [[56, "    if not PATTERNS[country].fullmatch(value):"], [57, "        raise ValidationError(f\"postal_code: does not match pattern for country {country}\")"]] },
+      {
+        fn: "validate_postal_code",
+        file: "app/validators/address.py",
+        line: 57,
+        inApp: true,
+        context: [
+          [56, "    if not PATTERNS[country].fullmatch(value):"],
+          [57, '        raise ValidationError(f"postal_code: does not match pattern for country {country}")'],
+        ],
+      },
       { fn: "full_clean", file: "django/db/models/base.py", line: 1502, inApp: false },
     ],
     breadcrumbs: [{ time: "13:43:05", category: "http", text: "POST /v1/addresses 400", level: "warn" }],
@@ -218,7 +257,16 @@ const issues: Issue[] = [
     assignee: PEOPLE[2],
     tags: { runtime: "OpenJDK 21.0.4", os: "linux 6.8", release: "reports@5.0.3", environment: "production", host: "worker-prod-09" },
     frames: [
-      { fn: "CsvExporter.write", file: "com/acme/reports/CsvExporter.java", line: 144, inApp: true, context: [[143, "        List<Row> all = repository.findAll(range);"], [144, "        String body = all.stream().map(Row::toCsv).collect(joining(\"\\n\"));"]] },
+      {
+        fn: "CsvExporter.write",
+        file: "com/acme/reports/CsvExporter.java",
+        line: 144,
+        inApp: true,
+        context: [
+          [143, "        List<Row> all = repository.findAll(range);"],
+          [144, '        String body = all.stream().map(Row::toCsv).collect(joining("\\n"));'],
+        ],
+      },
       { fn: "ThreadPoolExecutor.runWorker", file: "java/util/concurrent/ThreadPoolExecutor.java", line: 1144, inApp: false },
     ],
     breadcrumbs: [{ time: "13:30:00", category: "job", text: "export-monthly started · 2.1M rows", level: "info" }],
@@ -412,7 +460,14 @@ function IssuesPage() {
         />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Events · 24 h" value="6.8k" tone="danger" trendColor="var(--oa-danger)" trend={wave(24, { base: 200, amp: 40, seed: 86, spike: 420, spikeAt: 17 })} delta={{ label: "+212% vs. yesterday", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="Events · 24 h"
+          value="6.8k"
+          tone="danger"
+          trendColor="var(--oa-danger)"
+          trend={wave(24, { base: 200, amp: 40, seed: 86, spike: 420, spikeAt: 17 })}
+          delta={{ label: "+212% vs. yesterday", direction: "up", intent: "bad" }}
+        />
         <KpiCard label="Users affected" value="2,413" delta={{ label: "1.9% of active users", intent: "bad" }} />
         <KpiCard label="New issues" value="7" delta={{ label: "3 in web@3.42.0", direction: "up", intent: "bad" }} />
         <KpiCard label="Crash-free sessions" value="98.7" unit="%" delta={{ label: "-0.9 pts after web@3.42.0", direction: "down", intent: "bad" }} />
@@ -453,14 +508,126 @@ interface Release {
 }
 
 const RELEASES: Release[] = [
-  { id: "r1", version: "web@3.42.0", project: "web", deployed: "Today 11:52", crashFreeSessions: 98.12, crashFreeUsers: 97.41, adoption: 46, sessions: 182_400, newIssues: 3, regressions: 1, commits: 24, authors: [PEOPLE[3], PEOPLE[0], PEOPLE[6]], stage: "Production" },
-  { id: "r2", version: "web@3.41.2", project: "web", deployed: "Oct 13", crashFreeSessions: 99.61, crashFreeUsers: 99.18, adoption: 51, sessions: 1_204_880, newIssues: 1, regressions: 0, commits: 6, authors: [PEOPLE[1]], stage: "Production" },
-  { id: "r3", version: "orders-api@2.14.1", project: "orders-api", deployed: "Today 13:20", crashFreeSessions: 99.08, crashFreeUsers: 98.9, adoption: 100, sessions: 412_090, newIssues: 1, regressions: 1, commits: 9, authors: [PEOPLE[2], PEOPLE[4]], stage: "Production" },
-  { id: "r4", version: "orders-api@2.14.0", project: "orders-api", deployed: "Oct 16", crashFreeSessions: 99.94, crashFreeUsers: 99.9, adoption: 0, sessions: 2_840_100, newIssues: 0, regressions: 0, commits: 17, authors: [PEOPLE[2]], stage: "Rolled back" },
-  { id: "r5", version: "accounts@1.8.0", project: "accounts", deployed: "Sep 28", crashFreeSessions: 99.89, crashFreeUsers: 99.85, adoption: 100, sessions: 3_102_400, newIssues: 1, regressions: 0, commits: 31, authors: [PEOPLE[5], PEOPLE[7]], stage: "Production" },
-  { id: "r6", version: "reports@5.0.3", project: "reports", deployed: "Oct 10", crashFreeSessions: 99.42, crashFreeUsers: 98.6, adoption: 100, sessions: 4_210, newIssues: 1, regressions: 0, commits: 4, authors: [PEOPLE[2]], stage: "Production" },
-  { id: "r7", version: "ios@4.8.0", project: "ios", deployed: "Oct 14", crashFreeSessions: 99.71, crashFreeUsers: 99.52, adoption: 63, sessions: 288_300, newIssues: 2, regressions: 0, commits: 42, authors: [PEOPLE[7], PEOPLE[5]], stage: "Production" },
-  { id: "r8", version: "web@3.43.0-rc.1", project: "web", deployed: "Today 13:05", crashFreeSessions: 99.8, crashFreeUsers: 99.7, adoption: 0, sessions: 1_220, newIssues: 0, regressions: 0, commits: 11, authors: [PEOPLE[0]], stage: "Staging" },
+  {
+    id: "r1",
+    version: "web@3.42.0",
+    project: "web",
+    deployed: "Today 11:52",
+    crashFreeSessions: 98.12,
+    crashFreeUsers: 97.41,
+    adoption: 46,
+    sessions: 182_400,
+    newIssues: 3,
+    regressions: 1,
+    commits: 24,
+    authors: [PEOPLE[3], PEOPLE[0], PEOPLE[6]],
+    stage: "Production",
+  },
+  {
+    id: "r2",
+    version: "web@3.41.2",
+    project: "web",
+    deployed: "Oct 13",
+    crashFreeSessions: 99.61,
+    crashFreeUsers: 99.18,
+    adoption: 51,
+    sessions: 1_204_880,
+    newIssues: 1,
+    regressions: 0,
+    commits: 6,
+    authors: [PEOPLE[1]],
+    stage: "Production",
+  },
+  {
+    id: "r3",
+    version: "orders-api@2.14.1",
+    project: "orders-api",
+    deployed: "Today 13:20",
+    crashFreeSessions: 99.08,
+    crashFreeUsers: 98.9,
+    adoption: 100,
+    sessions: 412_090,
+    newIssues: 1,
+    regressions: 1,
+    commits: 9,
+    authors: [PEOPLE[2], PEOPLE[4]],
+    stage: "Production",
+  },
+  {
+    id: "r4",
+    version: "orders-api@2.14.0",
+    project: "orders-api",
+    deployed: "Oct 16",
+    crashFreeSessions: 99.94,
+    crashFreeUsers: 99.9,
+    adoption: 0,
+    sessions: 2_840_100,
+    newIssues: 0,
+    regressions: 0,
+    commits: 17,
+    authors: [PEOPLE[2]],
+    stage: "Rolled back",
+  },
+  {
+    id: "r5",
+    version: "accounts@1.8.0",
+    project: "accounts",
+    deployed: "Sep 28",
+    crashFreeSessions: 99.89,
+    crashFreeUsers: 99.85,
+    adoption: 100,
+    sessions: 3_102_400,
+    newIssues: 1,
+    regressions: 0,
+    commits: 31,
+    authors: [PEOPLE[5], PEOPLE[7]],
+    stage: "Production",
+  },
+  {
+    id: "r6",
+    version: "reports@5.0.3",
+    project: "reports",
+    deployed: "Oct 10",
+    crashFreeSessions: 99.42,
+    crashFreeUsers: 98.6,
+    adoption: 100,
+    sessions: 4_210,
+    newIssues: 1,
+    regressions: 0,
+    commits: 4,
+    authors: [PEOPLE[2]],
+    stage: "Production",
+  },
+  {
+    id: "r7",
+    version: "ios@4.8.0",
+    project: "ios",
+    deployed: "Oct 14",
+    crashFreeSessions: 99.71,
+    crashFreeUsers: 99.52,
+    adoption: 63,
+    sessions: 288_300,
+    newIssues: 2,
+    regressions: 0,
+    commits: 42,
+    authors: [PEOPLE[7], PEOPLE[5]],
+    stage: "Production",
+  },
+  {
+    id: "r8",
+    version: "web@3.43.0-rc.1",
+    project: "web",
+    deployed: "Today 13:05",
+    crashFreeSessions: 99.8,
+    crashFreeUsers: 99.7,
+    adoption: 0,
+    sessions: 1_220,
+    newIssues: 0,
+    regressions: 0,
+    commits: 11,
+    authors: [PEOPLE[0]],
+    stage: "Staging",
+  },
 ];
 
 const STAGE_TONE: Record<Release["stage"], "success" | "info" | "warning"> = { Production: "success", Staging: "info", "Rolled back": "warning" };
@@ -555,10 +722,21 @@ function ReleasesPage() {
       />
       <FilterBar onClear={projects.length ? () => setProjects([]) : undefined}>
         <TimeRangePicker value={range} onChange={setRange} />
-        <FacetFilter label="Project" selected={projects} onChange={setProjects} options={["web", "orders-api", "accounts", "reports", "ios"].map((p) => ({ value: p, count: RELEASES.filter((r) => r.project === p).length }))} />
+        <FacetFilter
+          label="Project"
+          selected={projects}
+          onChange={setProjects}
+          options={["web", "orders-api", "accounts", "reports", "ios"].map((p) => ({ value: p, count: RELEASES.filter((r) => r.project === p).length }))}
+        />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Crash-free sessions" value="99.21" unit="% all projects" trend={wave(24, { base: 99.6, amp: 0.1, seed: 120, spike: -0.9, spikeAt: 16 })} delta={{ label: "-0.4 pts vs. last week", direction: "down", intent: "bad" }} />
+        <KpiCard
+          label="Crash-free sessions"
+          value="99.21"
+          unit="% all projects"
+          trend={wave(24, { base: 99.6, amp: 0.1, seed: 120, spike: -0.9, spikeAt: 16 })}
+          delta={{ label: "-0.4 pts vs. last week", direction: "down", intent: "bad" }}
+        />
         <KpiCard label="Releases · 7 d" value="8" delta={{ label: "1 rolled back" }} />
         <KpiCard label="New issues in releases" value="9" delta={{ label: "3 in web@3.42.0", intent: "bad" }} />
         <KpiCard label="Regressions" value="2" tone="danger" delta={{ label: "orders-api, web", intent: "bad" }} />
@@ -579,11 +757,23 @@ function ReleasesPage() {
           />
         </Panel>
         <Panel title="New issues by release" description="Last 7 days">
-          <BarList label="New issues by release" items={RELEASES.filter((r) => r.newIssues > 0).map((r) => ({ id: r.id, label: r.version, value: r.newIssues }))} />
+          <BarList
+            label="New issues by release"
+            items={RELEASES.filter((r) => r.newIssues > 0).map((r) => ({ id: r.id, label: r.version, value: r.newIssues }))}
+          />
         </Panel>
       </div>
       <Panel title="All releases" description="Select a release to see its issues and commits" flush>
-        <DataTable label="Releases" columns={cols} rows={rows} getRowId={(r) => r.id} onRowClick={(r) => setActive(r.id)} activeRowId={active} defaultSort={{ id: "cfs", direction: "asc" }} minWidth={980} />
+        <DataTable
+          label="Releases"
+          columns={cols}
+          rows={rows}
+          getRowId={(r) => r.id}
+          onRowClick={(r) => setActive(r.id)}
+          activeRowId={active}
+          defaultSort={{ id: "cfs", direction: "asc" }}
+          minWidth={980}
+        />
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel
@@ -683,19 +873,92 @@ interface AlertRule {
 }
 
 const RULES: AlertRule[] = [
-  { id: "ar1", name: "Spike in checkout errors", condition: "events in an issue > 500 in 1 h", project: "web", env: "production", action: "Slack #checkout-alerts", owner: PEOPLE[3], last: "12 min ago", state: "Firing", enabled: true },
-  { id: "ar2", name: "New issue in orders-api", condition: "a new issue is created", project: "orders-api", env: "production", action: "Incidents · orders on-call", owner: PEOPLE[2], last: "47 min ago", state: "Firing", enabled: true },
-  { id: "ar3", name: "Any regression", condition: "a resolved issue happens again", project: "All projects", env: "production", action: "Email engineering@example.com", owner: PEOPLE[1], last: "2 h ago", state: "OK", enabled: true },
-  { id: "ar4", name: "Crash-free sessions below 99%", condition: "crash-free sessions < 99% for 30 min", project: "ios", env: "production", action: "Slack #mobile", owner: PEOPLE[7], last: "Oct 14", state: "OK", enabled: true },
-  { id: "ar5", name: "Fatal errors in reports", condition: "level is fatal", project: "reports", env: "production", action: "Webhook hooks.example.com/alerts", owner: PEOPLE[2], last: "22 min ago", state: "Muted", enabled: true },
-  { id: "ar6", name: "Many users affected", condition: "unique users in an issue > 100 in 1 h", project: "All projects", env: "production", action: "Incidents · platform on-call", owner: PEOPLE[1], last: "never", state: "OK", enabled: false },
+  {
+    id: "ar1",
+    name: "Spike in checkout errors",
+    condition: "events in an issue > 500 in 1 h",
+    project: "web",
+    env: "production",
+    action: "Slack #checkout-alerts",
+    owner: PEOPLE[3],
+    last: "12 min ago",
+    state: "Firing",
+    enabled: true,
+  },
+  {
+    id: "ar2",
+    name: "New issue in orders-api",
+    condition: "a new issue is created",
+    project: "orders-api",
+    env: "production",
+    action: "Incidents · orders on-call",
+    owner: PEOPLE[2],
+    last: "47 min ago",
+    state: "Firing",
+    enabled: true,
+  },
+  {
+    id: "ar3",
+    name: "Any regression",
+    condition: "a resolved issue happens again",
+    project: "All projects",
+    env: "production",
+    action: "Email engineering@example.com",
+    owner: PEOPLE[1],
+    last: "2 h ago",
+    state: "OK",
+    enabled: true,
+  },
+  {
+    id: "ar4",
+    name: "Crash-free sessions below 99%",
+    condition: "crash-free sessions < 99% for 30 min",
+    project: "ios",
+    env: "production",
+    action: "Slack #mobile",
+    owner: PEOPLE[7],
+    last: "Oct 14",
+    state: "OK",
+    enabled: true,
+  },
+  {
+    id: "ar5",
+    name: "Fatal errors in reports",
+    condition: "level is fatal",
+    project: "reports",
+    env: "production",
+    action: "Webhook hooks.example.com/alerts",
+    owner: PEOPLE[2],
+    last: "22 min ago",
+    state: "Muted",
+    enabled: true,
+  },
+  {
+    id: "ar6",
+    name: "Many users affected",
+    condition: "unique users in an issue > 100 in 1 h",
+    project: "All projects",
+    env: "production",
+    action: "Incidents · platform on-call",
+    owner: PEOPLE[1],
+    last: "never",
+    state: "OK",
+    enabled: false,
+  },
 ];
 
 const RULE_TONE: Record<AlertRule["state"], "danger" | "success" | "neutral"> = { Firing: "danger", OK: "success", Muted: "neutral" };
 
 const ALERT_HISTORY = [
   { id: "h1", time: "13:52", rule: "Spike in checkout errors", issue: "ORD-4F2 · TypeError", notified: "Slack #checkout-alerts", state: "Firing" },
-  { id: "h2", time: "13:47", rule: "New issue in orders-api", issue: "ORD-3A9 · pq: deadlock detected", notified: "Incidents · Dana Kim paged", state: "Firing" },
+  {
+    id: "h2",
+    time: "13:47",
+    rule: "New issue in orders-api",
+    issue: "ORD-3A9 · pq: deadlock detected",
+    notified: "Incidents · Dana Kim paged",
+    state: "Firing",
+  },
   { id: "h3", time: "13:30", rule: "Fatal errors in reports", issue: "ORD-0E4 · OutOfMemoryError", notified: "Muted until 16:00", state: "Muted" },
   { id: "h4", time: "11:58", rule: "Any regression", issue: "ORD-2C7 · ChunkLoadError", notified: "engineering@example.com", state: "Resolved" },
   { id: "h5", time: "Yesterday", rule: "Spike in checkout errors", issue: "ORD-1B0 · ValidationError", notified: "Slack #checkout-alerts", state: "Resolved" },
@@ -722,7 +985,12 @@ function AlertsPage() {
       ),
     },
     { id: "state", header: "State", sortValue: (r) => r.state, cell: (r) => <StatusBadge tone={RULE_TONE[r.state]}>{r.state}</StatusBadge> },
-    { id: "condition", header: "When", description: "The condition that triggers the rule, checked every minute.", cell: (r) => <span className="text-xs">{r.condition}</span> },
+    {
+      id: "condition",
+      header: "When",
+      description: "The condition that triggers the rule, checked every minute.",
+      cell: (r) => <span className="text-xs">{r.condition}</span>,
+    },
     { id: "project", header: "Project", mono: true, cell: (r) => r.project },
     { id: "env", header: "Environment", mono: true, cell: (r) => r.env },
     { id: "action", header: "Then notify", cell: (r) => <span className="text-xs">{r.action}</span> },
@@ -765,13 +1033,34 @@ function AlertsPage() {
       </PageHeader>
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       {composing && (
-        <Panel title="New alert rule" actions={<Button size="sm" variant="ghost" onClick={() => setComposing(false)}>Cancel</Button>}>
+        <Panel
+          title="New alert rule"
+          actions={
+            <Button size="sm" variant="ghost" onClick={() => setComposing(false)}>
+              Cancel
+            </Button>
+          }
+        >
           <form
             className="grid gap-3 md:grid-cols-3"
             onSubmit={(e) => {
               e.preventDefault();
               const n = name.trim() || "Untitled rule";
-              setRules((rs) => [...rs, { id: `ar${rs.length + 1}`, name: n, condition: "events in an issue > 100 in 1 h", project: "web", env: "production", action: "Slack #alerts", owner: PEOPLE[1], last: "never", state: "OK", enabled: true }]);
+              setRules((rs) => [
+                ...rs,
+                {
+                  id: `ar${rs.length + 1}`,
+                  name: n,
+                  condition: "events in an issue > 100 in 1 h",
+                  project: "web",
+                  env: "production",
+                  action: "Slack #alerts",
+                  owner: PEOPLE[1],
+                  last: "never",
+                  state: "OK",
+                  enabled: true,
+                },
+              ]);
               setNotice(`Created “${n}”`);
               setComposing(false);
               setName("");
@@ -791,7 +1080,13 @@ function AlertsPage() {
             />
             <TextField label="Threshold" type="number" defaultValue={100} adornment={<span className="text-xs text-fg-muted">in 1 h</span>} />
             <SelectField label="Project" options={["web", "orders-api", "accounts", "reports", "ios"].map((p) => ({ value: p, label: p }))} />
-            <SelectField label="Environment" options={[{ value: "production", label: "production" }, { value: "staging", label: "staging" }]} />
+            <SelectField
+              label="Environment"
+              options={[
+                { value: "production", label: "production" },
+                { value: "staging", label: "staging" },
+              ]}
+            />
             <SelectField
               label="Then notify"
               options={[
@@ -834,7 +1129,11 @@ function AlertsPage() {
               { id: "rule", header: "Rule", cell: (h) => <span className="font-medium">{h.rule}</span> },
               { id: "issue", header: "Issue", mono: true, cell: (h) => <span className="text-xs">{h.issue}</span> },
               { id: "notified", header: "Notified", cell: (h) => <span className="text-xs">{h.notified}</span> },
-              { id: "state", header: "State", cell: (h) => <StatusBadge tone={h.state === "Firing" ? "danger" : h.state === "Muted" ? "neutral" : "success"}>{h.state}</StatusBadge> },
+              {
+                id: "state",
+                header: "State",
+                cell: (h) => <StatusBadge tone={h.state === "Firing" ? "danger" : h.state === "Muted" ? "neutral" : "success"}>{h.state}</StatusBadge>,
+              },
             ]}
           />
         </Panel>
@@ -909,7 +1208,13 @@ function DiscoverPage() {
       />
       <Panel title="Query" aria-label="Query builder">
         <div className="flex flex-col gap-2.5">
-          <QueryBar label="Event query" value={query} onChange={setQuery} onSubmit={(q) => setApplied({ query: q, group: groupDraft })} placeholder="level:error release:web@3.42.0" />
+          <QueryBar
+            label="Event query"
+            value={query}
+            onChange={setQuery}
+            onSubmit={(q) => setApplied({ query: q, group: groupDraft })}
+            placeholder="level:error release:web@3.42.0"
+          />
           <div className="flex flex-wrap items-end gap-2.5">
             <TimeRangePicker value={range} onChange={setRange} />
             <SelectField
@@ -946,7 +1251,17 @@ function DiscoverPage() {
               label={`${yLabel} over time by ${applied.group}`}
               labels={timeLabels(24, 60)}
               height={200}
-              series={rows.slice(0, 4).map((r, i) => ({ id: r.id, name: r.value, data: wave(24, { base: metric(r) / 24, amp: metric(r) / 80, seed: 140 + i, spike: i === 0 && applied.group === "release" ? metric(r) / 6 : 0, spikeAt: 16 }) }))}
+              series={rows.slice(0, 4).map((r, i) => ({
+                id: r.id,
+                name: r.value,
+                data: wave(24, {
+                  base: metric(r) / 24,
+                  amp: metric(r) / 80,
+                  seed: 140 + i,
+                  spike: i === 0 && applied.group === "release" ? metric(r) / 6 : 0,
+                  spikeAt: 16,
+                }),
+              }))}
             />
           </Panel>
           <Panel title="Results" description={`${rows.length} groups · ${formatNumber(total)} events`} flush>
@@ -957,10 +1272,31 @@ function DiscoverPage() {
               defaultSort={{ id: "count", direction: "desc" }}
               minWidth={720}
               columns={[
-                { id: "value", header: applied.group, pinned: "left", sortValue: (r) => r.value, cell: (r) => <span className="font-mono text-xs">{r.value}</span> },
+                {
+                  id: "value",
+                  header: applied.group,
+                  pinned: "left",
+                  sortValue: (r) => r.value,
+                  cell: (r) => <span className="font-mono text-xs">{r.value}</span>,
+                },
                 { id: "count", header: "count()", align: "right", mono: true, sortValue: (r) => r.count, cell: (r) => formatNumber(r.count) },
-                { id: "users", header: "count_unique(user)", align: "right", mono: true, description: "Distinct user IDs that sent at least one matching event.", sortValue: (r) => r.users, cell: (r) => formatNumber(r.users) },
-                { id: "share", header: "Share", align: "right", mono: true, sortValue: (r) => r.count, cell: (r) => `${((r.count / total) * 100).toFixed(1)}%` },
+                {
+                  id: "users",
+                  header: "count_unique(user)",
+                  align: "right",
+                  mono: true,
+                  description: "Distinct user IDs that sent at least one matching event.",
+                  sortValue: (r) => r.users,
+                  cell: (r) => formatNumber(r.users),
+                },
+                {
+                  id: "share",
+                  header: "Share",
+                  align: "right",
+                  mono: true,
+                  sortValue: (r) => r.count,
+                  cell: (r) => `${((r.count / total) * 100).toFixed(1)}%`,
+                },
                 { id: "last", header: "Last seen", cell: (r) => <span className="text-xs">{r.last}</span> },
               ]}
             />
@@ -970,7 +1306,11 @@ function DiscoverPage() {
           <ul aria-label="Saved queries" className="flex flex-col">
             {SAVED_QUERIES.map((s) => (
               <li key={s.id} className="border-b border-subtle last:border-0">
-                <button type="button" onClick={() => setQuery(s.query)} className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-subtle">
+                <button
+                  type="button"
+                  onClick={() => setQuery(s.query)}
+                  className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-subtle"
+                >
                   <span className="text-sm font-medium">{s.name}</span>
                   <span className="w-full truncate font-mono text-2xs text-fg-muted">{s.query}</span>
                   <span className="text-2xs text-fg-muted">by {s.by}</span>

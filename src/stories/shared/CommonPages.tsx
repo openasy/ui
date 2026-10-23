@@ -28,18 +28,58 @@ interface Integration {
 }
 
 const INTEGRATIONS: Integration[] = [
-  { id: "otel", name: "OpenTelemetry", abbr: "OT", desc: "Logs, metrics and traces from any OTel SDK or Collector.", proto: "OTLP gRPC · HTTP", kind: "source", status: "connected" },
+  {
+    id: "otel",
+    name: "OpenTelemetry",
+    abbr: "OT",
+    desc: "Logs, metrics and traces from any OTel SDK or Collector.",
+    proto: "OTLP gRPC · HTTP",
+    kind: "source",
+    status: "connected",
+  },
   { id: "prom", name: "Prometheus", abbr: "PR", desc: "Scrape targets or receive remote write.", proto: "remote_write", kind: "source", status: "connected" },
   { id: "syslog", name: "Syslog", abbr: "SY", desc: "Network devices and legacy apps.", proto: "RFC 5424 · UDP/TCP/TLS", kind: "source", status: "connected" },
-  { id: "fluent", name: "Fluent Bit · Vector", abbr: "FB", desc: "Ship from an existing pipeline without a new agent.", proto: "HTTP · OTLP", kind: "source", status: "available" },
-  { id: "k8s", name: "Kubernetes", abbr: "K8", desc: "Pods, nodes, events and workload inventory.", proto: "K8s API · Helm", kind: "source", status: "available" },
+  {
+    id: "fluent",
+    name: "Fluent Bit · Vector",
+    abbr: "FB",
+    desc: "Ship from an existing pipeline without a new agent.",
+    proto: "HTTP · OTLP",
+    kind: "source",
+    status: "available",
+  },
+  {
+    id: "k8s",
+    name: "Kubernetes",
+    abbr: "K8",
+    desc: "Pods, nodes, events and workload inventory.",
+    proto: "K8s API · Helm",
+    kind: "source",
+    status: "available",
+  },
   { id: "cloudtrail", name: "AWS CloudTrail", abbr: "AW", desc: "Cloud audit events.", proto: "S3 · SQS", kind: "source", status: "available" },
   { id: "github", name: "GitHub", abbr: "GH", desc: "Repositories, pull requests and SARIF upload.", proto: "GitHub App", kind: "source", status: "error" },
-  { id: "ocsf", name: "Any OCSF source", abbr: "OC", desc: "Findings from any scanner or EDR.", proto: "POST /v1/ingest/ocsf", kind: "source", status: "available" },
+  {
+    id: "ocsf",
+    name: "Any OCSF source",
+    abbr: "OC",
+    desc: "Findings from any scanner or EDR.",
+    proto: "POST /v1/ingest/ocsf",
+    kind: "source",
+    status: "available",
+  },
   { id: "slack", name: "Slack", abbr: "SL", desc: "Alerts and incident updates in channels.", proto: "Slack app", kind: "destination", status: "connected" },
   { id: "pagerduty", name: "PagerDuty", abbr: "PD", desc: "Page the on-call engineer.", proto: "Events API v2", kind: "destination", status: "connected" },
   { id: "jira", name: "Jira", abbr: "JI", desc: "Turn findings into tickets with two-way status.", proto: "REST", kind: "destination", status: "available" },
-  { id: "siem", name: "External SIEM", abbr: "SE", desc: "Splunk, Elastic or QRadar via CEF, LEEF or HEC.", proto: "Syslog CEF · HEC", kind: "destination", status: "available" },
+  {
+    id: "siem",
+    name: "External SIEM",
+    abbr: "SE",
+    desc: "Splunk, Elastic or QRadar via CEF, LEEF or HEC.",
+    proto: "Syslog CEF · HEC",
+    kind: "destination",
+    status: "available",
+  },
   { id: "webhook", name: "Webhook", abbr: "{}", desc: "Signed JSON to any URL.", proto: "HTTPS + HMAC", kind: "destination", status: "error" },
   { id: "s3", name: "S3 archive", abbr: "S3", desc: "Long-term, immutable storage.", proto: "S3 Object Lock", kind: "destination", status: "connected" },
 ];
@@ -89,7 +129,11 @@ export function IntegrationsPage({ product }: { product: ProductId }) {
   ];
   return (
     <>
-      <PageHeader title="Integrations" description={`Connect ${name} to the tools you already run. Everything speaks open standards both ways.`} actions={<SearchInput label="Search integrations" value={query} onChange={(e) => setQuery(e.target.value)} className="w-60" />}>
+      <PageHeader
+        title="Integrations"
+        description={`Connect ${name} to the tools you already run. Everything speaks open standards both ways.`}
+        actions={<SearchInput label="Search integrations" value={query} onChange={(e) => setQuery(e.target.value)} className="w-60" />}
+      >
         <Tabs
           label="Integration type"
           value={tab}
@@ -126,34 +170,50 @@ export function IntegrationsPage({ product }: { product: ProductId }) {
         </div>
       )}
       {tab === "products" && (
-        <Panel title="Linked OpenAsy products" description="Linked once with a token; shared entities such as hosts, users and IPs become clickable across them." flush>
+        <Panel
+          title="Linked OpenAsy products"
+          description="Linked once with a token; shared entities such as hosts, users and IPs become clickable across them."
+          flush
+        >
           <ul className="flex flex-col">
-            {(CONNECTED as readonly ProductId[]).filter((p) => p !== product).map((p) => {
-              const P = PRODUCTS[p];
-              return (
-                <li key={p} className="flex items-center gap-3 border-b border-subtle px-3 py-2 last:border-0">
-                  <P.icon aria-hidden className="size-4 text-fg-muted" />
-                  <span className="flex min-w-0 grow flex-col">
-                    <span className="text-sm font-medium">{P.name}</span>
-                    <span className="truncate font-mono text-2xs text-fg-muted">{P.image.split("/").pop()}.ops.example.com</span>
-                  </span>
-                  <StatusBadge tone="success">Linked</StatusBadge>
-                  <Button size="xs">Unlink {P.name}</Button>
-                </li>
-              );
-            })}
+            {(CONNECTED as readonly ProductId[])
+              .filter((p) => p !== product)
+              .map((p) => {
+                const P = PRODUCTS[p];
+                return (
+                  <li key={p} className="flex items-center gap-3 border-b border-subtle px-3 py-2 last:border-0">
+                    <P.icon aria-hidden className="size-4 text-fg-muted" />
+                    <span className="flex min-w-0 grow flex-col">
+                      <span className="text-sm font-medium">{P.name}</span>
+                      <span className="truncate font-mono text-2xs text-fg-muted">{P.image.split("/").pop()}.ops.example.com</span>
+                    </span>
+                    <StatusBadge tone="success">Linked</StatusBadge>
+                    <Button size="xs">Unlink {P.name}</Button>
+                  </li>
+                );
+              })}
           </ul>
         </Panel>
       )}
       {tab === "api" && (
         <div className="grid gap-2.5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-          <Panel title="API tokens" actions={<Button size="sm" icon={<Plus />}>New token</Button>} flush>
+          <Panel
+            title="API tokens"
+            actions={
+              <Button size="sm" icon={<Plus />}>
+                New token
+              </Button>
+            }
+            flush
+          >
             <DataTable label="API tokens" columns={tokenCols} rows={tokens} getRowId={(t) => t.id} minWidth={560} columnMenu={false} />
           </Panel>
           <Panel title="REST API" description="Every screen is backed by a public API.">
             <div className="flex flex-col gap-2 text-sm">
               <code className="rounded-md bg-subtle px-2 py-1.5 font-mono text-xs">https://{PRODUCTS[product].image.split("/").pop()}.example.com/api/v1</code>
-              <Button size="sm" icon={<Copy />}>Copy base URL</Button>
+              <Button size="sm" icon={<Copy />}>
+                Copy base URL
+              </Button>
               <a href="#openapi" className="text-xs text-accent-text">
                 OpenAPI 3.1 specification
               </a>
@@ -293,7 +353,16 @@ export function SettingsPage({ product }: { product: ProductId }) {
         </Panel>
       )}
       {tab === "members" && (
-        <Panel title="Members" description="Roles apply to this product only." actions={<Button size="sm" variant="primary" icon={<Plus />}>Invite member</Button>} flush>
+        <Panel
+          title="Members"
+          description="Roles apply to this product only."
+          actions={
+            <Button size="sm" variant="primary" icon={<Plus />}>
+              Invite member
+            </Button>
+          }
+          flush
+        >
           <DataTable label="Members" columns={memberCols} rows={members} getRowId={(m) => m.id} minWidth={640} />
         </Panel>
       )}
@@ -320,7 +389,12 @@ export function SettingsPage({ product }: { product: ProductId }) {
           </Panel>
           <Panel title="Policy">
             <div className="flex flex-col gap-3">
-              <Switch checked={enforceSso} onCheckedChange={setEnforceSso} label="Enforce single sign-on" description="Local passwords stop working, except for one break-glass owner." />
+              <Switch
+                checked={enforceSso}
+                onCheckedChange={setEnforceSso}
+                label="Enforce single sign-on"
+                description="Local passwords stop working, except for one break-glass owner."
+              />
               <Checkbox label="Require MFA at the identity provider" defaultChecked />
               <Checkbox label="Provision members with SCIM" />
             </div>
@@ -362,7 +436,12 @@ export function SettingsPage({ product }: { product: ProductId }) {
         </div>
       )}
       {tab === "audit" && (
-        <Panel title="Audit log" description="Every change made by people and API tokens. Exportable as evidence for ISO 27001, SOC 2 and GDPR." actions={<Button size="sm">Export CSV</Button>} flush>
+        <Panel
+          title="Audit log"
+          description="Every change made by people and API tokens. Exportable as evidence for ISO 27001, SOC 2 and GDPR."
+          actions={<Button size="sm">Export CSV</Button>}
+          flush
+        >
           <DataTable
             label="Audit log"
             rows={AUDIT}

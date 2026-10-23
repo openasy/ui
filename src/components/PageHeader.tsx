@@ -31,7 +31,15 @@ export function PageHeader({ title, description, breadcrumbs, meta, actions, chi
               <ol className="flex flex-wrap items-center gap-1 text-xs text-fg-muted">
                 {breadcrumbs.map((c, i) => (
                   <Fragment key={i}>
-                    <li>{c.href ? <a href={c.href} className="text-fg-muted no-underline hover:text-fg">{c.label}</a> : c.label}</li>
+                    <li>
+                      {c.href ? (
+                        <a href={c.href} className="text-fg-muted no-underline hover:text-fg">
+                          {c.label}
+                        </a>
+                      ) : (
+                        c.label
+                      )}
+                    </li>
                     {i < breadcrumbs.length - 1 && (
                       <li aria-hidden>
                         <ChevronRight className="size-3" />

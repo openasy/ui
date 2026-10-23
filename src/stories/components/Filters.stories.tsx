@@ -68,7 +68,7 @@ export const Standard: Story = {
     const c = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
     await userEvent.click(c.getByRole("button", { name: /Time range/ }));
-    await userEvent.click(await body.findByRole("button", { name: "Last 7 days" }));
+    await userEvent.click(await body.findByRole("menuitemradio", { name: "Last 7 days" }));
     await expect(c.getByText(/range=7d/)).toBeInTheDocument();
     await userEvent.click(c.getByRole("button", { name: "Remove filter env" }));
     await expect(c.queryByRole("button", { name: "Remove filter env" })).not.toBeInTheDocument();

@@ -135,7 +135,11 @@ export function ThemeMenu({ value, onChange, className }: ThemeToggleProps) {
   };
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger aria-label={`${t("theme.label")}: ${t(current.name)}`} title={t("theme.label")} className={cn("grid size-10 place-items-center rounded-md", className)}>
+      <Popover.Trigger
+        aria-label={`${t("theme.label")}: ${t(current.name)}`}
+        title={t("theme.label")}
+        className={cn("grid size-10 place-items-center rounded-md", className)}
+      >
         <current.Icon aria-hidden className="size-[18px]" />
       </Popover.Trigger>
       <Popover.Portal>
@@ -148,7 +152,7 @@ export function ThemeMenu({ value, onChange, className }: ThemeToggleProps) {
           }}
           className="oa-root z-50 w-44 rounded-lg border border-line bg-surface p-1 shadow-overlay"
         >
-          <div role="menu" aria-label={t("theme.label")} onKeyDown={onKey} className="flex flex-col gap-0.5">
+          <div role="menu" tabIndex={-1} aria-label={t("theme.label")} onKeyDown={onKey} className="flex flex-col gap-0.5">
             {OPTIONS.map(({ value: v, name, Icon }, i) => {
               const on = v === value;
               return (

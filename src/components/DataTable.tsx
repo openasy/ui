@@ -1,4 +1,15 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { ArrowDown, ArrowUp, ArrowUpDown, EllipsisVertical, EyeOff, Pin, PinOff, RotateCcw } from "lucide-react";
 import { cn } from "../lib/cn";
@@ -172,7 +183,9 @@ export function DataTable<T>({
   const sized = Object.keys(layout.widths).length > 0;
   const anyPinned = visibleColumns.some((c) => pinOf(c));
 
-  // Measure rendered widths so pinned columns know their sticky offsets.
+  // Measure rendered widths so pinned columns know their sticky offsets. It runs after every render, as content
+  // changes widths; setMeasured keeps the old object when nothing moved, so it does not render again.
+  // oxlint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
     if (!anyPinned) return;
     const next: Record<string, number> = {};
@@ -184,9 +197,9 @@ export function DataTable<T>({
   const offsets = { left: {} as Record<string, number>, right: {} as Record<string, number> };
   {
     let acc = selectable ? SELECT_W : 0;
-    for (const c of visibleColumns) if (pinOf(c) === "left") (offsets.left[c.id] = acc), (acc += widthOf(c.id));
+    for (const c of visibleColumns) if (pinOf(c) === "left") ((offsets.left[c.id] = acc), (acc += widthOf(c.id)));
     acc = 0;
-    for (const c of [...visibleColumns].reverse()) if (pinOf(c) === "right") (offsets.right[c.id] = acc), (acc += widthOf(c.id));
+    for (const c of [...visibleColumns].reverse()) if (pinOf(c) === "right") ((offsets.right[c.id] = acc), (acc += widthOf(c.id)));
   }
   const lastLeft = [...visibleColumns].reverse().find((c) => pinOf(c) === "left")?.id;
   const firstRight = visibleColumns.find((c) => pinOf(c) === "right")?.id;
@@ -293,199 +306,229 @@ export function DataTable<T>({
       )}
       {/* relative: keeps absolutely positioned content (e.g. sr-only headers) inside the scroll box. */}
       <div className="relative min-w-0">
-      {edges.left && <span aria-hidden data-testid="scroll-shadow-left" className="pointer-events-none absolute inset-y-0 left-0 z-30 w-4 bg-gradient-to-r from-black/10 to-transparent" />}
-      {edges.right && <span aria-hidden data-testid="scroll-shadow-right" className="pointer-events-none absolute inset-y-0 right-0 z-30 w-4 bg-gradient-to-l from-black/10 to-transparent" />}
-      <div ref={scrollRef} onScroll={updateEdges} className={cn("relative overflow-x-auto", stickyHeader && "overflow-y-auto")} style={stickyHeader && maxHeight ? { maxHeight } : undefined}>
-        <table
-          aria-label={label}
-          aria-busy={loading || undefined}
-          className={cn("border-collapse text-sm", sized ? "table-fixed" : "w-full")}
-          style={sized ? { width: totalWidth } : { minWidth }}
+        {edges.left && (
+          <span
+            aria-hidden
+            data-testid="scroll-shadow-left"
+            className="pointer-events-none absolute inset-y-0 left-0 z-30 w-4 bg-gradient-to-r from-black/10 to-transparent"
+          />
+        )}
+        {edges.right && (
+          <span
+            aria-hidden
+            data-testid="scroll-shadow-right"
+            className="pointer-events-none absolute inset-y-0 right-0 z-30 w-4 bg-gradient-to-l from-black/10 to-transparent"
+          />
+        )}
+        <div
+          ref={scrollRef}
+          onScroll={updateEdges}
+          className={cn("relative overflow-x-auto", stickyHeader && "overflow-y-auto")}
+          style={stickyHeader && maxHeight ? { maxHeight } : undefined}
         >
-          <colgroup>
-            {selectable && <col style={{ width: SELECT_W }} />}
-            {visibleColumns.map((c) => (
-              <col key={c.id} style={layout.widths[c.id] ? { width: layout.widths[c.id] } : c.width ? { width: c.width } : undefined} />
-            ))}
-          </colgroup>
-          <thead className={cn(stickyHeader && "sticky top-0 z-20")}>
-            <tr className="border-b border-line bg-canvas">
-              {selectable && (
-                <th scope="col" className={cn("bg-canvas px-2.5 py-1.5 text-left", anyPinned && "sticky left-0 z-10")}>
-                  <input
-                    type="checkbox"
-                    aria-label={t("table.selectAll")}
-                    checked={allOnPage}
-                    ref={(el) => {
-                      if (el) el.indeterminate = !allOnPage && someOnPage;
-                    }}
-                    onChange={() =>
-                      setSelection(allOnPage ? selection.filter((id) => !visibleIds.includes(id)) : Array.from(new Set([...selection, ...visibleIds])))
-                    }
-                    className="size-3.5 accent-[var(--oa-accent)]"
-                  />
-                </th>
-              )}
-              {visibleColumns.map((c) => {
-                const active = sort?.id === c.id;
-                const ariaSort = active ? (sort.direction === "asc" ? "ascending" : "descending") : c.sortValue ? "none" : undefined;
-                const SortIcon = !active ? ArrowUpDown : sort.direction === "asc" ? ArrowUp : ArrowDown;
-                const pin = pinOf(c);
-                const canResize = c.resizable ?? resizable;
-                return (
-                  <th
-                    key={c.id}
-                    ref={(el) => {
-                      thRefs.current[c.id] = el;
-                    }}
-                    scope="col"
-                    aria-sort={ariaSort}
-                    data-pinned={pin ?? undefined}
-                    style={stickyStyle(c)}
-                    className={cn(
-                      "group/th relative bg-canvas px-2.5 py-1.5 text-2xs font-medium tracking-wider whitespace-nowrap text-fg-muted uppercase",
-                      c.align === "right" ? "text-right" : c.align === "center" ? "text-center" : "text-left",
-                      pin && "z-10",
-                      edge(c),
-                    )}
-                  >
-                    <span className={cn("inline-flex max-w-full items-center gap-1", c.align === "right" && "flex-row-reverse")}>
-                      {c.sortValue ? (
-                        <button type="button" onClick={() => toggleSort(c)} className={cn("inline-flex min-w-0 items-center gap-1 uppercase hover:text-fg", active && "text-fg")}>
+          <table
+            aria-label={label}
+            aria-busy={loading || undefined}
+            className={cn("border-collapse text-sm", sized ? "table-fixed" : "w-full")}
+            style={sized ? { width: totalWidth } : { minWidth }}
+          >
+            <colgroup>
+              {selectable && <col style={{ width: SELECT_W }} />}
+              {visibleColumns.map((c) => (
+                <col key={c.id} style={layout.widths[c.id] ? { width: layout.widths[c.id] } : c.width ? { width: c.width } : undefined} />
+              ))}
+            </colgroup>
+            <thead className={cn(stickyHeader && "sticky top-0 z-20")}>
+              <tr className="border-b border-line bg-canvas">
+                {selectable && (
+                  <th scope="col" className={cn("bg-canvas px-2.5 py-1.5 text-left", anyPinned && "sticky left-0 z-10")}>
+                    <input
+                      type="checkbox"
+                      aria-label={t("table.selectAll")}
+                      checked={allOnPage}
+                      ref={(el) => {
+                        if (el) el.indeterminate = !allOnPage && someOnPage;
+                      }}
+                      onChange={() =>
+                        setSelection(allOnPage ? selection.filter((id) => !visibleIds.includes(id)) : Array.from(new Set([...selection, ...visibleIds])))
+                      }
+                      className="size-3.5 accent-[var(--oa-accent)]"
+                    />
+                  </th>
+                )}
+                {visibleColumns.map((c) => {
+                  const active = sort?.id === c.id;
+                  const ariaSort = active ? (sort.direction === "asc" ? "ascending" : "descending") : c.sortValue ? "none" : undefined;
+                  const SortIcon = !active ? ArrowUpDown : sort.direction === "asc" ? ArrowUp : ArrowDown;
+                  const pin = pinOf(c);
+                  const canResize = c.resizable ?? resizable;
+                  return (
+                    <th
+                      key={c.id}
+                      ref={(el) => {
+                        thRefs.current[c.id] = el;
+                      }}
+                      scope="col"
+                      aria-sort={ariaSort}
+                      data-pinned={pin ?? undefined}
+                      style={stickyStyle(c)}
+                      className={cn(
+                        "group/th relative bg-canvas px-2.5 py-1.5 text-2xs font-medium tracking-wider whitespace-nowrap text-fg-muted uppercase",
+                        c.align === "right" ? "text-right" : c.align === "center" ? "text-center" : "text-left",
+                        pin && "z-10",
+                        edge(c),
+                      )}
+                    >
+                      <span className={cn("inline-flex max-w-full items-center gap-1", c.align === "right" && "flex-row-reverse")}>
+                        {c.sortValue ? (
+                          <button
+                            type="button"
+                            onClick={() => toggleSort(c)}
+                            className={cn("inline-flex min-w-0 items-center gap-1 uppercase hover:text-fg", active && "text-fg")}
+                          >
+                            <span id={`${uid}-h-${c.id}`} className="truncate">
+                              {c.header}
+                            </span>
+                            <SortIcon aria-hidden className={cn("size-3 shrink-0", !active && "opacity-50")} />
+                          </button>
+                        ) : (
                           <span id={`${uid}-h-${c.id}`} className="truncate">
                             {c.header}
                           </span>
-                          <SortIcon aria-hidden className={cn("size-3 shrink-0", !active && "opacity-50")} />
-                        </button>
-                      ) : (
-                        <span id={`${uid}-h-${c.id}`} className="truncate">
-                          {c.header}
-                        </span>
-                      )}
-                      {c.description && <InfoTip content={c.description} label={t("table.about", { column: labelOf(c) })} />}
-                      {pin && <Pin aria-hidden className="size-3 shrink-0 text-fg-muted" data-testid={`pinned-${c.id}`} />}
-                      {columnMenu && (
-                        <ColumnMenu
-                          name={labelOf(c)}
-                          sortable={!!c.sortValue}
-                          pin={pin}
-                          hideable={(c.hideable ?? true) && visibleColumns.length > 1}
-                          resized={sized}
-                          onSort={(direction) => setSort({ id: c.id, direction })}
-                          onPin={(side) => setPin(c.id, side)}
-                          onHide={() => hide(c.id)}
-                          onReset={resetWidths}
+                        )}
+                        {c.description && <InfoTip content={c.description} label={t("table.about", { column: labelOf(c) })} />}
+                        {pin && <Pin aria-hidden className="size-3 shrink-0 text-fg-muted" data-testid={`pinned-${c.id}`} />}
+                        {columnMenu && (
+                          <ColumnMenu
+                            name={labelOf(c)}
+                            sortable={!!c.sortValue}
+                            pin={pin}
+                            hideable={(c.hideable ?? true) && visibleColumns.length > 1}
+                            resized={sized}
+                            onSort={(direction) => setSort({ id: c.id, direction })}
+                            onPin={(side) => setPin(c.id, side)}
+                            onHide={() => hide(c.id)}
+                            onReset={resetWidths}
+                          />
+                        )}
+                      </span>
+                      {canResize && (
+                        <span
+                          role="separator"
+                          aria-orientation="vertical"
+                          aria-label={t("table.resize", { column: labelOf(c) })}
+                          aria-valuenow={Math.round(widthOf(c.id))}
+                          aria-valuemin={c.minWidth ?? DEFAULT_MIN}
+                          aria-valuemax={2000}
+                          tabIndex={0}
+                          onPointerDown={(e) => startResize(e, c.id)}
+                          onDoubleClick={resetWidths}
+                          onKeyDown={(e) => keyResize(e, c.id)}
+                          className="absolute inset-y-0 right-0 z-10 w-2 cursor-col-resize touch-none after:absolute after:inset-y-1 after:left-1/2 after:w-px after:-translate-x-1/2 after:bg-line-strong after:opacity-0 group-hover/th:after:opacity-100 hover:after:bg-accent focus-visible:after:bg-accent focus-visible:after:opacity-100"
+                          data-testid={`resize-${c.id}`}
                         />
                       )}
-                    </span>
-                    {canResize && (
-                      <span
-                        role="separator"
-                        aria-orientation="vertical"
-                        aria-label={t("table.resize", { column: labelOf(c) })}
-                        aria-valuenow={Math.round(widthOf(c.id))}
-                        aria-valuemin={c.minWidth ?? DEFAULT_MIN}
-                        aria-valuemax={2000}
-                        tabIndex={0}
-                        onPointerDown={(e) => startResize(e, c.id)}
-                        onDoubleClick={resetWidths}
-                        onKeyDown={(e) => keyResize(e, c.id)}
-                        className="absolute inset-y-0 right-0 z-10 w-2 cursor-col-resize touch-none after:absolute after:inset-y-1 after:left-1/2 after:w-px after:-translate-x-1/2 after:bg-line-strong after:opacity-0 group-hover/th:after:opacity-100 hover:after:bg-accent focus-visible:after:bg-accent focus-visible:after:opacity-100"
-                        data-testid={`resize-${c.id}`}
-                      />
-                    )}
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {loading &&
-              Array.from({ length: Math.min(pageSize ?? 5, 8) }, (_, i) => (
-                <tr key={`sk-${i}`} className="border-b border-subtle" data-testid="skeleton-row">
-                  {Array.from({ length: colCount }, (_, j) => (
-                    <td key={j} className={cellPad}>
-                      <span className="block h-3 animate-pulse rounded bg-subtle" />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            {!loading && visible.length === 0 && (
-              <tr>
-                <td colSpan={colCount} className="text-center text-sm text-fg-muted">
-                  {empty ?? <p className="py-8">{t("table.noResults")}</p>}
-                </td>
+                    </th>
+                  );
+                })}
               </tr>
-            )}
-            {!loading &&
-              visible.map((row) => {
-                const id = getRowId(row);
-                const selected = selection.includes(id);
-                const active = activeRowId === id;
-                const rowBg = selected || active ? "bg-accent-soft" : "bg-surface";
-                return (
-                  <tr
-                    key={id}
-                    data-row-id={id}
-                    aria-selected={selectable ? selected : undefined}
-                    onClick={onRowClick ? () => onRowClick(row) : undefined}
-                    tabIndex={onRowClick ? 0 : undefined}
-                    onKeyDown={
-                      onRowClick
-                        ? (e) => {
-                            if (e.target !== e.currentTarget) return;
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
+            </thead>
+            <tbody>
+              {loading &&
+                Array.from({ length: Math.min(pageSize ?? 5, 8) }, (_, i) => (
+                  <tr key={`sk-${i}`} aria-hidden className="border-b border-subtle" data-testid="skeleton-row">
+                    {Array.from({ length: colCount }, (_, j) => (
+                      <td key={j} className={cellPad}>
+                        <span className="block h-3 animate-pulse rounded bg-subtle" />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              {!loading && visible.length === 0 && (
+                <tr>
+                  <td colSpan={colCount} className="text-center text-sm text-fg-muted">
+                    {empty ?? <p className="py-8">{t("table.noResults")}</p>}
+                  </td>
+                </tr>
+              )}
+              {!loading &&
+                visible.map((row) => {
+                  const id = getRowId(row);
+                  const selected = selection.includes(id);
+                  const active = activeRowId === id;
+                  const rowBg = selected || active ? "bg-accent-soft" : "bg-surface";
+                  return (
+                    <tr
+                      key={id}
+                      data-row-id={id}
+                      aria-selected={selectable ? selected : undefined}
+                      onClick={
+                        onRowClick
+                          ? (e) => {
+                              // A button, link or field in a cell does its own thing, not open the row.
+                              const control = (e.target as Element).closest("a, button, input, select, textarea, label, [role=menuitem]");
+                              if (control && control !== e.currentTarget && e.currentTarget.contains(control)) return;
                               onRowClick(row);
                             }
-                          }
-                        : undefined
-                    }
-                    className={cn(
-                      "group/row border-b border-subtle last:border-b-0",
-                      onRowClick && "cursor-pointer hover:bg-canvas",
-                      (selected || active) && "bg-accent-soft hover:bg-accent-soft",
-                    )}
-                  >
-                    {selectable && (
-                      <td className={cn(cellPad, anyPinned && cn("sticky left-0 z-[1]", rowBg))} onClick={(e) => e.stopPropagation()}>
-                        <input
-                          type="checkbox"
-                          aria-label={t("table.selectRow", { id })}
-                          checked={selected}
-                          onChange={() => setSelection(selected ? selection.filter((s) => s !== id) : [...selection, id])}
-                          className="size-3.5 accent-[var(--oa-accent)]"
-                        />
-                      </td>
-                    )}
-                    {visibleColumns.map((c) => {
-                      const pin = pinOf(c);
-                      return (
-                        <td
-                          key={c.id}
-                          style={stickyStyle(c)}
-                          className={cn(
-                            cellPad,
-                            "align-middle",
-                            c.mono && "font-mono text-xs",
-                            (c.mono || c.align === "right") && "whitespace-nowrap",
-                            c.align === "right" ? "text-right" : c.align === "center" ? "text-center" : "text-left",
-                            sized && "overflow-hidden text-ellipsis",
-                            pin && cn("z-[1]", rowBg, onRowClick && !(selected || active) && "group-hover/row:bg-canvas"),
-                            edge(c),
-                            c.className,
-                          )}
-                        >
-                          {c.cell(row)}
+                          : undefined
+                      }
+                      tabIndex={onRowClick ? 0 : undefined}
+                      onKeyDown={
+                        onRowClick
+                          ? (e) => {
+                              if (e.target !== e.currentTarget) return;
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                onRowClick(row);
+                              }
+                            }
+                          : undefined
+                      }
+                      className={cn(
+                        "group/row border-b border-subtle last:border-b-0",
+                        onRowClick && "cursor-pointer hover:bg-canvas",
+                        (selected || active) && "bg-accent-soft hover:bg-accent-soft",
+                      )}
+                    >
+                      {selectable && (
+                        <td className={cn(cellPad, anyPinned && cn("sticky left-0 z-[1]", rowBg))} onClick={(e) => e.stopPropagation()}>
+                          <input
+                            type="checkbox"
+                            aria-label={t("table.selectRow", { id })}
+                            checked={selected}
+                            onChange={() => setSelection(selected ? selection.filter((s) => s !== id) : [...selection, id])}
+                            className="size-3.5 accent-[var(--oa-accent)]"
+                          />
                         </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
+                      )}
+                      {visibleColumns.map((c) => {
+                        const pin = pinOf(c);
+                        return (
+                          <td
+                            key={c.id}
+                            style={stickyStyle(c)}
+                            className={cn(
+                              cellPad,
+                              "align-middle",
+                              c.mono && "font-mono text-xs",
+                              (c.mono || c.align === "right") && "whitespace-nowrap",
+                              c.align === "right" ? "text-right" : c.align === "center" ? "text-center" : "text-left",
+                              sized && "overflow-hidden text-ellipsis",
+                              pin && cn("z-[1]", rowBg, onRowClick && !(selected || active) && "group-hover/row:bg-canvas"),
+                              edge(c),
+                              c.className,
+                            )}
+                          >
+                            {c.cell(row)}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
       </div>
       {pageSize && sorted.length > pageSize && (
         <div className="flex items-center justify-between border-t border-line px-2.5 py-1.5 text-xs text-fg-muted">
@@ -544,7 +587,7 @@ function ColumnMenu({ name, sortable, pin, hideable, resized, onSort, onPin, onH
                 <button type="button" role="menuitem" className={item} onClick={act(() => onSort("desc"))}>
                   <ArrowDown aria-hidden className="size-3.5 text-fg-muted" /> {t("table.sortDescending")}
                 </button>
-                <div role="separator" className="my-1 h-px bg-line" />
+                <div aria-hidden className="my-1 h-px bg-line" />
               </>
             )}
             {pin !== "left" && (
@@ -562,7 +605,7 @@ function ColumnMenu({ name, sortable, pin, hideable, resized, onSort, onPin, onH
                 <PinOff aria-hidden className="size-3.5 text-fg-muted" /> {t("table.unpin")}
               </button>
             )}
-            {(hideable || resized) && <div role="separator" className="my-1 h-px bg-line" />}
+            {(hideable || resized) && <div aria-hidden className="my-1 h-px bg-line" />}
             {resized && (
               <button type="button" role="menuitem" className={item} onClick={act(onReset)}>
                 <RotateCcw aria-hidden className="size-3.5 text-fg-muted" /> {t("table.resetWidths")}

@@ -125,7 +125,12 @@ export const StackedBars: Story = {
         ]}
         values={hours.map((_, h) => {
           const base = 18 + 10 * Math.sin(h / 3.8) + (h >= 13 && h <= 15 ? 26 : 0);
-          return [h === 14 ? 3 : h === 13 || h === 15 ? 1 : 0, Math.round(base * 0.18 + (h === 14 ? 9 : 0)), Math.round(base * 0.4), Math.round(base * 0.6 + 6)];
+          return [
+            h === 14 ? 3 : h === 13 || h === 15 ? 1 : 0,
+            Math.round(base * 0.18 + (h === 14 ? 9 : 0)),
+            Math.round(base * 0.4),
+            Math.round(base * 0.6 + 6),
+          ];
         })}
       />
     </Panel>

@@ -92,7 +92,15 @@ export const Badges: Story = {
 export const Empty: Story = {
   render: () => (
     <div className="max-w-md rounded-lg border border-dashed border-line-strong bg-surface">
-      <EmptyState icon={<Network />} title="No IP groups yet" action={<Button variant="primary" icon={<Plus />}>Create IP group</Button>}>
+      <EmptyState
+        icon={<Network />}
+        title="No IP groups yet"
+        action={
+          <Button variant="primary" icon={<Plus />}>
+            Create IP group
+          </Button>
+        }
+      >
         Group the networks people need, then allow teams to reach them.
       </EmptyState>
     </div>

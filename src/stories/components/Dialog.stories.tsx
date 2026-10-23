@@ -87,7 +87,9 @@ export const OneTimeValue: Story = {
           }
         >
           <div className="flex gap-2">
-            <code className="flex h-8 min-w-0 grow items-center truncate rounded-md border border-line bg-subtle px-2 font-mono text-xs">olg_example-token-shown-once</code>
+            <code className="flex h-8 min-w-0 grow items-center truncate rounded-md border border-line bg-subtle px-2 font-mono text-xs">
+              olg_example-token-shown-once
+            </code>
             <Button icon={<Copy aria-hidden className="size-3.5" />}>Copy</Button>
           </div>
           <Callout tone="warning" title="Closing this dialog hides the token" />

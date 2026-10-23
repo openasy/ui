@@ -70,26 +70,226 @@ interface Control {
 }
 
 const CONTROLS: Control[] = [
-  { id: "A.8.16", title: "Monitoring activities", framework: "ISO 27001", status: "passing", source: "logs", evidence: "Retention 30 d on 48 hosts", owner: PEOPLE[2], checked: "4 m ago", checkedSort: 4 },
-  { id: "A.8.8", title: "Management of technical vulnerabilities", framework: "ISO 27001", status: "failing", source: "vulnerabilities", evidence: "2 critical CVEs older than 14 d", owner: PEOPLE[7], checked: "12 m ago", checkedSort: 12 },
-  { id: "A.8.7", title: "Protection against malware", framework: "ISO 27001", status: "failing", source: "malware", evidence: "Active detection on api-prod-03", owner: PEOPLE[4], checked: "9 m ago", checkedSort: 9 },
-  { id: "A.5.15", title: "Access control", framework: "ISO 27001", status: "passing", source: "identity", evidence: "SSO enforced, 197/214 with MFA", owner: PEOPLE[1], checked: "1 h ago", checkedSort: 60 },
-  { id: "A.8.24", title: "Use of cryptography", framework: "ISO 27001", status: "needs-evidence", source: "posture", evidence: "Key rotation policy not uploaded", owner: PEOPLE[5], checked: "2 d ago", checkedSort: 2880 },
-  { id: "A.5.24", title: "Incident management planning", framework: "ISO 27001", status: "passing", source: "incidents", evidence: "8 incidents, 6 postmortems", owner: PEOPLE[4], checked: "3 h ago", checkedSort: 180 },
-  { id: "GDPR Art. 32", title: "Security of processing for personal data", framework: "GDPR", status: "passing", source: "access", evidence: "JIT database access, sessions recorded", owner: PEOPLE[0], checked: "18 m ago", checkedSort: 18 },
-  { id: "GDPR Art. 30", title: "Records of processing, incl. access audit logs", framework: "GDPR", status: "failing", source: "audit", evidence: "db-prod-02 audit log gap 13:20–13:55", owner: PEOPLE[3], checked: "6 m ago", checkedSort: 6 },
-  { id: "GDPR Art. 44", title: "Transfers of personal data outside the EEA", framework: "GDPR", status: "needs-evidence", source: "infrastructure", evidence: "us-east-1 replica needs signed SCCs", owner: PEOPLE[6], checked: "5 d ago", checkedSort: 7200 },
-  { id: "CC6.1", title: "Logical access security", framework: "SOC 2", status: "passing", source: "vpn", evidence: "214 people, per-group routes", owner: PEOPLE[1], checked: "22 m ago", checkedSort: 22 },
-  { id: "CC6.8", title: "Prevent unauthorized software", framework: "SOC 2", status: "failing", source: "runtime", evidence: "Unsigned binary kworkerd executed", owner: PEOPLE[4], checked: "9 m ago", checkedSort: 9 },
-  { id: "CC7.2", title: "Monitor system components for anomalies", framework: "SOC 2", status: "passing", source: "siem", evidence: "142 Sigma rules enabled", owner: PEOPLE[2], checked: "31 m ago", checkedSort: 31 },
-  { id: "CC8.1", title: "Change management", framework: "SOC 2", status: "failing", source: "sast", evidence: "3 merges without review this week", owner: PEOPLE[0], checked: "2 h ago", checkedSort: 120 },
-  { id: "CC7.4", title: "Respond to security incidents", framework: "SOC 2", status: "failing", source: "incidents", evidence: "INC-137 postmortem overdue", owner: PEOPLE[3], checked: "1 h ago", checkedSort: 60 },
-  { id: "PCI 6.3.3", title: "Patch critical vulnerabilities within one month", framework: "PCI DSS", status: "failing", source: "vulnerabilities", evidence: "CVE-2024-6387 on 3 in-scope hosts", owner: PEOPLE[7], checked: "12 m ago", checkedSort: 12 },
-  { id: "PCI 10.2.1", title: "Audit logs capture user access to cardholder data", framework: "PCI DSS", status: "passing", source: "logs", evidence: "Pipeline pci-audit · 1 y archive", owner: PEOPLE[2], checked: "8 m ago", checkedSort: 8 },
-  { id: "PCI 11.3.1", title: "Internal vulnerability scans quarterly", framework: "PCI DSS", status: "passing", source: "vulnerabilities", evidence: "Last full scan Oct 14", owner: PEOPLE[7], checked: "5 d ago", checkedSort: 7200 },
-  { id: "PCI 6.4.2", title: "Web application firewall or automated testing", framework: "PCI DSS", status: "needs-evidence", source: "dast", evidence: "checkout.example.com not scanned in 45 d", owner: PEOPLE[6], checked: "45 d ago", checkedSort: 64800 },
-  { id: "PCI 8.4.2", title: "MFA for all access into the CDE", framework: "PCI DSS", status: "passing", source: "identity", evidence: "Passkeys or TOTP on CDE group", owner: PEOPLE[1], checked: "1 h ago", checkedSort: 60 },
-  { id: "PCI 3.6.1", title: "Protect cryptographic keys", framework: "PCI DSS", status: "failing", source: "secrets", evidence: "Leaked Stripe key, rotated, review pending", owner: PEOPLE[5], checked: "2 d ago", checkedSort: 2880 },
+  {
+    id: "A.8.16",
+    title: "Monitoring activities",
+    framework: "ISO 27001",
+    status: "passing",
+    source: "logs",
+    evidence: "Retention 30 d on 48 hosts",
+    owner: PEOPLE[2],
+    checked: "4 m ago",
+    checkedSort: 4,
+  },
+  {
+    id: "A.8.8",
+    title: "Management of technical vulnerabilities",
+    framework: "ISO 27001",
+    status: "failing",
+    source: "vulnerabilities",
+    evidence: "2 critical CVEs older than 14 d",
+    owner: PEOPLE[7],
+    checked: "12 m ago",
+    checkedSort: 12,
+  },
+  {
+    id: "A.8.7",
+    title: "Protection against malware",
+    framework: "ISO 27001",
+    status: "failing",
+    source: "malware",
+    evidence: "Active detection on api-prod-03",
+    owner: PEOPLE[4],
+    checked: "9 m ago",
+    checkedSort: 9,
+  },
+  {
+    id: "A.5.15",
+    title: "Access control",
+    framework: "ISO 27001",
+    status: "passing",
+    source: "identity",
+    evidence: "SSO enforced, 197/214 with MFA",
+    owner: PEOPLE[1],
+    checked: "1 h ago",
+    checkedSort: 60,
+  },
+  {
+    id: "A.8.24",
+    title: "Use of cryptography",
+    framework: "ISO 27001",
+    status: "needs-evidence",
+    source: "posture",
+    evidence: "Key rotation policy not uploaded",
+    owner: PEOPLE[5],
+    checked: "2 d ago",
+    checkedSort: 2880,
+  },
+  {
+    id: "A.5.24",
+    title: "Incident management planning",
+    framework: "ISO 27001",
+    status: "passing",
+    source: "incidents",
+    evidence: "8 incidents, 6 postmortems",
+    owner: PEOPLE[4],
+    checked: "3 h ago",
+    checkedSort: 180,
+  },
+  {
+    id: "GDPR Art. 32",
+    title: "Security of processing for personal data",
+    framework: "GDPR",
+    status: "passing",
+    source: "access",
+    evidence: "JIT database access, sessions recorded",
+    owner: PEOPLE[0],
+    checked: "18 m ago",
+    checkedSort: 18,
+  },
+  {
+    id: "GDPR Art. 30",
+    title: "Records of processing, incl. access audit logs",
+    framework: "GDPR",
+    status: "failing",
+    source: "audit",
+    evidence: "db-prod-02 audit log gap 13:20–13:55",
+    owner: PEOPLE[3],
+    checked: "6 m ago",
+    checkedSort: 6,
+  },
+  {
+    id: "GDPR Art. 44",
+    title: "Transfers of personal data outside the EEA",
+    framework: "GDPR",
+    status: "needs-evidence",
+    source: "infrastructure",
+    evidence: "us-east-1 replica needs signed SCCs",
+    owner: PEOPLE[6],
+    checked: "5 d ago",
+    checkedSort: 7200,
+  },
+  {
+    id: "CC6.1",
+    title: "Logical access security",
+    framework: "SOC 2",
+    status: "passing",
+    source: "vpn",
+    evidence: "214 people, per-group routes",
+    owner: PEOPLE[1],
+    checked: "22 m ago",
+    checkedSort: 22,
+  },
+  {
+    id: "CC6.8",
+    title: "Prevent unauthorized software",
+    framework: "SOC 2",
+    status: "failing",
+    source: "runtime",
+    evidence: "Unsigned binary kworkerd executed",
+    owner: PEOPLE[4],
+    checked: "9 m ago",
+    checkedSort: 9,
+  },
+  {
+    id: "CC7.2",
+    title: "Monitor system components for anomalies",
+    framework: "SOC 2",
+    status: "passing",
+    source: "siem",
+    evidence: "142 Sigma rules enabled",
+    owner: PEOPLE[2],
+    checked: "31 m ago",
+    checkedSort: 31,
+  },
+  {
+    id: "CC8.1",
+    title: "Change management",
+    framework: "SOC 2",
+    status: "failing",
+    source: "sast",
+    evidence: "3 merges without review this week",
+    owner: PEOPLE[0],
+    checked: "2 h ago",
+    checkedSort: 120,
+  },
+  {
+    id: "CC7.4",
+    title: "Respond to security incidents",
+    framework: "SOC 2",
+    status: "failing",
+    source: "incidents",
+    evidence: "INC-137 postmortem overdue",
+    owner: PEOPLE[3],
+    checked: "1 h ago",
+    checkedSort: 60,
+  },
+  {
+    id: "PCI 6.3.3",
+    title: "Patch critical vulnerabilities within one month",
+    framework: "PCI DSS",
+    status: "failing",
+    source: "vulnerabilities",
+    evidence: "CVE-2024-6387 on 3 in-scope hosts",
+    owner: PEOPLE[7],
+    checked: "12 m ago",
+    checkedSort: 12,
+  },
+  {
+    id: "PCI 10.2.1",
+    title: "Audit logs capture user access to cardholder data",
+    framework: "PCI DSS",
+    status: "passing",
+    source: "logs",
+    evidence: "Pipeline pci-audit · 1 y archive",
+    owner: PEOPLE[2],
+    checked: "8 m ago",
+    checkedSort: 8,
+  },
+  {
+    id: "PCI 11.3.1",
+    title: "Internal vulnerability scans quarterly",
+    framework: "PCI DSS",
+    status: "passing",
+    source: "vulnerabilities",
+    evidence: "Last full scan Oct 14",
+    owner: PEOPLE[7],
+    checked: "5 d ago",
+    checkedSort: 7200,
+  },
+  {
+    id: "PCI 6.4.2",
+    title: "Web application firewall or automated testing",
+    framework: "PCI DSS",
+    status: "needs-evidence",
+    source: "dast",
+    evidence: "checkout.example.com not scanned in 45 d",
+    owner: PEOPLE[6],
+    checked: "45 d ago",
+    checkedSort: 64800,
+  },
+  {
+    id: "PCI 8.4.2",
+    title: "MFA for all access into the CDE",
+    framework: "PCI DSS",
+    status: "passing",
+    source: "identity",
+    evidence: "Passkeys or TOTP on CDE group",
+    owner: PEOPLE[1],
+    checked: "1 h ago",
+    checkedSort: 60,
+  },
+  {
+    id: "PCI 3.6.1",
+    title: "Protect cryptographic keys",
+    framework: "PCI DSS",
+    status: "failing",
+    source: "secrets",
+    evidence: "Leaked Stripe key, rotated, review pending",
+    owner: PEOPLE[5],
+    checked: "2 d ago",
+    checkedSort: 2880,
+  },
 ];
 
 /** Cross-framework mapping: the same control satisfies requirements in other frameworks. */
@@ -190,7 +390,13 @@ const columns: Column<Control>[] = [
   },
   { id: "source", header: "Evidence from", sortValue: (c) => PRODUCTS[c.source].name, cell: (c) => <SourceLink source={c.source} /> },
   { id: "owner", header: "Owner", sortValue: (c) => c.owner, cell: (c) => <Owner name={c.owner} /> },
-  { id: "checked", header: "Last checked", align: "right", sortValue: (c) => -c.checkedSort, cell: (c) => <span className="text-xs whitespace-nowrap text-fg-muted">{c.checked}</span> },
+  {
+    id: "checked",
+    header: "Last checked",
+    align: "right",
+    sortValue: (c) => -c.checkedSort,
+    cell: (c) => <span className="text-xs whitespace-nowrap text-fg-muted">{c.checked}</span>,
+  },
 ];
 
 /* ------------------------------------------------------------- Frameworks */
@@ -246,7 +452,11 @@ function FrameworksPage() {
               value={pct}
               unit="% passing"
               tone={pct < 85 ? "warning" : undefined}
-              delta={{ label: `${f.trend > 0 ? "+" : "−"}${Math.abs(f.trend)} pts in 30 d`, direction: f.trend > 0 ? "up" : "down", intent: f.trend > 0 ? "good" : "bad" }}
+              delta={{
+                label: `${f.trend > 0 ? "+" : "−"}${Math.abs(f.trend)} pts in 30 d`,
+                direction: f.trend > 0 ? "up" : "down",
+                intent: f.trend > 0 ? "good" : "bad",
+              }}
               footer={
                 <span className="flex flex-col gap-1">
                   <span aria-hidden className="flex h-1.5 overflow-hidden rounded-full bg-subtle">
@@ -311,11 +521,24 @@ function FrameworksPage() {
             ]}
           />
           <FilterBar onClear={fw.length ? () => setFw([]) : undefined} className="pb-2">
-            <FacetFilter label="Framework" selected={fw} onChange={setFw} options={FRAMEWORKS.map((f) => ({ value: f.id, count: CONTROLS.filter((c) => c.framework === f.id).length }))} />
+            <FacetFilter
+              label="Framework"
+              selected={fw}
+              onChange={setFw}
+              options={FRAMEWORKS.map((f) => ({ value: f.id, count: CONTROLS.filter((c) => c.framework === f.id).length }))}
+            />
           </FilterBar>
         </div>
         <div className="border-t border-line">
-          <DataTable label="Controls" columns={columns} rows={rows} getRowId={(c) => c.id} defaultSort={{ id: "status", direction: "desc" }} pageSize={12} minWidth={960} />
+          <DataTable
+            label="Controls"
+            columns={columns}
+            rows={rows}
+            getRowId={(c) => c.id}
+            defaultSort={{ id: "status", direction: "desc" }}
+            pageSize={12}
+            minWidth={960}
+          />
         </div>
       </Panel>
     </>
@@ -355,10 +578,21 @@ function ControlsPage() {
       sortValue: (c) => (MAPPED[c.id] ?? []).length,
       cell: (c) => <span className="font-mono text-2xs text-fg-muted">{(MAPPED[c.id] ?? []).join(", ") || "–"}</span>,
     },
-    { id: "status", header: "Status", sortValue: (c) => ["passing", "needs-evidence", "failing"].indexOf(c.status), cell: (c) => <StatusBadge tone={STATUS[c.status].tone}>{STATUS[c.status].label}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      sortValue: (c) => ["passing", "needs-evidence", "failing"].indexOf(c.status),
+      cell: (c) => <StatusBadge tone={STATUS[c.status].tone}>{STATUS[c.status].label}</StatusBadge>,
+    },
     { id: "source", header: "Evidence from", sortValue: (c) => PRODUCTS[c.source].name, cell: (c) => <SourceName source={c.source} /> },
     { id: "owner", header: "Owner", sortValue: (c) => c.owner, cell: (c) => <Owner name={c.owner} /> },
-    { id: "checked", header: "Last checked", align: "right", sortValue: (c) => -c.checkedSort, cell: (c) => <span className="text-xs whitespace-nowrap text-fg-muted">{c.checked}</span> },
+    {
+      id: "checked",
+      header: "Last checked",
+      align: "right",
+      sortValue: (c) => -c.checkedSort,
+      cell: (c) => <span className="text-xs whitespace-nowrap text-fg-muted">{c.checked}</span>,
+    },
   ];
   return (
     <>
@@ -393,14 +627,24 @@ function ControlsPage() {
         }
       >
         <SearchInput label="Search controls" className="w-56" value={q} onChange={(e) => setQ(e.target.value)} />
-        <FacetFilter label="Framework" selected={fw} onChange={setFw} options={FRAMEWORKS.map((f) => ({ value: f.id, count: rows.filter((c) => c.framework === f.id).length }))} />
+        <FacetFilter
+          label="Framework"
+          selected={fw}
+          onChange={setFw}
+          options={FRAMEWORKS.map((f) => ({ value: f.id, count: rows.filter((c) => c.framework === f.id).length }))}
+        />
         <FacetFilter
           label="Status"
           selected={status}
           onChange={setStatus}
           options={(Object.keys(STATUS) as CtlStatus[]).map((s) => ({ value: s, label: STATUS[s].label, count: rows.filter((c) => c.status === s).length }))}
         />
-        <FacetFilter label="Owner" selected={owners} onChange={setOwners} options={[...new Set(rows.map((c) => c.owner))].map((o) => ({ value: o, count: rows.filter((c) => c.owner === o).length }))} />
+        <FacetFilter
+          label="Owner"
+          selected={owners}
+          onChange={setOwners}
+          options={[...new Set(rows.map((c) => c.owner))].map((o) => ({ value: o, count: rows.filter((c) => c.owner === o).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="All controls" description={`${shown.length} shown · select one for its tests`} flush>
@@ -506,19 +750,149 @@ interface Evidence {
 }
 
 const EVIDENCE: Evidence[] = [
-  { id: "ev1", name: "Log retention configuration, all pipelines", source: "logs", kind: "Config snapshot", controls: 9, collected: "4 m ago", freshness: "fresh", validFor: "24 h", by: "Automatic" },
-  { id: "ev2", name: "MFA enrolment per user", source: "identity", kind: "User export", controls: 7, collected: "1 h ago", freshness: "fresh", validFor: "24 h", by: "Automatic" },
-  { id: "ev3", name: "Open critical vulnerabilities with age", source: "vulnerabilities", kind: "Findings report", controls: 6, collected: "12 m ago", freshness: "fresh", validFor: "24 h", by: "Automatic" },
-  { id: "ev4", name: "Sigma rule inventory and alert volume", source: "siem", kind: "Rule export", controls: 5, collected: "31 m ago", freshness: "fresh", validFor: "7 d", by: "Automatic" },
-  { id: "ev5", name: "Database session recordings index", source: "access", kind: "Session list", controls: 4, collected: "18 m ago", freshness: "fresh", validFor: "24 h", by: "Automatic" },
-  { id: "ev6", name: "Cloud posture benchmark, CIS AWS 3.0", source: "posture", kind: "Benchmark result", controls: 14, collected: "3 d ago", freshness: "stale", validFor: "24 h", by: "Automatic" },
-  { id: "ev7", name: "DAST baseline, checkout.example.com", source: "dast", kind: "Scan report", controls: 2, collected: "45 d ago", freshness: "expired", validFor: "30 d", by: "Automatic" },
-  { id: "ev8", name: "Postmortems for P1 incidents", source: "incidents", kind: "Documents", controls: 3, collected: "3 h ago", freshness: "fresh", validFor: "90 d", by: "Automatic" },
-  { id: "ev9", name: "Signed SCCs with cloud provider", source: "manual", kind: "PDF", controls: 1, collected: "14 months ago", freshness: "expired", validFor: "12 months", by: PEOPLE[6] },
-  { id: "ev10", name: "Penetration test report 2026", source: "manual", kind: "PDF", controls: 6, collected: "Jul 2", freshness: "fresh", validFor: "12 months", by: PEOPLE[3] },
-  { id: "ev11", name: "Background check confirmations", source: "manual", kind: "Spreadsheet", controls: 2, collected: "5 months ago", freshness: "stale", validFor: "6 months", by: PEOPLE[5] },
-  { id: "ev12", name: "Secret rotation history", source: "secrets", kind: "Audit trail", controls: 3, collected: "2 d ago", freshness: "stale", validFor: "24 h", by: "Automatic" },
-  { id: "ev13", name: "VPN group membership and routes", source: "vpn", kind: "Config snapshot", controls: 4, collected: "22 m ago", freshness: "fresh", validFor: "24 h", by: "Automatic" },
+  {
+    id: "ev1",
+    name: "Log retention configuration, all pipelines",
+    source: "logs",
+    kind: "Config snapshot",
+    controls: 9,
+    collected: "4 m ago",
+    freshness: "fresh",
+    validFor: "24 h",
+    by: "Automatic",
+  },
+  {
+    id: "ev2",
+    name: "MFA enrolment per user",
+    source: "identity",
+    kind: "User export",
+    controls: 7,
+    collected: "1 h ago",
+    freshness: "fresh",
+    validFor: "24 h",
+    by: "Automatic",
+  },
+  {
+    id: "ev3",
+    name: "Open critical vulnerabilities with age",
+    source: "vulnerabilities",
+    kind: "Findings report",
+    controls: 6,
+    collected: "12 m ago",
+    freshness: "fresh",
+    validFor: "24 h",
+    by: "Automatic",
+  },
+  {
+    id: "ev4",
+    name: "Sigma rule inventory and alert volume",
+    source: "siem",
+    kind: "Rule export",
+    controls: 5,
+    collected: "31 m ago",
+    freshness: "fresh",
+    validFor: "7 d",
+    by: "Automatic",
+  },
+  {
+    id: "ev5",
+    name: "Database session recordings index",
+    source: "access",
+    kind: "Session list",
+    controls: 4,
+    collected: "18 m ago",
+    freshness: "fresh",
+    validFor: "24 h",
+    by: "Automatic",
+  },
+  {
+    id: "ev6",
+    name: "Cloud posture benchmark, CIS AWS 3.0",
+    source: "posture",
+    kind: "Benchmark result",
+    controls: 14,
+    collected: "3 d ago",
+    freshness: "stale",
+    validFor: "24 h",
+    by: "Automatic",
+  },
+  {
+    id: "ev7",
+    name: "DAST baseline, checkout.example.com",
+    source: "dast",
+    kind: "Scan report",
+    controls: 2,
+    collected: "45 d ago",
+    freshness: "expired",
+    validFor: "30 d",
+    by: "Automatic",
+  },
+  {
+    id: "ev8",
+    name: "Postmortems for P1 incidents",
+    source: "incidents",
+    kind: "Documents",
+    controls: 3,
+    collected: "3 h ago",
+    freshness: "fresh",
+    validFor: "90 d",
+    by: "Automatic",
+  },
+  {
+    id: "ev9",
+    name: "Signed SCCs with cloud provider",
+    source: "manual",
+    kind: "PDF",
+    controls: 1,
+    collected: "14 months ago",
+    freshness: "expired",
+    validFor: "12 months",
+    by: PEOPLE[6],
+  },
+  {
+    id: "ev10",
+    name: "Penetration test report 2026",
+    source: "manual",
+    kind: "PDF",
+    controls: 6,
+    collected: "Jul 2",
+    freshness: "fresh",
+    validFor: "12 months",
+    by: PEOPLE[3],
+  },
+  {
+    id: "ev11",
+    name: "Background check confirmations",
+    source: "manual",
+    kind: "Spreadsheet",
+    controls: 2,
+    collected: "5 months ago",
+    freshness: "stale",
+    validFor: "6 months",
+    by: PEOPLE[5],
+  },
+  {
+    id: "ev12",
+    name: "Secret rotation history",
+    source: "secrets",
+    kind: "Audit trail",
+    controls: 3,
+    collected: "2 d ago",
+    freshness: "stale",
+    validFor: "24 h",
+    by: "Automatic",
+  },
+  {
+    id: "ev13",
+    name: "VPN group membership and routes",
+    source: "vpn",
+    kind: "Config snapshot",
+    controls: 4,
+    collected: "22 m ago",
+    freshness: "fresh",
+    validFor: "24 h",
+    by: "Automatic",
+  },
 ];
 
 function EvidencePage() {
@@ -529,7 +903,10 @@ function EvidencePage() {
   const [notice, setNotice] = useState("");
   const shown = rows.filter(
     (e) =>
-      (tab === "all" || (tab === "auto" && e.source !== "manual") || (tab === "manual" && e.source === "manual") || (tab === "attention" && e.freshness !== "fresh")) &&
+      (tab === "all" ||
+        (tab === "auto" && e.source !== "manual") ||
+        (tab === "manual" && e.source === "manual") ||
+        (tab === "attention" && e.freshness !== "fresh")) &&
       e.name.toLowerCase().includes(q.toLowerCase()),
   );
   const collect = (e: Evidence) => {
@@ -549,12 +926,39 @@ function EvidencePage() {
         </span>
       ),
     },
-    { id: "source", header: "Source", sortValue: (e) => e.source, cell: (e) => (e.source === "manual" ? <Badge variant="outline">Manual upload</Badge> : <SourceName source={e.source} />) },
-    { id: "controls", header: "Controls", align: "right", mono: true, description: "Controls that cite this evidence.", sortValue: (e) => e.controls, cell: (e) => e.controls },
+    {
+      id: "source",
+      header: "Source",
+      sortValue: (e) => e.source,
+      cell: (e) => (e.source === "manual" ? <Badge variant="outline">Manual upload</Badge> : <SourceName source={e.source} />),
+    },
+    {
+      id: "controls",
+      header: "Controls",
+      align: "right",
+      mono: true,
+      description: "Controls that cite this evidence.",
+      sortValue: (e) => e.controls,
+      cell: (e) => e.controls,
+    },
     { id: "collected", header: "Collected", cell: (e) => <span className="text-xs whitespace-nowrap text-fg-muted">{e.collected}</span> },
-    { id: "valid", header: "Valid for", description: "After this period the evidence is stale and the controls that cite it need evidence again.", cell: (e) => <span className="text-xs">{e.validFor}</span> },
-    { id: "fresh", header: "Freshness", sortValue: (e) => ["fresh", "stale", "expired"].indexOf(e.freshness), cell: (e) => <StatusBadge tone={FRESH[e.freshness].tone}>{FRESH[e.freshness].label}</StatusBadge> },
-    { id: "by", header: "Collected by", cell: (e) => (e.by === "Automatic" ? <span className="text-xs text-fg-muted">Automatic</span> : <Owner name={e.by} />) },
+    {
+      id: "valid",
+      header: "Valid for",
+      description: "After this period the evidence is stale and the controls that cite it need evidence again.",
+      cell: (e) => <span className="text-xs">{e.validFor}</span>,
+    },
+    {
+      id: "fresh",
+      header: "Freshness",
+      sortValue: (e) => ["fresh", "stale", "expired"].indexOf(e.freshness),
+      cell: (e) => <StatusBadge tone={FRESH[e.freshness].tone}>{FRESH[e.freshness].label}</StatusBadge>,
+    },
+    {
+      id: "by",
+      header: "Collected by",
+      cell: (e) => (e.by === "Automatic" ? <span className="text-xs text-fg-muted">Automatic</span> : <Owner name={e.by} />),
+    },
     {
       id: "act",
       header: <span className="sr-only">Actions</span>,
@@ -602,13 +1006,26 @@ function EvidencePage() {
         />
       </PageHeader>
       <KpiGrid>
-        <KpiCard label="Evidence items" value="1,284" unit="in library" trend={wave(12, { base: 1200, amp: 60, seed: 81 })} delta={{ label: "+96 this month", direction: "up" }} />
+        <KpiCard
+          label="Evidence items"
+          value="1,284"
+          unit="in library"
+          trend={wave(12, { base: 1200, amp: 60, seed: 81 })}
+          delta={{ label: "+96 this month", direction: "up" }}
+        />
         <KpiCard label="Collected automatically" value="86%" unit="from 14 products" tone="success" />
         <KpiCard label="Stale or expired" value={attention} unit="need action" tone="warning" delta={{ label: "Blocks 18 controls", intent: "bad" }} />
         <KpiCard label="Next collection" value="06:00" unit="UTC daily" delta={{ label: "Hourly for identity and logs" }} />
       </KpiGrid>
       {uploading && (
-        <Panel title="Upload evidence" actions={<Button size="sm" variant="ghost" onClick={() => setUploading(false)}>Cancel</Button>}>
+        <Panel
+          title="Upload evidence"
+          actions={
+            <Button size="sm" variant="ghost" onClick={() => setUploading(false)}>
+              Cancel
+            </Button>
+          }
+        >
           <form
             className="grid gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end"
             onSubmit={(e) => {
@@ -629,7 +1046,15 @@ function EvidencePage() {
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Evidence library" description={`${shown.length} of ${rows.length} shown`} flush>
-          <DataTable label="Evidence library" columns={cols} rows={shown} getRowId={(e) => e.id} defaultSort={{ id: "fresh", direction: "desc" }} minWidth={1040} persistKey="compliance-evidence" />
+          <DataTable
+            label="Evidence library"
+            columns={cols}
+            rows={shown}
+            getRowId={(e) => e.id}
+            defaultSort={{ id: "fresh", direction: "desc" }}
+            minWidth={1040}
+            persistKey="compliance-evidence"
+          />
         </Panel>
         <Panel title="Freshness by source" description="Items per product">
           <StackedBarChart
@@ -681,15 +1106,114 @@ const POLICY_STATUS: Record<PolicyStatus, { label: string; tone: Tone }> = {
 };
 
 const POLICIES: Policy[] = [
-  { id: "pol-is", name: "Information security policy", version: "v4.2", owner: PEOPLE[1], approved: "Mar 3, 2026", nextReview: "Mar 2027", ack: 98, pending: 4, status: "published", frameworks: ["ISO 27001", "SOC 2", "PCI DSS"] },
-  { id: "pol-ac", name: "Access control policy", version: "v3.1", owner: PEOPLE[0], approved: "Jan 18, 2026", nextReview: "Jan 2027", ack: 94, pending: 12, status: "published", frameworks: ["ISO 27001", "SOC 2", "PCI DSS"] },
-  { id: "pol-aup", name: "Acceptable use policy", version: "v2.6", owner: PEOPLE[5], approved: "Aug 1, 2026", nextReview: "Aug 2027", ack: 81, pending: 41, status: "published", frameworks: ["ISO 27001", "SOC 2"] },
-  { id: "pol-ir", name: "Incident response plan", version: "v5.0", owner: PEOPLE[4], approved: "Oct 2, 2025", nextReview: "Oct 2026", ack: 100, pending: 0, status: "review-due", frameworks: ["ISO 27001", "SOC 2", "PCI DSS"] },
-  { id: "pol-dp", name: "Data protection and privacy policy", version: "v2.0", owner: PEOPLE[3], approved: "May 24, 2026", nextReview: "May 2027", ack: 89, pending: 23, status: "published", frameworks: ["GDPR", "ISO 27001"] },
-  { id: "pol-crypto", name: "Cryptography and key management", version: "v1.3 draft", owner: PEOPLE[5], approved: "–", nextReview: "–", ack: 0, pending: 0, status: "draft", frameworks: ["ISO 27001", "PCI DSS"] },
-  { id: "pol-vm", name: "Vulnerability management standard", version: "v2.4", owner: PEOPLE[7], approved: "Jun 9, 2026", nextReview: "Jun 2027", ack: 97, pending: 2, status: "published", frameworks: ["ISO 27001", "PCI DSS", "SOC 2"] },
-  { id: "pol-bc", name: "Business continuity and backup", version: "v1.8", owner: PEOPLE[2], approved: "Sep 12, 2025", nextReview: "Sep 2026", ack: 92, pending: 8, status: "review-due", frameworks: ["ISO 27001", "SOC 2"] },
-  { id: "pol-ret", name: "Data retention schedule", version: "v1.2", owner: PEOPLE[3], approved: "Feb 2, 2026", nextReview: "Feb 2027", ack: 76, pending: 52, status: "published", frameworks: ["GDPR"] },
+  {
+    id: "pol-is",
+    name: "Information security policy",
+    version: "v4.2",
+    owner: PEOPLE[1],
+    approved: "Mar 3, 2026",
+    nextReview: "Mar 2027",
+    ack: 98,
+    pending: 4,
+    status: "published",
+    frameworks: ["ISO 27001", "SOC 2", "PCI DSS"],
+  },
+  {
+    id: "pol-ac",
+    name: "Access control policy",
+    version: "v3.1",
+    owner: PEOPLE[0],
+    approved: "Jan 18, 2026",
+    nextReview: "Jan 2027",
+    ack: 94,
+    pending: 12,
+    status: "published",
+    frameworks: ["ISO 27001", "SOC 2", "PCI DSS"],
+  },
+  {
+    id: "pol-aup",
+    name: "Acceptable use policy",
+    version: "v2.6",
+    owner: PEOPLE[5],
+    approved: "Aug 1, 2026",
+    nextReview: "Aug 2027",
+    ack: 81,
+    pending: 41,
+    status: "published",
+    frameworks: ["ISO 27001", "SOC 2"],
+  },
+  {
+    id: "pol-ir",
+    name: "Incident response plan",
+    version: "v5.0",
+    owner: PEOPLE[4],
+    approved: "Oct 2, 2025",
+    nextReview: "Oct 2026",
+    ack: 100,
+    pending: 0,
+    status: "review-due",
+    frameworks: ["ISO 27001", "SOC 2", "PCI DSS"],
+  },
+  {
+    id: "pol-dp",
+    name: "Data protection and privacy policy",
+    version: "v2.0",
+    owner: PEOPLE[3],
+    approved: "May 24, 2026",
+    nextReview: "May 2027",
+    ack: 89,
+    pending: 23,
+    status: "published",
+    frameworks: ["GDPR", "ISO 27001"],
+  },
+  {
+    id: "pol-crypto",
+    name: "Cryptography and key management",
+    version: "v1.3 draft",
+    owner: PEOPLE[5],
+    approved: "–",
+    nextReview: "–",
+    ack: 0,
+    pending: 0,
+    status: "draft",
+    frameworks: ["ISO 27001", "PCI DSS"],
+  },
+  {
+    id: "pol-vm",
+    name: "Vulnerability management standard",
+    version: "v2.4",
+    owner: PEOPLE[7],
+    approved: "Jun 9, 2026",
+    nextReview: "Jun 2027",
+    ack: 97,
+    pending: 2,
+    status: "published",
+    frameworks: ["ISO 27001", "PCI DSS", "SOC 2"],
+  },
+  {
+    id: "pol-bc",
+    name: "Business continuity and backup",
+    version: "v1.8",
+    owner: PEOPLE[2],
+    approved: "Sep 12, 2025",
+    nextReview: "Sep 2026",
+    ack: 92,
+    pending: 8,
+    status: "review-due",
+    frameworks: ["ISO 27001", "SOC 2"],
+  },
+  {
+    id: "pol-ret",
+    name: "Data retention schedule",
+    version: "v1.2",
+    owner: PEOPLE[3],
+    approved: "Feb 2, 2026",
+    nextReview: "Feb 2027",
+    ack: 76,
+    pending: 52,
+    status: "published",
+    frameworks: ["GDPR"],
+  },
 ];
 
 const TEAMS_ACK = [
@@ -723,15 +1247,31 @@ function PoliciesPage() {
     { id: "version", header: "Version", mono: true, cell: (p) => p.version },
     { id: "owner", header: "Owner", sortValue: (p) => p.owner, cell: (p) => <Owner name={p.owner} /> },
     { id: "approved", header: "Approved", cell: (p) => <span className="text-xs whitespace-nowrap">{p.approved}</span> },
-    { id: "review", header: "Next review", cell: (p) => <span className={p.status === "review-due" ? "text-xs whitespace-nowrap text-warning-text" : "text-xs whitespace-nowrap"}>{p.nextReview}</span> },
+    {
+      id: "review",
+      header: "Next review",
+      cell: (p) => (
+        <span className={p.status === "review-due" ? "text-xs whitespace-nowrap text-warning-text" : "text-xs whitespace-nowrap"}>{p.nextReview}</span>
+      ),
+    },
     {
       id: "ack",
       header: "Acknowledged",
       description: "Share of people in scope who accepted the current version.",
       sortValue: (p) => p.ack,
-      cell: (p) => (p.status === "draft" ? <span className="text-xs text-fg-muted">Not published</span> : <Meter value={p.ack} tone={p.ack >= 90 ? "success" : p.ack >= 75 ? "warning" : "danger"} />),
+      cell: (p) =>
+        p.status === "draft" ? (
+          <span className="text-xs text-fg-muted">Not published</span>
+        ) : (
+          <Meter value={p.ack} tone={p.ack >= 90 ? "success" : p.ack >= 75 ? "warning" : "danger"} />
+        ),
     },
-    { id: "status", header: "Status", sortValue: (p) => p.status, cell: (p) => <StatusBadge tone={POLICY_STATUS[p.status].tone}>{POLICY_STATUS[p.status].label}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      sortValue: (p) => p.status,
+      cell: (p) => <StatusBadge tone={POLICY_STATUS[p.status].tone}>{POLICY_STATUS[p.status].label}</StatusBadge>,
+    },
   ];
   return (
     <>
@@ -747,7 +1287,12 @@ function PoliciesPage() {
       <KpiGrid>
         <KpiCard label="Policies" value={rows.length} unit="1 draft" />
         <KpiCard label="Acknowledged" value="89%" unit="average" tone="success" delta={{ label: "+4 pts since reminders", direction: "up", intent: "good" }} />
-        <KpiCard label="Review overdue" value={rows.filter((p) => p.status === "review-due").length} tone="warning" delta={{ label: "ISO 27001 A.5.1 needs yearly review", intent: "bad" }} />
+        <KpiCard
+          label="Review overdue"
+          value={rows.filter((p) => p.status === "review-due").length}
+          tone="warning"
+          delta={{ label: "ISO 27001 A.5.1 needs yearly review", intent: "bad" }}
+        />
         <KpiCard label="Pending signatures" value={rows.reduce((a, p) => a + p.pending, 0)} unit="people" />
       </KpiGrid>
       <FilterBar>
@@ -765,7 +1310,15 @@ function PoliciesPage() {
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Policy documents" flush>
-          <DataTable label="Policy documents" columns={cols} rows={shown} getRowId={(p) => p.id} onRowClick={(p) => setActive(p.id)} activeRowId={active} minWidth={920} />
+          <DataTable
+            label="Policy documents"
+            columns={cols}
+            rows={shown}
+            getRowId={(p) => p.id}
+            onRowClick={(p) => setActive(p.id)}
+            activeRowId={active}
+            minWidth={920}
+          />
         </Panel>
         <Panel title={current.name} description={`${current.version} · owner ${current.owner}`} aria-label="Policy detail">
           <div className="flex flex-col gap-3">
@@ -855,21 +1408,83 @@ interface AuditRequest {
 }
 
 const AUDITS = [
-  { id: "iso", name: "ISO 27001 surveillance 2026", framework: "ISO 27001", auditor: "Harbor & Finch Assurance", lead: "Grace Miller", window: "Nov 18 – Nov 20", progress: 72, tone: "warning" as Tone, stage: "Fieldwork in 30 days" },
-  { id: "soc2", name: "SOC 2 Type II · 2026", framework: "SOC 2", auditor: "Linden CPA Group", lead: "Owen Brooks", window: "Jul 1 – Dec 31", progress: 58, tone: "info" as Tone, stage: "Observation period" },
-  { id: "pci", name: "PCI DSS 4.0 ROC", framework: "PCI DSS", auditor: "Northgate QSA", lead: "Ruth Hale", window: "Jan 6 – Jan 15", progress: 31, tone: "info" as Tone, stage: "Planning" },
+  {
+    id: "iso",
+    name: "ISO 27001 surveillance 2026",
+    framework: "ISO 27001",
+    auditor: "Harbor & Finch Assurance",
+    lead: "Grace Miller",
+    window: "Nov 18 – Nov 20",
+    progress: 72,
+    tone: "warning" as Tone,
+    stage: "Fieldwork in 30 days",
+  },
+  {
+    id: "soc2",
+    name: "SOC 2 Type II · 2026",
+    framework: "SOC 2",
+    auditor: "Linden CPA Group",
+    lead: "Owen Brooks",
+    window: "Jul 1 – Dec 31",
+    progress: 58,
+    tone: "info" as Tone,
+    stage: "Observation period",
+  },
+  {
+    id: "pci",
+    name: "PCI DSS 4.0 ROC",
+    framework: "PCI DSS",
+    auditor: "Northgate QSA",
+    lead: "Ruth Hale",
+    window: "Jan 6 – Jan 15",
+    progress: 31,
+    tone: "info" as Tone,
+    stage: "Planning",
+  },
 ];
 
 const REQUESTS: AuditRequest[] = [
-  { id: "R-101", audit: "iso", text: "Population of joiners and leavers, Jan to Oct", controls: "A.5.15, A.5.18", assignee: PEOPLE[1], due: "Oct 24", status: "open" },
+  {
+    id: "R-101",
+    audit: "iso",
+    text: "Population of joiners and leavers, Jan to Oct",
+    controls: "A.5.15, A.5.18",
+    assignee: PEOPLE[1],
+    due: "Oct 24",
+    status: "open",
+  },
   { id: "R-102", audit: "iso", text: "Evidence of quarterly access reviews", controls: "A.5.18", assignee: PEOPLE[0], due: "Oct 24", status: "submitted" },
   { id: "R-103", audit: "iso", text: "Vulnerability scan reports for in-scope hosts", controls: "A.8.8", assignee: PEOPLE[7], due: "Oct 28", status: "open" },
-  { id: "R-104", audit: "iso", text: "Incident register and two sample postmortems", controls: "A.5.24, A.5.27", assignee: PEOPLE[4], due: "Oct 31", status: "accepted" },
-  { id: "R-105", audit: "iso", text: "Supplier security assessments for top 10 vendors", controls: "A.5.19", assignee: PEOPLE[3], due: "Nov 4", status: "open" },
+  {
+    id: "R-104",
+    audit: "iso",
+    text: "Incident register and two sample postmortems",
+    controls: "A.5.24, A.5.27",
+    assignee: PEOPLE[4],
+    due: "Oct 31",
+    status: "accepted",
+  },
+  {
+    id: "R-105",
+    audit: "iso",
+    text: "Supplier security assessments for top 10 vendors",
+    controls: "A.5.19",
+    assignee: PEOPLE[3],
+    due: "Nov 4",
+    status: "open",
+  },
   { id: "R-106", audit: "iso", text: "Backup restore test results", controls: "A.8.13", assignee: PEOPLE[2], due: "Nov 4", status: "accepted" },
   { id: "R-201", audit: "soc2", text: "Change tickets sample, 25 items", controls: "CC8.1", assignee: PEOPLE[0], due: "Nov 2", status: "open" },
   { id: "R-202", audit: "soc2", text: "Alert triage evidence for September", controls: "CC7.2, CC7.3", assignee: PEOPLE[2], due: "Nov 9", status: "submitted" },
-  { id: "R-301", audit: "pci", text: "Network diagram of the cardholder data environment", controls: "PCI 1.2.3", assignee: PEOPLE[6], due: "Dec 1", status: "open" },
+  {
+    id: "R-301",
+    audit: "pci",
+    text: "Network diagram of the cardholder data environment",
+    controls: "PCI 1.2.3",
+    assignee: PEOPLE[6],
+    due: "Dec 1",
+    status: "open",
+  },
 ];
 
 function AuditsPage() {
@@ -883,7 +1498,12 @@ function AuditsPage() {
     { id: "controls", header: "Controls", mono: true, cell: (r) => <span className="text-xs">{r.controls}</span> },
     { id: "assignee", header: "Assignee", sortValue: (r) => r.assignee, cell: (r) => <Owner name={r.assignee} /> },
     { id: "due", header: "Due", cell: (r) => <span className="text-xs whitespace-nowrap">{r.due}</span> },
-    { id: "status", header: "Status", sortValue: (r) => ["open", "submitted", "accepted"].indexOf(r.status), cell: (r) => <StatusBadge tone={REQ_STATUS[r.status].tone}>{REQ_STATUS[r.status].label}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      sortValue: (r) => ["open", "submitted", "accepted"].indexOf(r.status),
+      cell: (r) => <StatusBadge tone={REQ_STATUS[r.status].tone}>{REQ_STATUS[r.status].label}</StatusBadge>,
+    },
     {
       id: "act",
       header: <span className="sr-only">Actions</span>,
@@ -893,7 +1513,12 @@ function AuditsPage() {
       hideable: false,
       cell: (r) =>
         r.status === "open" ? (
-          <Button size="xs" icon={<Send />} aria-label={`Submit ${r.id}`} onClick={() => setReqs((rs) => rs.map((x) => (x.id === r.id ? { ...x, status: "submitted" } : x)))}>
+          <Button
+            size="xs"
+            icon={<Send />}
+            aria-label={`Submit ${r.id}`}
+            onClick={() => setReqs((rs) => rs.map((x) => (x.id === r.id ? { ...x, status: "submitted" } : x)))}
+          >
             Submit
           </Button>
         ) : null,
@@ -985,7 +1610,12 @@ const REPORTS: Report[] = [
 ];
 
 const PACKS: Array<{ id: string; framework: Framework; title: string; contents: string }> = [
-  { id: "iso", framework: "ISO 27001", title: "Statement of applicability and evidence", contents: "SoA, Annex A control status, evidence index, risk treatment plan" },
+  {
+    id: "iso",
+    framework: "ISO 27001",
+    title: "Statement of applicability and evidence",
+    contents: "SoA, Annex A control status, evidence index, risk treatment plan",
+  },
   { id: "soc2", framework: "SOC 2", title: "Trust services criteria pack", contents: "Control matrix, population lists, samples, exceptions" },
   { id: "gdpr", framework: "GDPR", title: "Records of processing and DPIAs", contents: "Article 30 register, DPIAs, transfer register, breach log" },
   { id: "pci", framework: "PCI DSS", title: "Report on compliance binder", contents: "Requirement status, CDE scope, scan reports, key management" },
@@ -1050,7 +1680,18 @@ function ReportsPage() {
             onSubmit={(e) => {
               e.preventDefault();
               const name = `${p.framework} ${p.title.toLowerCase()}`;
-              setReports((rs) => [{ id: `rp${rs.length + 1}`, name, framework: p.framework, period: period === "q4" ? "Q4 2026" : period === "ytd" ? "2026 to date" : "Last 12 months", size: format === "zip" ? "64 MB" : "3.4 MB", by: "Emily Clark", created: "Just now" }, ...rs]);
+              setReports((rs) => [
+                {
+                  id: `rp${rs.length + 1}`,
+                  name,
+                  framework: p.framework,
+                  period: period === "q4" ? "Q4 2026" : period === "ytd" ? "2026 to date" : "Last 12 months",
+                  size: format === "zip" ? "64 MB" : "3.4 MB",
+                  by: "Emily Clark",
+                  created: "Just now",
+                },
+                ...rs,
+              ]);
               setGenerated(`Generated ${name}`);
             }}
           >

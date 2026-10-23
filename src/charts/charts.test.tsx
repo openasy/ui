@@ -171,7 +171,16 @@ describe("StackedBarChart", () => {
 describe("Heatmap", () => {
   it("colours cells by level and reads out the hovered cell", () => {
     const { container } = renderUI(
-      <Heatmap label="Latency" rows={["slow", "fast"]} columns={["00", "01"]} values={[[0, 5], [10, 2]]} unit="req" />,
+      <Heatmap
+        label="Latency"
+        rows={["slow", "fast"]}
+        columns={["00", "01"]}
+        values={[
+          [0, 5],
+          [10, 2],
+        ]}
+        unit="req"
+      />,
     );
     expect(container.querySelectorAll('[data-level="0"]')).toHaveLength(1);
     expect(container.querySelectorAll('[data-level="5"]')).toHaveLength(1);
@@ -233,7 +242,15 @@ describe("BarList", () => {
   });
 
   it("scales to the largest value by default", () => {
-    const { container } = renderUI(<BarList label="L" items={[{ id: "x", label: "x", value: 10 }, { id: "y", label: "y", value: 5 }]} />);
+    const { container } = renderUI(
+      <BarList
+        label="L"
+        items={[
+          { id: "x", label: "x", value: 10 },
+          { id: "y", label: "y", value: 5 },
+        ]}
+      />,
+    );
     const bars = container.querySelectorAll<HTMLElement>(".rounded-r-\\[3px\\] > span");
     expect(bars[0]!.style.width).toBe("100%");
     expect(bars[1]!.style.width).toBe("50%");

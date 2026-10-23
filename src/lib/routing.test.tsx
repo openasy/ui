@@ -8,7 +8,9 @@ function Page() {
       <p>at {usePath()}</p>
       <a href="/people/abc">Person</a>
       <a href="/api/v1/people">API</a>
-      <a href="/people" target="_blank">New tab</a>
+      <a href="/people" target="_blank">
+        New tab
+      </a>
       <a href="https://example.com/people">Elsewhere</a>
     </>
   );

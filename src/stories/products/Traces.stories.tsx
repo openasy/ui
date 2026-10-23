@@ -57,10 +57,26 @@ interface Endpoint {
 }
 
 const endpoints: Endpoint[] = [
-  { id: "e1", method: "POST", route: "/v1/orders", rps: 182.4, p95: 4920, errors: 2.9, trend: wave(24, { base: 600, amp: 120, seed: 61, spike: 4200, spikeAt: 17, spikeLen: 3 }) },
+  {
+    id: "e1",
+    method: "POST",
+    route: "/v1/orders",
+    rps: 182.4,
+    p95: 4920,
+    errors: 2.9,
+    trend: wave(24, { base: 600, amp: 120, seed: 61, spike: 4200, spikeAt: 17, spikeLen: 3 }),
+  },
   { id: "e2", method: "GET", route: "/v1/orders/{id}", rps: 611.2, p95: 84, errors: 0.1, trend: wave(24, { base: 80, amp: 10, seed: 62 }) },
   { id: "e3", method: "GET", route: "/v1/orders", rps: 248.9, p95: 312, errors: 0.3, trend: wave(24, { base: 290, amp: 40, seed: 63 }) },
-  { id: "e4", method: "PATCH", route: "/v1/orders/{id}/status", rps: 74.1, p95: 1840, errors: 1.2, trend: wave(24, { base: 300, amp: 40, seed: 64, spike: 1500, spikeAt: 18 }) },
+  {
+    id: "e4",
+    method: "PATCH",
+    route: "/v1/orders/{id}/status",
+    rps: 74.1,
+    p95: 1840,
+    errors: 1.2,
+    trend: wave(24, { base: 300, amp: 40, seed: 64, spike: 1500, spikeAt: 18 }),
+  },
   { id: "e5", method: "POST", route: "/v1/orders/{id}/refunds", rps: 6.3, p95: 690, errors: 0.6, trend: wave(24, { base: 640, amp: 60, seed: 65 }) },
   { id: "e6", method: "GET", route: "/v1/customers/{id}/orders", rps: 92.7, p95: 241, errors: 0, trend: wave(24, { base: 220, amp: 30, seed: 66 }) },
   { id: "e7", method: "DELETE", route: "/v1/orders/{id}", rps: 1.8, p95: 133, errors: 0, trend: wave(24, { base: 120, amp: 20, seed: 67 }) },
@@ -123,13 +139,76 @@ const TRACE_ID = "4bf92f3577b34da6a3ce929d0e0e4736";
 const TOTAL = 5420;
 
 const SPANS: Span[] = [
-  { id: "s1", service: "api-gateway", op: "POST /v1/orders", start: 0, dur: 5420, depth: 0, kind: "server", attrs: { "http.method": "POST", "http.route": "/v1/orders", "http.status_code": "201", "client.address": "203.0.113.24", "host.name": "edge-fra-02" } },
-  { id: "s2", service: "orders-api", op: "POST /v1/orders", start: 12, dur: 5392, depth: 1, kind: "server", attrs: { "http.method": "POST", "http.route": "/v1/orders", "http.status_code": "201", "host.name": "api-prod-03", "service.version": "2.14.1" } },
-  { id: "s3", service: "orders-api", op: "auth.verify_token", start: 20, dur: 38, depth: 2, kind: "internal", attrs: { "enduser.id": "usr_8f21c", "auth.method": "jwt", "host.name": "api-prod-03" } },
-  { id: "s4", service: "auth-service", op: "GET /v1/tokens/introspect", start: 24, dur: 30, depth: 3, kind: "server", attrs: { "http.method": "GET", "http.status_code": "200", "host.name": "api-prod-01" } },
-  { id: "s5", service: "orders-api", op: "inventory.reserve", start: 64, dur: 182, depth: 2, kind: "client", attrs: { "rpc.system": "http", "server.address": "inventory-api", "http.status_code": "200" } },
-  { id: "s6", service: "inventory-api", op: "POST /v1/reservations", start: 70, dur: 168, depth: 3, kind: "server", attrs: { "http.method": "POST", "http.status_code": "200", "host.name": "api-prod-05", "inventory.sku_count": "3" } },
-  { id: "s7", service: "inventory-api", op: "redis.EVALSHA", start: 82, dur: 6, depth: 4, kind: "client", attrs: { "db.system": "redis", "db.operation": "EVALSHA", "server.address": "cache-prod-01" } },
+  {
+    id: "s1",
+    service: "api-gateway",
+    op: "POST /v1/orders",
+    start: 0,
+    dur: 5420,
+    depth: 0,
+    kind: "server",
+    attrs: { "http.method": "POST", "http.route": "/v1/orders", "http.status_code": "201", "client.address": "203.0.113.24", "host.name": "edge-fra-02" },
+  },
+  {
+    id: "s2",
+    service: "orders-api",
+    op: "POST /v1/orders",
+    start: 12,
+    dur: 5392,
+    depth: 1,
+    kind: "server",
+    attrs: { "http.method": "POST", "http.route": "/v1/orders", "http.status_code": "201", "host.name": "api-prod-03", "service.version": "2.14.1" },
+  },
+  {
+    id: "s3",
+    service: "orders-api",
+    op: "auth.verify_token",
+    start: 20,
+    dur: 38,
+    depth: 2,
+    kind: "internal",
+    attrs: { "enduser.id": "usr_8f21c", "auth.method": "jwt", "host.name": "api-prod-03" },
+  },
+  {
+    id: "s4",
+    service: "auth-service",
+    op: "GET /v1/tokens/introspect",
+    start: 24,
+    dur: 30,
+    depth: 3,
+    kind: "server",
+    attrs: { "http.method": "GET", "http.status_code": "200", "host.name": "api-prod-01" },
+  },
+  {
+    id: "s5",
+    service: "orders-api",
+    op: "inventory.reserve",
+    start: 64,
+    dur: 182,
+    depth: 2,
+    kind: "client",
+    attrs: { "rpc.system": "http", "server.address": "inventory-api", "http.status_code": "200" },
+  },
+  {
+    id: "s6",
+    service: "inventory-api",
+    op: "POST /v1/reservations",
+    start: 70,
+    dur: 168,
+    depth: 3,
+    kind: "server",
+    attrs: { "http.method": "POST", "http.status_code": "200", "host.name": "api-prod-05", "inventory.sku_count": "3" },
+  },
+  {
+    id: "s7",
+    service: "inventory-api",
+    op: "redis.EVALSHA",
+    start: 82,
+    dur: 6,
+    depth: 4,
+    kind: "client",
+    attrs: { "db.system": "redis", "db.operation": "EVALSHA", "server.address": "cache-prod-01" },
+  },
   {
     id: "s8",
     service: "orders-api",
@@ -148,10 +227,46 @@ const SPANS: Span[] = [
       "db.lock_wait_ms": "4612",
     },
   },
-  { id: "s9", service: "orders-api", op: "payments.authorize", start: 5060, dur: 286, depth: 2, kind: "client", attrs: { "rpc.system": "http", "server.address": "payments-api", "http.status_code": "200" } },
-  { id: "s10", service: "payments-api", op: "POST /v1/charges", start: 5068, dur: 270, depth: 3, kind: "server", attrs: { "http.method": "POST", "http.status_code": "200", "host.name": "api-prod-01", "payment.amount_minor": "12900", "payment.currency": "EUR" } },
-  { id: "s11", service: "payments-api", op: "psp.authorize", start: 5082, dur: 231, depth: 4, kind: "client", attrs: { "server.address": "psp.example.com", "http.status_code": "200", "psp.retry": "0" } },
-  { id: "s12", service: "orders-api", op: "kafka.produce orders.created", start: 5352, dur: 22, depth: 2, kind: "producer", attrs: { "messaging.system": "kafka", "messaging.destination.name": "orders.created", "messaging.kafka.partition": "7" } },
+  {
+    id: "s9",
+    service: "orders-api",
+    op: "payments.authorize",
+    start: 5060,
+    dur: 286,
+    depth: 2,
+    kind: "client",
+    attrs: { "rpc.system": "http", "server.address": "payments-api", "http.status_code": "200" },
+  },
+  {
+    id: "s10",
+    service: "payments-api",
+    op: "POST /v1/charges",
+    start: 5068,
+    dur: 270,
+    depth: 3,
+    kind: "server",
+    attrs: { "http.method": "POST", "http.status_code": "200", "host.name": "api-prod-01", "payment.amount_minor": "12900", "payment.currency": "EUR" },
+  },
+  {
+    id: "s11",
+    service: "payments-api",
+    op: "psp.authorize",
+    start: 5082,
+    dur: 231,
+    depth: 4,
+    kind: "client",
+    attrs: { "server.address": "psp.example.com", "http.status_code": "200", "psp.retry": "0" },
+  },
+  {
+    id: "s12",
+    service: "orders-api",
+    op: "kafka.produce orders.created",
+    start: 5352,
+    dur: 22,
+    depth: 2,
+    kind: "producer",
+    attrs: { "messaging.system": "kafka", "messaging.destination.name": "orders.created", "messaging.kafka.partition": "7" },
+  },
   { id: "s13", service: "orders-api", op: "json.encode", start: 5380, dur: 9, depth: 2, kind: "internal", attrs: { "response.bytes": "1840" } },
 ];
 
@@ -168,7 +283,19 @@ const SERVICE_COLOR: Record<string, string> = {
 /* ----------------------------------------------------------- waterfall */
 
 /** Not in the library yet: a trace waterfall. Each row is a button; bars sit on a shared time axis. */
-function Waterfall({ selected, onSelect, spans = SPANS, total = TOTAL, traceId = TRACE_ID }: { selected: string | null; onSelect: (id: string) => void; spans?: Span[]; total?: number; traceId?: string }) {
+function Waterfall({
+  selected,
+  onSelect,
+  spans = SPANS,
+  total = TOTAL,
+  traceId = TRACE_ID,
+}: {
+  selected: string | null;
+  onSelect: (id: string) => void;
+  spans?: Span[];
+  total?: number;
+  traceId?: string;
+}) {
   const step = total > 2000 ? 1000 : total > 400 ? 100 : 20;
   const ticks = Array.from({ length: Math.floor(total / step) + 1 }, (_, i) => i * step);
   const TOTAL = total;
@@ -300,7 +427,11 @@ const SERVICES: ServiceRow[] = [
   { name: "billing-worker", lang: "Python", team: "Payments", instances: 2, rps: 38, errors: 0.4, p95: 820, apdex: 0.93 },
   { name: "search-api", lang: "Node.js", team: "Catalog", instances: 5, rps: 940, errors: 0.2, p95: 210, apdex: 0.98 },
   { name: "notifications", lang: "Node.js", team: "Platform", instances: 2, rps: 72, errors: 1.4, p95: 640, apdex: 0.91 },
-].map((s, i) => ({ ...s, id: s.name, trend: wave(24, { base: s.p95, amp: s.p95 * 0.1, seed: 90 + i, spike: s.name === "orders-api" ? 2000 : 0, spikeAt: 17 }) }));
+].map((s, i) => ({
+  ...s,
+  id: s.name,
+  trend: wave(24, { base: s.p95, amp: s.p95 * 0.1, seed: 90 + i, spike: s.name === "orders-api" ? 2000 : 0, spikeAt: 17 }),
+}));
 
 interface Edge {
   from: string;
@@ -346,13 +477,67 @@ interface TraceRow {
 
 const TRACES: TraceRow[] = [
   { id: TRACE_ID, root: "POST /v1/orders", service: "api-gateway", start: "13:47:12", dur: TOTAL, spans: SPANS.length, services: 5, status: "ok" },
-  { id: "7d1e0a52c4b3f9e8a1d2c3b4e5f60718", root: "POST /v1/orders", service: "api-gateway", start: "13:47:09", dur: 660, spans: 13, services: 5, status: "ok" },
-  { id: "a03c99d1e2f4b5a6c7d8e9f0a1b2c3d4", root: "PATCH /v1/orders/{id}/status", service: "api-gateway", start: "13:47:05", dur: 4710, spans: 9, services: 3, status: "error" },
-  { id: "c4b5a6d7e8f90a1b2c3d4e5f6a7b8c9d", root: "GET /v1/orders/{id}", service: "api-gateway", start: "13:47:02", dur: 74, spans: 6, services: 3, status: "ok" },
-  { id: "e1f2a3b4c5d6e7f8091a2b3c4d5e6f70", root: "POST /v1/orders", service: "api-gateway", start: "13:46:58", dur: 3920, spans: 13, services: 5, status: "error" },
+  {
+    id: "7d1e0a52c4b3f9e8a1d2c3b4e5f60718",
+    root: "POST /v1/orders",
+    service: "api-gateway",
+    start: "13:47:09",
+    dur: 660,
+    spans: 13,
+    services: 5,
+    status: "ok",
+  },
+  {
+    id: "a03c99d1e2f4b5a6c7d8e9f0a1b2c3d4",
+    root: "PATCH /v1/orders/{id}/status",
+    service: "api-gateway",
+    start: "13:47:05",
+    dur: 4710,
+    spans: 9,
+    services: 3,
+    status: "error",
+  },
+  {
+    id: "c4b5a6d7e8f90a1b2c3d4e5f6a7b8c9d",
+    root: "GET /v1/orders/{id}",
+    service: "api-gateway",
+    start: "13:47:02",
+    dur: 74,
+    spans: 6,
+    services: 3,
+    status: "ok",
+  },
+  {
+    id: "e1f2a3b4c5d6e7f8091a2b3c4d5e6f70",
+    root: "POST /v1/orders",
+    service: "api-gateway",
+    start: "13:46:58",
+    dur: 3920,
+    spans: 13,
+    services: 5,
+    status: "error",
+  },
   { id: "f0e1d2c3b4a5968778695a4b3c2d1e0f", root: "GET /v1/orders", service: "api-gateway", start: "13:46:51", dur: 288, spans: 7, services: 3, status: "ok" },
-  { id: "0a1b2c3d4e5f60718293a4b5c6d7e8f9", root: "invoice.batch", service: "billing-worker", start: "13:46:40", dur: 812, spans: 41, services: 3, status: "ok" },
-  { id: "1b2c3d4e5f60718293a4b5c6d7e8f90a", root: "POST /v1/orders/{id}/refunds", service: "api-gateway", start: "13:46:33", dur: 701, spans: 11, services: 4, status: "ok" },
+  {
+    id: "0a1b2c3d4e5f60718293a4b5c6d7e8f9",
+    root: "invoice.batch",
+    service: "billing-worker",
+    start: "13:46:40",
+    dur: 812,
+    spans: 41,
+    services: 3,
+    status: "ok",
+  },
+  {
+    id: "1b2c3d4e5f60718293a4b5c6d7e8f90a",
+    root: "POST /v1/orders/{id}/refunds",
+    service: "api-gateway",
+    start: "13:46:33",
+    dur: 701,
+    spans: 11,
+    services: 4,
+    status: "ok",
+  },
 ];
 
 /** A fast POST /v1/orders: same shape, no lock wait. */
@@ -369,11 +554,56 @@ interface EndpointRow extends Endpoint {
 
 const ALL_ENDPOINTS: EndpointRow[] = [
   ...endpoints.map((e) => ({ ...e, service: "orders-api" })),
-  { id: "p1", service: "payments-api", method: "POST", route: "/v1/charges", rps: 410, p95: 286, errors: 0.1, trend: wave(24, { base: 280, amp: 20, seed: 101 }) },
-  { id: "p2", service: "payments-api", method: "POST", route: "/v1/refunds", rps: 6.1, p95: 512, errors: 0.4, trend: wave(24, { base: 500, amp: 40, seed: 102 }) },
-  { id: "i1", service: "inventory-api", method: "POST", route: "/v1/reservations", rps: 690, p95: 182, errors: 0.05, trend: wave(24, { base: 170, amp: 15, seed: 103 }) },
-  { id: "i2", service: "inventory-api", method: "GET", route: "/v1/stock/{sku}", rps: 1320, p95: 12, errors: 0, trend: wave(24, { base: 11, amp: 2, seed: 104 }) },
-  { id: "a1", service: "auth-service", method: "GET", route: "/v1/tokens/introspect", rps: 2210, p95: 34, errors: 0.01, trend: wave(24, { base: 32, amp: 3, seed: 105 }) },
+  {
+    id: "p1",
+    service: "payments-api",
+    method: "POST",
+    route: "/v1/charges",
+    rps: 410,
+    p95: 286,
+    errors: 0.1,
+    trend: wave(24, { base: 280, amp: 20, seed: 101 }),
+  },
+  {
+    id: "p2",
+    service: "payments-api",
+    method: "POST",
+    route: "/v1/refunds",
+    rps: 6.1,
+    p95: 512,
+    errors: 0.4,
+    trend: wave(24, { base: 500, amp: 40, seed: 102 }),
+  },
+  {
+    id: "i1",
+    service: "inventory-api",
+    method: "POST",
+    route: "/v1/reservations",
+    rps: 690,
+    p95: 182,
+    errors: 0.05,
+    trend: wave(24, { base: 170, amp: 15, seed: 103 }),
+  },
+  {
+    id: "i2",
+    service: "inventory-api",
+    method: "GET",
+    route: "/v1/stock/{sku}",
+    rps: 1320,
+    p95: 12,
+    errors: 0,
+    trend: wave(24, { base: 11, amp: 2, seed: 104 }),
+  },
+  {
+    id: "a1",
+    service: "auth-service",
+    method: "GET",
+    route: "/v1/tokens/introspect",
+    rps: 2210,
+    p95: 34,
+    errors: 0.01,
+    trend: wave(24, { base: 32, amp: 3, seed: 105 }),
+  },
   { id: "s1", service: "search-api", method: "GET", route: "/v1/search", rps: 940, p95: 210, errors: 0.2, trend: wave(24, { base: 200, amp: 20, seed: 106 }) },
   { id: "n1", service: "notifications", method: "POST", route: "/v1/send", rps: 72, p95: 640, errors: 1.4, trend: wave(24, { base: 600, amp: 60, seed: 107 }) },
 ];
@@ -407,12 +637,42 @@ function ServiceDetail({ onBack }: { onBack?: () => void }) {
       />
       <FilterBar>
         <TimeRangePicker value={range} onChange={setRange} />
-        <FacetFilter label="Environment" selected={env} onChange={setEnv} options={[{ value: "prod", count: 6 }, { value: "staging", count: 2 }]} />
+        <FacetFilter
+          label="Environment"
+          selected={env}
+          onChange={setEnv}
+          options={[
+            { value: "prod", count: 6 },
+            { value: "staging", count: 2 },
+          ]}
+        />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Rate" value="1.24k" unit="req/s" trend={wave(24, { base: 1200, amp: 180, seed: 71 })} delta={{ label: "+4% vs. last week", direction: "up" }} />
-        <KpiCard label="Errors" value="0.82" unit="%" tone="danger" trendColor="var(--oa-danger)" trend={wave(24, { base: 0.2, amp: 0.05, seed: 72, spike: 0.7, spikeAt: 17 })} delta={{ label: "SLO 1% · 18% budget left", direction: "up", intent: "bad" }} />
-        <KpiCard label="Latency p95" value="2.41" unit="s" tone="warning" trendColor="var(--oa-warning)" trend={wave(24, { base: 0.4, amp: 0.05, seed: 73, spike: 2, spikeAt: 17 })} delta={{ label: "SLO 2 s since 13:45", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="Rate"
+          value="1.24k"
+          unit="req/s"
+          trend={wave(24, { base: 1200, amp: 180, seed: 71 })}
+          delta={{ label: "+4% vs. last week", direction: "up" }}
+        />
+        <KpiCard
+          label="Errors"
+          value="0.82"
+          unit="%"
+          tone="danger"
+          trendColor="var(--oa-danger)"
+          trend={wave(24, { base: 0.2, amp: 0.05, seed: 72, spike: 0.7, spikeAt: 17 })}
+          delta={{ label: "SLO 1% · 18% budget left", direction: "up", intent: "bad" }}
+        />
+        <KpiCard
+          label="Latency p95"
+          value="2.41"
+          unit="s"
+          tone="warning"
+          trendColor="var(--oa-warning)"
+          trend={wave(24, { base: 0.4, amp: 0.05, seed: 73, spike: 2, spikeAt: 17 })}
+          delta={{ label: "SLO 2 s since 13:45", direction: "up", intent: "bad" }}
+        />
         <KpiCard label="Apdex · 500 ms" value="0.87" delta={{ label: "-0.08 vs. yesterday", direction: "down", intent: "bad" }} />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -433,11 +693,23 @@ function ServiceDetail({ onBack }: { onBack?: () => void }) {
           />
         </Panel>
         <Panel title="Endpoints" description="Sorted by p95" flush>
-          <DataTable label="orders-api endpoints" columns={endpointColumns} rows={endpoints} getRowId={(e) => e.id} defaultSort={{ id: "p95", direction: "desc" }} minWidth={620} />
+          <DataTable
+            label="orders-api endpoints"
+            columns={endpointColumns}
+            rows={endpoints}
+            getRowId={(e) => e.id}
+            defaultSort={{ id: "p95", direction: "desc" }}
+            minWidth={620}
+          />
         </Panel>
       </div>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <Panel title={`Trace ${TRACE_ID.slice(0, 16)} · POST /v1/orders`} description={`${SPANS.length} spans · 5 services · ${ms(TOTAL)} · 13:47:12 UTC`} actions={<Badge tone="danger">Slow · 11× p50</Badge>} flush>
+        <Panel
+          title={`Trace ${TRACE_ID.slice(0, 16)} · POST /v1/orders`}
+          description={`${SPANS.length} spans · 5 services · ${ms(TOTAL)} · 13:47:12 UTC`}
+          actions={<Badge tone="danger">Slow · 11× p50</Badge>}
+          flush
+        >
           <Waterfall selected={selected} onSelect={setSelected} />
         </Panel>
         <Panel title="Span details" aria-label="Span details">
@@ -480,10 +752,37 @@ function ServicesPage({ initialOpen }: { initialOpen?: string }) {
       ),
     },
     { id: "rps", header: "Req/s", align: "right", mono: true, sortValue: (s) => s.rps, cell: (s) => formatNumber(s.rps) },
-    { id: "errors", header: "Errors", align: "right", mono: true, sortValue: (s) => s.errors, cell: (s) => <span className={cn(s.errors >= 1 ? "text-danger-text" : s.errors >= 0.5 ? "text-warning-text" : "text-fg")}>{s.errors.toFixed(2)}%</span> },
-    { id: "p95", header: "p95", align: "right", mono: true, sortValue: (s) => s.p95, cell: (s) => <span className={cn(s.p95 > 2000 && "font-semibold text-danger-text")}>{ms(s.p95)}</span> },
-    { id: "apdex", header: "Apdex", align: "right", mono: true, sortValue: (s) => s.apdex, cell: (s) => s.apdex.toFixed(2), description: "Share of satisfied requests (under 500 ms) plus half the tolerated ones (under 2 s)." },
-    { id: "trend", header: "p95 · 2 h", width: "130px", cell: (s) => <Sparkline data={s.trend} label={`p95 latency of ${s.name}`} height={20} className="w-24" format={(v) => ms(v)} /> },
+    {
+      id: "errors",
+      header: "Errors",
+      align: "right",
+      mono: true,
+      sortValue: (s) => s.errors,
+      cell: (s) => <span className={cn(s.errors >= 1 ? "text-danger-text" : s.errors >= 0.5 ? "text-warning-text" : "text-fg")}>{s.errors.toFixed(2)}%</span>,
+    },
+    {
+      id: "p95",
+      header: "p95",
+      align: "right",
+      mono: true,
+      sortValue: (s) => s.p95,
+      cell: (s) => <span className={cn(s.p95 > 2000 && "font-semibold text-danger-text")}>{ms(s.p95)}</span>,
+    },
+    {
+      id: "apdex",
+      header: "Apdex",
+      align: "right",
+      mono: true,
+      sortValue: (s) => s.apdex,
+      cell: (s) => s.apdex.toFixed(2),
+      description: "Share of satisfied requests (under 500 ms) plus half the tolerated ones (under 2 s).",
+    },
+    {
+      id: "trend",
+      header: "p95 · 2 h",
+      width: "130px",
+      cell: (s) => <Sparkline data={s.trend} label={`p95 latency of ${s.name}`} height={20} className="w-24" format={(v) => ms(v)} />,
+    },
     { id: "inst", header: "Instances", align: "right", mono: true, sortValue: (s) => s.instances, cell: (s) => s.instances },
   ];
   return (
@@ -500,7 +799,12 @@ function ServicesPage({ initialOpen }: { initialOpen?: string }) {
       />
       <FilterBar onClear={teams.length ? () => setTeams([]) : undefined}>
         <TimeRangePicker value={range} onChange={setRange} />
-        <FacetFilter label="Team" selected={teams} onChange={setTeams} options={Array.from(new Set(SERVICES.map((s) => s.team))).map((t) => ({ value: t, count: SERVICES.filter((s) => s.team === t).length }))} />
+        <FacetFilter
+          label="Team"
+          selected={teams}
+          onChange={setTeams}
+          options={Array.from(new Set(SERVICES.map((s) => s.team))).map((t) => ({ value: t, count: SERVICES.filter((s) => s.team === t).length }))}
+        />
       </FilterBar>
       <KpiGrid minWidth={170}>
         <KpiCard label="Services" value="24" unit="8 shown" />
@@ -525,12 +829,23 @@ function ServiceMapPage() {
     { id: "peer", header: "Service", pinned: "left", cell: (e) => <span className="font-mono text-xs">{e.from === active ? e.to : e.from}</span> },
     { id: "proto", header: "Protocol", cell: (e) => <Badge mono>{e.proto}</Badge> },
     { id: "rps", header: "Calls/s", align: "right", mono: true, sortValue: (e) => e.rps, cell: (e) => formatNumber(e.rps) },
-    { id: "p95", header: "p95", align: "right", mono: true, sortValue: (e) => e.p95, cell: (e) => <span className={cn(e.p95 > 2000 && "font-semibold text-danger-text")}>{ms(e.p95)}</span> },
+    {
+      id: "p95",
+      header: "p95",
+      align: "right",
+      mono: true,
+      sortValue: (e) => e.p95,
+      cell: (e) => <span className={cn(e.p95 > 2000 && "font-semibold text-danger-text")}>{ms(e.p95)}</span>,
+    },
     { id: "err", header: "Errors", align: "right", mono: true, sortValue: (e) => e.errors, cell: (e) => `${e.errors.toFixed(1)}%` },
   ];
   return (
     <>
-      <PageHeader title="Service map" description="Built from client and server spans over the last 15 minutes · select a service to see who it calls" actions={<Button icon={<Share2 />}>Share</Button>} />
+      <PageHeader
+        title="Service map"
+        description="Built from client and server spans over the last 15 minutes · select a service to see who it calls"
+        actions={<Button icon={<Share2 />}>Share</Button>}
+      />
       <Callout tone="warning" title="orders-api → postgres p95 is 4.8 s">
         Most of the time is a row lock wait on orders. It started at 13:45, together with the PATCH status endpoint.
       </Callout>
@@ -583,10 +898,25 @@ function ServiceMapPage() {
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-2">
         <Panel title={`Calls into ${active}`} description={`${callers.length} callers`} flush>
-          <DataTable label="Callers" columns={edgeCols} rows={callers} getRowId={(e) => `${e.from}>${e.to}`} minWidth={480} empty={<p className="py-6 text-sm text-fg-muted">No instrumented callers. Traffic enters here.</p>} />
+          <DataTable
+            label="Callers"
+            columns={edgeCols}
+            rows={callers}
+            getRowId={(e) => `${e.from}>${e.to}`}
+            minWidth={480}
+            empty={<p className="py-6 text-sm text-fg-muted">No instrumented callers. Traffic enters here.</p>}
+          />
         </Panel>
         <Panel title={`Calls from ${active}`} description={`${callees.length} dependencies`} flush>
-          <DataTable label="Dependencies" columns={edgeCols} rows={callees} getRowId={(e) => `${e.from}>${e.to}`} minWidth={480} defaultSort={{ id: "p95", direction: "desc" }} empty={<p className="py-6 text-sm text-fg-muted">Leaf: calls nothing that is instrumented.</p>} />
+          <DataTable
+            label="Dependencies"
+            columns={edgeCols}
+            rows={callees}
+            getRowId={(e) => `${e.from}>${e.to}`}
+            minWidth={480}
+            defaultSort={{ id: "p95", direction: "desc" }}
+            empty={<p className="py-6 text-sm text-fg-muted">Leaf: calls nothing that is instrumented.</p>}
+          />
         </Panel>
       </div>
     </>
@@ -601,7 +931,10 @@ function TracesPage() {
   const [traceId, setTraceId] = useState<string>(TRACE_ID);
   const [selected, setSelected] = useState<string | null>(null);
   const shown = TRACES.filter(
-    (t) => (status.length === 0 || status.includes(t.status)) && (minDur === "any" || t.dur >= Number(minDur)) && (t.root.toLowerCase().includes(q.trim().toLowerCase()) || t.id.startsWith(q.trim())),
+    (t) =>
+      (status.length === 0 || status.includes(t.status)) &&
+      (minDur === "any" || t.dur >= Number(minDur)) &&
+      (t.root.toLowerCase().includes(q.trim().toLowerCase()) || t.id.startsWith(q.trim())),
   );
   const t = TRACES.find((x) => x.id === traceId)!;
   const detail = t.id === TRACE_ID ? { spans: SPANS, total: TOTAL } : t.id === TRACES[1]!.id ? { spans: FAST_SPANS, total: TRACES[1]!.dur } : null;
@@ -620,16 +953,39 @@ function TracesPage() {
       ),
     },
     { id: "service", header: "Service", mono: true, cell: (x) => x.service },
-    { id: "dur", header: "Duration", align: "right", mono: true, sortValue: (x) => x.dur, cell: (x) => <span className={cn(x.dur > 2000 && "font-semibold text-danger-text")}>{ms(x.dur)}</span> },
+    {
+      id: "dur",
+      header: "Duration",
+      align: "right",
+      mono: true,
+      sortValue: (x) => x.dur,
+      cell: (x) => <span className={cn(x.dur > 2000 && "font-semibold text-danger-text")}>{ms(x.dur)}</span>,
+    },
     { id: "spans", header: "Spans", align: "right", mono: true, sortValue: (x) => x.spans, cell: (x) => x.spans },
-    { id: "status", header: "Status", cell: (x) => <StatusBadge tone={x.status === "ok" ? "success" : "danger"}>{x.status === "ok" ? "OK" : "Error"}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      cell: (x) => <StatusBadge tone={x.status === "ok" ? "success" : "danger"}>{x.status === "ok" ? "OK" : "Error"}</StatusBadge>,
+    },
   ];
   return (
     <>
-      <PageHeader title="Traces" description="Search sampled traces · errors and slow traces are always kept" actions={<SearchInput label="Search root span or trace ID" className="w-72" value={q} onChange={(e) => setQ(e.target.value)} />} />
+      <PageHeader
+        title="Traces"
+        description="Search sampled traces · errors and slow traces are always kept"
+        actions={<SearchInput label="Search root span or trace ID" className="w-72" value={q} onChange={(e) => setQ(e.target.value)} />}
+      />
       <FilterBar onClear={status.length || minDur !== "any" ? () => (setStatus([]), setMinDur("any")) : undefined}>
         <TimeRangePicker value={range} onChange={setRange} />
-        <FacetFilter label="Status" selected={status} onChange={setStatus} options={[{ value: "ok", count: TRACES.filter((x) => x.status === "ok").length }, { value: "error", count: TRACES.filter((x) => x.status === "error").length }]} />
+        <FacetFilter
+          label="Status"
+          selected={status}
+          onChange={setStatus}
+          options={[
+            { value: "ok", count: TRACES.filter((x) => x.status === "ok").length },
+            { value: "error", count: TRACES.filter((x) => x.status === "error").length },
+          ]}
+        />
         <SegmentedControl
           label="Minimum duration"
           value={minDur}
@@ -649,14 +1005,33 @@ function TracesPage() {
             { id: "ok", name: "OK", color: "var(--oa-chart-1)" },
             { id: "err", name: "Error", color: "var(--oa-danger)" },
           ]}
-          values={[[120, 0], [610, 1], [980, 2], [402, 3], [133, 2], [61, 4], [44, 12], [38, 31], [9, 22]]}
+          values={[
+            [120, 0],
+            [610, 1],
+            [980, 2],
+            [402, 3],
+            [133, 2],
+            [61, 4],
+            [44, 12],
+            [38, 31],
+            [9, 22],
+          ]}
           height={110}
           xTicks={9}
         />
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <Panel title="Traces" description={`${shown.length} shown`} flush>
-          <DataTable label="Traces" columns={cols} rows={shown} getRowId={(x) => x.id} onRowClick={(x) => (setTraceId(x.id), setSelected(null))} activeRowId={traceId} minWidth={620} defaultSort={{ id: "dur", direction: "desc" }} />
+          <DataTable
+            label="Traces"
+            columns={cols}
+            rows={shown}
+            getRowId={(x) => x.id}
+            onRowClick={(x) => (setTraceId(x.id), setSelected(null))}
+            activeRowId={traceId}
+            minWidth={620}
+            defaultSort={{ id: "dur", direction: "desc" }}
+          />
         </Panel>
         <div className="flex min-w-0 flex-col gap-2.5">
           <Panel title={`${t.root} · ${ms(t.dur)}`} description={`Trace ${t.id}`} aria-label="Trace waterfall" flush>
@@ -685,7 +1060,11 @@ function EndpointsPage() {
   const [active, setActive] = useState("e1");
   const shown = ALL_ENDPOINTS.filter((e) => (services.length === 0 || services.includes(e.service)) && e.route.includes(q.trim()));
   const e = ALL_ENDPOINTS.find((x) => x.id === active)!;
-  const cols: Column<EndpointRow>[] = [endpointColumns[0]!, { id: "service", header: "Service", mono: true, sortValue: (x) => x.service, cell: (x) => x.service }, ...endpointColumns.slice(1)];
+  const cols: Column<EndpointRow>[] = [
+    endpointColumns[0]!,
+    { id: "service", header: "Service", mono: true, sortValue: (x) => x.service, cell: (x) => x.service },
+    ...endpointColumns.slice(1),
+  ];
   cols[0] = { ...cols[0]!, pinned: "left" };
   const hist = BUCKETS.map((_, i) => {
     const center = e.p95 > 2000 ? 6 : e.p95 > 500 ? 4 : e.p95 > 100 ? 3 : 1;
@@ -694,13 +1073,35 @@ function EndpointsPage() {
   });
   return (
     <>
-      <PageHeader title="Endpoints" description="Every route of every service, from server spans · grouped by http.route" actions={<SearchInput label="Search routes" className="w-56" value={q} onChange={(ev) => setQ(ev.target.value)} />} />
+      <PageHeader
+        title="Endpoints"
+        description="Every route of every service, from server spans · grouped by http.route"
+        actions={<SearchInput label="Search routes" className="w-56" value={q} onChange={(ev) => setQ(ev.target.value)} />}
+      />
       <FilterBar onClear={services.length ? () => setServices([]) : undefined}>
-        <FacetFilter label="Service" selected={services} onChange={setServices} options={Array.from(new Set(ALL_ENDPOINTS.map((x) => x.service))).map((s) => ({ value: s, count: ALL_ENDPOINTS.filter((x) => x.service === s).length }))} />
+        <FacetFilter
+          label="Service"
+          selected={services}
+          onChange={setServices}
+          options={Array.from(new Set(ALL_ENDPOINTS.map((x) => x.service))).map((s) => ({
+            value: s,
+            count: ALL_ENDPOINTS.filter((x) => x.service === s).length,
+          }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Endpoints" description={`${shown.length} routes`} flush>
-          <DataTable label="All endpoints" columns={cols} rows={shown} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={active} defaultSort={{ id: "rps", direction: "desc" }} minWidth={760} pageSize={10} />
+          <DataTable
+            label="All endpoints"
+            columns={cols}
+            rows={shown}
+            getRowId={(x) => x.id}
+            onRowClick={(x) => setActive(x.id)}
+            activeRowId={active}
+            defaultSort={{ id: "rps", direction: "desc" }}
+            minWidth={760}
+            pageSize={10}
+          />
         </Panel>
         <Panel title={`${e.method} ${e.route}`} description={e.service} aria-label="Endpoint detail" className="xl:sticky xl:top-3 xl:self-start">
           <div className="flex flex-col gap-3">
@@ -789,8 +1190,18 @@ function ComparePage() {
       />
       <Panel>
         <div className="grid gap-3 md:grid-cols-3 md:items-end">
-          <SelectField label="Baseline version" value={base} onChange={(e) => setBase(e.target.value)} options={VERSIONS.map((v) => ({ value: v, label: `${v}${v === "2.14.0" ? " · Oct 17" : v === "2.13.4" ? " · Oct 9" : " · today 13:40"}` }))} />
-          <SelectField label="Comparison version" value={target} onChange={(e) => setTarget(e.target.value)} options={VERSIONS.map((v) => ({ value: v, label: v }))} />
+          <SelectField
+            label="Baseline version"
+            value={base}
+            onChange={(e) => setBase(e.target.value)}
+            options={VERSIONS.map((v) => ({ value: v, label: `${v}${v === "2.14.0" ? " · Oct 17" : v === "2.13.4" ? " · Oct 9" : " · today 13:40"}` }))}
+          />
+          <SelectField
+            label="Comparison version"
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+            options={VERSIONS.map((v) => ({ value: v, label: v }))}
+          />
           <SelectField label="Service" defaultValue="orders-api" options={[{ value: "orders-api", label: "orders-api" }]} />
         </div>
       </Panel>
@@ -802,8 +1213,16 @@ function ComparePage() {
         <Callout tone="success" title={`No significant latency change between ${base} and ${target}`} />
       )}
       <KpiGrid minWidth={170}>
-        <KpiCard label="p95" value={regress ? "2.41 s" : "412 ms"} delta={{ label: regress ? "+1.99 s vs. baseline" : "±0", direction: regress ? "up" : "flat", intent: regress ? "bad" : "neutral" }} />
-        <KpiCard label="Error rate" value={regress ? "0.82%" : "0.19%"} delta={{ label: regress ? "+0.63 pts" : "±0", direction: regress ? "up" : "flat", intent: regress ? "bad" : "neutral" }} />
+        <KpiCard
+          label="p95"
+          value={regress ? "2.41 s" : "412 ms"}
+          delta={{ label: regress ? "+1.99 s vs. baseline" : "±0", direction: regress ? "up" : "flat", intent: regress ? "bad" : "neutral" }}
+        />
+        <KpiCard
+          label="Error rate"
+          value={regress ? "0.82%" : "0.19%"}
+          delta={{ label: regress ? "+0.63 pts" : "±0", direction: regress ? "up" : "flat", intent: regress ? "bad" : "neutral" }}
+        />
         <KpiCard label="Throughput" value="1.24k" unit="req/s" delta={{ label: "same traffic mix", direction: "flat" }} />
         <KpiCard label="Traces compared" value="18.4k" unit="vs 21.0k" />
       </KpiGrid>
@@ -839,7 +1258,12 @@ function ComparePage() {
               mono: true,
               sortValue: (r) => r.delta,
               description: "Relative change of p95 latency from the baseline.",
-              cell: (r) => <span className={cn(r.delta > 0.5 ? "font-semibold text-danger-text" : r.delta < -0.1 ? "text-success" : "text-fg-muted")}>{r.delta >= 0 ? "+" : ""}{Math.round(r.delta * 100)}%</span>,
+              cell: (r) => (
+                <span className={cn(r.delta > 0.5 ? "font-semibold text-danger-text" : r.delta < -0.1 ? "text-success" : "text-fg-muted")}>
+                  {r.delta >= 0 ? "+" : ""}
+                  {Math.round(r.delta * 100)}%
+                </span>
+              ),
             },
           ]}
         />

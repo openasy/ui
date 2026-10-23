@@ -43,9 +43,21 @@ const THRESHOLDS = { statements: 90, branches: 85, functions: 90, lines: 90 } as
 
 const fileColumns: Column<FileResult>[] = [
   { id: "file", header: "File", sortValue: (f) => f.file, cell: (f) => <span className="font-mono text-xs">{f.file}</span>, width: "48%" },
-  { id: "project", header: "Project", sortValue: (f) => f.project, cell: (f) => <Badge tone={f.project === "unit" ? "neutral" : "info"}>{f.project === "unit" ? "Unit · jsdom" : "Story · Chromium"}</Badge> },
+  {
+    id: "project",
+    header: "Project",
+    sortValue: (f) => f.project,
+    cell: (f) => <Badge tone={f.project === "unit" ? "neutral" : "info"}>{f.project === "unit" ? "Unit · jsdom" : "Story · Chromium"}</Badge>,
+  },
   { id: "tests", header: "Tests", align: "right", mono: true, sortValue: (f) => f.tests, cell: (f) => f.tests },
-  { id: "failed", header: "Failed", align: "right", mono: true, sortValue: (f) => f.failed, cell: (f) => (f.failed ? <span className="font-semibold text-danger-text">{f.failed}</span> : "0") },
+  {
+    id: "failed",
+    header: "Failed",
+    align: "right",
+    mono: true,
+    sortValue: (f) => f.failed,
+    cell: (f) => (f.failed ? <span className="font-semibold text-danger-text">{f.failed}</span> : "0"),
+  },
   { id: "time", header: "Time", align: "right", mono: true, sortValue: (f) => f.durationMs, cell: (f) => `${(f.durationMs / 1000).toFixed(2)} s` },
   { id: "status", header: "Status", cell: (f) => <StatusBadge tone={f.failed ? "danger" : "success"}>{f.failed ? "Failing" : "Passing"}</StatusBadge> },
 ];
@@ -75,14 +87,29 @@ export function TestResultsView({ summary, base = "reports" }: { summary: Summar
         meta={<StatusBadge tone={summary.success ? "success" : "danger"}>{summary.success ? "All passing" : `${t.failed} failing`}</StatusBadge>}
         actions={
           <>
-            <a className="inline-flex h-8 items-center gap-1.5 rounded-md border border-line-strong bg-surface px-3 text-sm font-medium text-fg no-underline hover:bg-subtle" href={`${base}/tests/index.html`} target="_blank" rel="noreferrer">
+            <a
+              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-line-strong bg-surface px-3 text-sm font-medium text-fg no-underline hover:bg-subtle"
+              href={`${base}/tests/index.html`}
+              target="_blank"
+              rel="noreferrer"
+            >
               Full test report <ExternalLink aria-hidden className="size-3.5" />
             </a>
-            <a className="inline-flex h-8 items-center gap-1.5 rounded-md border border-line-strong bg-surface px-3 text-sm font-medium text-fg no-underline hover:bg-subtle" href={`${base}/coverage/index.html`} target="_blank" rel="noreferrer">
+            <a
+              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-line-strong bg-surface px-3 text-sm font-medium text-fg no-underline hover:bg-subtle"
+              href={`${base}/coverage/index.html`}
+              target="_blank"
+              rel="noreferrer"
+            >
               Coverage report <ExternalLink aria-hidden className="size-3.5" />
             </a>
             {summary.runUrl && (
-              <a className="inline-flex h-8 items-center gap-1.5 rounded-md border border-line-strong bg-surface px-3 text-sm font-medium text-fg no-underline hover:bg-subtle" href={summary.runUrl} target="_blank" rel="noreferrer">
+              <a
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-line-strong bg-surface px-3 text-sm font-medium text-fg no-underline hover:bg-subtle"
+                href={summary.runUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
                 CI run <ExternalLink aria-hidden className="size-3.5" />
               </a>
             )}
@@ -90,9 +117,24 @@ export function TestResultsView({ summary, base = "reports" }: { summary: Summar
         }
       />
       <KpiGrid>
-        <KpiCard label="Tests passed" value={`${t.passed}/${t.tests}`} tone={t.failed ? "danger" : "success"} delta={{ label: `${t.files} files · ${(t.durationMs / 1000).toFixed(1)} s` }} />
-        <KpiCard label="Unit tests · jsdom" value={summary.byProject.unit?.passed ?? 0} unit={`of ${summary.byProject.unit?.tests ?? 0}`} delta={{ label: `${summary.byProject.unit?.files ?? 0} files` }} />
-        <KpiCard label="Story tests · Chromium" value={summary.byProject.storybook?.passed ?? 0} unit={`of ${summary.byProject.storybook?.tests ?? 0}`} delta={{ label: "interaction + accessibility" }} />
+        <KpiCard
+          label="Tests passed"
+          value={`${t.passed}/${t.tests}`}
+          tone={t.failed ? "danger" : "success"}
+          delta={{ label: `${t.files} files · ${(t.durationMs / 1000).toFixed(1)} s` }}
+        />
+        <KpiCard
+          label="Unit tests · jsdom"
+          value={summary.byProject.unit?.passed ?? 0}
+          unit={`of ${summary.byProject.unit?.tests ?? 0}`}
+          delta={{ label: `${summary.byProject.unit?.files ?? 0} files` }}
+        />
+        <KpiCard
+          label="Story tests · Chromium"
+          value={summary.byProject.storybook?.passed ?? 0}
+          unit={`of ${summary.byProject.storybook?.tests ?? 0}`}
+          delta={{ label: "interaction + accessibility" }}
+        />
         <KpiCard
           label="Line coverage"
           value={metric("lines") ? `${metric("lines")!.pct}%` : "–"}
@@ -105,7 +147,13 @@ export function TestResultsView({ summary, base = "reports" }: { summary: Summar
           {failures.map((f, i) => (
             <Callout key={i} tone="danger" title={f.title}>
               <span className="font-mono text-xs">{f.file}</span>
-              <pre tabIndex={0} aria-label={`Failure output for ${f.title}`} className="mt-1 max-h-40 overflow-auto font-mono text-2xs whitespace-pre-wrap text-fg">{f.message}</pre>
+              <pre
+                tabIndex={0}
+                aria-label={`Failure output for ${f.title}`}
+                className="mt-1 max-h-40 overflow-auto font-mono text-2xs whitespace-pre-wrap text-fg"
+              >
+                {f.message}
+              </pre>
             </Callout>
           ))}
         </div>
@@ -160,7 +208,14 @@ export function TestResultsView({ summary, base = "reports" }: { summary: Summar
           />
         }
       >
-        <DataTable label="Test files" columns={fileColumns} rows={rows} getRowId={(f) => f.file} minWidth={720} defaultSort={{ id: "failed", direction: "desc" }} />
+        <DataTable
+          label="Test files"
+          columns={fileColumns}
+          rows={rows}
+          getRowId={(f) => f.file}
+          minWidth={720}
+          defaultSort={{ id: "failed", direction: "desc" }}
+        />
       </Panel>
     </div>
   );
@@ -187,7 +242,8 @@ export function LatestTestResults() {
         <p className="text-sm text-fg-muted">Loading results…</p>
       ) : (
         <Callout tone="info" title="No results published with this build">
-          Run <code className="font-mono">npm run test:ci && npm run report</code> before <code className="font-mono">npm run build-storybook</code>. The GitHub Pages workflow does this on every push to main.
+          Run <code className="font-mono">npm run test:ci && npm run report</code> before <code className="font-mono">npm run build-storybook</code>. The GitHub
+          Pages workflow does this on every push to main.
         </Callout>
       )}
     </div>

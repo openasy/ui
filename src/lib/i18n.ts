@@ -105,7 +105,11 @@ function flatten(messages: Messages, prefix = ""): Map<string, string> {
 /** "a.file_one" and "a.file_other" are both "a.file": languages have different plural forms. */
 const pluralBase = (key: string) => key.replace(/_(zero|one|two|few|many|other)$/, "");
 
-const placeholders = (text: string) => [...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]).sort().join(",");
+const placeholders = (text: string) =>
+  [...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)]
+    .map((m) => m[1])
+    .sort()
+    .join(",");
 
 /**
  * What is wrong with a product's messages: a key missing, empty or extra in a language given, or using other

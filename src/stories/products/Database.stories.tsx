@@ -97,7 +97,10 @@ const queries: Query[] = [
         },
       ],
     },
-    index: { sql: "CREATE INDEX CONCURRENTLY idx_orders_customer_status_created\n  ON orders (customer_id, status, created_at DESC);", gain: "Est. 40.7 ms → 0.08 ms per call · saves 4.6 h of DB time per day" },
+    index: {
+      sql: "CREATE INDEX CONCURRENTLY idx_orders_customer_status_created\n  ON orders (customer_id, status, created_at DESC);",
+      gain: "Est. 40.7 ms → 0.08 ms per call · saves 4.6 h of DB time per day",
+    },
   },
   {
     id: "q2",
@@ -137,7 +140,13 @@ const queries: Query[] = [
       rows: 14,
       time: 7.0,
       children: [
-        { op: "Index Scan using order_items_order_id_idx on order_items oi", detail: "Index Cond: (order_id = ANY ($1))", cost: "0.43..1480.10", rows: 14, time: 2.1 },
+        {
+          op: "Index Scan using order_items_order_id_idx on order_items oi",
+          detail: "Index Cond: (order_id = ANY ($1))",
+          cost: "0.43..1480.10",
+          rows: 14,
+          time: 2.1,
+        },
         {
           op: "Hash",
           detail: "Buckets: 16384 · Memory: 1 204 kB",
@@ -149,7 +158,10 @@ const queries: Query[] = [
         },
       ],
     },
-    index: { sql: "CREATE INDEX CONCURRENTLY idx_order_items_order_product\n  ON order_items (order_id) INCLUDE (product_id, quantity, price);", gain: "Index Only Scan · est. 7.0 ms → 2.4 ms per call" },
+    index: {
+      sql: "CREATE INDEX CONCURRENTLY idx_order_items_order_product\n  ON order_items (order_id) INCLUDE (product_id, quantity, price);",
+      gain: "Index Only Scan · est. 7.0 ms → 2.4 ms per call",
+    },
   },
   {
     id: "q4",
@@ -172,7 +184,15 @@ const queries: Query[] = [
       cost: "8.46..8.47",
       rows: 1,
       time: 1.0,
-      children: [{ op: "Index Only Scan using sessions_user_id_expires_at_idx on sessions", detail: "Index Cond: (user_id = $1) AND (expires_at > now())", cost: "0.43..8.45", rows: 2, time: 0.9 }],
+      children: [
+        {
+          op: "Index Only Scan using sessions_user_id_expires_at_idx on sessions",
+          detail: "Index Cond: (user_id = $1) AND (expires_at > now())",
+          cost: "0.43..8.45",
+          rows: 2,
+          time: 0.9,
+        },
+      ],
     },
   },
   {
@@ -199,7 +219,10 @@ const queries: Query[] = [
         },
       ],
     },
-    index: { sql: "CREATE INDEX CONCURRENTLY idx_orders_created_at\n  ON orders (created_at) INCLUDE (total);\n-- and raise work_mem for the reports role to 256MB", gain: "Est. 2.8 s → 310 ms · removes the on-disk sort" },
+    index: {
+      sql: "CREATE INDEX CONCURRENTLY idx_orders_created_at\n  ON orders (created_at) INCLUDE (total);\n-- and raise work_mem for the reports role to 256MB",
+      gain: "Est. 2.8 s → 310 ms · removes the on-disk sort",
+    },
   },
   {
     id: "q7",
@@ -454,14 +477,14 @@ function QueriesPage() {
             </div>
           ) : (
             <p className="text-sm text-fg-muted">
-              No index would help. {q.plan.children?.some((c) => c.hot) || q.plan.hot ? "Time is spent waiting on locks. See Locks." : "This plan is already efficient."}
+              No index would help.{" "}
+              {q.plan.children?.some((c) => c.hot) || q.plan.hot ? "Time is spent waiting on locks. See Locks." : "This plan is already efficient."}
             </p>
           )}
         </Panel>
       </div>
     </>
   );
-  
 }
 
 /* --------------------------------------------------------------- overview */
@@ -482,10 +505,60 @@ interface Instance {
 }
 
 const INSTANCES: Instance[] = [
-  { id: "i1", name: "db-prod-01", role: "primary", version: "PostgreSQL 16.4", size: "812 GB", conns: 142, maxConns: 200, tps: 2100, cacheHit: 99.2, disk: 71, status: "healthy" },
-  { id: "i2", name: "db-prod-02", role: "replica", version: "PostgreSQL 16.4", size: "812 GB", conns: 64, maxConns: 200, tps: 940, cacheHit: 98.7, lag: "1.2 s", disk: 71, status: "degraded" },
-  { id: "i3", name: "db-prod-03", role: "replica", version: "PostgreSQL 16.4", size: "812 GB", conns: 51, maxConns: 200, tps: 810, cacheHit: 99.0, lag: "40 ms", disk: 70, status: "healthy" },
-  { id: "i4", name: "db-analytics-01", role: "primary", version: "PostgreSQL 16.4", size: "2.4 TB", conns: 38, maxConns: 100, tps: 120, cacheHit: 91.4, disk: 83, status: "healthy" },
+  {
+    id: "i1",
+    name: "db-prod-01",
+    role: "primary",
+    version: "PostgreSQL 16.4",
+    size: "812 GB",
+    conns: 142,
+    maxConns: 200,
+    tps: 2100,
+    cacheHit: 99.2,
+    disk: 71,
+    status: "healthy",
+  },
+  {
+    id: "i2",
+    name: "db-prod-02",
+    role: "replica",
+    version: "PostgreSQL 16.4",
+    size: "812 GB",
+    conns: 64,
+    maxConns: 200,
+    tps: 940,
+    cacheHit: 98.7,
+    lag: "1.2 s",
+    disk: 71,
+    status: "degraded",
+  },
+  {
+    id: "i3",
+    name: "db-prod-03",
+    role: "replica",
+    version: "PostgreSQL 16.4",
+    size: "812 GB",
+    conns: 51,
+    maxConns: 200,
+    tps: 810,
+    cacheHit: 99.0,
+    lag: "40 ms",
+    disk: 70,
+    status: "healthy",
+  },
+  {
+    id: "i4",
+    name: "db-analytics-01",
+    role: "primary",
+    version: "PostgreSQL 16.4",
+    size: "2.4 TB",
+    conns: 38,
+    maxConns: 100,
+    tps: 120,
+    cacheHit: 91.4,
+    disk: 83,
+    status: "healthy",
+  },
 ];
 
 interface TableStat {
@@ -513,22 +586,47 @@ function OverviewPage() {
     { id: "version", header: "Version", cell: (i) => <span className="text-xs">{i.version}</span> },
     { id: "conns", header: "Connections", align: "right", mono: true, sortValue: (i) => i.conns / i.maxConns, cell: (i) => `${i.conns} / ${i.maxConns}` },
     { id: "tps", header: "tx/s", align: "right", mono: true, sortValue: (i) => i.tps, cell: (i) => formatNumber(i.tps) },
-    { id: "hit", header: "Cache hit", align: "right", mono: true, cell: (i) => <span className={i.cacheHit < 95 ? "text-warning-text" : undefined}>{i.cacheHit}%</span> },
+    {
+      id: "hit",
+      header: "Cache hit",
+      align: "right",
+      mono: true,
+      cell: (i) => <span className={i.cacheHit < 95 ? "text-warning-text" : undefined}>{i.cacheHit}%</span>,
+    },
     { id: "lag", header: "Lag", align: "right", mono: true, cell: (i) => i.lag ?? "–" },
-    { id: "disk", header: "Disk", align: "right", mono: true, sortValue: (i) => i.disk, cell: (i) => <span className={i.disk >= 80 ? "text-warning-text" : undefined}>{i.disk}%</span> },
+    {
+      id: "disk",
+      header: "Disk",
+      align: "right",
+      mono: true,
+      sortValue: (i) => i.disk,
+      cell: (i) => <span className={i.disk >= 80 ? "text-warning-text" : undefined}>{i.disk}%</span>,
+    },
     { id: "status", header: "Status", cell: (i) => <StatusBadge tone={i.status === "healthy" ? "success" : "warning"}>{i.status}</StatusBadge> },
   ];
   const tableCols: Column<TableStat>[] = [
     { id: "name", header: "Table", mono: true, cell: (t) => t.name },
     { id: "size", header: "Size", align: "right", mono: true, cell: (t) => t.size },
     { id: "rows", header: "Rows", align: "right", mono: true, cell: (t) => t.rows },
-    { id: "bloat", header: "Bloat", align: "right", mono: true, description: "Estimated dead space from pgstattuple. Over 20% is worth a VACUUM FULL or pg_repack.", sortValue: (t) => t.bloat, cell: (t) => <span className={t.bloat > 20 ? "text-danger-text" : undefined}>{t.bloat}%</span> },
+    {
+      id: "bloat",
+      header: "Bloat",
+      align: "right",
+      mono: true,
+      description: "Estimated dead space from pgstattuple. Over 20% is worth a VACUUM FULL or pg_repack.",
+      sortValue: (t) => t.bloat,
+      cell: (t) => <span className={t.bloat > 20 ? "text-danger-text" : undefined}>{t.bloat}%</span>,
+    },
     { id: "seq", header: "Seq scans · 24 h", align: "right", mono: true, sortValue: (t) => t.seqScans, cell: (t) => formatNumber(t.seqScans) },
     { id: "vac", header: "Last autovacuum", cell: (t) => <span className="text-xs">{t.lastVacuum}</span> },
   ];
   return (
     <>
-      <PageHeader title="Overview" description="4 PostgreSQL instances in 2 clusters · stats every 10 s from pg_stat_* views" meta={<StatusBadge tone="warning">1 degraded</StatusBadge>} />
+      <PageHeader
+        title="Overview"
+        description="4 PostgreSQL instances in 2 clusters · stats every 10 s from pg_stat_* views"
+        meta={<StatusBadge tone="warning">1 degraded</StatusBadge>}
+      />
       <KpiGrid>
         <KpiCard label="Transactions" value="3.97k" unit="per second" trend={wave(24, { base: 3800, amp: 600, seed: 81 })} />
         <KpiCard label="Query time p95" value="48" unit="ms" tone="warning" delta={{ label: "+31 ms since 13:45", direction: "up", intent: "bad" }} />
@@ -540,7 +638,14 @@ function OverviewPage() {
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Largest tables" description="orders cluster" flush>
-          <DataTable label="Largest tables" columns={tableCols} rows={TABLES} getRowId={(t) => t.id} defaultSort={{ id: "bloat", direction: "desc" }} minWidth={680} />
+          <DataTable
+            label="Largest tables"
+            columns={tableCols}
+            rows={TABLES}
+            getRowId={(t) => t.id}
+            defaultSort={{ id: "bloat", direction: "desc" }}
+            minWidth={680}
+          />
         </Panel>
         <Panel title="Wait events" description="db-prod-01 · last hour, share of active time">
           <BarList
@@ -583,8 +688,24 @@ const BLOCKERS: LockNode[] = [
     query: "UPDATE orders SET status = 'paid' WHERE id = 1928412",
     lock: "RowExclusiveLock on orders",
     children: [
-      { pid: 48302, user: "orders_app", app: "orders-api", state: "active", waiting: "3 m 50 s", query: "UPDATE orders SET status = $1, updated_at = now() WHERE id = $2", lock: "ShareLock on transaction 99812773" },
-      { pid: 48315, user: "orders_app", app: "orders-api", state: "active", waiting: "3 m 41 s", query: "UPDATE orders SET status = $1, updated_at = now() WHERE id = $2", lock: "ShareLock on transaction 99812773" },
+      {
+        pid: 48302,
+        user: "orders_app",
+        app: "orders-api",
+        state: "active",
+        waiting: "3 m 50 s",
+        query: "UPDATE orders SET status = $1, updated_at = now() WHERE id = $2",
+        lock: "ShareLock on transaction 99812773",
+      },
+      {
+        pid: 48315,
+        user: "orders_app",
+        app: "orders-api",
+        state: "active",
+        waiting: "3 m 41 s",
+        query: "UPDATE orders SET status = $1, updated_at = now() WHERE id = $2",
+        lock: "ShareLock on transaction 99812773",
+      },
       {
         pid: 48399,
         user: "reports",
@@ -593,7 +714,17 @@ const BLOCKERS: LockNode[] = [
         waiting: "2 m 02 s",
         query: "SELECT … FROM orders FOR UPDATE",
         lock: "RowShareLock on orders",
-        children: [{ pid: 48410, user: "orders_app", app: "orders-api", state: "active", waiting: "1 m 58 s", query: "INSERT INTO order_items …", lock: "RowExclusiveLock on orders" }],
+        children: [
+          {
+            pid: 48410,
+            user: "orders_app",
+            app: "orders-api",
+            state: "active",
+            waiting: "1 m 58 s",
+            query: "INSERT INTO order_items …",
+            lock: "RowExclusiveLock on orders",
+          },
+        ],
       },
     ],
   },
@@ -605,7 +736,17 @@ const BLOCKERS: LockNode[] = [
     waiting: "12 s",
     query: "ALTER TABLE payments ADD COLUMN refund_reason text",
     lock: "AccessExclusiveLock on payments",
-    children: [{ pid: 50120, user: "orders_app", app: "orders-api", state: "active", waiting: "11 s", query: "SELECT * FROM payments WHERE order_id = $1", lock: "AccessShareLock on payments" }],
+    children: [
+      {
+        pid: 50120,
+        user: "orders_app",
+        app: "orders-api",
+        state: "active",
+        waiting: "11 s",
+        query: "SELECT * FROM payments WHERE order_id = $1",
+        lock: "AccessShareLock on payments",
+      },
+    ],
   },
 ];
 
@@ -616,7 +757,10 @@ function countWaiters(n: LockNode): number {
 function LockTree({ node, depth = 0, onKill }: { node: LockNode; depth?: number; onKill?: (pid: number) => void }) {
   return (
     <li>
-      <div className={cn("grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-b border-subtle py-1.5 pr-3 text-xs", depth === 0 && "bg-danger-soft")} style={{ paddingLeft: 12 + depth * 20 }}>
+      <div
+        className={cn("grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border-b border-subtle py-1.5 pr-3 text-xs", depth === 0 && "bg-danger-soft")}
+        style={{ paddingLeft: 12 + depth * 20 }}
+      >
         <span className="flex min-w-0 flex-col gap-0.5">
           <span className="flex min-w-0 flex-wrap items-center gap-1.5">
             <span className="font-mono font-semibold">{node.pid}</span>
@@ -664,7 +808,13 @@ function LocksPage() {
         <KpiCard label="Deadlocks · 24 h" value="3" delta={{ label: "All on orders, resolved by Postgres" }} />
       </KpiGrid>
       <Panel title="Lock waits" description="Per minute, last hour">
-        <TimeSeriesChart label="Sessions waiting on locks" labels={labels} height={120} xTicks={5} series={[{ id: "wait", name: "waiting", color: "var(--oa-chart-4)", data: wave(N, { base: 1, amp: 1, seed: 97, spike: 24, spikeAt: AT + 1 }) }]} />
+        <TimeSeriesChart
+          label="Sessions waiting on locks"
+          labels={labels}
+          height={120}
+          xTicks={5}
+          series={[{ id: "wait", name: "waiting", color: "var(--oa-chart-4)", data: wave(N, { base: 1, amp: 1, seed: 97, spike: 24, spikeAt: AT + 1 }) }]}
+        />
       </Panel>
       {killed && (
         <p role="status" className="text-sm text-success">
@@ -713,8 +863,19 @@ function ReplicationPage() {
     { id: "name", header: "Slot", mono: true, cell: (s) => s.name },
     { id: "type", header: "Type", cell: (s) => <Badge>{s.type}</Badge> },
     { id: "consumer", header: "Consumer", cell: (s) => <span className="text-xs">{s.consumer}</span> },
-    { id: "active", header: "Active", cell: (s) => (s.active ? <StatusBadge tone="success">active</StatusBadge> : <StatusBadge tone="danger">inactive</StatusBadge>) },
-    { id: "retained", header: "WAL retained", align: "right", mono: true, sortValue: (s) => s.retainedGb, cell: (s) => <span className={s.retainedGb > 10 ? "text-danger-text" : undefined}>{s.retained}</span> },
+    {
+      id: "active",
+      header: "Active",
+      cell: (s) => (s.active ? <StatusBadge tone="success">active</StatusBadge> : <StatusBadge tone="danger">inactive</StatusBadge>),
+    },
+    {
+      id: "retained",
+      header: "WAL retained",
+      align: "right",
+      mono: true,
+      sortValue: (s) => s.retainedGb,
+      cell: (s) => <span className={s.retainedGb > 10 ? "text-danger-text" : undefined}>{s.retained}</span>,
+    },
     {
       id: "act",
       header: "",
@@ -732,10 +893,22 @@ function ReplicationPage() {
     <>
       <PageHeader title="Replication" description="Streaming replicas and replication slots for db-prod-01." />
       <KpiGrid>
-        <KpiCard label="db-prod-02 lag" value="1.2" unit="s" tone="warning" trendColor="var(--oa-warning)" trend={wave(24, { base: 0.1, amp: 0.05, seed: 92, spike: 1.1, spikeAt: 18 })} />
+        <KpiCard
+          label="db-prod-02 lag"
+          value="1.2"
+          unit="s"
+          tone="warning"
+          trendColor="var(--oa-warning)"
+          trend={wave(24, { base: 0.1, amp: 0.05, seed: 92, spike: 1.1, spikeAt: 18 })}
+        />
         <KpiCard label="db-prod-03 lag" value="40" unit="ms" tone="success" />
         <KpiCard label="WAL generated" value="9.4" unit="GB / h" />
-        <KpiCard label="WAL retained by slots" value={`${slots.reduce((s, x) => s + x.retainedGb, 0).toFixed(1)}`} unit="GB" tone={slots.some((s) => !s.active) ? "danger" : "success"} />
+        <KpiCard
+          label="WAL retained by slots"
+          value={`${slots.reduce((s, x) => s + x.retainedGb, 0).toFixed(1)}`}
+          unit="GB"
+          tone={slots.some((s) => !s.active) ? "danger" : "success"}
+        />
       </KpiGrid>
       <Panel title="Replay lag" description="Seconds behind the primary">
         <TimeSeriesChart
@@ -777,14 +950,59 @@ interface Backend {
 }
 
 const BACKENDS: Backend[] = [
-  { pid: 48211, user: "orders_app", app: "orders-api", client: "10.20.4.31", state: "idle in transaction", since: "4 m 12 s", sinceSec: 252, query: "UPDATE orders SET status = 'paid' WHERE id = 1928412" },
-  { pid: 48302, user: "orders_app", app: "orders-api", client: "10.20.4.32", state: "active", since: "3 m 50 s", sinceSec: 230, query: "UPDATE orders SET status = $1 WHERE id = $2" },
-  { pid: 48399, user: "reports", app: "reports-cron", client: "10.20.6.11", state: "active", since: "2 m 02 s", sinceSec: 122, query: "SELECT … FROM orders FOR UPDATE" },
+  {
+    pid: 48211,
+    user: "orders_app",
+    app: "orders-api",
+    client: "10.20.4.31",
+    state: "idle in transaction",
+    since: "4 m 12 s",
+    sinceSec: 252,
+    query: "UPDATE orders SET status = 'paid' WHERE id = 1928412",
+  },
+  {
+    pid: 48302,
+    user: "orders_app",
+    app: "orders-api",
+    client: "10.20.4.32",
+    state: "active",
+    since: "3 m 50 s",
+    sinceSec: 230,
+    query: "UPDATE orders SET status = $1 WHERE id = $2",
+  },
+  {
+    pid: 48399,
+    user: "reports",
+    app: "reports-cron",
+    client: "10.20.6.11",
+    state: "active",
+    since: "2 m 02 s",
+    sinceSec: 122,
+    query: "SELECT … FROM orders FOR UPDATE",
+  },
   { pid: 47100, user: "orders_app", app: "orders-api", client: "10.20.4.31", state: "idle", since: "8 s", sinceSec: 8, query: "COMMIT" },
   { pid: 47131, user: "orders_app", app: "checkout-web", client: "10.20.5.18", state: "idle", since: "1 s", sinceSec: 1, query: "SELECT 1" },
-  { pid: 46820, user: "analyst", app: "psql", client: "10.8.0.14", state: "idle in transaction", since: "22 m", sinceSec: 1320, query: "SELECT count(*) FROM orders" },
+  {
+    pid: 46820,
+    user: "analyst",
+    app: "psql",
+    client: "10.8.0.14",
+    state: "idle in transaction",
+    since: "22 m",
+    sinceSec: 1320,
+    query: "SELECT count(*) FROM orders",
+  },
   { pid: 46001, user: "pgbouncer", app: "pgbouncer", client: "10.20.1.5", state: "idle", since: "2 s", sinceSec: 2, query: "DISCARD ALL" },
-  { pid: 45988, user: "monitor", app: "openasy-agent", client: "10.20.1.9", state: "active", since: "0 s", sinceSec: 0, query: "SELECT * FROM pg_stat_activity" },
+  {
+    pid: 45988,
+    user: "monitor",
+    app: "openasy-agent",
+    client: "10.20.1.9",
+    state: "active",
+    since: "0 s",
+    sinceSec: 0,
+    query: "SELECT * FROM pg_stat_activity",
+  },
 ];
 
 function ConnectionsPage() {
@@ -796,9 +1014,23 @@ function ConnectionsPage() {
     { id: "user", header: "User", mono: true, cell: (b) => b.user },
     { id: "app", header: "Application", cell: (b) => <span className="text-xs">{b.app}</span> },
     { id: "client", header: "Client", cell: (b) => <EntityChip kind="ip" value={b.client} hideKind /> },
-    { id: "state", header: "State", sortValue: (b) => b.state, cell: (b) => <Badge tone={b.state === "idle in transaction" ? "warning" : b.state === "active" ? "info" : "neutral"}>{b.state}</Badge> },
+    {
+      id: "state",
+      header: "State",
+      sortValue: (b) => b.state,
+      cell: (b) => <Badge tone={b.state === "idle in transaction" ? "warning" : b.state === "active" ? "info" : "neutral"}>{b.state}</Badge>,
+    },
     { id: "since", header: "In state", align: "right", mono: true, sortValue: (b) => b.sinceSec, cell: (b) => b.since },
-    { id: "query", header: "Last query", width: "28%", cell: (b) => <span className="block truncate font-mono text-xs" title={b.query}>{b.query}</span> },
+    {
+      id: "query",
+      header: "Last query",
+      width: "28%",
+      cell: (b) => (
+        <span className="block truncate font-mono text-xs" title={b.query}>
+          {b.query}
+        </span>
+      ),
+    },
     {
       id: "act",
       header: <span className="sr-only">Actions</span>,
@@ -828,7 +1060,12 @@ function ConnectionsPage() {
         />
       </Panel>
       <FilterBar onClear={state.length ? () => setState([]) : undefined}>
-        <FacetFilter label="State" selected={state} onChange={setState} options={(["active", "idle", "idle in transaction"] as const).map((s) => ({ value: s, count: items.filter((b) => b.state === s).length }))} />
+        <FacetFilter
+          label="State"
+          selected={state}
+          onChange={setState}
+          options={(["active", "idle", "idle in transaction"] as const).map((s) => ({ value: s, count: items.filter((b) => b.state === s).length }))}
+        />
       </FilterBar>
       <Panel title="Backends" description={`${rows.length} shown`} flush>
         <DataTable label="Backends" columns={cols} rows={rows} getRowId={(b) => `${b.pid}`} defaultSort={{ id: "since", direction: "desc" }} minWidth={1000} />
@@ -847,22 +1084,45 @@ function ExplainPage() {
   const plan = queries[0]!.plan;
   return (
     <>
-      <PageHeader title="Explain" description="Run EXPLAIN on a read replica. ANALYZE executes the query, so it is off by default and only allowed for SELECT." />
+      <PageHeader
+        title="Explain"
+        description="Run EXPLAIN on a read replica. ANALYZE executes the query, so it is off by default and only allowed for SELECT."
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <Panel title="Query" aria-label="Explain query">
           <form className="flex flex-col gap-2.5" onSubmit={(e) => (e.preventDefault(), setRan(true))}>
-            <SelectField label="Database" value={db} onChange={(e) => setDb(e.target.value)} options={["orders", "accounts", "events"].map((v) => ({ value: v, label: `${v} · db-prod-03 (replica)` }))} />
+            <SelectField
+              label="Database"
+              value={db}
+              onChange={(e) => setDb(e.target.value)}
+              options={["orders", "accounts", "events"].map((v) => ({ value: v, label: `${v} · db-prod-03 (replica)` }))}
+            />
             <label className="flex flex-col gap-1 text-xs font-medium">
               SQL
-              <textarea value={sql} onChange={(e) => (setSql(e.target.value), setRan(false))} rows={6} className="rounded-md border border-line-strong bg-surface p-2 font-mono text-xs text-fg" />
+              <textarea
+                value={sql}
+                onChange={(e) => (setSql(e.target.value), setRan(false))}
+                rows={6}
+                className="rounded-md border border-line-strong bg-surface p-2 font-mono text-xs text-fg"
+              />
             </label>
-            <Switch checked={analyze} onCheckedChange={setAnalyze} label="ANALYZE (runs the query)" description="Statement timeout 10 s; results are discarded." />
+            <Switch
+              checked={analyze}
+              onCheckedChange={setAnalyze}
+              label="ANALYZE (runs the query)"
+              description="Statement timeout 10 s; results are discarded."
+            />
             <Button type="submit" variant="primary" icon={<Play />} disabled={!sql.trim()}>
               Run EXPLAIN
             </Button>
           </form>
         </Panel>
-        <Panel title="Plan" description={ran ? `${db} · ${analyze ? "EXPLAIN ANALYZE" : "EXPLAIN"} · ${analyze ? "41.2 ms" : "est. cost 18421"}` : "Not run yet"} aria-label="Explain result" flush>
+        <Panel
+          title="Plan"
+          description={ran ? `${db} · ${analyze ? "EXPLAIN ANALYZE" : "EXPLAIN"} · ${analyze ? "41.2 ms" : "est. cost 18421"}` : "Not run yet"}
+          aria-label="Explain result"
+          flush
+        >
           {ran ? (
             <>
               <ul aria-label="Explain plan nodes">

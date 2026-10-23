@@ -30,7 +30,19 @@ const TONE = { neutral: "bg-subtle text-fg-muted", success: "bg-success-soft tex
  * Adding or creating something happens here, over the page, never inside it. Escape and the close button close it;
  * a click outside does not, so a half-filled form is not lost.
  */
-export function Dialog({ open, onOpenChange, title, description, icon, iconTone = "neutral", footer, onSubmit, size = "md", children, className }: DialogProps) {
+export function Dialog({
+  open,
+  onOpenChange,
+  title,
+  description,
+  icon,
+  iconTone = "neutral",
+  footer,
+  onSubmit,
+  size = "md",
+  children,
+  className,
+}: DialogProps) {
   const t = useT();
   const body = (
     <>

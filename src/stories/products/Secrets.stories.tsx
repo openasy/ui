@@ -139,162 +139,171 @@ const findings: Finding[] = [
 
 /** Secrets findings: validity KPIs, masked findings and a detail panel with rotation steps. */
 function FindingsPage() {
-    const [range, setRange] = useState("7d");
-    const [sources, setSources] = useState<string[]>([]);
-    const [validity, setValidity] = useState<Record<string, Validity>>(() => Object.fromEntries(findings.map((f) => [f.id, f.validity])));
-    const [openId, setOpenId] = useState<string | undefined>();
-    const rows = useMemo(() => findings.map((f) => ({ ...f, validity: validity[f.id]! })).filter((f) => sources.length === 0 || sources.includes(f.source)), [validity, sources]);
-    const open = rows.find((f) => f.id === openId);
-    const markRevoked = (id: string) => setValidity((v) => ({ ...v, [id]: "revoked" }));
-    const counts = {
-      active: Object.values(validity).filter((v) => v === "active").length,
-      revoked: 9 + Object.values(validity).filter((v) => v === "revoked").length,
-      unverified: 6 + Object.values(validity).filter((v) => v === "unverified").length,
-    };
+  const [range, setRange] = useState("7d");
+  const [sources, setSources] = useState<string[]>([]);
+  const [validity, setValidity] = useState<Record<string, Validity>>(() => Object.fromEntries(findings.map((f) => [f.id, f.validity])));
+  const [openId, setOpenId] = useState<string | undefined>();
+  const rows = useMemo(
+    () => findings.map((f) => ({ ...f, validity: validity[f.id]! })).filter((f) => sources.length === 0 || sources.includes(f.source)),
+    [validity, sources],
+  );
+  const open = rows.find((f) => f.id === openId);
+  const markRevoked = (id: string) => setValidity((v) => ({ ...v, [id]: "revoked" }));
+  const counts = {
+    active: Object.values(validity).filter((v) => v === "active").length,
+    revoked: 9 + Object.values(validity).filter((v) => v === "revoked").length,
+    unverified: 6 + Object.values(validity).filter((v) => v === "unverified").length,
+  };
 
-    const columns: Column<Finding>[] = [
-      { id: "sev", header: "Severity", width: "96px", sortValue: (f) => SEVERITY_META[f.severity].rank, cell: (f) => <SeverityBadge severity={f.severity} /> },
-      {
-        id: "type",
-        header: "Type",
-        width: "20%",
-        sortValue: (f) => f.type,
-        cell: (f) => (
-          <span className="flex min-w-0 flex-col">
-            <span className="truncate font-medium">{f.type}</span>
-            <span className="truncate font-mono text-2xs text-fg-muted">{f.masked}</span>
-          </span>
-        ),
-      },
-      {
-        id: "loc",
-        header: "Location",
-        width: "32%",
-        cell: (f) => (
-          <span className="block max-w-full truncate font-mono text-xs" title={f.location}>
-            {f.location}
-          </span>
-        ),
-      },
-      { id: "valid", header: "Validity", cell: (f) => <StatusBadge tone={VALIDITY[f.validity].tone}>{VALIDITY[f.validity].label}</StatusBadge> },
-      { id: "seen", header: "First seen", cell: (f) => <span className="whitespace-nowrap text-fg-muted">{f.firstSeen}</span> },
-      {
-        id: "act",
-        header: <span className="sr-only">Actions</span>,
-        width: "190px",
-        align: "right",
-        cell: (f) => (
-          <span className="inline-flex gap-1" onClick={(e) => e.stopPropagation()}>
-            <Button size="xs" variant="primary" aria-label={`Rotate ${f.type}`} onClick={() => setOpenId(f.id)}>
-              Rotate
-            </Button>
-            <Button size="xs" aria-label={`Mark revoked: ${f.type}`} disabled={f.validity === "revoked"} onClick={() => markRevoked(f.id)}>
-              Mark revoked
-            </Button>
-          </span>
-        ),
-      },
-    ];
+  const columns: Column<Finding>[] = [
+    { id: "sev", header: "Severity", width: "96px", sortValue: (f) => SEVERITY_META[f.severity].rank, cell: (f) => <SeverityBadge severity={f.severity} /> },
+    {
+      id: "type",
+      header: "Type",
+      width: "20%",
+      sortValue: (f) => f.type,
+      cell: (f) => (
+        <span className="flex min-w-0 flex-col">
+          <span className="truncate font-medium">{f.type}</span>
+          <span className="truncate font-mono text-2xs text-fg-muted">{f.masked}</span>
+        </span>
+      ),
+    },
+    {
+      id: "loc",
+      header: "Location",
+      width: "32%",
+      cell: (f) => (
+        <span className="block max-w-full truncate font-mono text-xs" title={f.location}>
+          {f.location}
+        </span>
+      ),
+    },
+    { id: "valid", header: "Validity", cell: (f) => <StatusBadge tone={VALIDITY[f.validity].tone}>{VALIDITY[f.validity].label}</StatusBadge> },
+    { id: "seen", header: "First seen", cell: (f) => <span className="whitespace-nowrap text-fg-muted">{f.firstSeen}</span> },
+    {
+      id: "act",
+      header: <span className="sr-only">Actions</span>,
+      width: "190px",
+      align: "right",
+      cell: (f) => (
+        <span className="inline-flex gap-1">
+          <Button size="xs" variant="primary" aria-label={`Rotate ${f.type}`} onClick={() => setOpenId(f.id)}>
+            Rotate
+          </Button>
+          <Button size="xs" aria-label={`Mark revoked: ${f.type}`} disabled={f.validity === "revoked"} onClick={() => markRevoked(f.id)}>
+            Mark revoked
+          </Button>
+        </span>
+      ),
+    },
+  ];
 
-    return (
-      <>
-        <PageHeader
-          title="Findings"
-          description="41 repositories, 61 images and CI logs from 3 runners · values are never stored in full"
-          actions={
-            <>
-              <SearchInput label="Search findings" className="w-60" />
-              <Button size="md" variant="primary" icon={<FileSearch />}>
-                Scan now
-              </Button>
-            </>
-          }
+  return (
+    <>
+      <PageHeader
+        title="Findings"
+        description="41 repositories, 61 images and CI logs from 3 runners · values are never stored in full"
+        actions={
+          <>
+            <SearchInput label="Search findings" className="w-60" />
+            <Button size="md" variant="primary" icon={<FileSearch />}>
+              Scan now
+            </Button>
+          </>
+        }
+      />
+      <FilterBar>
+        <TimeRangePicker value={range} onChange={setRange} />
+        <FacetFilter
+          label="Source"
+          selected={sources}
+          onChange={setSources}
+          options={[
+            { value: "repo", label: "Repositories", count: 3 },
+            { value: "image", label: "Images", count: 1 },
+            { value: "ci", label: "CI logs", count: 1 },
+          ]}
         />
-        <FilterBar>
-          <TimeRangePicker value={range} onChange={setRange} />
-          <FacetFilter
-            label="Source"
-            selected={sources}
-            onChange={setSources}
-            options={[
-              { value: "repo", label: "Repositories", count: 3 },
-              { value: "image", label: "Images", count: 1 },
-              { value: "ci", label: "CI logs", count: 1 },
-            ]}
+      </FilterBar>
+      <KpiGrid>
+        <KpiCard
+          label="Verified active"
+          value={counts.active}
+          unit="secrets"
+          tone="danger"
+          delta={{ label: "Validated against the provider API", intent: "bad" }}
+        />
+        <KpiCard label="Revoked" value={counts.revoked} unit="secrets" tone="success" delta={{ label: "+2 this week", direction: "up", intent: "good" }} />
+        <KpiCard label="Unverified" value={counts.unverified} unit="secrets" delta={{ label: "No validator, or provider unreachable" }} />
+        <KpiCard label="Median time to revoke" value="6.4" unit="hours" delta={{ label: "-1.2 h vs. last month", direction: "down", intent: "good" }} />
+      </KpiGrid>
+      <div className={open ? "grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]" : "grid gap-2.5"}>
+        <Panel title="Findings" description="Click a row for rotation steps" flush>
+          <DataTable
+            label="Secret findings"
+            columns={columns}
+            rows={rows}
+            getRowId={(f) => f.id}
+            onRowClick={(f) => setOpenId(f.id)}
+            activeRowId={openId}
+            defaultSort={{ id: "sev", direction: "desc" }}
+            minWidth={960}
           />
-        </FilterBar>
-        <KpiGrid>
-          <KpiCard label="Verified active" value={counts.active} unit="secrets" tone="danger" delta={{ label: "Validated against the provider API", intent: "bad" }} />
-          <KpiCard label="Revoked" value={counts.revoked} unit="secrets" tone="success" delta={{ label: "+2 this week", direction: "up", intent: "good" }} />
-          <KpiCard label="Unverified" value={counts.unverified} unit="secrets" delta={{ label: "No validator, or provider unreachable" }} />
-          <KpiCard label="Median time to revoke" value="6.4" unit="hours" delta={{ label: "-1.2 h vs. last month", direction: "down", intent: "good" }} />
-        </KpiGrid>
-        <div className={open ? "grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]" : "grid gap-2.5"}>
-          <Panel title="Findings" description="Click a row for rotation steps" flush>
-            <DataTable
-              label="Secret findings"
-              columns={columns}
-              rows={rows}
-              getRowId={(f) => f.id}
-              onRowClick={(f) => setOpenId(f.id)}
-              activeRowId={openId}
-              defaultSort={{ id: "sev", direction: "desc" }}
-              minWidth={960}
-            />
-          </Panel>
-          {open && (
-            <Panel
-              title={open.type}
-              description={open.where}
-              aria-label={`Finding detail: ${open.type}`}
-              actions={
-                <IconButton label="Close detail" size="sm" onClick={() => setOpenId(undefined)}>
-                  <X />
-                </IconButton>
-              }
-            >
-              <div className="flex flex-col gap-2.5 text-sm">
-                <dl className="grid grid-cols-[96px_minmax(0,1fr)] gap-x-2 gap-y-1.5">
-                  <dt className="text-fg-muted">Severity</dt>
-                  <dd>
-                    <SeverityBadge severity={open.severity} />
-                  </dd>
-                  <dt className="text-fg-muted">Value</dt>
-                  <dd className="truncate font-mono text-xs">{open.masked}</dd>
-                  <dt className="text-fg-muted">Location</dt>
-                  <dd className="font-mono text-xs break-all">{open.location}</dd>
-                  <dt className="text-fg-muted">Validity</dt>
-                  <dd>
-                    <StatusBadge tone={VALIDITY[open.validity].tone}>{VALIDITY[open.validity].label}</StatusBadge>
-                  </dd>
-                  <dt className="text-fg-muted">Introduced by</dt>
-                  <dd>
-                    <EntityChip kind="user" value={open.author} hideKind />
-                  </dd>
-                </dl>
-                <Callout tone={open.validity === "revoked" ? "success" : "warning"} title={open.validity === "revoked" ? "Already revoked" : "How to rotate"}>
-                  <ol className="mt-1 list-decimal pl-4">
-                    {open.rotate.map((s) => (
-                      <li key={s}>{s}</li>
-                    ))}
-                  </ol>
-                </Callout>
-                <div className="flex gap-1.5">
-                  <Button size="sm" variant="primary" icon={<CircleCheck />} disabled={open.validity === "revoked"} onClick={() => markRevoked(open.id)}>
-                    Mark revoked
-                  </Button>
-                  <Button size="sm">Add exception</Button>
-                </div>
-                <p className="flex items-center gap-1.5 text-xs text-fg-muted">
-                  <Badge mono>{open.source}</Badge>
-                  First seen {open.firstSeen}
-                </p>
+        </Panel>
+        {open && (
+          <Panel
+            title={open.type}
+            description={open.where}
+            aria-label={`Finding detail: ${open.type}`}
+            actions={
+              <IconButton label="Close detail" size="sm" onClick={() => setOpenId(undefined)}>
+                <X />
+              </IconButton>
+            }
+          >
+            <div className="flex flex-col gap-2.5 text-sm">
+              <dl className="grid grid-cols-[96px_minmax(0,1fr)] gap-x-2 gap-y-1.5">
+                <dt className="text-fg-muted">Severity</dt>
+                <dd>
+                  <SeverityBadge severity={open.severity} />
+                </dd>
+                <dt className="text-fg-muted">Value</dt>
+                <dd className="truncate font-mono text-xs">{open.masked}</dd>
+                <dt className="text-fg-muted">Location</dt>
+                <dd className="font-mono text-xs break-all">{open.location}</dd>
+                <dt className="text-fg-muted">Validity</dt>
+                <dd>
+                  <StatusBadge tone={VALIDITY[open.validity].tone}>{VALIDITY[open.validity].label}</StatusBadge>
+                </dd>
+                <dt className="text-fg-muted">Introduced by</dt>
+                <dd>
+                  <EntityChip kind="user" value={open.author} hideKind />
+                </dd>
+              </dl>
+              <Callout tone={open.validity === "revoked" ? "success" : "warning"} title={open.validity === "revoked" ? "Already revoked" : "How to rotate"}>
+                <ol className="mt-1 list-decimal pl-4">
+                  {open.rotate.map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </ol>
+              </Callout>
+              <div className="flex gap-1.5">
+                <Button size="sm" variant="primary" icon={<CircleCheck />} disabled={open.validity === "revoked"} onClick={() => markRevoked(open.id)}>
+                  Mark revoked
+                </Button>
+                <Button size="sm">Add exception</Button>
               </div>
-            </Panel>
-          )}
-        </div>
-      </>
-    );
+              <p className="flex items-center gap-1.5 text-xs text-fg-muted">
+                <Badge mono>{open.source}</Badge>
+                First seen {open.firstSeen}
+              </p>
+            </div>
+          </Panel>
+        )}
+      </div>
+    </>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -316,14 +325,110 @@ interface Repo {
 }
 
 const REPOS: Repo[] = [
-  { id: "r1", name: "acme/orders-api", provider: "GitHub", visibility: "private", branch: "main", commit: "9c41e0b", scanned: "2 h ago", history: "Full history", findings: { critical: 1, high: 0, other: 2 }, protection: true, owner: PEOPLE[2] },
-  { id: "r2", name: "acme/legacy-portal", provider: "GitHub", visibility: "public", branch: "master", commit: "3f9a21c", scanned: "1 day ago", history: "Full history", findings: { critical: 0, high: 1, other: 4 }, protection: false, owner: PEOPLE[4] },
-  { id: "r3", name: "acme/checkout-web", provider: "GitHub", visibility: "private", branch: "develop", commit: "e7b0d14", scanned: "5 h ago", history: "Incremental", findings: { critical: 0, high: 0, other: 1 }, protection: true, owner: PEOPLE[7] },
-  { id: "r4", name: "platform/deploy", provider: "GitLab", visibility: "internal", branch: "main", commit: "71ac0f2", scanned: "40 min ago", history: "Incremental", findings: { critical: 0, high: 1, other: 0 }, protection: true, owner: PEOPLE[0] },
-  { id: "r5", name: "platform/terraform-live", provider: "GitLab", visibility: "internal", branch: "main", commit: "0d93be1", scanned: "3 h ago", history: "Full history", findings: { critical: 0, high: 0, other: 0 }, protection: true, owner: PEOPLE[1] },
-  { id: "r6", name: "acme/docs-site", provider: "GitHub", visibility: "public", branch: "main", commit: "a12f6c9", scanned: "6 h ago", history: "Full history", findings: { critical: 0, high: 0, other: 0 }, protection: false, owner: PEOPLE[5] },
-  { id: "r7", name: "acme/payments-api", provider: "GitHub", visibility: "private", branch: "main", commit: "5be2a70", scanned: "1 h ago", history: "Full history", findings: { critical: 0, high: 0, other: 3 }, protection: true, owner: PEOPLE[3] },
-  { id: "r8", name: "data/etl-jobs", provider: "GitLab", visibility: "private", branch: "main", commit: "c4419de", scanned: "12 h ago", history: "Incremental", findings: { critical: 0, high: 2, other: 1 }, protection: false, owner: PEOPLE[6] },
+  {
+    id: "r1",
+    name: "acme/orders-api",
+    provider: "GitHub",
+    visibility: "private",
+    branch: "main",
+    commit: "9c41e0b",
+    scanned: "2 h ago",
+    history: "Full history",
+    findings: { critical: 1, high: 0, other: 2 },
+    protection: true,
+    owner: PEOPLE[2],
+  },
+  {
+    id: "r2",
+    name: "acme/legacy-portal",
+    provider: "GitHub",
+    visibility: "public",
+    branch: "master",
+    commit: "3f9a21c",
+    scanned: "1 day ago",
+    history: "Full history",
+    findings: { critical: 0, high: 1, other: 4 },
+    protection: false,
+    owner: PEOPLE[4],
+  },
+  {
+    id: "r3",
+    name: "acme/checkout-web",
+    provider: "GitHub",
+    visibility: "private",
+    branch: "develop",
+    commit: "e7b0d14",
+    scanned: "5 h ago",
+    history: "Incremental",
+    findings: { critical: 0, high: 0, other: 1 },
+    protection: true,
+    owner: PEOPLE[7],
+  },
+  {
+    id: "r4",
+    name: "platform/deploy",
+    provider: "GitLab",
+    visibility: "internal",
+    branch: "main",
+    commit: "71ac0f2",
+    scanned: "40 min ago",
+    history: "Incremental",
+    findings: { critical: 0, high: 1, other: 0 },
+    protection: true,
+    owner: PEOPLE[0],
+  },
+  {
+    id: "r5",
+    name: "platform/terraform-live",
+    provider: "GitLab",
+    visibility: "internal",
+    branch: "main",
+    commit: "0d93be1",
+    scanned: "3 h ago",
+    history: "Full history",
+    findings: { critical: 0, high: 0, other: 0 },
+    protection: true,
+    owner: PEOPLE[1],
+  },
+  {
+    id: "r6",
+    name: "acme/docs-site",
+    provider: "GitHub",
+    visibility: "public",
+    branch: "main",
+    commit: "a12f6c9",
+    scanned: "6 h ago",
+    history: "Full history",
+    findings: { critical: 0, high: 0, other: 0 },
+    protection: false,
+    owner: PEOPLE[5],
+  },
+  {
+    id: "r7",
+    name: "acme/payments-api",
+    provider: "GitHub",
+    visibility: "private",
+    branch: "main",
+    commit: "5be2a70",
+    scanned: "1 h ago",
+    history: "Full history",
+    findings: { critical: 0, high: 0, other: 3 },
+    protection: true,
+    owner: PEOPLE[3],
+  },
+  {
+    id: "r8",
+    name: "data/etl-jobs",
+    provider: "GitLab",
+    visibility: "private",
+    branch: "main",
+    commit: "c4419de",
+    scanned: "12 h ago",
+    history: "Incremental",
+    findings: { critical: 0, high: 2, other: 1 },
+    protection: false,
+    owner: PEOPLE[6],
+  },
 ];
 
 const VIS_TONE = { public: "warning", private: "neutral", internal: "info" } as const;
@@ -343,13 +448,31 @@ function RepositoriesPage() {
       cell: (r) => (
         <span className="flex min-w-0 flex-col items-start gap-0.5">
           <EntityChip kind="repo" value={r.name} hideKind />
-          <span className="text-2xs text-fg-muted">{r.provider} · owner {r.owner}</span>
+          <span className="text-2xs text-fg-muted">
+            {r.provider} · owner {r.owner}
+          </span>
         </span>
       ),
     },
     { id: "vis", header: "Visibility", sortValue: (r) => r.visibility, cell: (r) => <Badge tone={VIS_TONE[r.visibility]}>{r.visibility}</Badge> },
-    { id: "commit", header: "Last scanned", cell: (r) => <span className="flex flex-col"><span className="font-mono text-xs">{r.branch} · {r.commit}</span><span className="text-2xs text-fg-muted">{r.scanned}</span></span> },
-    { id: "history", header: "Depth", description: "Full history scans every commit ever pushed; incremental scans only new pushes.", cell: (r) => <span className="text-xs">{r.history}</span> },
+    {
+      id: "commit",
+      header: "Last scanned",
+      cell: (r) => (
+        <span className="flex flex-col">
+          <span className="font-mono text-xs">
+            {r.branch} · {r.commit}
+          </span>
+          <span className="text-2xs text-fg-muted">{r.scanned}</span>
+        </span>
+      ),
+    },
+    {
+      id: "history",
+      header: "Depth",
+      description: "Full history scans every commit ever pushed; incremental scans only new pushes.",
+      cell: (r) => <span className="text-xs">{r.history}</span>,
+    },
     {
       id: "findings",
       header: "Open findings",
@@ -370,22 +493,47 @@ function RepositoriesPage() {
       header: "Push protection",
       width: "130px",
       description: "Blocks pushes that contain a verified secret. Developers can bypass with a reason, which is logged.",
-      cell: (r) => <Switch checked={protection[r.id] ?? false} onCheckedChange={(v) => setProtection((p) => ({ ...p, [r.id]: v }))} label={<span className="sr-only">Push protection for {r.name}</span>} />,
+      cell: (r) => (
+        <Switch
+          checked={protection[r.id] ?? false}
+          onCheckedChange={(v) => setProtection((p) => ({ ...p, [r.id]: v }))}
+          label={<span className="sr-only">Push protection for {r.name}</span>}
+        />
+      ),
     },
   ];
   const enabled = Object.values(protection).filter(Boolean).length;
   return (
     <>
-      <PageHeader title="Repositories" description="41 repositories from GitHub and GitLab. New repositories are added automatically." actions={<Button variant="primary" icon={<Plus />}>Add organisation</Button>} />
+      <PageHeader
+        title="Repositories"
+        description="41 repositories from GitHub and GitLab. New repositories are added automatically."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add organisation
+          </Button>
+        }
+      />
       <KpiGrid>
         <KpiCard label="Repositories" value="41" unit="12 public" />
-        <KpiCard label="Push protection" value={`${enabled + 33}`} unit="/ 41" tone={enabled + 33 < 41 ? "warning" : "success"} delta={{ label: "Blocked 6 pushes this month" }} />
+        <KpiCard
+          label="Push protection"
+          value={`${enabled + 33}`}
+          unit="/ 41"
+          tone={enabled + 33 < 41 ? "warning" : "success"}
+          delta={{ label: "Blocked 6 pushes this month" }}
+        />
         <KpiCard label="Commits scanned · 7 d" value="3,214" delta={{ label: "Median 2.1 s per push" }} />
         <KpiCard label="With open findings" value="6" tone="danger" delta={{ label: "1 public repository", intent: "bad" }} />
       </KpiGrid>
       <FilterBar onClear={vis.length || query ? () => (setVis([]), setQuery("")) : undefined}>
         <SearchInput label="Search repositories" value={query} onChange={(e) => setQuery(e.target.value)} className="w-60" />
-        <FacetFilter label="Visibility" selected={vis} onChange={setVis} options={(["public", "private", "internal"] as const).map((v) => ({ value: v, count: REPOS.filter((r) => r.visibility === v).length }))} />
+        <FacetFilter
+          label="Visibility"
+          selected={vis}
+          onChange={setVis}
+          options={(["public", "private", "internal"] as const).map((v) => ({ value: v, count: REPOS.filter((r) => r.visibility === v).length }))}
+        />
       </FilterBar>
       <Panel title="Repositories" description={`${shown.length} shown`} flush>
         <DataTable label="Repositories" columns={cols} rows={shown} getRowId={(r) => r.id} minWidth={980} defaultSort={{ id: "findings", direction: "desc" }} />
@@ -461,21 +609,63 @@ const IMAGES: Image[] = [
       { n: 3, instr: "COPY run.sh /opt/reports/", size: "2 KB" },
     ],
   },
-  { id: "i4", ref: "checkout-web:5.2.0", digest: "sha256:7aa9…31f0", base: "nginx:1.27-alpine", pushed: "2 h ago", status: "scanning", layers: [{ n: 1, instr: "FROM nginx:1.27-alpine", size: "20 MB" }, { n: 2, instr: "COPY build/ /usr/share/nginx/html", size: "9 MB" }] },
-  { id: "i5", ref: "edge-proxy:1.3.7", digest: "sha256:c2f0…9b13", base: "envoyproxy/envoy:v1.31", pushed: "4 days ago", status: "clean", layers: [{ n: 1, instr: "FROM envoyproxy/envoy:v1.31", size: "70 MB" }, { n: 2, instr: "COPY envoy.yaml /etc/envoy/", size: "8 KB" }] },
+  {
+    id: "i4",
+    ref: "checkout-web:5.2.0",
+    digest: "sha256:7aa9…31f0",
+    base: "nginx:1.27-alpine",
+    pushed: "2 h ago",
+    status: "scanning",
+    layers: [
+      { n: 1, instr: "FROM nginx:1.27-alpine", size: "20 MB" },
+      { n: 2, instr: "COPY build/ /usr/share/nginx/html", size: "9 MB" },
+    ],
+  },
+  {
+    id: "i5",
+    ref: "edge-proxy:1.3.7",
+    digest: "sha256:c2f0…9b13",
+    base: "envoyproxy/envoy:v1.31",
+    pushed: "4 days ago",
+    status: "clean",
+    layers: [
+      { n: 1, instr: "FROM envoyproxy/envoy:v1.31", size: "70 MB" },
+      { n: 2, instr: "COPY envoy.yaml /etc/envoy/", size: "8 KB" },
+    ],
+  },
 ];
 
-const IMG_STATUS = { clean: { label: "Clean", tone: "success" }, finding: { label: "Secret found", tone: "danger" }, scanning: { label: "Scanning", tone: "info" } } as const;
+const IMG_STATUS = {
+  clean: { label: "Clean", tone: "success" },
+  finding: { label: "Secret found", tone: "danger" },
+  scanning: { label: "Scanning", tone: "info" },
+} as const;
 
 function ImagesPage() {
   const [active, setActive] = useState("i1");
   const img = IMAGES.find((i) => i.id === active)!;
   const cols: Column<Image>[] = [
-    { id: "ref", header: "Image", width: "34%", sortValue: (i) => i.ref, cell: (i) => <span className="flex min-w-0 flex-col"><span className="truncate font-mono text-xs font-medium">registry.example.com/{i.ref}</span><span className="truncate font-mono text-2xs text-fg-muted">{i.digest}</span></span> },
+    {
+      id: "ref",
+      header: "Image",
+      width: "34%",
+      sortValue: (i) => i.ref,
+      cell: (i) => (
+        <span className="flex min-w-0 flex-col">
+          <span className="truncate font-mono text-xs font-medium">registry.example.com/{i.ref}</span>
+          <span className="truncate font-mono text-2xs text-fg-muted">{i.digest}</span>
+        </span>
+      ),
+    },
     { id: "base", header: "Base", mono: true, cell: (i) => <span className="text-xs">{i.base}</span> },
     { id: "layers", header: "Layers", align: "right", mono: true, sortValue: (i) => i.layers.length, cell: (i) => i.layers.length },
     { id: "pushed", header: "Pushed", cell: (i) => <span className="whitespace-nowrap text-fg-muted">{i.pushed}</span> },
-    { id: "status", header: "Result", sortValue: (i) => i.status, cell: (i) => <StatusBadge tone={IMG_STATUS[i.status].tone}>{IMG_STATUS[i.status].label}</StatusBadge> },
+    {
+      id: "status",
+      header: "Result",
+      sortValue: (i) => i.status,
+      cell: (i) => <StatusBadge tone={IMG_STATUS[i.status].tone}>{IMG_STATUS[i.status].label}</StatusBadge>,
+    },
   ];
   return (
     <>
@@ -488,12 +678,27 @@ function ImagesPage() {
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Images" description="Click an image to see its layers" flush>
-          <DataTable label="Container images" columns={cols} rows={IMAGES} getRowId={(i) => i.id} onRowClick={(i) => setActive(i.id)} activeRowId={active} minWidth={760} />
+          <DataTable
+            label="Container images"
+            columns={cols}
+            rows={IMAGES}
+            getRowId={(i) => i.id}
+            onRowClick={(i) => setActive(i.id)}
+            activeRowId={active}
+            minWidth={760}
+          />
         </Panel>
         <Panel title={<span className="font-mono">{img.ref}</span>} description={`${img.layers.length} layers · base ${img.base}`} aria-label="Image layers">
           <ol className="flex flex-col">
             {img.layers.map((l) => (
-              <li key={l.n} className={l.secret ? "flex flex-col gap-1 rounded-md border border-danger/30 bg-danger-soft px-2 py-1.5" : "flex flex-col gap-1 border-b border-subtle px-2 py-1.5 last:border-0"}>
+              <li
+                key={l.n}
+                className={
+                  l.secret
+                    ? "flex flex-col gap-1 rounded-md border border-danger/30 bg-danger-soft px-2 py-1.5"
+                    : "flex flex-col gap-1 border-b border-subtle px-2 py-1.5 last:border-0"
+                }
+              >
                 <span className="grid grid-cols-[24px_minmax(0,1fr)_auto] items-start gap-2">
                   <span className="font-mono text-2xs text-fg-muted">{l.n}</span>
                   <code className="font-mono text-xs break-all">{l.instr}</code>
@@ -565,26 +770,59 @@ function CiLogsPage() {
   const lines = LOG[active] ?? [{ n: 1, text: "No secrets found in this job log." }];
   const cols: Column<Job>[] = [
     { id: "id", header: "Job", width: "100px", mono: true, sortValue: (j) => Number(j.id), cell: (j) => `#${j.id}` },
-    { id: "pipeline", header: "Pipeline", cell: (j) => <span className="flex min-w-0 flex-col"><span className="truncate font-medium">{j.pipeline}</span><span className="truncate text-2xs text-fg-muted">{j.job}</span></span> },
+    {
+      id: "pipeline",
+      header: "Pipeline",
+      cell: (j) => (
+        <span className="flex min-w-0 flex-col">
+          <span className="truncate font-medium">{j.pipeline}</span>
+          <span className="truncate text-2xs text-fg-muted">{j.job}</span>
+        </span>
+      ),
+    },
     { id: "runner", header: "Runner", mono: true, cell: (j) => j.runner },
     { id: "when", header: "Finished", cell: (j) => <span className="whitespace-nowrap text-fg-muted">{j.when}</span> },
-    { id: "hits", header: "Secrets", align: "right", sortValue: (j) => j.hits, cell: (j) => (erased.includes(j.id) ? <Badge>Erased</Badge> : j.hits ? <Badge tone="danger">{j.hits}</Badge> : <span className="text-fg-muted">0</span>) },
+    {
+      id: "hits",
+      header: "Secrets",
+      align: "right",
+      sortValue: (j) => j.hits,
+      cell: (j) => (erased.includes(j.id) ? <Badge>Erased</Badge> : j.hits ? <Badge tone="danger">{j.hits}</Badge> : <span className="text-fg-muted">0</span>),
+    },
   ];
   return (
     <>
-      <PageHeader title="CI logs" description="Job logs from 3 GitLab runners and GitHub Actions are scanned as they stream. Matches are masked before storage." />
+      <PageHeader
+        title="CI logs"
+        description="Job logs from 3 GitLab runners and GitHub Actions are scanned as they stream. Matches are masked before storage."
+      />
       <Callout tone="info" title="Turn on runner-side masking">
         The runner plugin masks known secret formats before logs leave the runner, so they never reach GitLab.
       </Callout>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <Panel title="Jobs" description="Last 24 hours" flush>
-          <DataTable label="CI jobs" columns={cols} rows={JOBS} getRowId={(j) => j.id} onRowClick={(j) => setActive(j.id)} activeRowId={active} defaultSort={{ id: "hits", direction: "desc" }} minWidth={560} />
+          <DataTable
+            label="CI jobs"
+            columns={cols}
+            rows={JOBS}
+            getRowId={(j) => j.id}
+            onRowClick={(j) => setActive(j.id)}
+            activeRowId={active}
+            defaultSort={{ id: "hits", direction: "desc" }}
+            minWidth={560}
+          />
         </Panel>
         <Panel
           title={`Job #${job.id} · ${job.job}`}
           description={`${job.pipeline} · runner ${job.runner} · ${job.lines} lines`}
           actions={
-            <Button size="sm" variant="danger" icon={<Trash2 />} disabled={!job.hits || erased.includes(job.id)} onClick={() => setErased((e) => [...e, job.id])}>
+            <Button
+              size="sm"
+              variant="danger"
+              icon={<Trash2 />}
+              disabled={!job.hits || erased.includes(job.id)}
+              onClick={() => setErased((e) => [...e, job.id])}
+            >
               Erase job log
             </Button>
           }
@@ -594,7 +832,14 @@ function CiLogsPage() {
               <p className="px-2.5 font-mono text-xs text-fg-muted">Log erased in GitLab by Emily Clark. Finding kept with masked value.</p>
             ) : (
               lines.map((l) => (
-                <div key={l.n} className={l.hit ? "grid grid-cols-[40px_minmax(0,1fr)] gap-2 bg-danger-soft px-2.5 font-mono text-xs text-danger-text" : "grid grid-cols-[40px_minmax(0,1fr)] gap-2 px-2.5 font-mono text-xs"}>
+                <div
+                  key={l.n}
+                  className={
+                    l.hit
+                      ? "grid grid-cols-[40px_minmax(0,1fr)] gap-2 bg-danger-soft px-2.5 font-mono text-xs text-danger-text"
+                      : "grid grid-cols-[40px_minmax(0,1fr)] gap-2 px-2.5 font-mono text-xs"
+                  }
+                >
                   <span className="text-right text-fg-muted select-none">{l.n}</span>
                   <span className="break-all whitespace-pre-wrap">{l.text}</span>
                 </div>
@@ -628,14 +873,86 @@ interface Validator {
 }
 
 const VALIDATORS: Validator[] = [
-  { id: "v1", type: "AWS access key", provider: "AWS", method: "sts:GetCallerIdentity", detector: "aws-access-key-id + secret pair", verified: 3, enabled: true, scope: "Read-only, no side effects" },
-  { id: "v2", type: "GitHub PAT", provider: "GitHub", method: "GET /user", detector: "ghp_, github_pat_", verified: 2, enabled: true, scope: "Reads token owner and scopes" },
-  { id: "v3", type: "Slack bot token", provider: "Slack", method: "auth.test", detector: "xoxb-, xoxp-", verified: 1, enabled: true, scope: "Reads workspace and bot id" },
-  { id: "v4", type: "Stripe live key", provider: "Stripe", method: "GET /v1/balance", detector: "sk_live_, rk_live_", verified: 0, enabled: false, scope: "Reads balance; disabled by policy" },
-  { id: "v5", type: "Google API key", provider: "Google Cloud", method: "GET tokeninfo", detector: "AIza…", verified: 0, enabled: true, scope: "No data access" },
-  { id: "v6", type: "Twilio auth token", provider: "Twilio", method: "GET /Accounts/{sid}", detector: "SK…, AC… pair", verified: 0, enabled: true, scope: "Reads account status" },
-  { id: "v7", type: "Private key", provider: "–", method: "No live check", detector: "PEM headers", verified: 0, enabled: false, scope: "Matched certificate inventory instead" },
-  { id: "v8", type: "Postgres URI", provider: "Database", method: "TCP handshake only", detector: "postgres://user:pass@", verified: 1, enabled: true, scope: "Never authenticates" },
+  {
+    id: "v1",
+    type: "AWS access key",
+    provider: "AWS",
+    method: "sts:GetCallerIdentity",
+    detector: "aws-access-key-id + secret pair",
+    verified: 3,
+    enabled: true,
+    scope: "Read-only, no side effects",
+  },
+  {
+    id: "v2",
+    type: "GitHub PAT",
+    provider: "GitHub",
+    method: "GET /user",
+    detector: "ghp_, github_pat_",
+    verified: 2,
+    enabled: true,
+    scope: "Reads token owner and scopes",
+  },
+  {
+    id: "v3",
+    type: "Slack bot token",
+    provider: "Slack",
+    method: "auth.test",
+    detector: "xoxb-, xoxp-",
+    verified: 1,
+    enabled: true,
+    scope: "Reads workspace and bot id",
+  },
+  {
+    id: "v4",
+    type: "Stripe live key",
+    provider: "Stripe",
+    method: "GET /v1/balance",
+    detector: "sk_live_, rk_live_",
+    verified: 0,
+    enabled: false,
+    scope: "Reads balance; disabled by policy",
+  },
+  {
+    id: "v5",
+    type: "Google API key",
+    provider: "Google Cloud",
+    method: "GET tokeninfo",
+    detector: "AIza…",
+    verified: 0,
+    enabled: true,
+    scope: "No data access",
+  },
+  {
+    id: "v6",
+    type: "Twilio auth token",
+    provider: "Twilio",
+    method: "GET /Accounts/{sid}",
+    detector: "SK…, AC… pair",
+    verified: 0,
+    enabled: true,
+    scope: "Reads account status",
+  },
+  {
+    id: "v7",
+    type: "Private key",
+    provider: "–",
+    method: "No live check",
+    detector: "PEM headers",
+    verified: 0,
+    enabled: false,
+    scope: "Matched certificate inventory instead",
+  },
+  {
+    id: "v8",
+    type: "Postgres URI",
+    provider: "Database",
+    method: "TCP handshake only",
+    detector: "postgres://user:pass@",
+    verified: 1,
+    enabled: true,
+    scope: "Never authenticates",
+  },
 ];
 
 function ValidatorsPage() {
@@ -643,12 +960,48 @@ function ValidatorsPage() {
   const [query, setQuery] = useState("");
   const shown = VALIDATORS.filter((v) => `${v.type} ${v.provider}`.toLowerCase().includes(query.toLowerCase()));
   const cols: Column<Validator>[] = [
-    { id: "type", header: "Secret type", width: "20%", sortValue: (v) => v.type, cell: (v) => <span className="flex flex-col"><span className="font-medium">{v.type}</span><span className="text-2xs text-fg-muted">{v.provider}</span></span> },
+    {
+      id: "type",
+      header: "Secret type",
+      width: "20%",
+      sortValue: (v) => v.type,
+      cell: (v) => (
+        <span className="flex flex-col">
+          <span className="font-medium">{v.type}</span>
+          <span className="text-2xs text-fg-muted">{v.provider}</span>
+        </span>
+      ),
+    },
     { id: "detector", header: "Detector", mono: true, cell: (v) => <span className="text-xs">{v.detector}</span> },
-    { id: "method", header: "Live check", mono: true, description: "The API call made with the found secret to see if it still works. Calls go out from validator.example.com.", cell: (v) => <span className="text-xs">{v.method}</span> },
+    {
+      id: "method",
+      header: "Live check",
+      mono: true,
+      description: "The API call made with the found secret to see if it still works. Calls go out from validator.example.com.",
+      cell: (v) => <span className="text-xs">{v.method}</span>,
+    },
     { id: "scope", header: "Effect", cell: (v) => <span className="text-xs text-fg-muted">{v.scope}</span> },
-    { id: "verified", header: "Verified active", align: "right", mono: true, sortValue: (v) => v.verified, cell: (v) => (v.verified ? <span className="font-semibold text-danger-text">{v.verified}</span> : "0") },
-    { id: "on", header: "Validate", width: "90px", align: "right", cell: (v) => <Switch checked={enabled[v.id] ?? false} onCheckedChange={(x) => setEnabled((e) => ({ ...e, [v.id]: x }))} label={<span className="sr-only">Validate {v.type}</span>} /> },
+    {
+      id: "verified",
+      header: "Verified active",
+      align: "right",
+      mono: true,
+      sortValue: (v) => v.verified,
+      cell: (v) => (v.verified ? <span className="font-semibold text-danger-text">{v.verified}</span> : "0"),
+    },
+    {
+      id: "on",
+      header: "Validate",
+      width: "90px",
+      align: "right",
+      cell: (v) => (
+        <Switch
+          checked={enabled[v.id] ?? false}
+          onCheckedChange={(x) => setEnabled((e) => ({ ...e, [v.id]: x }))}
+          label={<span className="sr-only">Validate {v.type}</span>}
+        />
+      ),
+    },
   ];
   return (
     <>
@@ -684,10 +1037,42 @@ interface SecretException {
 }
 
 const SECRET_EXCEPTIONS: SecretException[] = [
-  { id: "x1", kind: "Path", value: "**/testdata/**", repo: "All repositories", reason: "Fixtures with fake keys used by unit tests", by: PEOPLE[1], expires: "Never" },
-  { id: "x2", kind: "Path", value: "docs/examples/*.md", repo: "acme/docs-site", reason: "Documentation uses AKIAIOSFODNN7EXAMPLE style placeholders", by: PEOPLE[5], expires: "Never" },
-  { id: "x3", kind: "Fingerprint", value: "fp:7a91c2…e04b", repo: "acme/checkout-web", reason: "Stripe test-mode key, no access to live data", by: PEOPLE[7], expires: "Jan 31" },
-  { id: "x4", kind: "Rule", value: "generic-high-entropy-string", repo: "data/etl-jobs", reason: "Hashes in dbt seeds trigger the entropy rule", by: PEOPLE[6], expires: "Dec 15" },
+  {
+    id: "x1",
+    kind: "Path",
+    value: "**/testdata/**",
+    repo: "All repositories",
+    reason: "Fixtures with fake keys used by unit tests",
+    by: PEOPLE[1],
+    expires: "Never",
+  },
+  {
+    id: "x2",
+    kind: "Path",
+    value: "docs/examples/*.md",
+    repo: "acme/docs-site",
+    reason: "Documentation uses AKIAIOSFODNN7EXAMPLE style placeholders",
+    by: PEOPLE[5],
+    expires: "Never",
+  },
+  {
+    id: "x3",
+    kind: "Fingerprint",
+    value: "fp:7a91c2…e04b",
+    repo: "acme/checkout-web",
+    reason: "Stripe test-mode key, no access to live data",
+    by: PEOPLE[7],
+    expires: "Jan 31",
+  },
+  {
+    id: "x4",
+    kind: "Rule",
+    value: "generic-high-entropy-string",
+    repo: "data/etl-jobs",
+    reason: "Hashes in dbt seeds trigger the entropy rule",
+    by: PEOPLE[6],
+    expires: "Dec 15",
+  },
 ];
 
 function SecretExceptionsPage() {
@@ -725,13 +1110,35 @@ function SecretExceptionsPage() {
           onSubmit={(e) => {
             e.preventDefault();
             if (!value.trim()) return;
-            setRows((rs) => [{ id: `x${rs.length + 10}`, kind, value: value.trim(), repo: "All repositories", reason: reason.trim() || "–", by: "Emily Clark", expires: "Jan 19" }, ...rs]);
+            setRows((rs) => [
+              {
+                id: `x${rs.length + 10}`,
+                kind,
+                value: value.trim(),
+                repo: "All repositories",
+                reason: reason.trim() || "–",
+                by: "Emily Clark",
+                expires: "Jan 19",
+              },
+              ...rs,
+            ]);
             setValue("");
             setReason("");
           }}
         >
-          <SelectField label="Type" value={kind} onChange={(e) => setKind(e.target.value as SecretException["kind"])} options={(["Path", "Fingerprint", "Rule"] as const).map((k) => ({ value: k, label: k }))} />
-          <TextField label="Value" mono value={value} onChange={(e) => setValue(e.target.value)} placeholder={kind === "Path" ? "**/fixtures/**" : kind === "Fingerprint" ? "fp:…" : "rule id"} />
+          <SelectField
+            label="Type"
+            value={kind}
+            onChange={(e) => setKind(e.target.value as SecretException["kind"])}
+            options={(["Path", "Fingerprint", "Rule"] as const).map((k) => ({ value: k, label: k }))}
+          />
+          <TextField
+            label="Value"
+            mono
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={kind === "Path" ? "**/fixtures/**" : kind === "Fingerprint" ? "fp:…" : "rule id"}
+          />
           <TextField label="Reason" value={reason} onChange={(e) => setReason(e.target.value)} />
           <Button type="submit" variant="primary" icon={<Plus />}>
             Add exception
@@ -759,7 +1166,6 @@ const app = (initial: string): Story => ({ render: () => <ProductApp product="se
 /* ------------------------------------------------------------------ */
 /* Stories: one per page                                               */
 /* ------------------------------------------------------------------ */
-
 
 export const Findings: Story = {
   ...app("findings"),

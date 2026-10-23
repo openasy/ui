@@ -25,9 +25,7 @@ export function Heatmap({ label, rows, columns, values, format = (v) => formatNu
   const [hover, setHover] = useState<{ r: number; c: number } | null>(null);
   const max = Math.max(1, ...values.flat());
   const level = (v: number) => (v <= 0 ? 0 : Math.min(SEQUENTIAL_RAMP.length - 1, 1 + Math.floor((v / max) * (SEQUENTIAL_RAMP.length - 1))));
-  const readout = hover
-    ? `${columns[hover.c]} · ${rows[hover.r]} · ${format(values[hover.r]?.[hover.c] ?? 0)}${unit ? ` ${unit}` : ""}`
-    : t("chart.hoverCell");
+  const readout = hover ? `${columns[hover.c]} · ${rows[hover.r]} · ${format(values[hover.r]?.[hover.c] ?? 0)}${unit ? ` ${unit}` : ""}` : t("chart.hoverCell");
   return (
     <figure className={cn("m-0 flex min-w-0 flex-col gap-1.5", className)} aria-label={label}>
       <figcaption aria-live="polite" className="text-right font-mono text-2xs text-fg-muted" data-testid="heatmap-readout">

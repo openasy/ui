@@ -119,7 +119,17 @@ function BrandPreview({ draft }: { draft: Draft }) {
   );
 }
 
-function ColorField({ value, onChange, hexText, onHexText }: { value: string; onChange: (hex: string) => void; hexText: string; onHexText: (s: string) => void }) {
+function ColorField({
+  value,
+  onChange,
+  hexText,
+  onHexText,
+}: {
+  value: string;
+  onChange: (hex: string) => void;
+  hexText: string;
+  onHexText: (s: string) => void;
+}) {
   const id = useId();
   const invalid = !HEX.test(hexText);
   return (
@@ -210,14 +220,30 @@ export const Settings: Story = {
               <div className="grid gap-2.5 sm:grid-cols-2">
                 <TextField label="Product name" value={draft.name} onChange={(e) => set("name", e.target.value)} />
                 <TextField label="Organization" value={draft.organization} onChange={(e) => set("organization", e.target.value)} />
-                <TextField label="Logo URL" mono placeholder="https://cdn.example.com/logo.svg" hint="Square SVG or PNG, shown at 24 px" value={draft.logoUrl} onChange={(e) => set("logoUrl", e.target.value)} />
-                <TextField label="Dark logo URL" mono placeholder="Falls back to the logo" value={draft.logoDarkUrl} onChange={(e) => set("logoDarkUrl", e.target.value)} />
+                <TextField
+                  label="Logo URL"
+                  mono
+                  placeholder="https://cdn.example.com/logo.svg"
+                  hint="Square SVG or PNG, shown at 24 px"
+                  value={draft.logoUrl}
+                  onChange={(e) => set("logoUrl", e.target.value)}
+                />
+                <TextField
+                  label="Dark logo URL"
+                  mono
+                  placeholder="Falls back to the logo"
+                  value={draft.logoDarkUrl}
+                  onChange={(e) => set("logoDarkUrl", e.target.value)}
+                />
               </div>
               <div className="grid gap-2.5 sm:grid-cols-2">
                 <ColorField value={draft.accent} onChange={(v) => set("accent", v)} hexText={hexText} onHexText={setHexText} />
                 <SelectField label="Font" options={FONTS} value={draft.fontFamily} onChange={(e) => set("fontFamily", e.target.value)} />
               </div>
-              <p data-testid="contrast" className={passes ? "flex items-center gap-1.5 text-xs text-success" : "flex items-center gap-1.5 text-xs text-warning-text"}>
+              <p
+                data-testid="contrast"
+                className={passes ? "flex items-center gap-1.5 text-xs text-success" : "flex items-center gap-1.5 text-xs text-warning-text"}
+              >
                 <span aria-hidden className="size-3 rounded-sm border border-line" style={{ background: draft.accent }} />
                 {passes ? `Passes AA (${ratio.toFixed(1)}:1) for white text on the accent` : `Fails AA (${ratio.toFixed(1)}:1) for white text on the accent`}
               </p>
@@ -227,7 +253,13 @@ export const Settings: Story = {
                 </Callout>
               )}
               <div className="grid gap-2.5 sm:grid-cols-2">
-                <TextField label="Custom domain" mono value={draft.domain} hint="CNAME to edge.openasy.example" onChange={(e) => set("domain", e.target.value)} />
+                <TextField
+                  label="Custom domain"
+                  mono
+                  value={draft.domain}
+                  hint="CNAME to edge.openasy.example"
+                  onChange={(e) => set("domain", e.target.value)}
+                />
                 <TextField label="Email sender name" value={draft.emailSender} onChange={(e) => set("emailSender", e.target.value)} />
               </div>
               <Switch

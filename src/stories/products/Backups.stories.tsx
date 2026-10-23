@@ -63,14 +63,126 @@ interface Job {
 }
 
 const jobs: Job[] = [
-  { id: "j1", name: "db-prod-01 · postgres base", engine: "restic", source: "db-prod-01", sourceKind: "host", schedule: "0 */6 * * *", last: "Failed", lastAt: "Today 12:00", durationMin: 3, bytes: 0, next: "18:00", repo: "s3:backups-eu/db", retention: "7 daily · 4 weekly · 12 monthly" },
-  { id: "j2", name: "db-prod-02 · postgres base", engine: "restic", source: "db-prod-02", sourceKind: "host", schedule: "30 */6 * * *", last: "Succeeded", lastAt: "Today 12:30", durationMin: 41, bytes: 182e9, next: "18:30", repo: "s3:backups-eu/db", retention: "7 daily · 4 weekly · 12 monthly" },
-  { id: "j3", name: "prod cluster · all namespaces", engine: "Velero", source: "k8s-prod", sourceKind: "container", schedule: "0 2 * * *", last: "Succeeded", lastAt: "Today 02:00", durationMin: 26, bytes: 64e9, next: "Tomorrow 02:00", repo: "velero-prod", retention: "14 daily" },
-  { id: "j4", name: "payments namespace · hourly", engine: "Velero", source: "k8s-prod/payments", sourceKind: "container", schedule: "15 * * * *", last: "Running", lastAt: "Today 14:15", durationMin: 4, bytes: 3.2e9, next: "15:15", repo: "velero-prod", retention: "48 hourly" },
-  { id: "j5", name: "api-prod-01 · /etc and /var/lib", engine: "restic", source: "api-prod-01", sourceKind: "host", schedule: "0 3 * * *", last: "Succeeded", lastAt: "Today 03:00", durationMin: 6, bytes: 2.1e9, next: "Tomorrow 03:00", repo: "s3:backups-eu/hosts", retention: "30 daily" },
-  { id: "j6", name: "worker-prod-04 · uploads", engine: "restic", source: "worker-prod-04", sourceKind: "host", schedule: "0 1 * * *", last: "Warning", lastAt: "Today 01:00", durationMin: 58, bytes: 412e9, next: "Tomorrow 01:00", repo: "s3:backups-eu/files", retention: "14 daily · 8 weekly" },
-  { id: "j7", name: "edge-fra-02 · nginx config", engine: "restic", source: "edge-fra-02", sourceKind: "host", schedule: "0 4 * * 0", last: "Succeeded", lastAt: "Oct 18 04:00", durationMin: 1, bytes: 18e6, next: "Oct 25 04:00", repo: "s3:backups-eu/hosts", retention: "12 weekly" },
-  { id: "j8", name: "staging cluster · nightly", engine: "Velero", source: "k8s-staging", sourceKind: "container", schedule: "0 23 * * *", last: "Succeeded", lastAt: "Oct 18 23:00", durationMin: 14, bytes: 21e9, next: "Today 23:00", repo: "velero-staging", retention: "7 daily" },
+  {
+    id: "j1",
+    name: "db-prod-01 · postgres base",
+    engine: "restic",
+    source: "db-prod-01",
+    sourceKind: "host",
+    schedule: "0 */6 * * *",
+    last: "Failed",
+    lastAt: "Today 12:00",
+    durationMin: 3,
+    bytes: 0,
+    next: "18:00",
+    repo: "s3:backups-eu/db",
+    retention: "7 daily · 4 weekly · 12 monthly",
+  },
+  {
+    id: "j2",
+    name: "db-prod-02 · postgres base",
+    engine: "restic",
+    source: "db-prod-02",
+    sourceKind: "host",
+    schedule: "30 */6 * * *",
+    last: "Succeeded",
+    lastAt: "Today 12:30",
+    durationMin: 41,
+    bytes: 182e9,
+    next: "18:30",
+    repo: "s3:backups-eu/db",
+    retention: "7 daily · 4 weekly · 12 monthly",
+  },
+  {
+    id: "j3",
+    name: "prod cluster · all namespaces",
+    engine: "Velero",
+    source: "k8s-prod",
+    sourceKind: "container",
+    schedule: "0 2 * * *",
+    last: "Succeeded",
+    lastAt: "Today 02:00",
+    durationMin: 26,
+    bytes: 64e9,
+    next: "Tomorrow 02:00",
+    repo: "velero-prod",
+    retention: "14 daily",
+  },
+  {
+    id: "j4",
+    name: "payments namespace · hourly",
+    engine: "Velero",
+    source: "k8s-prod/payments",
+    sourceKind: "container",
+    schedule: "15 * * * *",
+    last: "Running",
+    lastAt: "Today 14:15",
+    durationMin: 4,
+    bytes: 3.2e9,
+    next: "15:15",
+    repo: "velero-prod",
+    retention: "48 hourly",
+  },
+  {
+    id: "j5",
+    name: "api-prod-01 · /etc and /var/lib",
+    engine: "restic",
+    source: "api-prod-01",
+    sourceKind: "host",
+    schedule: "0 3 * * *",
+    last: "Succeeded",
+    lastAt: "Today 03:00",
+    durationMin: 6,
+    bytes: 2.1e9,
+    next: "Tomorrow 03:00",
+    repo: "s3:backups-eu/hosts",
+    retention: "30 daily",
+  },
+  {
+    id: "j6",
+    name: "worker-prod-04 · uploads",
+    engine: "restic",
+    source: "worker-prod-04",
+    sourceKind: "host",
+    schedule: "0 1 * * *",
+    last: "Warning",
+    lastAt: "Today 01:00",
+    durationMin: 58,
+    bytes: 412e9,
+    next: "Tomorrow 01:00",
+    repo: "s3:backups-eu/files",
+    retention: "14 daily · 8 weekly",
+  },
+  {
+    id: "j7",
+    name: "edge-fra-02 · nginx config",
+    engine: "restic",
+    source: "edge-fra-02",
+    sourceKind: "host",
+    schedule: "0 4 * * 0",
+    last: "Succeeded",
+    lastAt: "Oct 18 04:00",
+    durationMin: 1,
+    bytes: 18e6,
+    next: "Oct 25 04:00",
+    repo: "s3:backups-eu/hosts",
+    retention: "12 weekly",
+  },
+  {
+    id: "j8",
+    name: "staging cluster · nightly",
+    engine: "Velero",
+    source: "k8s-staging",
+    sourceKind: "container",
+    schedule: "0 23 * * *",
+    last: "Succeeded",
+    lastAt: "Oct 18 23:00",
+    durationMin: 14,
+    bytes: 21e9,
+    next: "Today 23:00",
+    repo: "velero-staging",
+    retention: "7 daily",
+  },
 ];
 
 const columns: Column<Job>[] = [
@@ -87,7 +199,15 @@ const columns: Column<Job>[] = [
   { id: "schedule", header: "Schedule", mono: true, description: "Cron expression in the agent's local time zone.", cell: (j) => j.schedule },
   { id: "last", header: "Last run", sortValue: (j) => j.last, cell: (j) => <StatusBadge tone={RUN_TONE[j.last]}>{j.last}</StatusBadge> },
   { id: "duration", header: "Duration", align: "right", mono: true, sortValue: (j) => j.durationMin, cell: (j) => `${j.durationMin} m` },
-  { id: "size", header: "Size", align: "right", mono: true, description: "Data added to the repository by the last run, after deduplication.", sortValue: (j) => j.bytes, cell: (j) => (j.bytes ? formatBytes(j.bytes) : "–") },
+  {
+    id: "size",
+    header: "Size",
+    align: "right",
+    mono: true,
+    description: "Data added to the repository by the last run, after deduplication.",
+    sortValue: (j) => j.bytes,
+    cell: (j) => (j.bytes ? formatBytes(j.bytes) : "–"),
+  },
   { id: "next", header: "Next run", align: "right", cell: (j) => <span className="text-xs whitespace-nowrap text-fg-muted">{j.next}</span> },
 ];
 
@@ -103,9 +223,27 @@ interface RestoreTest {
 }
 
 const restoreTests: RestoreTest[] = [
-  { id: "t8", date: "Oct 19", target: "db-prod-02 → scratch", passed: true, detail: "Restored 182 GB in 23 m · 412 tables checked", rtoMin: 23, targetMin: 60, kind: "Database" },
+  {
+    id: "t8",
+    date: "Oct 19",
+    target: "db-prod-02 → scratch",
+    passed: true,
+    detail: "Restored 182 GB in 23 m · 412 tables checked",
+    rtoMin: 23,
+    targetMin: 60,
+    kind: "Database",
+  },
   { id: "t7", date: "Oct 18", target: "k8s-prod/payments", passed: true, detail: "11 deployments ready in 4 m", rtoMin: 4, targetMin: 15, kind: "Cluster" },
-  { id: "t6", date: "Oct 17", target: "worker-prod-04 uploads", passed: false, detail: "Checksum mismatch in 3 of 18,204 files", rtoMin: 71, targetMin: 120, kind: "Files" },
+  {
+    id: "t6",
+    date: "Oct 17",
+    target: "worker-prod-04 uploads",
+    passed: false,
+    detail: "Checksum mismatch in 3 of 18,204 files",
+    rtoMin: 71,
+    targetMin: 120,
+    kind: "Files",
+  },
   { id: "t5", date: "Oct 16", target: "db-prod-01 → scratch", passed: true, detail: "Restored 176 GB in 22 m", rtoMin: 22, targetMin: 60, kind: "Database" },
   { id: "t4", date: "Oct 15", target: "api-prod-01 /etc", passed: true, detail: "Config diff clean", rtoMin: 2, targetMin: 15, kind: "Config" },
   { id: "t3", date: "Oct 14", target: "k8s-staging", passed: true, detail: "38 workloads ready in 9 m", rtoMin: 9, targetMin: 30, kind: "Cluster" },
@@ -205,7 +343,15 @@ function JobsPage() {
           ]}
         />
       </FilterBar>
-      <Callout tone="danger" title="db-prod-01 · postgres base failed at 12:00" action={<Button size="sm" onClick={() => setOpenId("j1")}>View job</Button>}>
+      <Callout
+        tone="danger"
+        title="db-prod-01 · postgres base failed at 12:00"
+        action={
+          <Button size="sm" onClick={() => setOpenId("j1")}>
+            View job
+          </Button>
+        }
+      >
         restic could not open s3:backups-eu/db (403 AccessDenied). Last good snapshot is 8 h old; the 6 h RPO will be missed at 18:00.
       </Callout>
       <KpiGrid>
@@ -216,7 +362,15 @@ function JobsPage() {
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Jobs" description={`${rows.length} shown · click a row for details`} flush>
-          <DataTable label="Backup jobs" columns={columns} rows={rows} getRowId={(j) => j.id} onRowClick={(j) => setOpenId(j.id)} activeRowId={openId} minWidth={900} />
+          <DataTable
+            label="Backup jobs"
+            columns={columns}
+            rows={rows}
+            getRowId={(j) => j.id}
+            onRowClick={(j) => setOpenId(j.id)}
+            activeRowId={openId}
+            minWidth={900}
+          />
         </Panel>
         <div className="flex min-w-0 flex-col gap-2.5">
           {open && <JobDetail key={open.id} job={open} onClose={() => setOpenId(undefined)} />}
@@ -257,7 +411,18 @@ interface Snapshot {
 
 function snapshotsFor(job: Job): Snapshot[] {
   const base = job.bytes || 176e9;
-  const times = ["Today 12:30", "Today 06:30", "Today 00:30", "Oct 18 18:30", "Oct 18 12:30", "Oct 18 06:30", "Oct 17 00:30", "Oct 12 00:30", "Oct 5 00:30", "Sep 30 00:30"];
+  const times = [
+    "Today 12:30",
+    "Today 06:30",
+    "Today 00:30",
+    "Oct 18 18:30",
+    "Oct 18 12:30",
+    "Oct 18 06:30",
+    "Oct 17 00:30",
+    "Oct 12 00:30",
+    "Oct 5 00:30",
+    "Sep 30 00:30",
+  ];
   return times.map((time, i) => ({
     id: `${job.id}${["4f9a21c7", "b31e0d2a", "77c0a91e", "e2d4f118", "0a6b3c55", "9d81e7f0", "c5a2b7d3", "18f3e6a9", "6e0c4d21", "a7b9f2e4"][i]}`.slice(-8),
     time,
@@ -294,7 +459,11 @@ function RestoreWizard({ job, snap, onClose }: { job: Job; snap: Snapshot; onClo
     >
       <ol aria-label="Restore steps" className="mb-3 grid grid-cols-3 gap-1.5">
         {steps.map((s, i) => (
-          <li key={s} aria-current={i === step ? "step" : undefined} className={cn("flex flex-col gap-0.5 border-t-2 pt-1 text-xs", i <= step ? "border-accent text-fg" : "border-line text-fg-muted")}>
+          <li
+            key={s}
+            aria-current={i === step ? "step" : undefined}
+            className={cn("flex flex-col gap-0.5 border-t-2 pt-1 text-xs", i <= step ? "border-accent text-fg" : "border-line text-fg-muted")}
+          >
             <span className="font-mono text-2xs">Step {i + 1}</span>
             <span className="font-medium">{s}</span>
           </li>
@@ -302,7 +471,8 @@ function RestoreWizard({ job, snap, onClose }: { job: Job; snap: Snapshot; onClo
       </ol>
       {started ? (
         <Callout tone="success" title="Restore started">
-          {formatBytes(snap.total)} to {target === "scratch" ? "scratch-restore-01" : target === "original" ? job.source : "db-prod-02"} · estimated 24 m. Progress shows in Jobs.
+          {formatBytes(snap.total)} to {target === "scratch" ? "scratch-restore-01" : target === "original" ? job.source : "db-prod-02"} · estimated 24 m.
+          Progress shows in Jobs.
         </Callout>
       ) : (
         <div className="flex flex-col gap-3">
@@ -318,7 +488,12 @@ function RestoreWizard({ job, snap, onClose }: { job: Job; snap: Snapshot; onClo
                 ]}
               />
               {scope === "paths" ? (
-                <TextField label="Paths to include" mono defaultValue="/var/lib/postgresql/16/main/base" hint="One per line or comma separated. Globs allowed." />
+                <TextField
+                  label="Paths to include"
+                  mono
+                  defaultValue="/var/lib/postgresql/16/main/base"
+                  hint="One per line or comma separated. Globs allowed."
+                />
               ) : (
                 <p className="text-sm text-fg-muted">
                   {snap.files.toLocaleString("en-US")} files · {formatBytes(snap.total)}
@@ -390,12 +565,49 @@ function SnapshotsPage() {
   const cols: Column<Snapshot>[] = [
     { id: "id", header: "Snapshot", mono: true, pinned: "left", width: "110px", cell: (s) => s.id },
     { id: "time", header: "Taken", cell: (s) => <span className="whitespace-nowrap">{s.time}</span> },
-    { id: "tags", header: "Tags", cell: (s) => <span className="flex gap-1">{s.tags.map((t) => <Badge key={t} variant="outline">{t}</Badge>)}</span> },
-    { id: "added", header: "Added", align: "right", mono: true, description: "New data this snapshot added after deduplication.", sortValue: (s) => s.added, cell: (s) => formatBytes(s.added) },
+    {
+      id: "tags",
+      header: "Tags",
+      cell: (s) => (
+        <span className="flex gap-1">
+          {s.tags.map((t) => (
+            <Badge key={t} variant="outline">
+              {t}
+            </Badge>
+          ))}
+        </span>
+      ),
+    },
+    {
+      id: "added",
+      header: "Added",
+      align: "right",
+      mono: true,
+      description: "New data this snapshot added after deduplication.",
+      sortValue: (s) => s.added,
+      cell: (s) => formatBytes(s.added),
+    },
     { id: "total", header: "Restore size", align: "right", mono: true, sortValue: (s) => s.total, cell: (s) => formatBytes(s.total) },
     { id: "files", header: "Files", align: "right", mono: true, cell: (s) => s.files.toLocaleString("en-US") },
-    { id: "verified", header: "Integrity", description: "Result of the last restic check --read-data-subset over this snapshot.", cell: (s) => <StatusBadge tone={VERIFY_TONE[s.verified]}>{s.verified}</StatusBadge> },
-    { id: "lock", header: "Lock", description: "Object Lock in compliance mode; cannot be deleted before expiry.", cell: (s) => (s.locked ? <Badge tone="info" icon={<Lock aria-hidden className="size-3" />}>Locked</Badge> : <span className="text-xs text-fg-muted">–</span>) },
+    {
+      id: "verified",
+      header: "Integrity",
+      description: "Result of the last restic check --read-data-subset over this snapshot.",
+      cell: (s) => <StatusBadge tone={VERIFY_TONE[s.verified]}>{s.verified}</StatusBadge>,
+    },
+    {
+      id: "lock",
+      header: "Lock",
+      description: "Object Lock in compliance mode; cannot be deleted before expiry.",
+      cell: (s) =>
+        s.locked ? (
+          <Badge tone="info" icon={<Lock aria-hidden className="size-3" />}>
+            Locked
+          </Badge>
+        ) : (
+          <span className="text-xs text-fg-muted">–</span>
+        ),
+    },
     {
       id: "act",
       header: <span className="sr-only">Actions</span>,
@@ -415,13 +627,30 @@ function SnapshotsPage() {
       <PageHeader
         title="Snapshots"
         description="Browse restore points per job. Locked snapshots are immutable until their retention ends."
-        actions={<SelectField aria-label="Job" value={jobId} onChange={(e) => (setJobId(e.target.value), setRestoring(undefined))} options={jobs.map((j) => ({ value: j.id, label: j.name }))} />}
+        actions={
+          <SelectField
+            aria-label="Job"
+            value={jobId}
+            onChange={(e) => (setJobId(e.target.value), setRestoring(undefined))}
+            options={jobs.map((j) => ({ value: j.id, label: j.name }))}
+          />
+        }
       />
       <KpiGrid>
         <KpiCard label="Snapshots" value={String(snaps.length * 7 + 4)} unit="for this job" />
-        <KpiCard label="Newest" value={snaps[0]!.time.replace("Today ", "")} unit="today" tone={job.last === "Failed" ? "danger" : undefined} delta={job.last === "Failed" ? { label: "last run failed", intent: "bad" } : { label: "on schedule", intent: "good" }} />
+        <KpiCard
+          label="Newest"
+          value={snaps[0]!.time.replace("Today ", "")}
+          unit="today"
+          tone={job.last === "Failed" ? "danger" : undefined}
+          delta={job.last === "Failed" ? { label: "last run failed", intent: "bad" } : { label: "on schedule", intent: "good" }}
+        />
         <KpiCard label="Restore size" value={formatBytes(snaps[0]!.total)} unit="latest" />
-        <KpiCard label="Stored after dedup" value={formatBytes(snaps.reduce((a, s) => a + s.added, 0) + snaps[0]!.total * 0.42)} delta={{ label: "2.4× dedup ratio" }} />
+        <KpiCard
+          label="Stored after dedup"
+          value={formatBytes(snaps.reduce((a, s) => a + s.added, 0) + snaps[0]!.total * 0.42)}
+          delta={{ label: "2.4× dedup ratio" }}
+        />
       </KpiGrid>
       <div className={cn("grid gap-2.5", snap && "xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]")}>
         <Panel title={`Snapshots of ${job.name}`} description={`${job.repo} · ${job.retention}`} flush>
@@ -448,10 +677,42 @@ interface TestSchedule {
 }
 
 const SCHEDULES: TestSchedule[] = [
-  { id: "s1", target: "db-prod-02 → scratch", cadence: "Daily 06:00", next: "Tomorrow 06:00", check: "pg_restore + row counts on 412 tables", rtoTarget: "60 m", last: "Passed" },
-  { id: "s2", target: "db-prod-01 → scratch", cadence: "Every 3 days", next: "Oct 22 06:00", check: "pg_restore + row counts", rtoTarget: "60 m", last: "Passed" },
-  { id: "s3", target: "k8s-prod/payments", cadence: "Daily 07:00", next: "Tomorrow 07:00", check: "All deployments ready, smoke test /healthz", rtoTarget: "15 m", last: "Passed" },
-  { id: "s4", target: "worker-prod-04 uploads", cadence: "Weekly Fri", next: "Oct 24 05:00", check: "SHA-256 of a 2% sample", rtoTarget: "120 m", last: "Failed" },
+  {
+    id: "s1",
+    target: "db-prod-02 → scratch",
+    cadence: "Daily 06:00",
+    next: "Tomorrow 06:00",
+    check: "pg_restore + row counts on 412 tables",
+    rtoTarget: "60 m",
+    last: "Passed",
+  },
+  {
+    id: "s2",
+    target: "db-prod-01 → scratch",
+    cadence: "Every 3 days",
+    next: "Oct 22 06:00",
+    check: "pg_restore + row counts",
+    rtoTarget: "60 m",
+    last: "Passed",
+  },
+  {
+    id: "s3",
+    target: "k8s-prod/payments",
+    cadence: "Daily 07:00",
+    next: "Tomorrow 07:00",
+    check: "All deployments ready, smoke test /healthz",
+    rtoTarget: "15 m",
+    last: "Passed",
+  },
+  {
+    id: "s4",
+    target: "worker-prod-04 uploads",
+    cadence: "Weekly Fri",
+    next: "Oct 24 05:00",
+    check: "SHA-256 of a 2% sample",
+    rtoTarget: "120 m",
+    last: "Failed",
+  },
   { id: "s5", target: "api-prod-01 /etc", cadence: "Weekly Wed", next: "Oct 22 04:00", check: "Diff against live config", rtoTarget: "15 m", last: "Passed" },
   { id: "s6", target: "k8s-staging", cadence: "Weekly Tue", next: "Oct 21 08:00", check: "Workloads ready", rtoTarget: "30 m", last: "Passed" },
 ];
@@ -485,7 +746,11 @@ function RestoreTestsPage() {
       <PageHeader
         title="Restore tests"
         description="Backups are only as good as the last restore. Tests run on isolated scratch hosts and never touch production."
-        actions={<Button variant="primary" icon={<Plus />}>Schedule test</Button>}
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Schedule test
+          </Button>
+        }
       />
       <KpiGrid>
         <KpiCard label="Pass rate · 30 d" value="96%" unit="27 of 28" tone="success" delta={{ label: "+4 pts", direction: "up", intent: "good" }} />
@@ -608,12 +873,102 @@ interface Repo {
 }
 
 const REPOS: Repo[] = [
-  { id: "r1", name: "s3:backups-eu/db", kind: "restic · S3", endpoint: "s3.eu-central-1.example.com", region: "eu-central-1", used: 3.8e12, quota: 5e12, dedup: 2.4, snapshots: 1284, jobs: 6, encryption: "AES-256 · repo key in Secrets", lock: "Compliance · 35 days", lastCheck: "Today 04:00 · 5% read", health: "Error" },
-  { id: "r2", name: "s3:backups-eu/hosts", kind: "restic · S3", endpoint: "s3.eu-central-1.example.com", region: "eu-central-1", used: 0.41e12, quota: 2e12, dedup: 5.1, snapshots: 3410, jobs: 19, encryption: "AES-256 · repo key in Secrets", lock: "Governance · 14 days", lastCheck: "Today 04:20 · 5% read", health: "Healthy" },
-  { id: "r3", name: "s3:backups-eu/files", kind: "restic · S3", endpoint: "s3.eu-west-1.example.com", region: "eu-west-1", used: 6.2e12, quota: 8e12, dedup: 1.3, snapshots: 298, jobs: 3, encryption: "AES-256 · repo key in Secrets", lock: "Off", lastCheck: "Oct 17 · found 3 damaged packs", health: "Degraded" },
-  { id: "r4", name: "velero-prod", kind: "Velero · S3", endpoint: "minio.internal.example.com", region: "on-prem", used: 1.1e12, quota: 4e12, dedup: 1.0, snapshots: 612, jobs: 7, encryption: "SSE-S3 + CSI snapshot encryption", lock: "Compliance · 14 days", lastCheck: "Today 03:10", health: "Healthy" },
-  { id: "r5", name: "velero-staging", kind: "Velero · S3", endpoint: "minio.internal.example.com", region: "on-prem", used: 0.18e12, quota: 1e12, dedup: 1.0, snapshots: 54, jobs: 2, encryption: "SSE-S3", lock: "Off", lastCheck: "Oct 18 03:10", health: "Healthy" },
-  { id: "r6", name: "sftp:offsite-vault", kind: "restic · SFTP", endpoint: "vault.offsite.example.com:22", region: "Dublin DC", used: 2.9e12, quota: 10e12, dedup: 2.1, snapshots: 410, jobs: 4, encryption: "AES-256 · offline key escrow", lock: "Append-only (rest-server)", lastCheck: "Oct 16 · 2% read", health: "Healthy" },
+  {
+    id: "r1",
+    name: "s3:backups-eu/db",
+    kind: "restic · S3",
+    endpoint: "s3.eu-central-1.example.com",
+    region: "eu-central-1",
+    used: 3.8e12,
+    quota: 5e12,
+    dedup: 2.4,
+    snapshots: 1284,
+    jobs: 6,
+    encryption: "AES-256 · repo key in Secrets",
+    lock: "Compliance · 35 days",
+    lastCheck: "Today 04:00 · 5% read",
+    health: "Error",
+  },
+  {
+    id: "r2",
+    name: "s3:backups-eu/hosts",
+    kind: "restic · S3",
+    endpoint: "s3.eu-central-1.example.com",
+    region: "eu-central-1",
+    used: 0.41e12,
+    quota: 2e12,
+    dedup: 5.1,
+    snapshots: 3410,
+    jobs: 19,
+    encryption: "AES-256 · repo key in Secrets",
+    lock: "Governance · 14 days",
+    lastCheck: "Today 04:20 · 5% read",
+    health: "Healthy",
+  },
+  {
+    id: "r3",
+    name: "s3:backups-eu/files",
+    kind: "restic · S3",
+    endpoint: "s3.eu-west-1.example.com",
+    region: "eu-west-1",
+    used: 6.2e12,
+    quota: 8e12,
+    dedup: 1.3,
+    snapshots: 298,
+    jobs: 3,
+    encryption: "AES-256 · repo key in Secrets",
+    lock: "Off",
+    lastCheck: "Oct 17 · found 3 damaged packs",
+    health: "Degraded",
+  },
+  {
+    id: "r4",
+    name: "velero-prod",
+    kind: "Velero · S3",
+    endpoint: "minio.internal.example.com",
+    region: "on-prem",
+    used: 1.1e12,
+    quota: 4e12,
+    dedup: 1.0,
+    snapshots: 612,
+    jobs: 7,
+    encryption: "SSE-S3 + CSI snapshot encryption",
+    lock: "Compliance · 14 days",
+    lastCheck: "Today 03:10",
+    health: "Healthy",
+  },
+  {
+    id: "r5",
+    name: "velero-staging",
+    kind: "Velero · S3",
+    endpoint: "minio.internal.example.com",
+    region: "on-prem",
+    used: 0.18e12,
+    quota: 1e12,
+    dedup: 1.0,
+    snapshots: 54,
+    jobs: 2,
+    encryption: "SSE-S3",
+    lock: "Off",
+    lastCheck: "Oct 18 03:10",
+    health: "Healthy",
+  },
+  {
+    id: "r6",
+    name: "sftp:offsite-vault",
+    kind: "restic · SFTP",
+    endpoint: "vault.offsite.example.com:22",
+    region: "Dublin DC",
+    used: 2.9e12,
+    quota: 10e12,
+    dedup: 2.1,
+    snapshots: 410,
+    jobs: 4,
+    encryption: "AES-256 · offline key escrow",
+    lock: "Append-only (rest-server)",
+    lastCheck: "Oct 16 · 2% read",
+    health: "Healthy",
+  },
 ];
 
 const HEALTH_TONE = { Healthy: "success", Degraded: "warning", Error: "danger" } as const;
@@ -624,7 +979,13 @@ function RepositoriesPage() {
   const repo = REPOS.find((r) => r.id === active)!;
   const pct = (r: Repo) => Math.round((r.used / r.quota) * 100);
   const cols: Column<Repo>[] = [
-    { id: "name", header: "Repository", pinned: "left", sortValue: (r) => r.name, cell: (r) => <span className="font-mono text-xs font-medium">{r.name}</span> },
+    {
+      id: "name",
+      header: "Repository",
+      pinned: "left",
+      sortValue: (r) => r.name,
+      cell: (r) => <span className="font-mono text-xs font-medium">{r.name}</span>,
+    },
     { id: "kind", header: "Type", cell: (r) => <Badge mono>{r.kind}</Badge> },
     {
       id: "used",
@@ -634,7 +995,10 @@ function RepositoriesPage() {
       cell: (r) => (
         <span className="flex items-center gap-2">
           <span className="h-1.5 w-20 overflow-hidden rounded-full bg-subtle" aria-hidden>
-            <span className={cn("block h-full rounded-full", pct(r) > 80 ? "bg-danger" : pct(r) > 70 ? "bg-warning" : "bg-accent")} style={{ width: `${pct(r)}%` }} />
+            <span
+              className={cn("block h-full rounded-full", pct(r) > 80 ? "bg-danger" : pct(r) > 70 ? "bg-warning" : "bg-accent")}
+              style={{ width: `${pct(r)}%` }}
+            />
           </span>
           <span className="font-mono text-xs whitespace-nowrap">
             {formatBytes(r.used)} · {pct(r)}%
@@ -652,17 +1016,35 @@ function RepositoriesPage() {
       <PageHeader
         title="Repositories"
         description="Where snapshots are stored. All repositories are encrypted client-side; keys live in Secrets."
-        actions={<Button variant="primary" icon={<Plus />}>Add repository</Button>}
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add repository
+          </Button>
+        }
       />
       <KpiGrid>
-        <KpiCard label="Stored" value="14.6" unit="TB" delta={{ label: "+212 GB this week", direction: "up" }} trend={[12.9, 13.1, 13.3, 13.6, 13.8, 14.0, 14.2, 14.4, 14.6]} />
+        <KpiCard
+          label="Stored"
+          value="14.6"
+          unit="TB"
+          delta={{ label: "+212 GB this week", direction: "up" }}
+          trend={[12.9, 13.1, 13.3, 13.6, 13.8, 14.0, 14.2, 14.4, 14.6]}
+        />
         <KpiCard label="Quota used" value="48%" unit="of 30 TB" />
         <KpiCard label="Immutable" value="4" unit="of 6 repositories" tone="warning" delta={{ label: "files, staging without lock", intent: "bad" }} />
         <KpiCard label="Off-site copy" value="Yes" unit="sftp:offsite-vault" tone="success" delta={{ label: "3-2-1 rule met" }} />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Repositories" flush>
-          <DataTable label="Repositories" columns={cols} rows={REPOS} getRowId={(r) => r.id} onRowClick={(r) => setActive(r.id)} activeRowId={active} minWidth={820} />
+          <DataTable
+            label="Repositories"
+            columns={cols}
+            rows={REPOS}
+            getRowId={(r) => r.id}
+            onRowClick={(r) => setActive(r.id)}
+            activeRowId={active}
+            minWidth={820}
+          />
         </Panel>
         <Panel
           aria-label="Repository detail"
@@ -765,11 +1147,81 @@ interface Policy {
 }
 
 const POLICIES: Policy[] = [
-  { id: "p1", name: "Tier 1 · production databases", hourly: 0, daily: 7, weekly: 4, monthly: 12, yearly: 1, rpo: "6 h", rto: "1 h", jobs: 6, immutable: true, offsite: true, compliance: 83 },
-  { id: "p2", name: "Tier 1 · payments", hourly: 48, daily: 7, weekly: 4, monthly: 12, yearly: 7, rpo: "1 h", rto: "15 m", jobs: 3, immutable: true, offsite: true, compliance: 100 },
-  { id: "p3", name: "Tier 2 · clusters", hourly: 0, daily: 14, weekly: 4, monthly: 3, yearly: 0, rpo: "24 h", rto: "30 m", jobs: 9, immutable: true, offsite: false, compliance: 100 },
-  { id: "p4", name: "Tier 2 · user files", hourly: 0, daily: 14, weekly: 8, monthly: 6, yearly: 0, rpo: "24 h", rto: "2 h", jobs: 3, immutable: false, offsite: true, compliance: 100 },
-  { id: "p5", name: "Tier 3 · host config", hourly: 0, daily: 30, weekly: 12, monthly: 0, yearly: 0, rpo: "7 d", rto: "4 h", jobs: 17, immutable: false, offsite: false, compliance: 100 },
+  {
+    id: "p1",
+    name: "Tier 1 · production databases",
+    hourly: 0,
+    daily: 7,
+    weekly: 4,
+    monthly: 12,
+    yearly: 1,
+    rpo: "6 h",
+    rto: "1 h",
+    jobs: 6,
+    immutable: true,
+    offsite: true,
+    compliance: 83,
+  },
+  {
+    id: "p2",
+    name: "Tier 1 · payments",
+    hourly: 48,
+    daily: 7,
+    weekly: 4,
+    monthly: 12,
+    yearly: 7,
+    rpo: "1 h",
+    rto: "15 m",
+    jobs: 3,
+    immutable: true,
+    offsite: true,
+    compliance: 100,
+  },
+  {
+    id: "p3",
+    name: "Tier 2 · clusters",
+    hourly: 0,
+    daily: 14,
+    weekly: 4,
+    monthly: 3,
+    yearly: 0,
+    rpo: "24 h",
+    rto: "30 m",
+    jobs: 9,
+    immutable: true,
+    offsite: false,
+    compliance: 100,
+  },
+  {
+    id: "p4",
+    name: "Tier 2 · user files",
+    hourly: 0,
+    daily: 14,
+    weekly: 8,
+    monthly: 6,
+    yearly: 0,
+    rpo: "24 h",
+    rto: "2 h",
+    jobs: 3,
+    immutable: false,
+    offsite: true,
+    compliance: 100,
+  },
+  {
+    id: "p5",
+    name: "Tier 3 · host config",
+    hourly: 0,
+    daily: 30,
+    weekly: 12,
+    monthly: 0,
+    yearly: 0,
+    rpo: "7 d",
+    rto: "4 h",
+    jobs: 17,
+    immutable: false,
+    offsite: false,
+    compliance: 100,
+  },
 ];
 
 function keepLabel(p: Policy) {
@@ -799,7 +1251,12 @@ function PoliciesPage() {
   };
   const cols: Column<Policy>[] = [
     { id: "name", header: "Policy", pinned: "left", sortValue: (x) => x.name, cell: (x) => <span className="font-medium">{x.name}</span> },
-    { id: "keep", header: "Keep", description: "restic forget --keep-* rules applied after each run.", cell: (x) => <span className="text-xs">{keepLabel(x)}</span> },
+    {
+      id: "keep",
+      header: "Keep",
+      description: "restic forget --keep-* rules applied after each run.",
+      cell: (x) => <span className="text-xs">{keepLabel(x)}</span>,
+    },
     { id: "rpo", header: "RPO", mono: true, description: "Recovery point objective: the most data you can afford to lose.", cell: (x) => x.rpo },
     { id: "rto", header: "RTO", mono: true, description: "Recovery time objective: how fast a restore must finish.", cell: (x) => x.rto },
     { id: "jobs", header: "Jobs", align: "right", mono: true, sortValue: (x) => x.jobs, cell: (x) => x.jobs },
@@ -814,19 +1271,48 @@ function PoliciesPage() {
         </span>
       ),
     },
-    { id: "met", header: "RPO met", align: "right", sortValue: (x) => x.compliance, cell: (x) => <StatusBadge tone={x.compliance === 100 ? "success" : "warning"}>{x.compliance}%</StatusBadge> },
+    {
+      id: "met",
+      header: "RPO met",
+      align: "right",
+      sortValue: (x) => x.compliance,
+      cell: (x) => <StatusBadge tone={x.compliance === 100 ? "success" : "warning"}>{x.compliance}%</StatusBadge>,
+    },
   ];
   const num = (k: "hourly" | "daily" | "weekly" | "monthly" | "yearly") => (
-    <TextField label={k[0]!.toUpperCase() + k.slice(1)} type="number" min={0} mono value={draft[k]} onChange={(e) => setDraft((d) => ({ ...d, [k]: Number(e.target.value) }))} />
+    <TextField
+      label={k[0]!.toUpperCase() + k.slice(1)}
+      type="number"
+      min={0}
+      mono
+      value={draft[k]}
+      onChange={(e) => setDraft((d) => ({ ...d, [k]: Number(e.target.value) }))}
+    />
   );
   return (
     <>
-      <PageHeader title="Policies" description="Retention rules and recovery targets. Every job belongs to exactly one policy." actions={<Button variant="primary" icon={<Plus />}>New policy</Button>} />
+      <PageHeader
+        title="Policies"
+        description="Retention rules and recovery targets. Every job belongs to exactly one policy."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New policy
+          </Button>
+        }
+      />
       <Callout tone="warning" title="Tier 1 · production databases misses its RPO on 1 of 6 jobs">
         db-prod-01 · postgres base has had no successful snapshot for 8 h against a 6 h target.
       </Callout>
       <Panel title="Policies" flush>
-        <DataTable label="Retention policies" columns={cols} rows={rows} getRowId={(x) => x.id} onRowClick={(x) => select(x.id)} activeRowId={active} minWidth={900} />
+        <DataTable
+          label="Retention policies"
+          columns={cols}
+          rows={rows}
+          getRowId={(x) => x.id}
+          onRowClick={(x) => select(x.id)}
+          activeRowId={active}
+          minWidth={900}
+        />
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title={`Edit ${p.name}`} description={`${p.jobs} jobs follow this policy`}>
@@ -847,11 +1333,31 @@ function PoliciesPage() {
               {num("yearly")}
             </fieldset>
             <div className="grid gap-2.5 md:grid-cols-2">
-              <SelectField label="RPO target" value={draft.rpo} onChange={(e) => setDraft((d) => ({ ...d, rpo: e.target.value }))} options={["1 h", "6 h", "24 h", "7 d"].map((v) => ({ value: v, label: v }))} />
-              <SelectField label="RTO target" value={draft.rto} onChange={(e) => setDraft((d) => ({ ...d, rto: e.target.value }))} options={["15 m", "30 m", "1 h", "2 h", "4 h"].map((v) => ({ value: v, label: v }))} />
+              <SelectField
+                label="RPO target"
+                value={draft.rpo}
+                onChange={(e) => setDraft((d) => ({ ...d, rpo: e.target.value }))}
+                options={["1 h", "6 h", "24 h", "7 d"].map((v) => ({ value: v, label: v }))}
+              />
+              <SelectField
+                label="RTO target"
+                value={draft.rto}
+                onChange={(e) => setDraft((d) => ({ ...d, rto: e.target.value }))}
+                options={["15 m", "30 m", "1 h", "2 h", "4 h"].map((v) => ({ value: v, label: v }))}
+              />
             </div>
-            <Switch checked={draft.immutable} onCheckedChange={(v) => setDraft((d) => ({ ...d, immutable: v }))} label="Immutable snapshots" description="Object Lock in compliance mode for the retention period. Cannot be shortened later." />
-            <Switch checked={draft.offsite} onCheckedChange={(v) => setDraft((d) => ({ ...d, offsite: v }))} label="Copy off-site" description="Replicate every daily snapshot to sftp:offsite-vault." />
+            <Switch
+              checked={draft.immutable}
+              onCheckedChange={(v) => setDraft((d) => ({ ...d, immutable: v }))}
+              label="Immutable snapshots"
+              description="Object Lock in compliance mode for the retention period. Cannot be shortened later."
+            />
+            <Switch
+              checked={draft.offsite}
+              onCheckedChange={(v) => setDraft((d) => ({ ...d, offsite: v }))}
+              label="Copy off-site"
+              description="Replicate every daily snapshot to sftp:offsite-vault."
+            />
             <div className="flex flex-wrap items-center gap-2">
               <Button type="submit" variant="primary">
                 Save policy
@@ -885,7 +1391,15 @@ function PoliciesPage() {
             ))}
           </ul>
           <p className="mt-2 text-xs text-fg-muted">
-            Oldest restore point: {draft.yearly ? `${draft.yearly} year${draft.yearly > 1 ? "s" : ""}` : draft.monthly ? `${draft.monthly} months` : draft.weekly ? `${draft.weekly} weeks` : `${draft.daily} days`} · GDPR erasure requests are honoured by excluding paths, not by deleting locked snapshots. Owner {PEOPLE[2]}.
+            Oldest restore point:{" "}
+            {draft.yearly
+              ? `${draft.yearly} year${draft.yearly > 1 ? "s" : ""}`
+              : draft.monthly
+                ? `${draft.monthly} months`
+                : draft.weekly
+                  ? `${draft.weekly} weeks`
+                  : `${draft.daily} days`}{" "}
+            · GDPR erasure requests are honoured by excluding paths, not by deleting locked snapshots. Owner {PEOPLE[2]}.
           </p>
         </Panel>
       </div>

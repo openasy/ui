@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useMemo, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { Check, ChevronDown, Clock, Play, X } from "lucide-react";
 import { cn } from "../lib/cn";
@@ -46,7 +46,15 @@ export function TimeRangePicker({ value, onChange, ranges: given, defaultOpen }:
   const t = useT();
   const ranges = given ?? DEFAULT_TIME_RANGES.map((r) => ({ ...r, label: t(`range.${r.value}` as "range.1h") }));
   const [open, setOpen] = useState(defaultOpen ?? false);
+  const items = useRef<Array<HTMLButtonElement | null>>([]);
   const current = ranges.find((r) => r.value === value) ?? { value, label: value };
+  const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const at = items.current.findIndex((el) => el === document.activeElement);
+    const next = (at + (e.key === "ArrowDown" ? 1 : ranges.length - 1)) % ranges.length;
+    items.current[next]?.focus();
+  };
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
@@ -55,27 +63,44 @@ export function TimeRangePicker({ value, onChange, ranges: given, defaultOpen }:
         </Button>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content align="start" sideOffset={4} className="oa-root z-50 w-52 rounded-lg border border-line bg-surface p-1 shadow-overlay">
-          <ul role="listbox" aria-label={t("filters.timeRange")}>
-            {ranges.map((r) => {
+        <Popover.Content
+          align="start"
+          sideOffset={4}
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            items.current[
+              Math.max(
+                0,
+                ranges.findIndex((r) => r.value === value),
+              )
+            ]?.focus();
+          }}
+          className="oa-root z-50 w-52 rounded-lg border border-line bg-surface p-1 shadow-overlay"
+        >
+          <div role="menu" tabIndex={-1} aria-label={t("filters.timeRange")} onKeyDown={onKey} className="flex flex-col">
+            {ranges.map((r, i) => {
               const on = r.value === value;
               return (
-                <li key={r.value} role="option" aria-selected={on}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onChange(r.value);
-                      setOpen(false);
-                    }}
-                    className={cn("flex h-7 w-full items-center gap-2 rounded-md px-2 text-sm hover:bg-subtle", on ? "font-semibold text-fg" : "text-fg")}
-                  >
-                    <span className="grow text-left">{r.label}</span>
-                    {on && <Check aria-hidden className="size-4 text-accent" strokeWidth={3} />}
-                  </button>
-                </li>
+                <button
+                  key={r.value}
+                  ref={(el) => {
+                    items.current[i] = el;
+                  }}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={on}
+                  onClick={() => {
+                    onChange(r.value);
+                    setOpen(false);
+                  }}
+                  className={cn("flex h-7 w-full items-center gap-2 rounded-md px-2 text-sm hover:bg-subtle", on ? "font-semibold text-fg" : "text-fg")}
+                >
+                  <span className="grow text-left">{r.label}</span>
+                  {on && <Check aria-hidden className="size-4 text-accent" strokeWidth={3} />}
+                </button>
               );
             })}
-          </ul>
+          </div>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
@@ -101,7 +126,12 @@ export function FilterChip({ field, value, negate, onRemove }: FilterChipProps) 
       </span>
       <span className="flex items-center px-2 font-mono text-fg">{value}</span>
       {onRemove && (
-        <button type="button" aria-label={t("filters.remove", { field })} onClick={onRemove} className="grid w-6 place-items-center text-fg-muted hover:bg-subtle hover:text-fg">
+        <button
+          type="button"
+          aria-label={t("filters.remove", { field })}
+          onClick={onRemove}
+          className="grid w-6 place-items-center text-fg-muted hover:bg-subtle hover:text-fg"
+        >
           <X aria-hidden className="size-3" />
         </button>
       )}

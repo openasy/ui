@@ -49,27 +49,9 @@ export function wave(count: number, o: WaveOptions): number[] {
   });
 }
 
-export const PEOPLE = [
-  "Dana Kim",
-  "Emily Clark",
-  "Mark Wilson",
-  "Sarah Chen",
-  "Ben Ortiz",
-  "Amy Davis",
-  "Chris Shaw",
-  "Zoe Adams",
-] as const;
+export const PEOPLE = ["Dana Kim", "Emily Clark", "Mark Wilson", "Sarah Chen", "Ben Ortiz", "Amy Davis", "Chris Shaw", "Zoe Adams"] as const;
 
-export const HOSTS = [
-  "api-prod-01",
-  "api-prod-03",
-  "api-prod-05",
-  "worker-prod-04",
-  "worker-prod-09",
-  "db-prod-01",
-  "db-prod-02",
-  "edge-fra-02",
-] as const;
+export const HOSTS = ["api-prod-01", "api-prod-03", "api-prod-05", "worker-prod-04", "worker-prod-09", "db-prod-01", "db-prod-02", "edge-fra-02"] as const;
 
 export function emailOf(name: string): string {
   return `${name.toLowerCase().replace(" ", ".")}@example.com`;

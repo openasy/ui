@@ -15,10 +15,7 @@ const ChartSyncContext = createContext<ChartSyncValue | null>(null);
  */
 export function ChartSync({ children }: { children: ReactNode }) {
   const [state, setState] = useState<{ index: number | null; source: string | null }>({ index: null, source: null });
-  const value = useMemo<ChartSyncValue>(
-    () => ({ ...state, setHover: (index, source) => setState({ index, source }) }),
-    [state],
-  );
+  const value = useMemo<ChartSyncValue>(() => ({ ...state, setHover: (index, source) => setState({ index, source }) }), [state]);
   return <ChartSyncContext.Provider value={value}>{children}</ChartSyncContext.Provider>;
 }
 

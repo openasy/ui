@@ -117,15 +117,91 @@ interface Step {
 }
 
 const steps: Step[] = [
-  { step: 1, technique: "T1078", name: "Valid Accounts", test: "Sign in to VPN with a leaked test user", host: "edge-fra-02", expected: "VPN + SIEM", result: "detected", ttd: "42 s", signal: "sig-1052" },
-  { step: 2, technique: "T1059.004", name: "Unix shell", test: "Reverse shell via bash -i to 192.0.2.10", host: HOSTS[0], expected: "Runtime", result: "detected", ttd: "3 s", signal: "sig-1053" },
-  { step: 3, technique: "T1046", name: "Network Service Discovery", test: "nmap -sT against 192.0.2.0/24", host: HOSTS[0], expected: "Network IDS", result: "missed" },
-  { step: 4, technique: "T1003", name: "OS Credential Dumping", test: "Read /etc/shadow and copy to /tmp", host: HOSTS[0], expected: "Runtime", result: "prevented", ttd: "0.4 s", signal: "sig-1054" },
+  {
+    step: 1,
+    technique: "T1078",
+    name: "Valid Accounts",
+    test: "Sign in to VPN with a leaked test user",
+    host: "edge-fra-02",
+    expected: "VPN + SIEM",
+    result: "detected",
+    ttd: "42 s",
+    signal: "sig-1052",
+  },
+  {
+    step: 2,
+    technique: "T1059.004",
+    name: "Unix shell",
+    test: "Reverse shell via bash -i to 192.0.2.10",
+    host: HOSTS[0],
+    expected: "Runtime",
+    result: "detected",
+    ttd: "3 s",
+    signal: "sig-1053",
+  },
+  {
+    step: 3,
+    technique: "T1046",
+    name: "Network Service Discovery",
+    test: "nmap -sT against 192.0.2.0/24",
+    host: HOSTS[0],
+    expected: "Network IDS",
+    result: "missed",
+  },
+  {
+    step: 4,
+    technique: "T1003",
+    name: "OS Credential Dumping",
+    test: "Read /etc/shadow and copy to /tmp",
+    host: HOSTS[0],
+    expected: "Runtime",
+    result: "prevented",
+    ttd: "0.4 s",
+    signal: "sig-1054",
+  },
   { step: 5, technique: "T1562.001", name: "Disable or Modify Tools", test: "systemctl stop auditd", host: HOSTS[0], expected: "Runtime", result: "missed" },
-  { step: 6, technique: "T1021.004", name: "SSH", test: "SSH with harvested key to db-prod-01", host: HOSTS[5], expected: "SIEM + Access", result: "detected", ttd: "1 m 10 s", signal: "sig-1055" },
-  { step: 7, technique: "T1048", name: "Exfiltration Over Alternative Protocol", test: "DNS TXT exfil of 5 MB test file", host: HOSTS[5], expected: "Network IDS", result: "missed" },
-  { step: 8, technique: "T1490", name: "Inhibit System Recovery", test: "Delete restic snapshots with test repo key", host: HOSTS[5], expected: "Backups + SIEM", result: "detected", ttd: "2 m 03 s", signal: "sig-1056" },
-  { step: 9, technique: "T1486", name: "Data Encrypted for Impact", test: "Encrypt 500 canary files with openssl", host: HOSTS[5], expected: "Runtime + Malware", result: "prevented", ttd: "1.8 s", signal: "sig-1057" },
+  {
+    step: 6,
+    technique: "T1021.004",
+    name: "SSH",
+    test: "SSH with harvested key to db-prod-01",
+    host: HOSTS[5],
+    expected: "SIEM + Access",
+    result: "detected",
+    ttd: "1 m 10 s",
+    signal: "sig-1055",
+  },
+  {
+    step: 7,
+    technique: "T1048",
+    name: "Exfiltration Over Alternative Protocol",
+    test: "DNS TXT exfil of 5 MB test file",
+    host: HOSTS[5],
+    expected: "Network IDS",
+    result: "missed",
+  },
+  {
+    step: 8,
+    technique: "T1490",
+    name: "Inhibit System Recovery",
+    test: "Delete restic snapshots with test repo key",
+    host: HOSTS[5],
+    expected: "Backups + SIEM",
+    result: "detected",
+    ttd: "2 m 03 s",
+    signal: "sig-1056",
+  },
+  {
+    step: 9,
+    technique: "T1486",
+    name: "Data Encrypted for Impact",
+    test: "Encrypt 500 canary files with openssl",
+    host: HOSTS[5],
+    expected: "Runtime + Malware",
+    result: "prevented",
+    ttd: "1.8 s",
+    signal: "sig-1057",
+  },
 ];
 
 const stepColumns: Column<Step>[] = [
@@ -210,7 +286,8 @@ function CampaignProgress({ done }: { done: number }) {
         <div className="h-full rounded-full bg-accent transition-[width]" style={{ width: `${Math.max(value, 3)}%` }} />
       </div>
       <span className="text-2xs text-fg-muted">
-        Step {Math.min(done + 1, TOTAL_STEPS)} of {TOTAL_STEPS}: <span className="font-mono">{current.technique}</span> {current.name} on {current.host} · waiting up to 5 min for a signal
+        Step {Math.min(done + 1, TOTAL_STEPS)} of {TOTAL_STEPS}: <span className="font-mono">{current.technique}</span> {current.name} on {current.host} ·
+        waiting up to 5 min for a signal
       </span>
     </div>
   );
@@ -306,7 +383,12 @@ function CoveragePage() {
               {drafted.includes(g.technique) ? (
                 <StatusBadge tone="success">Draft rule in {g.product}</StatusBadge>
               ) : (
-                <Button size="xs" icon={<WandSparkles />} aria-label={`Create detection for ${g.technique} ${g.name}`} onClick={() => setDrafted((d) => [...d, g.technique])}>
+                <Button
+                  size="xs"
+                  icon={<WandSparkles />}
+                  aria-label={`Create detection for ${g.technique} ${g.name}`}
+                  onClick={() => setDrafted((d) => [...d, g.technique])}
+                >
                   Create detection
                 </Button>
               )}
@@ -317,7 +399,11 @@ function CoveragePage() {
       <Panel
         title="Ransomware precursor chain"
         description="Latest campaign · 9 steps · 6 caught, 3 missed · targets api-prod-01 and db-prod-01 test namespaces"
-        actions={<Badge tone="neutral" mono>campaign-08</Badge>}
+        actions={
+          <Badge tone="neutral" mono>
+            campaign-08
+          </Badge>
+        }
         footer="Each step is an Atomic Red Team style test with a cleanup command. Nothing leaves the test hosts; encrypted files are canaries, not data."
         flush
       >
@@ -327,15 +413,25 @@ function CoveragePage() {
               label="Result"
               selected={results}
               onChange={setResults}
-              options={(Object.keys(OUTCOME) as Outcome[]).map((o) => ({ value: o, label: OUTCOME[o].label, count: steps.filter((s) => s.result === o).length }))}
+              options={(Object.keys(OUTCOME) as Outcome[]).map((o) => ({
+                value: o,
+                label: OUTCOME[o].label,
+                count: steps.filter((s) => s.result === o).length,
+              }))}
             />
           </FilterBar>
         </div>
-        <DataTable label="Campaign results" columns={stepColumns} rows={rows} getRowId={(s) => String(s.step)} defaultSort={{ id: "step", direction: "asc" }} minWidth={980} />
+        <DataTable
+          label="Campaign results"
+          columns={stepColumns}
+          rows={rows}
+          getRowId={(s) => String(s.step)}
+          defaultSort={{ id: "step", direction: "asc" }}
+          minWidth={980}
+        />
       </Panel>
     </>
   );
-  
 }
 
 /* ------------------------------------------------------------------ */
@@ -354,25 +450,149 @@ interface Technique {
 }
 
 const TECHNIQUES: Technique[] = [
-  { id: "T1595", name: "Active Scanning", tactic: "Reconnaissance", platform: "Network", detector: "Attack Surface, WAF", last: "detected", lastRun: "2 h ago", ttd: "4 m" },
-  { id: "T1566.002", name: "Spearphishing Link", tactic: "Initial Access", platform: "Cloud", detector: "Awareness, Identity", last: "detected", lastRun: "1 d ago", ttd: "6 m" },
-  { id: "T1078", name: "Valid Accounts", tactic: "Initial Access", platform: "Cloud", detector: "VPN, SIEM", last: "detected", lastRun: "2 h ago", ttd: "42 s" },
+  {
+    id: "T1595",
+    name: "Active Scanning",
+    tactic: "Reconnaissance",
+    platform: "Network",
+    detector: "Attack Surface, WAF",
+    last: "detected",
+    lastRun: "2 h ago",
+    ttd: "4 m",
+  },
+  {
+    id: "T1566.002",
+    name: "Spearphishing Link",
+    tactic: "Initial Access",
+    platform: "Cloud",
+    detector: "Awareness, Identity",
+    last: "detected",
+    lastRun: "1 d ago",
+    ttd: "6 m",
+  },
+  {
+    id: "T1078",
+    name: "Valid Accounts",
+    tactic: "Initial Access",
+    platform: "Cloud",
+    detector: "VPN, SIEM",
+    last: "detected",
+    lastRun: "2 h ago",
+    ttd: "42 s",
+  },
   { id: "T1059.004", name: "Unix Shell", tactic: "Execution", platform: "Linux", detector: "Runtime", last: "detected", lastRun: "2 h ago", ttd: "3 s" },
   { id: "T1053.003", name: "Cron", tactic: "Persistence", platform: "Linux", detector: "Runtime", last: "detected", lastRun: "2 h ago", ttd: "8 s" },
-  { id: "T1098.004", name: "SSH Authorized Keys", tactic: "Persistence", platform: "Linux", detector: "Runtime FIM", last: "detected", lastRun: "1 d ago", ttd: "12 s" },
-  { id: "T1548.003", name: "Sudo and Sudo Caching", tactic: "Privilege Escalation", platform: "Linux", detector: "Runtime", last: "prevented", lastRun: "2 h ago", ttd: "0.3 s" },
+  {
+    id: "T1098.004",
+    name: "SSH Authorized Keys",
+    tactic: "Persistence",
+    platform: "Linux",
+    detector: "Runtime FIM",
+    last: "detected",
+    lastRun: "1 d ago",
+    ttd: "12 s",
+  },
+  {
+    id: "T1548.003",
+    name: "Sudo and Sudo Caching",
+    tactic: "Privilege Escalation",
+    platform: "Linux",
+    detector: "Runtime",
+    last: "prevented",
+    lastRun: "2 h ago",
+    ttd: "0.3 s",
+  },
   { id: "T1562.001", name: "Disable or Modify Tools", tactic: "Defense Evasion", platform: "Linux", detector: "Runtime", last: "missed", lastRun: "2 h ago" },
   { id: "T1070.003", name: "Clear Command History", tactic: "Defense Evasion", platform: "Linux", detector: "Runtime FIM", last: "missed", lastRun: "1 d ago" },
-  { id: "T1003.008", name: "/etc/passwd and /etc/shadow", tactic: "Credential Access", platform: "Linux", detector: "Runtime", last: "prevented", lastRun: "2 h ago", ttd: "0.4 s" },
-  { id: "T1552.001", name: "Credentials In Files", tactic: "Credential Access", platform: "Linux", detector: "Secrets, Deception", last: "detected", lastRun: "1 d ago", ttd: "1 m" },
-  { id: "T1046", name: "Network Service Discovery", tactic: "Discovery", platform: "Network", detector: "Network IDS, Deception", last: "missed", lastRun: "2 h ago" },
-  { id: "T1021.004", name: "SSH", tactic: "Lateral Movement", platform: "Linux", detector: "SIEM, Access", last: "detected", lastRun: "2 h ago", ttd: "1 m 10 s" },
-  { id: "T1071.001", name: "Web Protocols", tactic: "Command and Control", platform: "Network", detector: "Network IDS, Threat Intel", last: "detected", lastRun: "1 d ago", ttd: "22 s" },
-  { id: "T1048", name: "Exfiltration Over Alternative Protocol", tactic: "Exfiltration", platform: "Network", detector: "Network IDS", last: "missed", lastRun: "2 h ago" },
+  {
+    id: "T1003.008",
+    name: "/etc/passwd and /etc/shadow",
+    tactic: "Credential Access",
+    platform: "Linux",
+    detector: "Runtime",
+    last: "prevented",
+    lastRun: "2 h ago",
+    ttd: "0.4 s",
+  },
+  {
+    id: "T1552.001",
+    name: "Credentials In Files",
+    tactic: "Credential Access",
+    platform: "Linux",
+    detector: "Secrets, Deception",
+    last: "detected",
+    lastRun: "1 d ago",
+    ttd: "1 m",
+  },
+  {
+    id: "T1046",
+    name: "Network Service Discovery",
+    tactic: "Discovery",
+    platform: "Network",
+    detector: "Network IDS, Deception",
+    last: "missed",
+    lastRun: "2 h ago",
+  },
+  {
+    id: "T1021.004",
+    name: "SSH",
+    tactic: "Lateral Movement",
+    platform: "Linux",
+    detector: "SIEM, Access",
+    last: "detected",
+    lastRun: "2 h ago",
+    ttd: "1 m 10 s",
+  },
+  {
+    id: "T1071.001",
+    name: "Web Protocols",
+    tactic: "Command and Control",
+    platform: "Network",
+    detector: "Network IDS, Threat Intel",
+    last: "detected",
+    lastRun: "1 d ago",
+    ttd: "22 s",
+  },
+  {
+    id: "T1048",
+    name: "Exfiltration Over Alternative Protocol",
+    tactic: "Exfiltration",
+    platform: "Network",
+    detector: "Network IDS",
+    last: "missed",
+    lastRun: "2 h ago",
+  },
   { id: "T1567.002", name: "Exfiltration to Cloud Storage", tactic: "Exfiltration", platform: "Cloud", detector: "SIEM", last: "missed", lastRun: "3 d ago" },
-  { id: "T1490", name: "Inhibit System Recovery", tactic: "Impact", platform: "Linux", detector: "Backups, SIEM", last: "detected", lastRun: "2 h ago", ttd: "2 m 03 s" },
-  { id: "T1486", name: "Data Encrypted for Impact", tactic: "Impact", platform: "Linux", detector: "Runtime, Malware", last: "prevented", lastRun: "2 h ago", ttd: "1.8 s" },
-  { id: "T1496", name: "Resource Hijacking", tactic: "Impact", platform: "Linux", detector: "Malware, Runtime, Metrics", last: "detected", lastRun: "1 d ago", ttd: "9 s" },
+  {
+    id: "T1490",
+    name: "Inhibit System Recovery",
+    tactic: "Impact",
+    platform: "Linux",
+    detector: "Backups, SIEM",
+    last: "detected",
+    lastRun: "2 h ago",
+    ttd: "2 m 03 s",
+  },
+  {
+    id: "T1486",
+    name: "Data Encrypted for Impact",
+    tactic: "Impact",
+    platform: "Linux",
+    detector: "Runtime, Malware",
+    last: "prevented",
+    lastRun: "2 h ago",
+    ttd: "1.8 s",
+  },
+  {
+    id: "T1496",
+    name: "Resource Hijacking",
+    tactic: "Impact",
+    platform: "Linux",
+    detector: "Malware, Runtime, Metrics",
+    last: "detected",
+    lastRun: "1 d ago",
+    ttd: "9 s",
+  },
   { id: "T1110.003", name: "Password Spraying", tactic: "Credential Access", platform: "Cloud", detector: "Identity", last: "untested", lastRun: "never" },
 ];
 
@@ -389,12 +609,60 @@ interface Campaign {
 }
 
 const CAMPAIGNS: Campaign[] = [
-  { id: "campaign-08", name: "Ransomware precursor chain", techniques: 9, targets: "api-prod-01, db-prod-01 test namespaces", lastRun: "2 h ago", result: { caught: 6, missed: 3 }, status: "idle" },
-  { id: "campaign-07", name: "Cloud account takeover", techniques: 7, targets: "sandbox AWS account", lastRun: "1 d ago", result: { caught: 6, missed: 1 }, status: "scheduled" },
-  { id: "campaign-06", name: "Insider data theft", techniques: 6, targets: "db-analytics-01 test schema", lastRun: "3 d ago", result: { caught: 4, missed: 2 }, status: "idle" },
-  { id: "campaign-05", name: "Container breakout", techniques: 8, targets: "k8s-staging · sim namespace", lastRun: "4 d ago", result: { caught: 8, missed: 0 }, status: "idle" },
-  { id: "campaign-04", name: "Phishing to VPN", techniques: 5, targets: "test user sim.user@example.com", lastRun: "1 w ago", result: { caught: 5, missed: 0 }, status: "idle" },
-  { id: "campaign-03", name: "Web app exploitation", techniques: 6, targets: "staging.example.com", lastRun: "1 w ago", result: { caught: 5, missed: 1 }, status: "scheduled" },
+  {
+    id: "campaign-08",
+    name: "Ransomware precursor chain",
+    techniques: 9,
+    targets: "api-prod-01, db-prod-01 test namespaces",
+    lastRun: "2 h ago",
+    result: { caught: 6, missed: 3 },
+    status: "idle",
+  },
+  {
+    id: "campaign-07",
+    name: "Cloud account takeover",
+    techniques: 7,
+    targets: "sandbox AWS account",
+    lastRun: "1 d ago",
+    result: { caught: 6, missed: 1 },
+    status: "scheduled",
+  },
+  {
+    id: "campaign-06",
+    name: "Insider data theft",
+    techniques: 6,
+    targets: "db-analytics-01 test schema",
+    lastRun: "3 d ago",
+    result: { caught: 4, missed: 2 },
+    status: "idle",
+  },
+  {
+    id: "campaign-05",
+    name: "Container breakout",
+    techniques: 8,
+    targets: "k8s-staging · sim namespace",
+    lastRun: "4 d ago",
+    result: { caught: 8, missed: 0 },
+    status: "idle",
+  },
+  {
+    id: "campaign-04",
+    name: "Phishing to VPN",
+    techniques: 5,
+    targets: "test user sim.user@example.com",
+    lastRun: "1 w ago",
+    result: { caught: 5, missed: 0 },
+    status: "idle",
+  },
+  {
+    id: "campaign-03",
+    name: "Web app exploitation",
+    techniques: 6,
+    targets: "staging.example.com",
+    lastRun: "1 w ago",
+    result: { caught: 5, missed: 1 },
+    status: "scheduled",
+  },
 ];
 
 function CampaignsPage() {
@@ -433,7 +701,11 @@ function CampaignsPage() {
         ),
     },
     { id: "last", header: "Last run", cell: (c) => <span className="text-xs">{c.lastRun}</span> },
-    { id: "status", header: "Status", cell: (c) => <StatusBadge tone={c.status === "running" ? "info" : c.status === "scheduled" ? "neutral" : "success"}>{c.status}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      cell: (c) => <StatusBadge tone={c.status === "running" ? "info" : c.status === "scheduled" ? "neutral" : "success"}>{c.status}</StatusBadge>,
+    },
   ];
   return (
     <>
@@ -448,12 +720,23 @@ function CampaignsPage() {
             onSubmit={(e) => {
               e.preventDefault();
               const id = `campaign-${String(items.length + 3).padStart(2, "0")}`;
-              setItems((all) => [{ id, name, techniques: chain.length, targets: target, lastRun: "never", result: { caught: 0, missed: 0 }, status: "scheduled" }, ...all]);
+              setItems((all) => [
+                { id, name, techniques: chain.length, targets: target, lastRun: "never", result: { caught: 0, missed: 0 }, status: "scheduled" },
+                ...all,
+              ]);
               setCreated(`${name} created with ${chain.length} steps · first run tonight at 02:00`);
             }}
           >
             <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} />
-            <SelectField label="Target" value={target} onChange={(e) => setTarget(e.target.value)} options={["k8s-staging · sim namespace", "api-prod-01, db-prod-01 test namespaces", "sandbox AWS account", "staging.example.com"].map((v) => ({ value: v, label: v }))} />
+            <SelectField
+              label="Target"
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+              options={["k8s-staging · sim namespace", "api-prod-01, db-prod-01 test namespaces", "sandbox AWS account", "staging.example.com"].map((v) => ({
+                value: v,
+                label: v,
+              }))}
+            />
             <div className="flex flex-col gap-1">
               <span className="text-xs font-medium">Steps, in order</span>
               <ol aria-label="Campaign steps" className="flex flex-col gap-1">
@@ -513,7 +796,10 @@ function TechniquesPage() {
   const [query, setQuery] = useState("");
   const [queued, setQueued] = useState<string | null>(null);
   const rows = TECHNIQUES.filter(
-    (t) => (tactic.length === 0 || tactic.includes(t.tactic)) && (last.length === 0 || last.includes(t.last)) && (!query || `${t.id} ${t.name}`.toLowerCase().includes(query.toLowerCase())),
+    (t) =>
+      (tactic.length === 0 || tactic.includes(t.tactic)) &&
+      (last.length === 0 || last.includes(t.last)) &&
+      (!query || `${t.id} ${t.name}`.toLowerCase().includes(query.toLowerCase())),
   );
   const cols: Column<Technique>[] = [
     {
@@ -530,7 +816,12 @@ function TechniquesPage() {
     },
     { id: "tactic", header: "Tactic", sortValue: (t) => t.tactic, cell: (t) => <span className="text-xs">{t.tactic}</span> },
     { id: "platform", header: "Platform", cell: (t) => <Badge>{t.platform}</Badge> },
-    { id: "detector", header: "Should be caught by", description: "The products expected to detect or prevent this technique, from Platform → Breach coverage.", cell: (t) => <span className="text-xs">{t.detector}</span> },
+    {
+      id: "detector",
+      header: "Should be caught by",
+      description: "The products expected to detect or prevent this technique, from Platform → Breach coverage.",
+      cell: (t) => <span className="text-xs">{t.detector}</span>,
+    },
     { id: "last", header: "Last result", sortValue: (t) => t.last, cell: (t) => <StatusBadge tone={LAST_TONE[t.last]}>{t.last}</StatusBadge> },
     { id: "ttd", header: "Time to detect", align: "right", mono: true, cell: (t) => t.ttd ?? "–" },
     {
@@ -548,10 +839,25 @@ function TechniquesPage() {
   const tactics = [...new Set(TECHNIQUES.map((t) => t.tactic))];
   return (
     <>
-      <PageHeader title="Techniques" description="212 tests mapped to MITRE ATT&CK enterprise v15. 20 shown: the ones in active campaigns." actions={<SearchInput label="Search techniques" value={query} onChange={(e) => setQuery(e.target.value)} className="w-60" />} />
+      <PageHeader
+        title="Techniques"
+        description="212 tests mapped to MITRE ATT&CK enterprise v15. 20 shown: the ones in active campaigns."
+        actions={<SearchInput label="Search techniques" value={query} onChange={(e) => setQuery(e.target.value)} className="w-60" />}
+      />
       <FilterBar onClear={tactic.length || last.length ? () => (setTactic([]), setLast([])) : undefined}>
-        <FacetFilter label="Tactic" selected={tactic} onChange={setTactic} searchable options={tactics.map((t) => ({ value: t, count: TECHNIQUES.filter((x) => x.tactic === t).length }))} />
-        <FacetFilter label="Last result" selected={last} onChange={setLast} options={(["detected", "prevented", "missed", "untested"] as const).map((o) => ({ value: o, count: TECHNIQUES.filter((x) => x.last === o).length }))} />
+        <FacetFilter
+          label="Tactic"
+          selected={tactic}
+          onChange={setTactic}
+          searchable
+          options={tactics.map((t) => ({ value: t, count: TECHNIQUES.filter((x) => x.tactic === t).length }))}
+        />
+        <FacetFilter
+          label="Last result"
+          selected={last}
+          onChange={setLast}
+          options={(["detected", "prevented", "missed", "untested"] as const).map((o) => ({ value: o, count: TECHNIQUES.filter((x) => x.last === o).length }))}
+        />
       </FilterBar>
       {queued && (
         <p role="status" className="text-sm text-success">
@@ -559,7 +865,15 @@ function TechniquesPage() {
         </p>
       )}
       <Panel title="Technique library" description={`${rows.length} shown`} flush>
-        <DataTable label="Techniques" columns={cols} rows={rows} getRowId={(t) => t.id} defaultSort={{ id: "id", direction: "asc" }} minWidth={1040} empty={<p className="py-8">No techniques match</p>} />
+        <DataTable
+          label="Techniques"
+          columns={cols}
+          rows={rows}
+          getRowId={(t) => t.id}
+          defaultSort={{ id: "id", direction: "asc" }}
+          minWidth={1040}
+          empty={<p className="py-8">No techniques match</p>}
+        />
       </Panel>
     </>
   );
@@ -581,12 +895,48 @@ interface Run {
 }
 
 const RUNS: Run[] = [
-  { id: "run-412", campaign: "Ransomware precursor chain", started: "Oct 19 · 02:00", duration: "18 m", detected: 4, prevented: 2, missed: 3, medianTtd: "42 s" },
-  { id: "run-411", campaign: "Cloud account takeover", started: "Oct 18 · 02:00", duration: "11 m", detected: 5, prevented: 1, missed: 1, medianTtd: "1 m 05 s" },
-  { id: "run-410", campaign: "Ransomware precursor chain", started: "Oct 18 · 02:00", duration: "17 m", detected: 4, prevented: 2, missed: 3, medianTtd: "48 s" },
+  {
+    id: "run-412",
+    campaign: "Ransomware precursor chain",
+    started: "Oct 19 · 02:00",
+    duration: "18 m",
+    detected: 4,
+    prevented: 2,
+    missed: 3,
+    medianTtd: "42 s",
+  },
+  {
+    id: "run-411",
+    campaign: "Cloud account takeover",
+    started: "Oct 18 · 02:00",
+    duration: "11 m",
+    detected: 5,
+    prevented: 1,
+    missed: 1,
+    medianTtd: "1 m 05 s",
+  },
+  {
+    id: "run-410",
+    campaign: "Ransomware precursor chain",
+    started: "Oct 18 · 02:00",
+    duration: "17 m",
+    detected: 4,
+    prevented: 2,
+    missed: 3,
+    medianTtd: "48 s",
+  },
   { id: "run-409", campaign: "Insider data theft", started: "Oct 16 · 02:00", duration: "14 m", detected: 3, prevented: 1, missed: 2, medianTtd: "2 m 10 s" },
   { id: "run-408", campaign: "Container breakout", started: "Oct 15 · 02:00", duration: "9 m", detected: 5, prevented: 3, missed: 0, medianTtd: "6 s" },
-  { id: "run-407", campaign: "Ransomware precursor chain", started: "Oct 14 · 14:22", duration: "19 m", detected: 3, prevented: 2, missed: 4, medianTtd: "55 s" },
+  {
+    id: "run-407",
+    campaign: "Ransomware precursor chain",
+    started: "Oct 14 · 14:22",
+    duration: "19 m",
+    detected: 3,
+    prevented: 2,
+    missed: 4,
+    medianTtd: "55 s",
+  },
   { id: "run-406", campaign: "Phishing to VPN", started: "Oct 12 · 02:00", duration: "22 m", detected: 4, prevented: 1, missed: 0, medianTtd: "3 m 40 s" },
 ];
 
@@ -618,10 +968,20 @@ function ResultsPage() {
   ];
   return (
     <>
-      <PageHeader title="Results" description="Every run, step by step. A step counts as detected only when the expected product raised a signal within 5 minutes." />
+      <PageHeader
+        title="Results"
+        description="Every run, step by step. A step counts as detected only when the expected product raised a signal within 5 minutes."
+      />
       <KpiGrid>
         <KpiCard label="Runs · 30 d" value="31" />
-        <KpiCard label="Detection rate" value="89" unit="%" tone="success" trend={wave(14, { base: 84, amp: 3, seed: 51 })} delta={{ label: "+3 pts vs. last month", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Detection rate"
+          value="89"
+          unit="%"
+          tone="success"
+          trend={wave(14, { base: 84, amp: 3, seed: 51 })}
+          delta={{ label: "+3 pts vs. last month", direction: "up", intent: "good" }}
+        />
         <KpiCard label="Median time to detect" value="48" unit="s" delta={{ label: "-12 s vs. last month", direction: "down", intent: "good" }} />
         <KpiCard label="Regressions" value="1" tone="warning" delta={{ label: "T1562.001 was caught last week", intent: "bad" }} />
       </KpiGrid>
@@ -641,11 +1001,25 @@ function ResultsPage() {
         />
       </Panel>
       <FilterBar onClear={campaign.length ? () => setCampaign([]) : undefined}>
-        <FacetFilter label="Campaign" selected={campaign} onChange={setCampaign} options={[...new Set(RUNS.map((r) => r.campaign))].map((c) => ({ value: c, count: RUNS.filter((r) => r.campaign === c).length }))} />
+        <FacetFilter
+          label="Campaign"
+          selected={campaign}
+          onChange={setCampaign}
+          options={[...new Set(RUNS.map((r) => r.campaign))].map((c) => ({ value: c, count: RUNS.filter((r) => r.campaign === c).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Runs" description={`${rows.length} runs`} flush>
-          <DataTable label="Runs" columns={cols} rows={rows} getRowId={(r) => r.id} onRowClick={(r) => setActive(r.id)} activeRowId={active} defaultSort={{ id: "started", direction: "desc" }} minWidth={820} />
+          <DataTable
+            label="Runs"
+            columns={cols}
+            rows={rows}
+            getRowId={(r) => r.id}
+            onRowClick={(r) => setActive(r.id)}
+            activeRowId={active}
+            defaultSort={{ id: "started", direction: "desc" }}
+            minWidth={820}
+          />
         </Panel>
         <Panel title="Steps" description={cur ? `${cur.id} · ${cur.campaign}` : "No run selected"} aria-label="Run steps">
           {cur && cur.campaign === "Ransomware precursor chain" ? (
@@ -692,8 +1066,25 @@ const GAP_ITEMS: GapItem[] = [
   { ...gaps[2]!, owner: PEOPLE[4], work: "SIEM-341 ship Zeek dns.log", status: "in progress", since: "Oct 9" },
   { ...gaps[3]!, owner: PEOPLE[0], status: "open", since: "Oct 17" },
   { ...gaps[4]!, owner: PEOPLE[3], status: "open", since: "Oct 16" },
-  { technique: "T1201", name: "Password Policy Discovery", product: "SIEM", why: "Low value; accepted until Q1", owner: PEOPLE[3], status: "accepted", since: "Sep 30" },
-  { technique: "T1053.003", name: "Cron", product: "Runtime", why: "New rule proc.cron_write", owner: PEOPLE[0], work: "RT-77", status: "fixed", since: "Oct 2" },
+  {
+    technique: "T1201",
+    name: "Password Policy Discovery",
+    product: "SIEM",
+    why: "Low value; accepted until Q1",
+    owner: PEOPLE[3],
+    status: "accepted",
+    since: "Sep 30",
+  },
+  {
+    technique: "T1053.003",
+    name: "Cron",
+    product: "Runtime",
+    why: "New rule proc.cron_write",
+    owner: PEOPLE[0],
+    work: "RT-77",
+    status: "fixed",
+    since: "Oct 2",
+  },
 ];
 
 const GAP_TONE: Record<GapStatus, Tone> = { open: "danger", "in progress": "warning", fixed: "success", accepted: "neutral" };
@@ -720,7 +1111,12 @@ function GapsPage() {
     { id: "owner", header: "Owner", cell: (g) => <span className="text-xs">{g.owner}</span> },
     { id: "work", header: "Linked work", mono: true, cell: (g) => g.work ?? <span className="text-fg-subtle">none</span> },
     { id: "since", header: "Missed since", cell: (g) => <span className="text-xs">{g.since}</span> },
-    { id: "status", header: "Status", sortValue: (g) => status[g.technique] ?? g.status, cell: (g) => <StatusBadge tone={GAP_TONE[status[g.technique] ?? g.status]}>{status[g.technique]}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      sortValue: (g) => status[g.technique] ?? g.status,
+      cell: (g) => <StatusBadge tone={GAP_TONE[status[g.technique] ?? g.status]}>{status[g.technique]}</StatusBadge>,
+    },
     {
       id: "act",
       header: "",
@@ -744,10 +1140,25 @@ function GapsPage() {
         <KpiCard label="Accepted" value={`${Object.values(status).filter((s) => s === "accepted").length + 17}`} delta={{ label: "Reviewed quarterly" }} />
       </KpiGrid>
       <FilterBar onClear={show.length ? () => setShow([]) : undefined}>
-        <FacetFilter label="Status" selected={show} onChange={setShow} options={(["open", "in progress", "fixed", "accepted"] as const).map((s) => ({ value: s, count: Object.values(status).filter((x) => x === s).length }))} />
+        <FacetFilter
+          label="Status"
+          selected={show}
+          onChange={setShow}
+          options={(["open", "in progress", "fixed", "accepted"] as const).map((s) => ({
+            value: s,
+            count: Object.values(status).filter((x) => x === s).length,
+          }))}
+        />
       </FilterBar>
       <Panel title="Gaps" description={`${rows.length} shown`} flush>
-        <DataTable label="Detection gaps" columns={cols} rows={rows} getRowId={(g) => g.technique} minWidth={1000} empty={<p className="py-8">No gaps with this status</p>} />
+        <DataTable
+          label="Detection gaps"
+          columns={cols}
+          rows={rows}
+          getRowId={(g) => g.technique}
+          minWidth={1000}
+          empty={<p className="py-8">No gaps with this status</p>}
+        />
       </Panel>
     </>
   );
@@ -787,13 +1198,37 @@ function SchedulesPage() {
       id: "rule",
       header: "On rule change",
       description: "Also run within 10 minutes when a detection rule in SIEM, Runtime or Network IDS is changed.",
-      cell: (s) => <Switch checked={ruleChange[s.id] ?? false} onCheckedChange={(v) => setRuleChange((r) => ({ ...r, [s.id]: v }))} label={<span className="sr-only">Run {s.campaign} on rule change</span>} />,
+      cell: (s) => (
+        <Switch
+          checked={ruleChange[s.id] ?? false}
+          onCheckedChange={(v) => setRuleChange((r) => ({ ...r, [s.id]: v }))}
+          label={<span className="sr-only">Run {s.campaign} on rule change</span>}
+        />
+      ),
     },
-    { id: "enabled", header: "Enabled", cell: (s) => <Switch checked={enabled[s.id] ?? false} onCheckedChange={(v) => setEnabled((r) => ({ ...r, [s.id]: v }))} label={<span className="sr-only">Enable {s.campaign}</span>} /> },
+    {
+      id: "enabled",
+      header: "Enabled",
+      cell: (s) => (
+        <Switch
+          checked={enabled[s.id] ?? false}
+          onCheckedChange={(v) => setEnabled((r) => ({ ...r, [s.id]: v }))}
+          label={<span className="sr-only">Enable {s.campaign}</span>}
+        />
+      ),
+    },
   ];
   return (
     <>
-      <PageHeader title="Schedules" description="When each campaign runs. Runs never overlap; a queued run waits for the previous one to clean up." actions={<Button variant="primary" icon={<Plus />}>New schedule</Button>} />
+      <PageHeader
+        title="Schedules"
+        description="When each campaign runs. Runs never overlap; a queued run waits for the previous one to clean up."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New schedule
+          </Button>
+        }
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Schedules" flush>
           <DataTable label="Schedules" columns={cols} rows={SCHEDULES} getRowId={(s) => s.id} minWidth={760} />

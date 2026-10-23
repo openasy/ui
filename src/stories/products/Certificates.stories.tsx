@@ -60,20 +60,73 @@ const certs: Cert[] = [
   { id: "c1", cn: "api.example.com", sans: 4, issuer: "Let's Encrypt", key: "ECDSA P-256", daysLeft: 6, endpoints: 3, autoRenew: true, source: "uptime" },
   { id: "c2", cn: "vpn.example.com", sans: 1, issuer: "OpenAsy CA", key: "RSA 2048", daysLeft: 11, endpoints: 2, autoRenew: false, source: "vpn" },
   { id: "c3", cn: "www.example.com", sans: 3, issuer: "DigiCert", key: "RSA 2048", daysLeft: 13, endpoints: 4, autoRenew: false, source: "uptime" },
-  { id: "c4", cn: "grafana.internal.example.com", sans: 1, issuer: "OpenAsy CA", key: "RSA 1024", daysLeft: 19, endpoints: 1, autoRenew: false, source: "infrastructure" },
+  {
+    id: "c4",
+    cn: "grafana.internal.example.com",
+    sans: 1,
+    issuer: "OpenAsy CA",
+    key: "RSA 1024",
+    daysLeft: 19,
+    endpoints: 1,
+    autoRenew: false,
+    source: "infrastructure",
+  },
   { id: "c5", cn: "status.example.com", sans: 2, issuer: "Let's Encrypt", key: "ECDSA P-256", daysLeft: 24, endpoints: 1, autoRenew: true, source: "uptime" },
-  { id: "c6", cn: "*.apps.example.com", sans: 12, issuer: "DigiCert", key: "RSA 2048", daysLeft: 28, endpoints: 17, autoRenew: false, source: "infrastructure" },
-  { id: "c7", cn: "kafka-broker-1.internal.example.com", sans: 2, issuer: "OpenAsy CA", key: "ECDSA P-256", daysLeft: 41, endpoints: 1, autoRenew: true, source: "infrastructure" },
+  {
+    id: "c6",
+    cn: "*.apps.example.com",
+    sans: 12,
+    issuer: "DigiCert",
+    key: "RSA 2048",
+    daysLeft: 28,
+    endpoints: 17,
+    autoRenew: false,
+    source: "infrastructure",
+  },
+  {
+    id: "c7",
+    cn: "kafka-broker-1.internal.example.com",
+    sans: 2,
+    issuer: "OpenAsy CA",
+    key: "ECDSA P-256",
+    daysLeft: 41,
+    endpoints: 1,
+    autoRenew: true,
+    source: "infrastructure",
+  },
   { id: "c8", cn: "auth.example.com", sans: 2, issuer: "Let's Encrypt", key: "ECDSA P-256", daysLeft: 57, endpoints: 2, autoRenew: true, source: "uptime" },
   { id: "c9", cn: "mail.example.com", sans: 3, issuer: "DigiCert", key: "RSA 2048", daysLeft: 74, endpoints: 2, autoRenew: false, source: "infrastructure" },
   { id: "c10", cn: "lon-01.vpn.example.com", sans: 1, issuer: "OpenAsy CA", key: "RSA 2048", daysLeft: 88, endpoints: 1, autoRenew: true, source: "vpn" },
-  { id: "c11", cn: "registry.example.com", sans: 2, issuer: "Let's Encrypt", key: "ECDSA P-256", daysLeft: 63, endpoints: 1, autoRenew: true, source: "infrastructure" },
+  {
+    id: "c11",
+    cn: "registry.example.com",
+    sans: 2,
+    issuer: "Let's Encrypt",
+    key: "ECDSA P-256",
+    daysLeft: 63,
+    endpoints: 1,
+    autoRenew: true,
+    source: "infrastructure",
+  },
   { id: "c12", cn: "fra-01.vpn.example.com", sans: 1, issuer: "OpenAsy CA", key: "RSA 1024", daysLeft: 212, endpoints: 1, autoRenew: true, source: "vpn" },
 ];
 
 /** Certificate validity in days as issued; used by policy checks. */
 const VALIDITY: Record<Issuer, number> = { "Let's Encrypt": 90, DigiCert: 397, "OpenAsy CA": 365 };
-const OWNER: Record<string, string> = { c1: PEOPLE[0], c2: PEOPLE[1], c3: PEOPLE[3], c4: PEOPLE[2], c5: PEOPLE[0], c6: PEOPLE[6], c7: PEOPLE[7], c8: PEOPLE[5], c9: PEOPLE[3], c10: PEOPLE[1], c11: PEOPLE[2], c12: PEOPLE[1] };
+const OWNER: Record<string, string> = {
+  c1: PEOPLE[0],
+  c2: PEOPLE[1],
+  c3: PEOPLE[3],
+  c4: PEOPLE[2],
+  c5: PEOPLE[0],
+  c6: PEOPLE[6],
+  c7: PEOPLE[7],
+  c8: PEOPLE[5],
+  c9: PEOPLE[3],
+  c10: PEOPLE[1],
+  c11: PEOPLE[2],
+  c12: PEOPLE[1],
+};
 
 function daysTone(d: number): Tone {
   if (d <= 7) return "danger";
@@ -95,15 +148,37 @@ const columns: Column<Cert>[] = [
     id: "key",
     header: "Key",
     sortValue: (c) => c.key,
-    cell: (c) => (c.key === "RSA 1024" ? <Badge tone="danger" mono>RSA 1024 · weak</Badge> : <span className="font-mono text-xs">{c.key}</span>),
+    cell: (c) =>
+      c.key === "RSA 1024" ? (
+        <Badge tone="danger" mono>
+          RSA 1024 · weak
+        </Badge>
+      ) : (
+        <span className="font-mono text-xs">{c.key}</span>
+      ),
   },
   { id: "days", header: "Days left", sortValue: (c) => c.daysLeft, cell: (c) => <StatusBadge tone={daysTone(c.daysLeft)}>{c.daysLeft} d</StatusBadge> },
-  { id: "endpoints", header: "Endpoints", align: "right", mono: true, description: "Distinct host:port pairs serving this certificate.", sortValue: (c) => c.endpoints, cell: (c) => c.endpoints },
+  {
+    id: "endpoints",
+    header: "Endpoints",
+    align: "right",
+    mono: true,
+    description: "Distinct host:port pairs serving this certificate.",
+    sortValue: (c) => c.endpoints,
+    cell: (c) => c.endpoints,
+  },
   {
     id: "renew",
     header: "Auto-renew",
     sortValue: (c) => (c.autoRenew ? 1 : 0),
-    cell: (c) => (c.autoRenew ? <Badge tone="success" icon={<RefreshCw aria-hidden className="size-3" />}>On · ACME</Badge> : <Badge>Off · manual</Badge>),
+    cell: (c) =>
+      c.autoRenew ? (
+        <Badge tone="success" icon={<RefreshCw aria-hidden className="size-3" />}>
+          On · ACME
+        </Badge>
+      ) : (
+        <Badge>Off · manual</Badge>
+      ),
   },
   {
     id: "source",
@@ -147,14 +222,25 @@ function InventoryPage() {
         }
       />
       <FilterBar onClear={issuers.length ? () => setIssuers([]) : undefined}>
-        <FacetFilter label="Issuer" selected={issuers} onChange={setIssuers} options={ISSUERS.map((i) => ({ value: i, count: certs.filter((c) => c.issuer === i).length }))} />
+        <FacetFilter
+          label="Issuer"
+          selected={issuers}
+          onChange={setIssuers}
+          options={ISSUERS.map((i) => ({ value: i, count: certs.filter((c) => c.issuer === i).length }))}
+        />
       </FilterBar>
       <Callout tone="warning" title="3 certificates expire within 14 days without auto-renew" action={<Button size="sm">Open Expiring</Button>}>
         vpn.example.com and www.example.com need a manual renewal; owners were emailed on Oct 12.
       </Callout>
       <KpiGrid>
         <KpiCard label="Expiring ≤ 14 days" value="3" unit="certificates" tone="danger" delta={{ label: "2 without auto-renew", intent: "bad" }} />
-        <KpiCard label="Expiring ≤ 30 days" value="9" unit="certificates" tone="warning" delta={{ label: "+4 vs. last week", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="Expiring ≤ 30 days"
+          value="9"
+          unit="certificates"
+          tone="warning"
+          delta={{ label: "+4 vs. last week", direction: "up", intent: "bad" }}
+        />
         <KpiCard label="Auto-renewing" value="71%" unit="152 of 214" delta={{ label: "+6 pts this month", direction: "up", intent: "good" }} />
         <KpiCard label="Weak keys" value="5" unit="RSA 1024 · SHA-1" tone="danger" delta={{ label: "all internal OpenAsy CA" }} />
       </KpiGrid>
@@ -214,7 +300,14 @@ function ExpiringPage() {
       id: "path",
       header: "Renewal path",
       description: "How this certificate gets renewed: ACME automatically, internal CA on request, or a manual CSR to a commercial CA.",
-      cell: (c) => (c.autoRenew ? <Badge tone="success">ACME · automatic</Badge> : c.issuer === "OpenAsy CA" ? <Badge tone="info">Internal CA</Badge> : <Badge tone="warning">Manual CSR</Badge>),
+      cell: (c) =>
+        c.autoRenew ? (
+          <Badge tone="success">ACME · automatic</Badge>
+        ) : c.issuer === "OpenAsy CA" ? (
+          <Badge tone="info">Internal CA</Badge>
+        ) : (
+          <Badge tone="warning">Manual CSR</Badge>
+        ),
     },
     {
       id: "state",
@@ -223,7 +316,11 @@ function ExpiringPage() {
         const s = state[c.id] ?? "idle";
         if (s === "queued") return <StatusBadge tone="info">Renewal queued</StatusBadge>;
         if (s === "csr") return <StatusBadge tone="warning">CSR generated</StatusBadge>;
-        return c.autoRenew ? <span className="text-xs text-fg-muted">Next attempt 02:00</span> : <span className="text-xs text-warning-text">Waiting on owner</span>;
+        return c.autoRenew ? (
+          <span className="text-xs text-fg-muted">Next attempt 02:00</span>
+        ) : (
+          <span className="text-xs text-warning-text">Waiting on owner</span>
+        );
       },
     },
     {
@@ -285,12 +382,24 @@ function ExpiringPage() {
       )}
       <div className={cn("grid gap-2.5", csr && "xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]")}>
         <Panel title={`Expiring within ${win} days`} description={`${rows.length} certificates`} flush>
-          <DataTable label="Expiring certificates" columns={cols} rows={rows} getRowId={(c) => c.id} selectable selectedIds={selected} onSelectionChange={setSelected} defaultSort={{ id: "days", direction: "asc" }} minWidth={980} />
+          <DataTable
+            label="Expiring certificates"
+            columns={cols}
+            rows={rows}
+            getRowId={(c) => c.id}
+            selectable
+            selectedIds={selected}
+            onSelectionChange={setSelected}
+            defaultSort={{ id: "days", direction: "asc" }}
+            minWidth={980}
+          />
         </Panel>
         {csr && (
           <Panel aria-label="CSR" title={`CSR for ${csr.cn}`} description={`Send to ${csr.issuer} · key stays in Secrets`}>
             <pre tabIndex={0} aria-label="CSR in PEM format" className="overflow-x-auto rounded-md bg-canvas p-2 font-mono text-2xs text-fg">
-              {"-----BEGIN CERTIFICATE REQUEST-----\nMIIC2jCCAcICAQAwgZQxCzAJBgNVBAYTAklFMQ8wDQYDVQQIDAZEdWJs\naW4xFzAVBgNVBAoMDkFjbWUgQ29ycCBMdGQuMRcwFQYDVQQDDA53d3cu\nZXhhbXBsZS5jb20xQjBABgkqhkiG9w0BCQEWM3NhcmFoLmNoZW5AZXhh\n…\n-----END CERTIFICATE REQUEST-----"}
+              {
+                "-----BEGIN CERTIFICATE REQUEST-----\nMIIC2jCCAcICAQAwgZQxCzAJBgNVBAYTAklFMQ8wDQYDVQQIDAZEdWJs\naW4xFzAVBgNVBAoMDkFjbWUgQ29ycCBMdGQuMRcwFQYDVQQDDA53d3cu\nZXhhbXBsZS5jb20xQjBABgkqhkiG9w0BCQEWM3NhcmFoLmNoZW5AZXhh\n…\n-----END CERTIFICATE REQUEST-----"
+              }
             </pre>
             <ol className="mt-2 flex list-decimal flex-col gap-1 pl-5 text-xs text-fg-muted">
               <li>Paste the CSR into the {csr.issuer} portal and pick a 397-day term.</li>
@@ -400,11 +509,27 @@ function IssuersPage() {
   ];
   return (
     <>
-      <PageHeader title="Issuers" description="Certificate authorities in use, their chains and how certificates are requested from each." actions={<Button variant="primary" icon={<Plus />}>Add issuer</Button>} />
+      <PageHeader
+        title="Issuers"
+        description="Certificate authorities in use, their chains and how certificates are requested from each."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add issuer
+          </Button>
+        }
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <div className="flex min-w-0 flex-col gap-2.5">
           <Panel title="Issuers" flush>
-            <DataTable label="Issuers" columns={cols} rows={ISSUER_ROWS} getRowId={(x) => x.id} onRowClick={(x) => (setActive(x.id), setPublished(false))} activeRowId={active} minWidth={720} />
+            <DataTable
+              label="Issuers"
+              columns={cols}
+              rows={ISSUER_ROWS}
+              getRowId={(x) => x.id}
+              onRowClick={(x) => (setActive(x.id), setPublished(false))}
+              activeRowId={active}
+              minWidth={720}
+            />
           </Panel>
           <Panel title="Certificates by issuer and key type">
             <StackedBarChart
@@ -503,20 +628,63 @@ interface Challenge {
 }
 
 const CHALLENGES: Challenge[] = [
-  { id: "ch1", domain: "api.example.com", type: "HTTP-01", solver: "ingress-nginx · api-prod", state: "Invalid", error: "Fetching http://api.example.com/.well-known/acme-challenge/…: 403 from WAF rule 942100", attempts: 4 },
+  {
+    id: "ch1",
+    domain: "api.example.com",
+    type: "HTTP-01",
+    solver: "ingress-nginx · api-prod",
+    state: "Invalid",
+    error: "Fetching http://api.example.com/.well-known/acme-challenge/…: 403 from WAF rule 942100",
+    attempts: 4,
+  },
   { id: "ch2", domain: "*.apps.example.com", type: "DNS-01", solver: "Route 53 · zone Z0EXAMPLE", state: "Pending", attempts: 1 },
   { id: "ch3", domain: "status.example.com", type: "HTTP-01", solver: "edge-fra-02 webroot", state: "Valid", attempts: 1 },
   { id: "ch4", domain: "registry.example.com", type: "TLS-ALPN-01", solver: "Caddy on registry", state: "Valid", attempts: 1 },
 ];
 
 const RENEW_LOG: Array<{ id: string; time: string; level: LogLevel; domain: string; text: string; account: string }> = [
-  { id: "l1", time: "Today 02:00", level: "error", domain: "api.example.com", text: "Order failed: challenge invalid (403). Retry in 6 h, attempt 4 of 10.", account: "le-prod" },
-  { id: "l2", time: "Today 02:00", level: "info", domain: "status.example.com", text: "Renewed · E6 · valid until Jan 17, 2027 · deployed to 1 endpoint", account: "le-prod" },
+  {
+    id: "l1",
+    time: "Today 02:00",
+    level: "error",
+    domain: "api.example.com",
+    text: "Order failed: challenge invalid (403). Retry in 6 h, attempt 4 of 10.",
+    account: "le-prod",
+  },
+  {
+    id: "l2",
+    time: "Today 02:00",
+    level: "info",
+    domain: "status.example.com",
+    text: "Renewed · E6 · valid until Jan 17, 2027 · deployed to 1 endpoint",
+    account: "le-prod",
+  },
   { id: "l3", time: "Today 01:58", level: "info", domain: "registry.example.com", text: "Renewed · E6 · deployed via Caddy reload", account: "le-prod" },
-  { id: "l4", time: "Yesterday 02:00", level: "warn", domain: "api.example.com", text: "Challenge invalid (403). WAF blocked the validation request.", account: "le-prod" },
-  { id: "l5", time: "Yesterday 02:00", level: "info", domain: "kafka-broker-1.internal.example.com", text: "Renewed by internal ACME · OpenAsy Issuing CA 2026", account: "openasy-internal" },
+  {
+    id: "l4",
+    time: "Yesterday 02:00",
+    level: "warn",
+    domain: "api.example.com",
+    text: "Challenge invalid (403). WAF blocked the validation request.",
+    account: "le-prod",
+  },
+  {
+    id: "l5",
+    time: "Yesterday 02:00",
+    level: "info",
+    domain: "kafka-broker-1.internal.example.com",
+    text: "Renewed by internal ACME · OpenAsy Issuing CA 2026",
+    account: "openasy-internal",
+  },
   { id: "l6", time: "Oct 17 02:00", level: "info", domain: "auth.example.com", text: "Renewed · E6 · deployed to 2 endpoints", account: "le-prod" },
-  { id: "l7", time: "Oct 16 02:00", level: "warn", domain: "*.apps.example.com", text: "DNS propagation slow (94 s); passed on second check", account: "le-prod" },
+  {
+    id: "l7",
+    time: "Oct 16 02:00",
+    level: "warn",
+    domain: "*.apps.example.com",
+    text: "DNS propagation slow (94 s); passed on second check",
+    account: "le-prod",
+  },
 ];
 
 function AcmePage() {
@@ -526,7 +694,15 @@ function AcmePage() {
   const STATE_TONE = { Pending: "info", Valid: "success", Invalid: "danger" } as const;
   return (
     <>
-      <PageHeader title="ACME" description="Accounts, live challenges and every automatic renewal attempt. Renewal runs nightly at 02:00 for certificates with ≤ 30 days left." actions={<Button variant="primary" icon={<Plus />}>Add account</Button>} />
+      <PageHeader
+        title="ACME"
+        description="Accounts, live challenges and every automatic renewal attempt. Renewal runs nightly at 02:00 for certificates with ≤ 30 days left."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add account
+          </Button>
+        }
+      />
       <KpiGrid>
         <KpiCard label="Renewed · 30 d" value="64" unit="certificates" tone="success" delta={{ label: "100% deployed" }} />
         <KpiCard label="Failing" value="1" unit="api.example.com" tone="danger" delta={{ label: "expires in 6 d", intent: "bad" }} />
@@ -547,7 +723,12 @@ function AcmePage() {
             { id: "id", header: "Account", mono: true, cell: (a) => a.id },
             { id: "dir", header: "Directory", cell: (a) => <span className="font-mono text-xs">{a.dir}</span> },
             { id: "email", header: "Contact", cell: (a) => a.email },
-            { id: "eab", header: "EAB", description: "External account binding, required by some CAs to link the ACME account to a customer.", cell: (a) => a.eab },
+            {
+              id: "eab",
+              header: "EAB",
+              description: "External account binding, required by some CAs to link the ACME account to a customer.",
+              cell: (a) => a.eab,
+            },
             { id: "certs", header: "Certificates", align: "right", mono: true, cell: (a) => a.certs },
             { id: "status", header: "Status", cell: (a) => <StatusBadge tone="success">{a.status}</StatusBadge> },
           ]}
@@ -556,7 +737,10 @@ function AcmePage() {
       <Panel title="Challenges in flight" description="Validation attempts for orders opened in the last 24 h" flush>
         <ul aria-label="Challenges" className="flex flex-col">
           {challenges.map((ch) => (
-            <li key={ch.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 border-b border-subtle px-3 py-2 last:border-0 md:grid-cols-[minmax(0,2fr)_110px_minmax(0,2fr)_auto]">
+            <li
+              key={ch.id}
+              className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 border-b border-subtle px-3 py-2 last:border-0 md:grid-cols-[minmax(0,2fr)_110px_minmax(0,2fr)_auto]"
+            >
               <span className="flex min-w-0 flex-col">
                 <span className="truncate font-mono text-xs font-medium">{ch.domain}</span>
                 <span className="text-2xs text-fg-muted">
@@ -566,11 +750,19 @@ function AcmePage() {
               <Badge mono className="hidden w-fit md:inline-flex">
                 {ch.type}
               </Badge>
-              <span className={cn("hidden text-xs md:block", ch.error ? "text-danger-text" : "text-fg-muted")}>{ch.error ?? (ch.state === "Pending" ? "Waiting for TXT record to propagate" : "Validated")}</span>
+              <span className={cn("hidden text-xs md:block", ch.error ? "text-danger-text" : "text-fg-muted")}>
+                {ch.error ?? (ch.state === "Pending" ? "Waiting for TXT record to propagate" : "Validated")}
+              </span>
               <span className="flex items-center gap-1.5">
                 <StatusBadge tone={STATE_TONE[ch.state]}>{ch.state}</StatusBadge>
                 {ch.state === "Invalid" && (
-                  <Button size="xs" aria-label={`Retry ${ch.domain}`} onClick={() => setChallenges((cs) => cs.map((x) => (x.id === ch.id ? { ...x, state: "Pending", error: undefined, attempts: x.attempts + 1 } : x)))}>
+                  <Button
+                    size="xs"
+                    aria-label={`Retry ${ch.domain}`}
+                    onClick={() =>
+                      setChallenges((cs) => cs.map((x) => (x.id === ch.id ? { ...x, state: "Pending", error: undefined, attempts: x.attempts + 1 } : x)))
+                    }
+                  >
                     Retry
                   </Button>
                 )}
@@ -649,7 +841,10 @@ function PoliciesPage() {
   const v = useMemo(() => violations(p), [p]);
   return (
     <>
-      <PageHeader title="Policies" description="Rules every certificate must meet. Requests that break them are refused; existing certificates that break them are listed below." />
+      <PageHeader
+        title="Policies"
+        description="Rules every certificate must meet. Requests that break them are refused; existing certificates that break them are listed below."
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <Panel title="Certificate policy" description="Applies to all issuers · last changed by Emily Clark on Oct 2">
           <form
@@ -660,7 +855,15 @@ function PoliciesPage() {
             }}
           >
             <div className="grid gap-2.5 md:grid-cols-2">
-              <SelectField label="Minimum RSA key size" value={p.minRsa} onChange={(e) => set({ minRsa: e.target.value as CertPolicy["minRsa"] })} options={[{ value: "2048", label: "2048 bits" }, { value: "3072", label: "3072 bits" }]} />
+              <SelectField
+                label="Minimum RSA key size"
+                value={p.minRsa}
+                onChange={(e) => set({ minRsa: e.target.value as CertPolicy["minRsa"] })}
+                options={[
+                  { value: "2048", label: "2048 bits" },
+                  { value: "3072", label: "3072 bits" },
+                ]}
+              />
               <SelectField
                 label="Maximum validity"
                 value={p.maxDays}
@@ -671,17 +874,39 @@ function PoliciesPage() {
                   { value: "90", label: "90 days" },
                 ]}
               />
-              <TextField label="Renew when days left" type="number" mono value={p.renewAt} onChange={(e) => set({ renewAt: e.target.value })} hint="ACME renews at this point; manual owners get reminders." />
+              <TextField
+                label="Renew when days left"
+                type="number"
+                mono
+                value={p.renewAt}
+                onChange={(e) => set({ renewAt: e.target.value })}
+                hint="ACME renews at this point; manual owners get reminders."
+              />
             </div>
             <fieldset className="flex flex-col gap-1.5">
               <legend className="mb-1 text-xs font-semibold text-fg">Allowed issuers</legend>
               {ISSUERS.map((i) => (
-                <Checkbox key={i} label={i} checked={p.issuers.includes(i)} onChange={() => set({ issuers: p.issuers.includes(i) ? p.issuers.filter((x) => x !== i) : [...p.issuers, i] })} />
+                <Checkbox
+                  key={i}
+                  label={i}
+                  checked={p.issuers.includes(i)}
+                  onChange={() => set({ issuers: p.issuers.includes(i) ? p.issuers.filter((x) => x !== i) : [...p.issuers, i] })}
+                />
               ))}
             </fieldset>
             <Switch checked={p.allowEcdsa} onCheckedChange={(x) => set({ allowEcdsa: x })} label="Allow ECDSA keys" description="P-256 and P-384." />
-            <Switch checked={p.wildcards} onCheckedChange={(x) => set({ wildcards: x })} label="Allow wildcard certificates" description="Only for *.apps.example.com today." />
-            <Switch checked={p.ct} onCheckedChange={(x) => set({ ct: x })} label="Require Certificate Transparency" description="Public certificates must carry 2+ SCTs." />
+            <Switch
+              checked={p.wildcards}
+              onCheckedChange={(x) => set({ wildcards: x })}
+              label="Allow wildcard certificates"
+              description="Only for *.apps.example.com today."
+            />
+            <Switch
+              checked={p.ct}
+              onCheckedChange={(x) => set({ ct: x })}
+              label="Require Certificate Transparency"
+              description="Public certificates must carry 2+ SCTs."
+            />
             <div className="flex flex-wrap items-center gap-2">
               <Button type="submit" variant="primary">
                 Save policy

@@ -24,11 +24,7 @@ export function ChartLegend({
     <ul aria-label="Legend" className={cn("flex flex-wrap items-center gap-1", className)}>
       {items.map((it) => {
         const key = (
-          <span
-            aria-hidden
-            className={cn("shrink-0", mark === "line" ? "h-0.5 w-2.5 rounded-full" : "size-2.5 rounded-sm")}
-            style={{ background: it.color }}
-          />
+          <span aria-hidden className={cn("shrink-0", mark === "line" ? "h-0.5 w-2.5 rounded-full" : "size-2.5 rounded-sm")} style={{ background: it.color }} />
         );
         return (
           <li key={it.id}>
@@ -91,12 +87,12 @@ export function ChartTooltip({
     >
       <span className="font-mono text-2xs text-fg-muted">{title}</span>
       {rows.map((r) => (
-        <span key={r.id} className={cn("-mx-1 grid grid-cols-[10px_auto_1fr] items-center gap-1.5 rounded px-1", r.emphasis && "bg-subtle")} data-emphasis={r.emphasis || undefined}>
-          <span
-            aria-hidden
-            className={mark === "line" ? "h-0.5 w-2.5 rounded-full" : "size-2.5 rounded-sm"}
-            style={{ background: r.color }}
-          />
+        <span
+          key={r.id}
+          className={cn("-mx-1 grid grid-cols-[10px_auto_1fr] items-center gap-1.5 rounded px-1", r.emphasis && "bg-subtle")}
+          data-emphasis={r.emphasis || undefined}
+        >
+          <span aria-hidden className={mark === "line" ? "h-0.5 w-2.5 rounded-full" : "size-2.5 rounded-sm"} style={{ background: r.color }} />
           <span className="font-mono text-xs font-semibold tabular-nums text-fg">{r.value}</span>
           <span className="truncate text-2xs text-fg-muted">{r.name}</span>
         </span>

@@ -22,6 +22,5 @@ export function renderUI(ui: ReactElement, opts: RenderOptions & { brand?: Parti
 
 /** Pretend an element is laid out at a given box, so pointer maths works in jsdom. */
 export function mockRect(el: Element, rect: Partial<DOMRect>) {
-  el.getBoundingClientRect = () =>
-    ({ left: 0, top: 0, width: 0, height: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => ({}), ...rect }) as DOMRect;
+  el.getBoundingClientRect = () => ({ left: 0, top: 0, width: 0, height: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => ({}), ...rect }) as DOMRect;
 }

@@ -178,7 +178,11 @@ describe("Panel and EmptyState", () => {
   });
 
   it("EmptyState shows icon, text and action", () => {
-    renderUI(<EmptyState icon={<Plus data-testid="i" />} title="No IP groups" action={<button type="button">Create</button>}>Group the networks</EmptyState>);
+    renderUI(
+      <EmptyState icon={<Plus data-testid="i" />} title="No IP groups" action={<button type="button">Create</button>}>
+        Group the networks
+      </EmptyState>,
+    );
     expect(screen.getByText("No IP groups")).toBeInTheDocument();
     expect(screen.getByTestId("i")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Create" })).toBeInTheDocument();

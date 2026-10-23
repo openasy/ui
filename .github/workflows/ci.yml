@@ -25,6 +25,8 @@ jobs:
       - name: Install Chromium for story tests
         run: npx playwright install --with-deps chromium
 
+      - run: npm run lint
+      - run: npm run format:check
       - run: npm run typecheck
 
       - name: Unit, interaction and accessibility tests with coverage

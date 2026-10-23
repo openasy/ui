@@ -30,6 +30,9 @@
     "dev": "storybook dev -p 6006",
     "build": "vite build && tsc -p tsconfig.build.json && cp -R src/messages dist/types/messages",
     "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run --project unit",
     "test:watch": "vitest --project unit",
     "test:stories": "vitest run --project storybook",
@@ -38,6 +41,7 @@
     "build-storybook": "storybook build -o storybook-static",
     "pages": "npm run test:ci; npm run report && npm run build-storybook"
   },
+  "prettier": "@openasy/code-style/prettier",
   "peerDependencies": {
     "react": ">=19",
     "react-dom": ">=19"
@@ -51,6 +55,7 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@openasy/code-style": "https://github.com/openasy/code-style/releases/download/v0.1.2/openasy-code-style-0.1.2.tgz",
     "@storybook/addon-a11y": "^10.6.2",
     "@storybook/addon-docs": "^10.6.2",
     "@storybook/addon-themes": "^10.6.2",
@@ -69,7 +74,9 @@
     "@vitest/coverage-v8": "^5.0.5",
     "@vitest/ui": "^5.0.5",
     "jsdom": "^30.1.3",
+    "oxlint": "1.87.0",
     "playwright": "^1.64.1",
+    "prettier": "3.9.9",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "storybook": "^10.6.2",

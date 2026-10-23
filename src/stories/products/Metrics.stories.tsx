@@ -66,7 +66,12 @@ const PANELS = {
     { id: "p50", name: "p50", color: "var(--oa-chart-1)", data: wave(N, { base: 0.09, amp: 0.02, seed: 47, spike: 0.6, spikeAt: AT + 1, spikeLen: 7 }) },
   ],
   pool: [
-    { id: "use", name: "in use", color: "var(--oa-chart-3)", data: clamp(wave(N, { base: 18, amp: 4, seed: 48, spike: 40, spikeAt: AT + 3, spikeLen: 5 }), 50) },
+    {
+      id: "use",
+      name: "in use",
+      color: "var(--oa-chart-3)",
+      data: clamp(wave(N, { base: 18, amp: 4, seed: 48, spike: 40, spikeAt: AT + 3, spikeLen: 5 }), 50),
+    },
     { id: "wait", name: "waiting", color: "var(--oa-chart-4)", data: wave(N, { base: 0, amp: 0.5, seed: 49, spike: 37, spikeAt: AT + 6, spikeLen: 5 }) },
   ],
   mem: [
@@ -93,16 +98,56 @@ interface DashboardRow {
 }
 
 const DASHBOARDS: DashboardRow[] = [
-  { id: "orders-api", name: "orders-api", folder: "Payments", owner: PEOPLE[3], panels: 6, tags: ["red", "slo"], updated: "2 h ago", views: 1840, starred: true },
-  { id: "node", name: "Node exporter · full", folder: "Platform", owner: PEOPLE[2], panels: 24, tags: ["hosts"], updated: "yesterday", views: 3210, starred: true },
-  { id: "k8s", name: "Kubernetes · cluster overview", folder: "Platform", owner: PEOPLE[6], panels: 18, tags: ["k8s"], updated: "3 d ago", views: 2204, starred: false },
+  {
+    id: "orders-api",
+    name: "orders-api",
+    folder: "Payments",
+    owner: PEOPLE[3],
+    panels: 6,
+    tags: ["red", "slo"],
+    updated: "2 h ago",
+    views: 1840,
+    starred: true,
+  },
+  {
+    id: "node",
+    name: "Node exporter · full",
+    folder: "Platform",
+    owner: PEOPLE[2],
+    panels: 24,
+    tags: ["hosts"],
+    updated: "yesterday",
+    views: 3210,
+    starred: true,
+  },
+  {
+    id: "k8s",
+    name: "Kubernetes · cluster overview",
+    folder: "Platform",
+    owner: PEOPLE[6],
+    panels: 18,
+    tags: ["k8s"],
+    updated: "3 d ago",
+    views: 2204,
+    starred: false,
+  },
   { id: "pg", name: "PostgreSQL · db-prod", folder: "Data", owner: PEOPLE[0], panels: 14, tags: ["db"], updated: "5 d ago", views: 980, starred: true },
   { id: "kafka", name: "Kafka consumer lag", folder: "Data", owner: PEOPLE[0], panels: 8, tags: ["queues"], updated: "1 w ago", views: 612, starred: false },
   { id: "billing", name: "billing-worker", folder: "Payments", owner: PEOPLE[3], panels: 9, tags: ["red"], updated: "1 w ago", views: 455, starred: false },
   { id: "edge", name: "Edge · nginx", folder: "Platform", owner: PEOPLE[2], panels: 11, tags: ["edge", "red"], updated: "2 w ago", views: 820, starred: false },
   { id: "slo", name: "SLO burn rates", folder: "Reliability", owner: PEOPLE[1], panels: 12, tags: ["slo"], updated: "2 w ago", views: 1503, starred: true },
   { id: "vpn", name: "VPN nodes", folder: "Security", owner: PEOPLE[4], panels: 7, tags: ["vpn"], updated: "1 mo ago", views: 214, starred: false },
-  { id: "cost", name: "Ingest volume and cost", folder: "Reliability", owner: PEOPLE[1], panels: 10, tags: ["billing"], updated: "1 mo ago", views: 377, starred: false },
+  {
+    id: "cost",
+    name: "Ingest volume and cost",
+    folder: "Reliability",
+    owner: PEOPLE[1],
+    panels: 10,
+    tags: ["billing"],
+    updated: "1 mo ago",
+    views: 377,
+    starred: false,
+  },
 ];
 
 type MetricType = "counter" | "gauge" | "histogram" | "summary";
@@ -120,18 +165,157 @@ interface MetricRow {
 }
 
 const METRICS: MetricRow[] = [
-  { name: "http_request_duration_seconds_bucket", type: "histogram" as MetricType, unit: "seconds", series: 48210, labels: [{ name: "le", values: 14 }, { name: "route", values: 62 }, { name: "service", values: 24 }, { name: "pod", values: 41 }, { name: "code", values: 9 }], help: "Latency of HTTP requests handled by the server.", job: "kubernetes-pods" },
-  { name: "http_requests_total", type: "counter" as MetricType, unit: "requests", series: 6120, labels: [{ name: "route", values: 62 }, { name: "service", values: 24 }, { name: "code", values: 9 }, { name: "method", values: 5 }], help: "Total HTTP requests by route and status code.", job: "kubernetes-pods" },
-  { name: "node_cpu_seconds_total", type: "counter" as MetricType, unit: "seconds", series: 3072, labels: [{ name: "instance", values: 48 }, { name: "cpu", values: 8 }, { name: "mode", values: 8 }], help: "Seconds the CPUs spent in each mode.", job: "node" },
-  { name: "node_memory_MemAvailable_bytes", type: "gauge" as MetricType, unit: "bytes", series: 48, labels: [{ name: "instance", values: 48 }], help: "Memory available for new processes.", job: "node" },
-  { name: "node_filesystem_avail_bytes", type: "gauge" as MetricType, unit: "bytes", series: 212, labels: [{ name: "instance", values: 48 }, { name: "mountpoint", values: 6 }, { name: "fstype", values: 3 }], help: "Filesystem space available to non-root users.", job: "node" },
-  { name: "pgbouncer_pools_client_waiting_connections", type: "gauge" as MetricType, unit: "connections", series: 12, labels: [{ name: "database", values: 4 }, { name: "user", values: 3 }], help: "Clients waiting for a server connection.", job: "pgbouncer" },
-  { name: "kube_pod_container_status_restarts_total", type: "counter" as MetricType, unit: "restarts", series: 1248, labels: [{ name: "namespace", values: 18 }, { name: "pod", values: 312 }, { name: "container", values: 96 }], help: "Container restarts per pod.", job: "kube-state-metrics" },
-  { name: "kafka_consumergroup_lag", type: "gauge" as MetricType, unit: "messages", series: 384, labels: [{ name: "consumergroup", values: 12 }, { name: "topic", values: 16 }, { name: "partition", values: 24 }], help: "Messages behind the latest offset.", job: "kafka-exporter" },
-  { name: "process_resident_memory_bytes", type: "gauge" as MetricType, unit: "bytes", series: 96, labels: [{ name: "job", values: 9 }, { name: "instance", values: 96 }], help: "Resident memory of the exporter process.", job: "all" },
-  { name: "grpc_server_handling_seconds", type: "summary" as MetricType, unit: "seconds", series: 940, labels: [{ name: "grpc_method", values: 47 }, { name: "grpc_service", values: 6 }, { name: "quantile", values: 4 }], help: "gRPC handling time as a summary.", job: "kubernetes-pods" },
-  { name: "up", type: "gauge" as MetricType, unit: "", series: 96, labels: [{ name: "job", values: 9 }, { name: "instance", values: 96 }], help: "1 when the last scrape of the target succeeded.", job: "all" },
-  { name: "vpn_auth_failures_total", type: "counter" as MetricType, unit: "attempts", series: 14, labels: [{ name: "src_ip", values: 7 }, { name: "node", values: 2 }], help: "Failed VPN sign-ins by source address.", job: "openasy-vpn" },
+  {
+    name: "http_request_duration_seconds_bucket",
+    type: "histogram" as MetricType,
+    unit: "seconds",
+    series: 48210,
+    labels: [
+      { name: "le", values: 14 },
+      { name: "route", values: 62 },
+      { name: "service", values: 24 },
+      { name: "pod", values: 41 },
+      { name: "code", values: 9 },
+    ],
+    help: "Latency of HTTP requests handled by the server.",
+    job: "kubernetes-pods",
+  },
+  {
+    name: "http_requests_total",
+    type: "counter" as MetricType,
+    unit: "requests",
+    series: 6120,
+    labels: [
+      { name: "route", values: 62 },
+      { name: "service", values: 24 },
+      { name: "code", values: 9 },
+      { name: "method", values: 5 },
+    ],
+    help: "Total HTTP requests by route and status code.",
+    job: "kubernetes-pods",
+  },
+  {
+    name: "node_cpu_seconds_total",
+    type: "counter" as MetricType,
+    unit: "seconds",
+    series: 3072,
+    labels: [
+      { name: "instance", values: 48 },
+      { name: "cpu", values: 8 },
+      { name: "mode", values: 8 },
+    ],
+    help: "Seconds the CPUs spent in each mode.",
+    job: "node",
+  },
+  {
+    name: "node_memory_MemAvailable_bytes",
+    type: "gauge" as MetricType,
+    unit: "bytes",
+    series: 48,
+    labels: [{ name: "instance", values: 48 }],
+    help: "Memory available for new processes.",
+    job: "node",
+  },
+  {
+    name: "node_filesystem_avail_bytes",
+    type: "gauge" as MetricType,
+    unit: "bytes",
+    series: 212,
+    labels: [
+      { name: "instance", values: 48 },
+      { name: "mountpoint", values: 6 },
+      { name: "fstype", values: 3 },
+    ],
+    help: "Filesystem space available to non-root users.",
+    job: "node",
+  },
+  {
+    name: "pgbouncer_pools_client_waiting_connections",
+    type: "gauge" as MetricType,
+    unit: "connections",
+    series: 12,
+    labels: [
+      { name: "database", values: 4 },
+      { name: "user", values: 3 },
+    ],
+    help: "Clients waiting for a server connection.",
+    job: "pgbouncer",
+  },
+  {
+    name: "kube_pod_container_status_restarts_total",
+    type: "counter" as MetricType,
+    unit: "restarts",
+    series: 1248,
+    labels: [
+      { name: "namespace", values: 18 },
+      { name: "pod", values: 312 },
+      { name: "container", values: 96 },
+    ],
+    help: "Container restarts per pod.",
+    job: "kube-state-metrics",
+  },
+  {
+    name: "kafka_consumergroup_lag",
+    type: "gauge" as MetricType,
+    unit: "messages",
+    series: 384,
+    labels: [
+      { name: "consumergroup", values: 12 },
+      { name: "topic", values: 16 },
+      { name: "partition", values: 24 },
+    ],
+    help: "Messages behind the latest offset.",
+    job: "kafka-exporter",
+  },
+  {
+    name: "process_resident_memory_bytes",
+    type: "gauge" as MetricType,
+    unit: "bytes",
+    series: 96,
+    labels: [
+      { name: "job", values: 9 },
+      { name: "instance", values: 96 },
+    ],
+    help: "Resident memory of the exporter process.",
+    job: "all",
+  },
+  {
+    name: "grpc_server_handling_seconds",
+    type: "summary" as MetricType,
+    unit: "seconds",
+    series: 940,
+    labels: [
+      { name: "grpc_method", values: 47 },
+      { name: "grpc_service", values: 6 },
+      { name: "quantile", values: 4 },
+    ],
+    help: "gRPC handling time as a summary.",
+    job: "kubernetes-pods",
+  },
+  {
+    name: "up",
+    type: "gauge" as MetricType,
+    unit: "",
+    series: 96,
+    labels: [
+      { name: "job", values: 9 },
+      { name: "instance", values: 96 },
+    ],
+    help: "1 when the last scrape of the target succeeded.",
+    job: "all",
+  },
+  {
+    name: "vpn_auth_failures_total",
+    type: "counter" as MetricType,
+    unit: "attempts",
+    series: 14,
+    labels: [
+      { name: "src_ip", values: 7 },
+      { name: "node", values: 2 },
+    ],
+    help: "Failed VPN sign-ins by source address.",
+    job: "openasy-vpn",
+  },
 ].map((m, i) => ({ ...m, id: `m${i}`, trend: wave(24, { base: m.series, amp: m.series * 0.05, seed: 80 + i }) }));
 
 interface RecordingRule {
@@ -147,14 +331,94 @@ interface RecordingRule {
 }
 
 const RULES: RecordingRule[] = [
-  { id: "rr1", group: "http.rules", record: "service:http_requests:rate5m", expr: "sum by (service) (rate(http_requests_total[5m]))", interval: "30s", lastEval: "12 s ago", evalMs: 41, series: 24, health: "ok" },
-  { id: "rr2", group: "http.rules", record: "service:http_errors:ratio5m", expr: 'sum by (service) (rate(http_requests_total{code=~"5.."}[5m])) / sum by (service) (rate(http_requests_total[5m]))', interval: "30s", lastEval: "12 s ago", evalMs: 58, series: 24, health: "ok" },
-  { id: "rr3", group: "http.rules", record: "service_route:latency_p95:5m", expr: "histogram_quantile(0.95, sum by (service, route, le) (rate(http_request_duration_seconds_bucket[5m])))", interval: "30s", lastEval: "12 s ago", evalMs: 412, series: 1488, health: "ok" },
-  { id: "rr4", group: "node.rules", record: "instance:node_cpu:ratio", expr: ' 1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))', interval: "1m", lastEval: "41 s ago", evalMs: 22, series: 48, health: "ok" },
-  { id: "rr5", group: "node.rules", record: "instance:node_memory_used:ratio", expr: "1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes", interval: "1m", lastEval: "41 s ago", evalMs: 9, series: 48, health: "ok" },
-  { id: "rr6", group: "slo.rules", record: "slo:orders_api:error_budget_burn1h", expr: "(1 - slo:orders_api:availability1h) / (1 - 0.999)", interval: "1m", lastEval: "18 s ago", evalMs: 6, series: 1, health: "ok" },
-  { id: "rr7", group: "slo.rules", record: "slo:orders_api:availability1h", expr: 'sum(rate(http_requests_total{service="orders-api",code!~"5.."}[1h])) / sum(rate(http_requests_total{service="orders-api"}[1h]))', interval: "1m", lastEval: "18 s ago", evalMs: 31, series: 1, health: "ok" },
-  { id: "rr8", group: "kafka.rules", record: "topic:kafka_consumergroup_lag:sum", expr: "sum by (topic, consumergroup) (kafka_consumergroup_lag)", interval: "30s", lastEval: "3 m ago", evalMs: 0, series: 0, health: "err" },
+  {
+    id: "rr1",
+    group: "http.rules",
+    record: "service:http_requests:rate5m",
+    expr: "sum by (service) (rate(http_requests_total[5m]))",
+    interval: "30s",
+    lastEval: "12 s ago",
+    evalMs: 41,
+    series: 24,
+    health: "ok",
+  },
+  {
+    id: "rr2",
+    group: "http.rules",
+    record: "service:http_errors:ratio5m",
+    expr: 'sum by (service) (rate(http_requests_total{code=~"5.."}[5m])) / sum by (service) (rate(http_requests_total[5m]))',
+    interval: "30s",
+    lastEval: "12 s ago",
+    evalMs: 58,
+    series: 24,
+    health: "ok",
+  },
+  {
+    id: "rr3",
+    group: "http.rules",
+    record: "service_route:latency_p95:5m",
+    expr: "histogram_quantile(0.95, sum by (service, route, le) (rate(http_request_duration_seconds_bucket[5m])))",
+    interval: "30s",
+    lastEval: "12 s ago",
+    evalMs: 412,
+    series: 1488,
+    health: "ok",
+  },
+  {
+    id: "rr4",
+    group: "node.rules",
+    record: "instance:node_cpu:ratio",
+    expr: ' 1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))',
+    interval: "1m",
+    lastEval: "41 s ago",
+    evalMs: 22,
+    series: 48,
+    health: "ok",
+  },
+  {
+    id: "rr5",
+    group: "node.rules",
+    record: "instance:node_memory_used:ratio",
+    expr: "1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes",
+    interval: "1m",
+    lastEval: "41 s ago",
+    evalMs: 9,
+    series: 48,
+    health: "ok",
+  },
+  {
+    id: "rr6",
+    group: "slo.rules",
+    record: "slo:orders_api:error_budget_burn1h",
+    expr: "(1 - slo:orders_api:availability1h) / (1 - 0.999)",
+    interval: "1m",
+    lastEval: "18 s ago",
+    evalMs: 6,
+    series: 1,
+    health: "ok",
+  },
+  {
+    id: "rr7",
+    group: "slo.rules",
+    record: "slo:orders_api:availability1h",
+    expr: 'sum(rate(http_requests_total{service="orders-api",code!~"5.."}[1h])) / sum(rate(http_requests_total{service="orders-api"}[1h]))',
+    interval: "1m",
+    lastEval: "18 s ago",
+    evalMs: 31,
+    series: 1,
+    health: "ok",
+  },
+  {
+    id: "rr8",
+    group: "kafka.rules",
+    record: "topic:kafka_consumergroup_lag:sum",
+    expr: "sum by (topic, consumergroup) (kafka_consumergroup_lag)",
+    interval: "30s",
+    lastEval: "3 m ago",
+    evalMs: 0,
+    series: 0,
+    health: "err",
+  },
 ];
 
 type TargetHealth = "up" | "down" | "unknown";
@@ -183,12 +447,20 @@ const TARGETS: Target[] = Array.from({ length: 30 }, (_, i) => {
     id: `t${i}`,
     job,
     endpoint: `http://${ip}:${port}/metrics`,
-    labels: job === "node" ? `instance="${["api-prod-01", "api-prod-03", "db-prod-01", "edge-fra-02", "worker-prod-04"][i % 5]}"` : `namespace="${["orders", "billing", "platform"][i % 3]}"`,
+    labels:
+      job === "node"
+        ? `instance="${["api-prod-01", "api-prod-03", "db-prod-01", "edge-fra-02", "worker-prod-04"][i % 5]}"`
+        : `namespace="${["orders", "billing", "platform"][i % 3]}"`,
     health: down ? "down" : unknown ? "unknown" : "up",
-    lastScrape: unknown ? "never" : `${(i * 7) % 29 + 1} s ago`,
+    lastScrape: unknown ? "never" : `${((i * 7) % 29) + 1} s ago`,
     durationMs: down ? 10000 : 18 + ((i * 37) % 260),
     samples: down || unknown ? 0 : 400 + ((i * 991) % 9000),
-    error: i === 7 ? "Get \"http://192.0.2.31:8080/metrics\": context deadline exceeded" : i === 19 ? "dial tcp 192.0.2.67:8080: connect: connection refused" : undefined,
+    error:
+      i === 7
+        ? 'Get "http://192.0.2.31:8080/metrics": context deadline exceeded'
+        : i === 19
+          ? "dial tcp 192.0.2.67:8080: connect: connection refused"
+          : undefined,
   } satisfies Target;
 });
 
@@ -244,7 +516,12 @@ function DashboardView({ onBack }: { onBack?: () => void }) {
       <FilterBar>
         <TimeRangePicker value={range} onChange={setRange} />
         {vars.map((v) => (
-          <FilterChip key={v.field} field={v.field} value={v.value} onRemove={v.field === "env" ? undefined : () => setVars((xs) => xs.filter((x) => x.field !== v.field))} />
+          <FilterChip
+            key={v.field}
+            field={v.field}
+            value={v.value}
+            onRemove={v.field === "env" ? undefined : () => setVars((xs) => xs.filter((x) => x.field !== v.field))}
+          />
         ))}
         <Button size="sm" variant="ghost" icon={<ChartLine />}>
           Add panel
@@ -256,22 +533,62 @@ function DashboardView({ onBack }: { onBack?: () => void }) {
       <ChartSync>
         <div className="grid gap-2.5 lg:grid-cols-2 2xl:grid-cols-3">
           <Panel title="CPU by host · %" description="node_cpu_seconds_total">
-            <TimeSeriesChart label="CPU by host" labels={labels} height={height} yMax={100} format={pct} threshold={{ value: 85, label: "alert 85%" }} series={PANELS.cpu} xTicks={4} />
+            <TimeSeriesChart
+              label="CPU by host"
+              labels={labels}
+              height={height}
+              yMax={100}
+              format={pct}
+              threshold={{ value: 85, label: "alert 85%" }}
+              series={PANELS.cpu}
+              xTicks={4}
+            />
           </Panel>
           <Panel title="Requests / s" description="by status class">
-            <TimeSeriesChart label="Requests per second, 2xx and 5xx" labels={labels} height={height} format={(v) => `${Math.round(v)}`} series={PANELS.rps} xTicks={4} />
+            <TimeSeriesChart
+              label="Requests per second, 2xx and 5xx"
+              labels={labels}
+              height={height}
+              format={(v) => `${Math.round(v)}`}
+              series={PANELS.rps}
+              xTicks={4}
+            />
           </Panel>
           <Panel title="Latency · s" description="histogram_quantile over http_request_duration_seconds">
-            <TimeSeriesChart label="Latency p95 and p50" labels={labels} height={height} area={false} format={(v) => `${v.toFixed(2)} s`} threshold={{ value: 2, label: "SLO 2 s" }} series={PANELS.latency} xTicks={4} />
+            <TimeSeriesChart
+              label="Latency p95 and p50"
+              labels={labels}
+              height={height}
+              area={false}
+              format={(v) => `${v.toFixed(2)} s`}
+              threshold={{ value: 2, label: "SLO 2 s" }}
+              series={PANELS.latency}
+              xTicks={4}
+            />
           </Panel>
           <Panel title="DB pool" description="pgbouncer connections">
-            <TimeSeriesChart label="Database pool in use and waiting" labels={labels} height={height} format={(v) => `${Math.round(v)}`} threshold={{ value: 50, label: "pool size 50" }} series={PANELS.pool} xTicks={4} />
+            <TimeSeriesChart
+              label="Database pool in use and waiting"
+              labels={labels}
+              height={height}
+              format={(v) => `${Math.round(v)}`}
+              threshold={{ value: 50, label: "pool size 50" }}
+              series={PANELS.pool}
+              xTicks={4}
+            />
           </Panel>
           <Panel title="Memory by host · %">
             <TimeSeriesChart label="Memory by host" labels={labels} height={height} yMax={100} format={pct} series={PANELS.mem} area={false} xTicks={4} />
           </Panel>
           <Panel title="Network · MB/s">
-            <TimeSeriesChart label="Network receive and transmit" labels={labels} height={height} format={(v) => `${v.toFixed(1)} MB/s`} series={PANELS.net} xTicks={4} />
+            <TimeSeriesChart
+              label="Network receive and transmit"
+              labels={labels}
+              height={height}
+              format={(v) => `${v.toFixed(1)} MB/s`}
+              series={PANELS.net}
+              xTicks={4}
+            />
           </Panel>
         </div>
       </ChartSync>
@@ -298,7 +615,12 @@ function DashboardsPage({ initialOpen }: { initialOpen?: string }) {
       width: "44px",
       hideable: false,
       cell: (d) => (
-        <IconButton label={stars[d.id] ? `Unstar ${d.name}` : `Star ${d.name}`} size="xs" aria-pressed={!!stars[d.id]} onClick={() => setStars((s) => ({ ...s, [d.id]: !s[d.id] }))}>
+        <IconButton
+          label={stars[d.id] ? `Unstar ${d.name}` : `Star ${d.name}`}
+          size="xs"
+          aria-pressed={!!stars[d.id]}
+          onClick={() => setStars((s) => ({ ...s, [d.id]: !s[d.id] }))}
+        >
           <Star className={cn(stars[d.id] && "fill-current text-warning-text")} />
         </IconButton>
       ),
@@ -318,7 +640,19 @@ function DashboardsPage({ initialOpen }: { initialOpen?: string }) {
         </span>
       ),
     },
-    { id: "tags", header: "Tags", cell: (d) => <span className="flex flex-wrap gap-1">{d.tags.map((t) => <Badge key={t} mono>{t}</Badge>)}</span> },
+    {
+      id: "tags",
+      header: "Tags",
+      cell: (d) => (
+        <span className="flex flex-wrap gap-1">
+          {d.tags.map((t) => (
+            <Badge key={t} mono>
+              {t}
+            </Badge>
+          ))}
+        </span>
+      ),
+    },
     {
       id: "owner",
       header: "Owner",
@@ -331,7 +665,15 @@ function DashboardsPage({ initialOpen }: { initialOpen?: string }) {
       ),
     },
     { id: "panels", header: "Panels", align: "right", mono: true, sortValue: (d) => d.panels, cell: (d) => d.panels },
-    { id: "views", header: "Views · 30 d", align: "right", mono: true, sortValue: (d) => d.views, cell: (d) => formatNumber(d.views), description: "Times the dashboard was opened in the last 30 days." },
+    {
+      id: "views",
+      header: "Views · 30 d",
+      align: "right",
+      mono: true,
+      sortValue: (d) => d.views,
+      cell: (d) => formatNumber(d.views),
+      description: "Times the dashboard was opened in the last 30 days.",
+    },
     { id: "updated", header: "Updated", cell: (d) => <span className="text-xs text-fg-muted">{d.updated}</span> },
   ];
   return (
@@ -360,7 +702,12 @@ function DashboardsPage({ initialOpen }: { initialOpen?: string }) {
         />
       </PageHeader>
       <FilterBar onClear={folders.length ? () => setFolders([]) : undefined}>
-        <FacetFilter label="Folder" selected={folders} onChange={setFolders} options={folderNames.map((f) => ({ value: f, count: DASHBOARDS.filter((d) => d.folder === f).length }))} />
+        <FacetFilter
+          label="Folder"
+          selected={folders}
+          onChange={setFolders}
+          options={folderNames.map((f) => ({ value: f, count: DASHBOARDS.filter((d) => d.folder === f).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Dashboards" description={`${shown.length} of ${DASHBOARDS.length}`} flush>
@@ -371,12 +718,22 @@ function DashboardsPage({ initialOpen }: { initialOpen?: string }) {
             getRowId={(d) => d.id}
             defaultSort={{ id: "views", direction: "desc" }}
             minWidth={820}
-            empty={<EmptyState title="No dashboards match" icon={<LayoutDashboard />}>Clear the search or folder filter.</EmptyState>}
+            empty={
+              <EmptyState title="No dashboards match" icon={<LayoutDashboard />}>
+                Clear the search or folder filter.
+              </EmptyState>
+            }
           />
         </Panel>
         <div className="flex flex-col gap-2.5">
           <Panel title="Most viewed · 30 d">
-            <BarList label="Most viewed dashboards" items={[...DASHBOARDS].sort((a, b) => b.views - a.views).slice(0, 5).map((d) => ({ id: d.id, label: d.name, value: d.views }))} />
+            <BarList
+              label="Most viewed dashboards"
+              items={[...DASHBOARDS]
+                .sort((a, b) => b.views - a.views)
+                .slice(0, 5)
+                .map((d) => ({ id: d.id, label: d.name, value: d.views }))}
+            />
           </Panel>
           <Panel title="Recently viewed" flush>
             <ul className="flex flex-col text-sm">
@@ -409,7 +766,11 @@ function seriesFor(query: string) {
     le: ["p95"],
   };
   const names = by ? (values[by] ?? ["a", "b", "c"]) : ["value"];
-  return names.map((n, i) => ({ id: `${by ?? "v"}-${i}`, name: by && by !== "le" ? `{${by}="${n}"}` : n, data: wave(N, { base: 20 + ((seed + i * 13) % 40), amp: 6, seed: seed + i, spike: i === 1 ? 30 : 0, spikeAt: AT }) }));
+  return names.map((n, i) => ({
+    id: `${by ?? "v"}-${i}`,
+    name: by && by !== "le" ? `{${by}="${n}"}` : n,
+    data: wave(N, { base: 20 + ((seed + i * 13) % 40), amp: 6, seed: seed + i, spike: i === 1 ? 30 : 0, spikeAt: AT }),
+  }));
 }
 
 function balanced(q: string) {
@@ -493,7 +854,16 @@ function ExplorePage() {
             }
           >
             {ok ? (
-              <TimeSeriesChart label={`Result of ${query}`} labels={labels} series={series} stacked={mode === "stacked"} area={mode === "stacked"} height={240} xTicks={6} format={(v) => v.toFixed(1)} />
+              <TimeSeriesChart
+                label={`Result of ${query}`}
+                labels={labels}
+                series={series}
+                stacked={mode === "stacked"}
+                area={mode === "stacked"}
+                height={240}
+                xTicks={6}
+                format={(v) => v.toFixed(1)}
+              />
             ) : (
               <EmptyState title="Fix the query to see a graph" icon={<ChartLine />} />
             )}
@@ -541,30 +911,71 @@ function MetricListPage() {
   const shown = METRICS.filter((m) => (types.length === 0 || types.includes(m.type)) && m.name.includes(q.trim().toLowerCase()));
   const m = METRICS.find((x) => x.id === active);
   const cols: Column<MetricRow>[] = [
-    { id: "name", header: "Metric", pinned: "left", width: "36%", sortValue: (x) => x.name, cell: (x) => <span className="block truncate font-mono text-xs font-medium">{x.name}</span> },
+    {
+      id: "name",
+      header: "Metric",
+      pinned: "left",
+      width: "36%",
+      sortValue: (x) => x.name,
+      cell: (x) => <span className="block truncate font-mono text-xs font-medium">{x.name}</span>,
+    },
     { id: "type", header: "Type", sortValue: (x) => x.type, cell: (x) => <Badge tone={TYPE_TONE[x.type]}>{x.type}</Badge> },
     { id: "unit", header: "Unit", cell: (x) => <span className="text-xs text-fg-muted">{x.unit || "–"}</span> },
-    { id: "series", header: "Series", align: "right", mono: true, sortValue: (x) => x.series, cell: (x) => formatNumber(x.series), description: "Active time series (cardinality) in the last hour. Each unique label combination is one series." },
+    {
+      id: "series",
+      header: "Series",
+      align: "right",
+      mono: true,
+      sortValue: (x) => x.series,
+      cell: (x) => formatNumber(x.series),
+      description: "Active time series (cardinality) in the last hour. Each unique label combination is one series.",
+    },
     { id: "labels", header: "Labels", align: "right", mono: true, sortValue: (x) => x.labels.length, cell: (x) => x.labels.length },
-    { id: "trend", header: "Series · 24 h", width: "130px", cell: (x) => <Sparkline data={x.trend} label={`Series count of ${x.name}`} height={20} className="w-24" /> },
+    {
+      id: "trend",
+      header: "Series · 24 h",
+      width: "130px",
+      cell: (x) => <Sparkline data={x.trend} label={`Series count of ${x.name}`} height={20} className="w-24" />,
+    },
     { id: "job", header: "Job", mono: true, cell: (x) => x.job },
   ];
   return (
     <>
       <PageHeader title="Metric list" description="4,112 metric names · 412k active series · limit 1M" actions={<Button>Export CSV</Button>} />
       <KpiGrid minWidth={170}>
-        <KpiCard label="Active series" value="412k" unit="of 1M" trend={wave(24, { base: 400, amp: 12, seed: 91 })} delta={{ label: "+3.2% this week", direction: "up" }} />
+        <KpiCard
+          label="Active series"
+          value="412k"
+          unit="of 1M"
+          trend={wave(24, { base: 400, amp: 12, seed: 91 })}
+          delta={{ label: "+3.2% this week", direction: "up" }}
+        />
         <KpiCard label="Metric names" value="4,112" delta={{ label: "+38 new today", direction: "up" }} />
         <KpiCard label="Samples / s" value="182k" unit="ingested" />
         <KpiCard label="High cardinality" value="3" tone="warning" unit="metrics > 10k series" />
       </KpiGrid>
       <FilterBar onClear={types.length || q ? () => (setTypes([]), setQ("")) : undefined}>
         <SearchInput label="Search metrics" value={q} onChange={(e) => setQ(e.target.value)} className="w-72" />
-        <FacetFilter label="Type" selected={types} onChange={setTypes} options={(["counter", "gauge", "histogram", "summary"] as const).map((t) => ({ value: t, count: METRICS.filter((x) => x.type === t).length }))} />
+        <FacetFilter
+          label="Type"
+          selected={types}
+          onChange={setTypes}
+          options={(["counter", "gauge", "histogram", "summary"] as const).map((t) => ({ value: t, count: METRICS.filter((x) => x.type === t).length }))}
+        />
       </FilterBar>
       <div className={cn("grid gap-2.5", m && "xl:grid-cols-[minmax(0,1fr)_340px]")}>
         <Panel title="Metrics" description={`${shown.length} shown`} flush>
-          <DataTable label="Metrics" columns={cols} rows={shown} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={active} defaultSort={{ id: "series", direction: "desc" }} minWidth={860} pageSize={12} />
+          <DataTable
+            label="Metrics"
+            columns={cols}
+            rows={shown}
+            getRowId={(x) => x.id}
+            onRowClick={(x) => setActive(x.id)}
+            activeRowId={active}
+            defaultSort={{ id: "series", direction: "desc" }}
+            minWidth={860}
+            pageSize={12}
+          />
         </Panel>
         {m && (
           <Panel
@@ -628,10 +1039,31 @@ function RecordingRulesPage() {
       ),
     },
     { id: "group", header: "Group", sortValue: (r) => r.group, cell: (r) => <Badge mono>{r.group}</Badge> },
-    { id: "health", header: "Health", sortValue: (r) => r.health, cell: (r) => <StatusBadge tone={r.health === "ok" ? "success" : "danger"}>{r.health === "ok" ? "OK" : "Error"}</StatusBadge> },
+    {
+      id: "health",
+      header: "Health",
+      sortValue: (r) => r.health,
+      cell: (r) => <StatusBadge tone={r.health === "ok" ? "success" : "danger"}>{r.health === "ok" ? "OK" : "Error"}</StatusBadge>,
+    },
     { id: "interval", header: "Interval", mono: true, cell: (r) => r.interval },
-    { id: "eval", header: "Eval time", align: "right", mono: true, sortValue: (r) => r.evalMs, cell: (r) => <span className={cn(r.evalMs > 300 && "text-warning-text")}>{r.evalMs} ms</span>, description: "How long the last evaluation took. Slow rules delay every rule after them in the group." },
-    { id: "series", header: "Series", align: "right", mono: true, sortValue: (r) => r.series, cell: (r) => formatNumber(r.series), description: "Series written by the last evaluation." },
+    {
+      id: "eval",
+      header: "Eval time",
+      align: "right",
+      mono: true,
+      sortValue: (r) => r.evalMs,
+      cell: (r) => <span className={cn(r.evalMs > 300 && "text-warning-text")}>{r.evalMs} ms</span>,
+      description: "How long the last evaluation took. Slow rules delay every rule after them in the group.",
+    },
+    {
+      id: "series",
+      header: "Series",
+      align: "right",
+      mono: true,
+      sortValue: (r) => r.series,
+      cell: (r) => formatNumber(r.series),
+      description: "Series written by the last evaluation.",
+    },
     { id: "last", header: "Last run", cell: (r) => <span className="text-xs text-fg-muted">{r.lastEval}</span> },
   ];
   const submit = () => {
@@ -639,7 +1071,10 @@ function RecordingRulesPage() {
       setError("Use level:metric:operations, lower case with colons, e.g. service:http_requests:rate5m");
       return;
     }
-    setRows((rs) => [...rs, { id: `rr${rs.length + 1}`, group, record, expr: expr || "sum(up)", interval: "30s", lastEval: "pending", evalMs: 0, series: 0, health: "ok" }]);
+    setRows((rs) => [
+      ...rs,
+      { id: `rr${rs.length + 1}`, group, record, expr: expr || "sum(up)", interval: "30s", lastEval: "pending", evalMs: 0, series: 0, health: "ok" },
+    ]);
     setNotice(`Recording rule ${record} added to ${group}`);
     setAdding(false);
     setRecord("");
@@ -662,7 +1097,14 @@ function RecordingRulesPage() {
       </Callout>
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       {adding && (
-        <Panel title="New recording rule" actions={<Button size="sm" variant="ghost" onClick={() => setAdding(false)}>Cancel</Button>}>
+        <Panel
+          title="New recording rule"
+          actions={
+            <Button size="sm" variant="ghost" onClick={() => setAdding(false)}>
+              Cancel
+            </Button>
+          }
+        >
           <form
             className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_160px_auto] md:items-start"
             onSubmit={(e) => {
@@ -670,8 +1112,21 @@ function RecordingRulesPage() {
               submit();
             }}
           >
-            <TextField label="Record name" mono value={record} onChange={(e) => setRecord(e.target.value)} placeholder="service:http_requests:rate5m" error={error || undefined} />
-            <TextField label="Expression" mono value={expr} onChange={(e) => setExpr(e.target.value)} placeholder="sum by (service) (rate(http_requests_total[5m]))" />
+            <TextField
+              label="Record name"
+              mono
+              value={record}
+              onChange={(e) => setRecord(e.target.value)}
+              placeholder="service:http_requests:rate5m"
+              error={error || undefined}
+            />
+            <TextField
+              label="Expression"
+              mono
+              value={expr}
+              onChange={(e) => setExpr(e.target.value)}
+              placeholder="sum by (service) (rate(http_requests_total[5m]))"
+            />
             <SelectField label="Group" value={group} onChange={(e) => setGroup(e.target.value)} options={groups.map((g) => ({ value: g, label: g }))} />
             <Button type="submit" variant="primary" className="md:mt-5">
               Save rule
@@ -710,17 +1165,49 @@ function TargetsPage() {
   const t = TARGETS.find((x) => x.id === active);
   const count = (h: TargetHealth) => TARGETS.filter((x) => x.health === h).length;
   const cols: Column<Target>[] = [
-    { id: "endpoint", header: "Endpoint", pinned: "left", width: "30%", sortValue: (x) => x.endpoint, cell: (x) => <span className="block truncate font-mono text-xs">{x.endpoint}</span> },
+    {
+      id: "endpoint",
+      header: "Endpoint",
+      pinned: "left",
+      width: "30%",
+      sortValue: (x) => x.endpoint,
+      cell: (x) => <span className="block truncate font-mono text-xs">{x.endpoint}</span>,
+    },
     { id: "job", header: "Job", sortValue: (x) => x.job, cell: (x) => <Badge mono>{x.job}</Badge> },
-    { id: "health", header: "State", sortValue: (x) => x.health, cell: (x) => <StatusBadge tone={HEALTH[x.health].tone}>{HEALTH[x.health].label}</StatusBadge> },
+    {
+      id: "health",
+      header: "State",
+      sortValue: (x) => x.health,
+      cell: (x) => <StatusBadge tone={HEALTH[x.health].tone}>{HEALTH[x.health].label}</StatusBadge>,
+    },
     { id: "labels", header: "Labels", cell: (x) => <span className="truncate font-mono text-2xs text-fg-muted">{x.labels}</span> },
     { id: "last", header: "Last scrape", cell: (x) => <span className="text-xs">{x.lastScrape}</span> },
-    { id: "dur", header: "Duration", align: "right", mono: true, sortValue: (x) => x.durationMs, cell: (x) => (x.durationMs >= 10000 ? <span className="text-danger-text">timeout</span> : `${x.durationMs} ms`), description: "Time the last scrape took. The scrape timeout is 10 s." },
-    { id: "samples", header: "Samples", align: "right", mono: true, sortValue: (x) => x.samples, cell: (x) => formatNumber(x.samples), description: "Samples returned by the last scrape after relabelling." },
+    {
+      id: "dur",
+      header: "Duration",
+      align: "right",
+      mono: true,
+      sortValue: (x) => x.durationMs,
+      cell: (x) => (x.durationMs >= 10000 ? <span className="text-danger-text">timeout</span> : `${x.durationMs} ms`),
+      description: "Time the last scrape took. The scrape timeout is 10 s.",
+    },
+    {
+      id: "samples",
+      header: "Samples",
+      align: "right",
+      mono: true,
+      sortValue: (x) => x.samples,
+      cell: (x) => formatNumber(x.samples),
+      description: "Samples returned by the last scrape after relabelling.",
+    },
   ];
   return (
     <>
-      <PageHeader title="Targets" description="96 scrape targets in 6 jobs · interval 30 s · service discovery: Kubernetes, file_sd" actions={<Button icon={<RefreshCw />}>Reload configuration</Button>}>
+      <PageHeader
+        title="Targets"
+        description="96 scrape targets in 6 jobs · interval 30 s · service discovery: Kubernetes, file_sd"
+        actions={<Button icon={<RefreshCw />}>Reload configuration</Button>}
+      >
         <Tabs
           label="Target health"
           value={tab}
@@ -740,14 +1227,39 @@ function TargetsPage() {
         <KpiCard label="Samples / scrape" value="4.6k" unit="avg" />
       </KpiGrid>
       <FilterBar onClear={jobs.length ? () => setJobs([]) : undefined}>
-        <FacetFilter label="Job" selected={jobs} onChange={setJobs} options={JOBS.map((j) => ({ value: j, count: TARGETS.filter((x) => x.job === j).length }))} />
+        <FacetFilter
+          label="Job"
+          selected={jobs}
+          onChange={setJobs}
+          options={JOBS.map((j) => ({ value: j, count: TARGETS.filter((x) => x.job === j).length }))}
+        />
       </FilterBar>
       <div className={cn("grid gap-2.5", t && "xl:grid-cols-[minmax(0,1fr)_320px]")}>
         <Panel title="Targets" description={`${shown.length} shown`} flush>
-          <DataTable label="Scrape targets" columns={cols} rows={shown} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={active} minWidth={900} pageSize={10} defaultSort={{ id: "health", direction: "asc" }} />
+          <DataTable
+            label="Scrape targets"
+            columns={cols}
+            rows={shown}
+            getRowId={(x) => x.id}
+            onRowClick={(x) => setActive(x.id)}
+            activeRowId={active}
+            minWidth={900}
+            pageSize={10}
+            defaultSort={{ id: "health", direction: "asc" }}
+          />
         </Panel>
         {t && (
-          <Panel title="Target" description={t.job} aria-label="Target detail" className="xl:sticky xl:top-3 xl:self-start" actions={<IconButton label="Close target details" size="sm" onClick={() => setActive(undefined)}><X /></IconButton>}>
+          <Panel
+            title="Target"
+            description={t.job}
+            aria-label="Target detail"
+            className="xl:sticky xl:top-3 xl:self-start"
+            actions={
+              <IconButton label="Close target details" size="sm" onClick={() => setActive(undefined)}>
+                <X />
+              </IconButton>
+            }
+          >
             <div className="flex flex-col gap-2.5 text-sm">
               <span className="font-mono text-xs break-all">{t.endpoint}</span>
               <StatusBadge tone={HEALTH[t.health].tone}>{HEALTH[t.health].label}</StatusBadge>
@@ -764,7 +1276,13 @@ function TargetsPage() {
                 <dt className="text-fg-muted">Scrape interval</dt>
                 <dd className="font-mono">30s · timeout 10s</dd>
               </dl>
-              <Sparkline data={t.health === "up" ? wave(24, { base: t.durationMs, amp: 10, seed: 3 }) : Array.from({ length: 24 }, (_, i) => (i > 17 ? 10000 : 80))} label="Scrape duration · 2 h" height={36} color={t.health === "up" ? undefined : "var(--oa-danger)"} format={(v) => `${Math.round(v)} ms`} />
+              <Sparkline
+                data={t.health === "up" ? wave(24, { base: t.durationMs, amp: 10, seed: 3 }) : Array.from({ length: 24 }, (_, i) => (i > 17 ? 10000 : 80))}
+                label="Scrape duration · 2 h"
+                height={36}
+                color={t.health === "up" ? undefined : "var(--oa-danger)"}
+                format={(v) => `${Math.round(v)} ms`}
+              />
               <Button size="sm">Scrape now</Button>
             </div>
           </Panel>
@@ -838,7 +1356,7 @@ export const Explore: Story = {
     await userEvent.type(input, "sum(rate(up{Enter}");
     await expect(c.getByText("Parse error: unclosed parenthesis")).toBeInTheDocument();
     await userEvent.clear(input);
-    await userEvent.type(input, 'avg by (instance) (up){Enter}');
+    await userEvent.type(input, "avg by (instance) (up){Enter}");
     await expect(c.getByRole("table", { name: "Result series" })).toHaveTextContent('{instance="api-prod-03"}');
     await expect(within(c.getByRole("list", { name: "Query history" })).getAllByRole("button")[0]).toHaveTextContent("avg by (instance) (up)");
   },

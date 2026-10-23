@@ -52,21 +52,9 @@ export function indexFromPointer(clientX: number, rect: { left: number; width: n
 }
 
 /** Default categorical order. Colour follows the series, never its rank. */
-export const CHART_COLORS = [
-  "var(--oa-chart-1)",
-  "var(--oa-chart-2)",
-  "var(--oa-chart-3)",
-  "var(--oa-chart-4)",
-] as const;
+export const CHART_COLORS = ["var(--oa-chart-1)", "var(--oa-chart-2)", "var(--oa-chart-3)", "var(--oa-chart-4)"] as const;
 
-export const SEQUENTIAL_RAMP = [
-  "var(--oa-seq-0)",
-  "var(--oa-seq-1)",
-  "var(--oa-seq-2)",
-  "var(--oa-seq-3)",
-  "var(--oa-seq-4)",
-  "var(--oa-seq-5)",
-] as const;
+export const SEQUENTIAL_RAMP = ["var(--oa-seq-0)", "var(--oa-seq-1)", "var(--oa-seq-2)", "var(--oa-seq-3)", "var(--oa-seq-4)", "var(--oa-seq-5)"] as const;
 
 export function colorAt(index: number): string {
   return CHART_COLORS[index % CHART_COLORS.length]!;

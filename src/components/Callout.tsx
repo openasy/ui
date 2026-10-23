@@ -30,11 +30,7 @@ export function Callout({ tone = "info", title, children, action, onDismiss, cla
   const s = styles[tone];
   const urgent = tone === "danger" || tone === "critical";
   return (
-    <div
-      role={urgent ? "alert" : "status"}
-      data-tone={tone}
-      className={cn("flex items-start gap-2.5 rounded-lg border px-3 py-2 text-sm", s.box, className)}
-    >
+    <div role={urgent ? "alert" : "status"} data-tone={tone} className={cn("flex items-start gap-2.5 rounded-lg border px-3 py-2 text-sm", s.box, className)}>
       <s.Icon aria-hidden className={cn("mt-px size-4 shrink-0", s.icon)} />
       <div className="flex min-w-0 grow flex-col gap-0.5">
         <span className="font-semibold text-fg">{title}</span>

@@ -62,20 +62,132 @@ interface Rule {
 }
 
 const named: Omit<Rule, "id">[] = [
-  { state: "firing", name: "Host CPU above 85%", expr: "avg by (host) (rate(node_cpu_seconds_total{mode!=\"idle\"}[5m])) > 0.85", source: "metrics", severity: "high", route: "#ops-oncall → PagerDuty", since: "12 m" },
-  { state: "firing", name: "orders-api p95 above SLO", expr: "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{service=\"orders-api\"}[5m]))) > 2", source: "metrics", severity: "critical", route: "Payments → PagerDuty", since: "11 m" },
-  { state: "firing", name: "Crypto miner detected", expr: "yara.rule:XMRig_* AND action:detected", source: "malware", severity: "critical", route: "Security → Telegram, PagerDuty", since: "9 m" },
-  { state: "pending", name: "DB pool waiters", expr: "pgbouncer_pools_client_waiting_connections > 20 for 5m", source: "metrics", severity: "medium", route: "Payments → Slack", since: "3 m" },
-  { state: "pending", name: "Error log rate 5× baseline", expr: "count_over_time({service=\"orders-api\", level=\"error\"}[5m]) > 5 * baseline_7d", source: "logs", severity: "medium", route: "#ops-oncall → Slack", since: "2 m" },
-  { state: "silenced", name: "edge-fra-02 heartbeat missing", expr: "absent_over_time(up{host=\"edge-fra-02\"}[10m])", source: "infrastructure", severity: "high", route: "#ops-oncall → Slack", since: "silenced 2 h" },
-  { state: "silenced", name: "Certificate expires < 14 d", expr: "x509_cert_not_after - time() < 14 * 86400", source: "vpn", severity: "low", route: "Platform → Email", since: "silenced 6 d" },
-  { state: "ok", name: "SSH brute force", expr: "sigma: proc_creation_lnx_ssh_bruteforce (count > 20 by src_ip in 5m)", source: "siem", severity: "high", route: "Security → Telegram", since: "4 d" },
-  { state: "ok", name: "Critical CVE on internet-facing host", expr: "cvss >= 9.0 AND asset.exposure = \"public\" AND epss > 0.2", source: "vulnerabilities", severity: "critical", route: "Security → Email", since: "12 d" },
-  { state: "ok", name: "Secret pushed to repository", expr: "secret.verified = true AND repo.visibility != \"archived\"", source: "secrets", severity: "high", route: "Security → Slack", since: "21 d" },
-  { state: "ok", name: "VPN failed sign-ins", expr: "sum by (src_ip) (vpn_auth_failures_total[15m]) >= 5", source: "vpn", severity: "medium", route: "Security → Slack", since: "1 d" },
-  { state: "ok", name: "Disk will fill in 4 h", expr: "predict_linear(node_filesystem_avail_bytes[6h], 4 * 3600) < 0", source: "metrics", severity: "high", route: "#ops-oncall → PagerDuty", since: "9 d" },
-  { state: "ok", name: "Container restart loop", expr: "increase(kube_pod_container_status_restarts_total[15m]) > 5", source: "infrastructure", severity: "medium", route: "#ops-oncall → Slack", since: "2 d" },
-  { state: "ok", name: "Unexpected outbound to mining pool", expr: "runtime.event = \"connect\" AND dst.port IN (3333, 4444, 14444)", source: "runtime", severity: "critical", route: "Security → PagerDuty", since: "30 d" },
+  {
+    state: "firing",
+    name: "Host CPU above 85%",
+    expr: 'avg by (host) (rate(node_cpu_seconds_total{mode!="idle"}[5m])) > 0.85',
+    source: "metrics",
+    severity: "high",
+    route: "#ops-oncall → PagerDuty",
+    since: "12 m",
+  },
+  {
+    state: "firing",
+    name: "orders-api p95 above SLO",
+    expr: 'histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{service="orders-api"}[5m]))) > 2',
+    source: "metrics",
+    severity: "critical",
+    route: "Payments → PagerDuty",
+    since: "11 m",
+  },
+  {
+    state: "firing",
+    name: "Crypto miner detected",
+    expr: "yara.rule:XMRig_* AND action:detected",
+    source: "malware",
+    severity: "critical",
+    route: "Security → Telegram, PagerDuty",
+    since: "9 m",
+  },
+  {
+    state: "pending",
+    name: "DB pool waiters",
+    expr: "pgbouncer_pools_client_waiting_connections > 20 for 5m",
+    source: "metrics",
+    severity: "medium",
+    route: "Payments → Slack",
+    since: "3 m",
+  },
+  {
+    state: "pending",
+    name: "Error log rate 5× baseline",
+    expr: 'count_over_time({service="orders-api", level="error"}[5m]) > 5 * baseline_7d',
+    source: "logs",
+    severity: "medium",
+    route: "#ops-oncall → Slack",
+    since: "2 m",
+  },
+  {
+    state: "silenced",
+    name: "edge-fra-02 heartbeat missing",
+    expr: 'absent_over_time(up{host="edge-fra-02"}[10m])',
+    source: "infrastructure",
+    severity: "high",
+    route: "#ops-oncall → Slack",
+    since: "silenced 2 h",
+  },
+  {
+    state: "silenced",
+    name: "Certificate expires < 14 d",
+    expr: "x509_cert_not_after - time() < 14 * 86400",
+    source: "vpn",
+    severity: "low",
+    route: "Platform → Email",
+    since: "silenced 6 d",
+  },
+  {
+    state: "ok",
+    name: "SSH brute force",
+    expr: "sigma: proc_creation_lnx_ssh_bruteforce (count > 20 by src_ip in 5m)",
+    source: "siem",
+    severity: "high",
+    route: "Security → Telegram",
+    since: "4 d",
+  },
+  {
+    state: "ok",
+    name: "Critical CVE on internet-facing host",
+    expr: 'cvss >= 9.0 AND asset.exposure = "public" AND epss > 0.2',
+    source: "vulnerabilities",
+    severity: "critical",
+    route: "Security → Email",
+    since: "12 d",
+  },
+  {
+    state: "ok",
+    name: "Secret pushed to repository",
+    expr: 'secret.verified = true AND repo.visibility != "archived"',
+    source: "secrets",
+    severity: "high",
+    route: "Security → Slack",
+    since: "21 d",
+  },
+  {
+    state: "ok",
+    name: "VPN failed sign-ins",
+    expr: "sum by (src_ip) (vpn_auth_failures_total[15m]) >= 5",
+    source: "vpn",
+    severity: "medium",
+    route: "Security → Slack",
+    since: "1 d",
+  },
+  {
+    state: "ok",
+    name: "Disk will fill in 4 h",
+    expr: "predict_linear(node_filesystem_avail_bytes[6h], 4 * 3600) < 0",
+    source: "metrics",
+    severity: "high",
+    route: "#ops-oncall → PagerDuty",
+    since: "9 d",
+  },
+  {
+    state: "ok",
+    name: "Container restart loop",
+    expr: "increase(kube_pod_container_status_restarts_total[15m]) > 5",
+    source: "infrastructure",
+    severity: "medium",
+    route: "#ops-oncall → Slack",
+    since: "2 d",
+  },
+  {
+    state: "ok",
+    name: "Unexpected outbound to mining pool",
+    expr: 'runtime.event = "connect" AND dst.port IN (3333, 4444, 14444)',
+    source: "runtime",
+    severity: "critical",
+    route: "Security → PagerDuty",
+    since: "30 d",
+  },
 ];
 
 const fillerSources: ProductId[] = ["metrics", "logs", "infrastructure", "siem", "posture", "dast"];
@@ -83,8 +195,16 @@ const rules: Rule[] = [
   ...named,
   ...Array.from({ length: 64 - named.length }, (_, i) => ({
     state: "ok" as const,
-    name: [`5xx ratio above 1% · ${["billing", "auth", "search", "catalog", "cart"][i % 5]}-svc`, `Queue lag > 10k · topic ${["orders", "invoices", "emails", "events"][i % 4]}`, `Posture drift · CIS ${["1.1.12", "4.2.1", "5.1.3"][i % 3]}`][i % 3]!,
-    expr: ["sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])) > 0.01", "kafka_consumergroup_lag > 10000", "posture.control.status = \"fail\""][i % 3]!,
+    name: [
+      `5xx ratio above 1% · ${["billing", "auth", "search", "catalog", "cart"][i % 5]}-svc`,
+      `Queue lag > 10k · topic ${["orders", "invoices", "emails", "events"][i % 4]}`,
+      `Posture drift · CIS ${["1.1.12", "4.2.1", "5.1.3"][i % 3]}`,
+    ][i % 3]!,
+    expr: [
+      'sum(rate(http_requests_total{code=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.01',
+      "kafka_consumergroup_lag > 10000",
+      'posture.control.status = "fail"',
+    ][i % 3]!,
     source: fillerSources[i % fillerSources.length]!,
     severity: (["medium", "low", "high", "info"] as const)[i % 4]!,
     route: ["#ops-oncall → Slack", "Platform → Email", "Security → Webhook"][i % 3]!,
@@ -130,7 +250,12 @@ const columns: Column<Rule>[] = [
       );
     },
   },
-  { id: "severity", header: "Severity", sortValue: (r) => ["info", "low", "medium", "high", "critical"].indexOf(r.severity), cell: (r) => <SeverityBadge severity={r.severity} /> },
+  {
+    id: "severity",
+    header: "Severity",
+    sortValue: (r) => ["info", "low", "medium", "high", "critical"].indexOf(r.severity),
+    cell: (r) => <SeverityBadge severity={r.severity} />,
+  },
   { id: "route", header: "Route", cell: (r) => <span className="text-xs text-fg-muted">{r.route}</span> },
   { id: "since", header: "For", align: "right", mono: true, cell: (r) => r.since },
 ];
@@ -160,10 +285,54 @@ interface FiringAlert {
 }
 
 const FIRING: FiringAlert[] = [
-  { id: "f1", rule: "Crypto miner detected", severity: "critical", source: "malware", labels: { host: "api-prod-03", rule: "XMRig_Miner", path: "/tmp/.x/kworkerd" }, value: "1 match", started: "13:51", for: "9 m", notified: "Telegram, PagerDuty → Ben Ortiz", summary: "YARA rule XMRig_Miner matched a running binary on api-prod-03." },
-  { id: "f2", rule: "orders-api p95 above SLO", severity: "critical", source: "metrics", labels: { service: "orders-api", env: "prod" }, value: "2.41 s", started: "13:49", for: "11 m", notified: "PagerDuty → Sarah Chen", summary: "p95 latency above the 2 s SLO; error budget burn 14× over 1 h." },
-  { id: "f3", rule: "Host CPU above 85%", severity: "high", source: "metrics", labels: { host: "api-prod-03", role: "api" }, value: "97%", started: "13:48", for: "12 m", notified: "Slack #ops-oncall, PagerDuty → Mark Wilson", summary: "CPU on api-prod-03 has stayed above 85% for 12 minutes." },
-  { id: "f4", rule: "Host CPU above 85%", severity: "high", source: "metrics", labels: { host: "db-prod-01", role: "db" }, value: "88%", started: "13:53", for: "7 m", notified: "Slack #ops-oncall", summary: "CPU on db-prod-01 has stayed above 85% for 7 minutes." },
+  {
+    id: "f1",
+    rule: "Crypto miner detected",
+    severity: "critical",
+    source: "malware",
+    labels: { host: "api-prod-03", rule: "XMRig_Miner", path: "/tmp/.x/kworkerd" },
+    value: "1 match",
+    started: "13:51",
+    for: "9 m",
+    notified: "Telegram, PagerDuty → Ben Ortiz",
+    summary: "YARA rule XMRig_Miner matched a running binary on api-prod-03.",
+  },
+  {
+    id: "f2",
+    rule: "orders-api p95 above SLO",
+    severity: "critical",
+    source: "metrics",
+    labels: { service: "orders-api", env: "prod" },
+    value: "2.41 s",
+    started: "13:49",
+    for: "11 m",
+    notified: "PagerDuty → Sarah Chen",
+    summary: "p95 latency above the 2 s SLO; error budget burn 14× over 1 h.",
+  },
+  {
+    id: "f3",
+    rule: "Host CPU above 85%",
+    severity: "high",
+    source: "metrics",
+    labels: { host: "api-prod-03", role: "api" },
+    value: "97%",
+    started: "13:48",
+    for: "12 m",
+    notified: "Slack #ops-oncall, PagerDuty → Mark Wilson",
+    summary: "CPU on api-prod-03 has stayed above 85% for 12 minutes.",
+  },
+  {
+    id: "f4",
+    rule: "Host CPU above 85%",
+    severity: "high",
+    source: "metrics",
+    labels: { host: "db-prod-01", role: "db" },
+    value: "88%",
+    started: "13:53",
+    for: "7 m",
+    notified: "Slack #ops-oncall",
+    summary: "CPU on db-prod-01 has stayed above 85% for 7 minutes.",
+  },
 ];
 
 const TIMELINE: Record<string, Array<{ t: string; text: string }>> = {
@@ -199,7 +368,13 @@ function FiringPage() {
   const rows = FIRING.filter((f) => !silenced.includes(f.id) && (sev.length === 0 || sev.includes(f.severity)));
   const a = FIRING.find((f) => f.id === active);
   const cols: Column<FiringAlert>[] = [
-    { id: "severity", header: "Severity", width: "100px", sortValue: (f) => SEVERITY_META_RANK[f.severity], cell: (f) => <SeverityBadge severity={f.severity} /> },
+    {
+      id: "severity",
+      header: "Severity",
+      width: "100px",
+      sortValue: (f) => SEVERITY_META_RANK[f.severity],
+      cell: (f) => <SeverityBadge severity={f.severity} />,
+    },
     {
       id: "rule",
       header: "Alert",
@@ -221,13 +396,31 @@ function FiringPage() {
     },
     { id: "value", header: "Value", align: "right", mono: true, cell: (f) => f.value, description: "Value of the expression at the last evaluation." },
     { id: "for", header: "Firing for", align: "right", mono: true, cell: (f) => f.for },
-    { id: "ack", header: "Status", cell: (f) => (ack[f.id] ? <StatusBadge tone="info">Acknowledged</StatusBadge> : <StatusBadge tone="danger">Unacknowledged</StatusBadge>) },
+    {
+      id: "ack",
+      header: "Status",
+      cell: (f) => (ack[f.id] ? <StatusBadge tone="info">Acknowledged</StatusBadge> : <StatusBadge tone="danger">Unacknowledged</StatusBadge>),
+    },
   ];
   return (
     <>
-      <PageHeader title="Firing" description="Alert instances firing right now, newest first · one rule can fire for many hosts" meta={<StatusBadge tone="danger">{rows.length} firing</StatusBadge>} actions={<Button icon={<BellOff />}>Silence all</Button>} />
+      <PageHeader
+        title="Firing"
+        description="Alert instances firing right now, newest first · one rule can fire for many hosts"
+        meta={<StatusBadge tone="danger">{rows.length} firing</StatusBadge>}
+        actions={<Button icon={<BellOff />}>Silence all</Button>}
+      />
       <FilterBar onClear={sev.length ? () => setSev([]) : undefined}>
-        <FacetFilter label="Severity" selected={sev} onChange={setSev} options={(["critical", "high"] as const).map((s) => ({ value: s, label: <SeverityBadge severity={s} />, count: FIRING.filter((f) => f.severity === s).length }))} />
+        <FacetFilter
+          label="Severity"
+          selected={sev}
+          onChange={setSev}
+          options={(["critical", "high"] as const).map((s) => ({
+            value: s,
+            label: <SeverityBadge severity={s} />,
+            count: FIRING.filter((f) => f.severity === s).length,
+          }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_380px]">
         <Panel title="Alert instances" flush>
@@ -239,11 +432,20 @@ function FiringPage() {
             onRowClick={(f) => setActive(f.id)}
             activeRowId={active}
             minWidth={760}
-            empty={<EmptyState icon={<BellRing />} title="Nothing is firing">All rules evaluate OK. Silenced alerts are on the Silences page.</EmptyState>}
+            empty={
+              <EmptyState icon={<BellRing />} title="Nothing is firing">
+                All rules evaluate OK. Silenced alerts are on the Silences page.
+              </EmptyState>
+            }
           />
         </Panel>
         {a && !silenced.includes(a.id) && (
-          <Panel title={a.rule} description={`${PRODUCTS[a.source].name} · started ${a.started}`} aria-label="Alert detail" className="xl:sticky xl:top-3 xl:self-start">
+          <Panel
+            title={a.rule}
+            description={`${PRODUCTS[a.source].name} · started ${a.started}`}
+            aria-label="Alert detail"
+            className="xl:sticky xl:top-3 xl:self-start"
+          >
             <div className="flex flex-col gap-3 text-sm">
               <p className="text-fg">{a.summary}</p>
               <dl className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-3 gap-y-1 text-xs">
@@ -304,11 +506,56 @@ interface Silence {
 }
 
 const SILENCES: Silence[] = [
-  { id: "sl1", matchers: 'host="edge-fra-02"', comment: "Hardware swap in Frankfurt, ticket OPS-2291", createdBy: PEOPLE[2], starts: "12:00", ends: "18:00", affected: 3, state: "active" },
-  { id: "sl2", matchers: 'alertname="Certificate expires < 14 d", source="vpn"', comment: "Renewal scheduled for Monday", createdBy: PEOPLE[1], starts: "Oct 13", ends: "Oct 24", affected: 1, state: "active" },
-  { id: "sl3", matchers: 'service="billing-worker", env="staging"', comment: "Load test window", createdBy: PEOPLE[0], starts: "Oct 20 02:00", ends: "Oct 20 04:00", affected: 0, state: "pending" },
-  { id: "sl4", matchers: 'host=~"worker-prod-0[4-9]"', comment: "Kernel patching", createdBy: PEOPLE[6], starts: "Oct 16 22:00", ends: "Oct 17 01:00", affected: 6, state: "expired" },
-  { id: "sl5", matchers: 'alertname="Disk will fill in 4 h"', comment: "Log rotation fix deploying", createdBy: PEOPLE[3], starts: "Oct 12", ends: "Oct 12", affected: 2, state: "expired" },
+  {
+    id: "sl1",
+    matchers: 'host="edge-fra-02"',
+    comment: "Hardware swap in Frankfurt, ticket OPS-2291",
+    createdBy: PEOPLE[2],
+    starts: "12:00",
+    ends: "18:00",
+    affected: 3,
+    state: "active",
+  },
+  {
+    id: "sl2",
+    matchers: 'alertname="Certificate expires < 14 d", source="vpn"',
+    comment: "Renewal scheduled for Monday",
+    createdBy: PEOPLE[1],
+    starts: "Oct 13",
+    ends: "Oct 24",
+    affected: 1,
+    state: "active",
+  },
+  {
+    id: "sl3",
+    matchers: 'service="billing-worker", env="staging"',
+    comment: "Load test window",
+    createdBy: PEOPLE[0],
+    starts: "Oct 20 02:00",
+    ends: "Oct 20 04:00",
+    affected: 0,
+    state: "pending",
+  },
+  {
+    id: "sl4",
+    matchers: 'host=~"worker-prod-0[4-9]"',
+    comment: "Kernel patching",
+    createdBy: PEOPLE[6],
+    starts: "Oct 16 22:00",
+    ends: "Oct 17 01:00",
+    affected: 6,
+    state: "expired",
+  },
+  {
+    id: "sl5",
+    matchers: 'alertname="Disk will fill in 4 h"',
+    comment: "Log rotation fix deploying",
+    createdBy: PEOPLE[3],
+    starts: "Oct 12",
+    ends: "Oct 12",
+    affected: 2,
+    state: "expired",
+  },
 ];
 
 const SIL_TONE = { active: "info", pending: "warning", expired: "neutral" } as const;
@@ -336,7 +583,15 @@ function SilencesPage() {
     },
     { id: "state", header: "State", cell: (r) => <StatusBadge tone={SIL_TONE[r.state]}>{r.state[0]!.toUpperCase() + r.state.slice(1)}</StatusBadge> },
     { id: "affected", header: "Muted alerts", align: "right", mono: true, sortValue: (r) => r.affected, cell: (r) => r.affected },
-    { id: "window", header: "Window", cell: (r) => <span className="text-xs whitespace-nowrap">{r.starts} → {r.ends}</span> },
+    {
+      id: "window",
+      header: "Window",
+      cell: (r) => (
+        <span className="text-xs whitespace-nowrap">
+          {r.starts} → {r.ends}
+        </span>
+      ),
+    },
     {
       id: "by",
       header: "Created by",
@@ -360,7 +615,14 @@ function SilencesPage() {
             Recreate
           </Button>
         ) : (
-          <Button size="xs" onClick={() => (setRows((rs) => rs.map((x) => (x.id === r.id ? { ...x, state: "expired", ends: "now" } : x))), setNotice(`Expired silence ${r.matchers}`))} aria-label={`Expire silence ${r.matchers}`}>
+          <Button
+            size="xs"
+            onClick={() => (
+              setRows((rs) => rs.map((x) => (x.id === r.id ? { ...x, state: "expired", ends: "now" } : x))),
+              setNotice(`Expired silence ${r.matchers}`)
+            )}
+            aria-label={`Expire silence ${r.matchers}`}
+          >
             Expire
           </Button>
         ),
@@ -390,21 +652,56 @@ function SilencesPage() {
       </PageHeader>
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       {creating && (
-        <Panel title="New silence" actions={<Button size="sm" variant="ghost" onClick={() => setCreating(false)}>Cancel</Button>}>
+        <Panel
+          title="New silence"
+          actions={
+            <Button size="sm" variant="ghost" onClick={() => setCreating(false)}>
+              Cancel
+            </Button>
+          }
+        >
           <form
             className="grid gap-3 md:grid-cols-[minmax(0,2fr)_160px_minmax(0,2fr)_auto] md:items-start"
             onSubmit={(e) => {
               e.preventDefault();
               const m = matchers.trim() || 'host="api-prod-03"';
-              setRows((rs) => [{ id: `sl${rs.length + 1}`, matchers: m, comment: "Created from the Silences page", createdBy: "Emily Clark", starts: "now", ends: "in 2 h", affected: 2, state: "active" }, ...rs]);
+              setRows((rs) => [
+                {
+                  id: `sl${rs.length + 1}`,
+                  matchers: m,
+                  comment: "Created from the Silences page",
+                  createdBy: "Emily Clark",
+                  starts: "now",
+                  ends: "in 2 h",
+                  affected: 2,
+                  state: "active",
+                },
+                ...rs,
+              ]);
               setNotice(`Silenced ${m} for 2 hours`);
               setCreating(false);
               setTab("active");
               setMatchers("");
             }}
           >
-            <TextField label="Matchers" mono value={matchers} onChange={(e) => setMatchers(e.target.value)} placeholder='host="api-prod-03", alertname="Host CPU above 85%"' hint="Preview: matches 2 firing alerts" />
-            <SelectField label="Duration" defaultValue="2h" options={[{ value: "1h", label: "1 hour" }, { value: "2h", label: "2 hours" }, { value: "8h", label: "8 hours" }, { value: "1d", label: "1 day" }]} />
+            <TextField
+              label="Matchers"
+              mono
+              value={matchers}
+              onChange={(e) => setMatchers(e.target.value)}
+              placeholder='host="api-prod-03", alertname="Host CPU above 85%"'
+              hint="Preview: matches 2 firing alerts"
+            />
+            <SelectField
+              label="Duration"
+              defaultValue="2h"
+              options={[
+                { value: "1h", label: "1 hour" },
+                { value: "2h", label: "2 hours" },
+                { value: "8h", label: "8 hours" },
+                { value: "1d", label: "1 day" },
+              ]}
+            />
             <TextField label="Comment" placeholder="Why, and a ticket link" />
             <Button type="submit" variant="primary" className="md:mt-5">
               Create silence
@@ -413,7 +710,14 @@ function SilencesPage() {
         </Panel>
       )}
       <Panel title="Silences" flush>
-        <DataTable label="Silences" columns={cols} rows={shown} getRowId={(r) => r.id} minWidth={860} empty={<EmptyState icon={<BellOff />} title="No silences here" />} />
+        <DataTable
+          label="Silences"
+          columns={cols}
+          rows={shown}
+          getRowId={(r) => r.id}
+          minWidth={860}
+          empty={<EmptyState icon={<BellOff />} title="No silences here" />}
+        />
       </Panel>
     </>
   );
@@ -436,7 +740,11 @@ function OnCallPage() {
   const [notice, setNotice] = useState("");
   return (
     <>
-      <PageHeader title="On-call" description="Weekly rotations hand over Monday 09:00 · escalation after 5 minutes to the secondary" actions={<Button icon={<CalendarClock />}>Export iCal</Button>} />
+      <PageHeader
+        title="On-call"
+        description="Weekly rotations hand over Monday 09:00 · escalation after 5 minutes to the secondary"
+        actions={<Button icon={<CalendarClock />}>Export iCal</Button>}
+      />
       <KpiGrid minWidth={200}>
         {TEAMS.map((t) => {
           const now = overrides[`${t.id}-0`] ?? t.rota[0]!;
@@ -481,7 +789,13 @@ function OnCallPage() {
                     const o = overrides[`${t.id}-${i}`];
                     return (
                       <td key={i} className="p-1" data-testid={`cell-${t.id}-${i}`}>
-                        <span className={cn("flex min-w-0 items-center gap-1.5 rounded-md border px-1.5 py-1", o ? "border-warning bg-warning-soft" : "border-line bg-surface", i === 0 && "ring-1 ring-accent")}>
+                        <span
+                          className={cn(
+                            "flex min-w-0 items-center gap-1.5 rounded-md border px-1.5 py-1",
+                            o ? "border-warning bg-warning-soft" : "border-line bg-surface",
+                            i === 0 && "ring-1 ring-accent",
+                          )}
+                        >
                           <Avatar name={o ?? p} size="sm" />
                           <span className="flex min-w-0 flex-col">
                             <span className="truncate text-xs font-medium">{o ?? p}</span>
@@ -545,8 +859,24 @@ function ContactsPage() {
   const c = CONTACTS.find((x) => x.id === active)!;
   return (
     <>
-      <PageHeader title="Contact points" description="Where notifications go, and the policy tree that routes alerts to them." actions={<Button variant="primary" icon={<Plus />}>New contact point</Button>} />
-      <Callout tone="danger" title="Webhook is failing" action={<Button size="sm" onClick={() => setActive("hook")}>Inspect</Button>}>
+      <PageHeader
+        title="Contact points"
+        description="Where notifications go, and the policy tree that routes alerts to them."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New contact point
+          </Button>
+        }
+      />
+      <Callout
+        tone="danger"
+        title="Webhook is failing"
+        action={
+          <Button size="sm" onClick={() => setActive("hook")}>
+            Inspect
+          </Button>
+        }
+      >
         hooks.example.com returned 502 for the last 3 deliveries; they are retried with backoff for 24 h.
       </Callout>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -554,7 +884,12 @@ function ContactsPage() {
           <ul aria-label="Contact points" className="flex flex-col">
             {CONTACTS.map((x) => (
               <li key={x.id} className="border-b border-subtle last:border-0">
-                <button type="button" aria-pressed={active === x.id} onClick={() => (setActive(x.id), setResult(null))} className={cn("flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-canvas", active === x.id && "bg-accent-soft hover:bg-accent-soft")}>
+                <button
+                  type="button"
+                  aria-pressed={active === x.id}
+                  onClick={() => (setActive(x.id), setResult(null))}
+                  className={cn("flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-canvas", active === x.id && "bg-accent-soft hover:bg-accent-soft")}
+                >
                   <span className="grid size-7 shrink-0 place-items-center rounded-md bg-subtle text-fg-muted">
                     <x.icon aria-hidden className="size-3.5" />
                   </span>
@@ -570,10 +905,23 @@ function ContactsPage() {
         </Panel>
         <Panel title={c.name} description={c.target} aria-label="Contact point detail">
           <div className="flex flex-col gap-3">
-            <Switch checked={enabled[c.id] ?? true} onCheckedChange={(v) => setEnabled((e) => ({ ...e, [c.id]: v }))} label="Send notifications" description="Off keeps the contact point but drops its notifications." />
+            <Switch
+              checked={enabled[c.id] ?? true}
+              onCheckedChange={(v) => setEnabled((e) => ({ ...e, [c.id]: v }))}
+              label="Send notifications"
+              description="Off keeps the contact point but drops its notifications."
+            />
             <div className="grid gap-3 md:grid-cols-2">
               <TextField label="Target" mono defaultValue={c.target} key={`t-${c.id}`} />
-              <SelectField label="Message template" defaultValue="default" options={[{ value: "default", label: "Default · title, labels, runbook" }, { value: "short", label: "Short · one line" }]} key={`m-${c.id}`} />
+              <SelectField
+                label="Message template"
+                defaultValue="default"
+                options={[
+                  { value: "default", label: "Default · title, labels, runbook" },
+                  { value: "short", label: "Short · one line" },
+                ]}
+                key={`m-${c.id}`}
+              />
             </div>
             <dl className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-3 gap-y-1 text-xs">
               <dt className="text-fg-muted">Last delivery</dt>
@@ -611,7 +959,9 @@ function ContactsPage() {
           ].map((n) => (
             <li key={n.match} className="flex items-center gap-2 border-b border-subtle py-2 pr-3 last:border-0" style={{ paddingLeft: 12 + n.depth * 20 }}>
               <code className="shrink-0 font-mono text-xs">{n.match}</code>
-              <span aria-hidden className="text-fg-muted">→</span>
+              <span aria-hidden className="text-fg-muted">
+                →
+              </span>
               <span className="grow truncate">{n.to}</span>
               <span className="text-2xs text-fg-muted">{n.group}</span>
             </li>
@@ -641,11 +991,38 @@ const HISTORY: HistoryEvent[] = [
   { id: "h3", time: "Today 13:49", rule: "orders-api p95 above SLO", severity: "critical", from: "pending", to: "firing", duration: "–" },
   { id: "h4", time: "Today 11:20", rule: "Container restart loop", severity: "medium", from: "firing", to: "resolved", duration: "24 m", ackBy: PEOPLE[2] },
   { id: "h5", time: "Today 09:02", rule: "VPN failed sign-ins", severity: "medium", from: "firing", to: "resolved", duration: "6 m", ackBy: PEOPLE[4] },
-  { id: "h6", time: "Yesterday 22:41", rule: "Disk will fill in 4 h", severity: "high", from: "firing", to: "resolved", duration: "1 h 12 m", ackBy: PEOPLE[6] },
-  { id: "h7", time: "Yesterday 18:05", rule: "5xx ratio above 1% · billing-svc", severity: "medium", from: "firing", to: "resolved", duration: "9 m", ackBy: PEOPLE[3] },
+  {
+    id: "h6",
+    time: "Yesterday 22:41",
+    rule: "Disk will fill in 4 h",
+    severity: "high",
+    from: "firing",
+    to: "resolved",
+    duration: "1 h 12 m",
+    ackBy: PEOPLE[6],
+  },
+  {
+    id: "h7",
+    time: "Yesterday 18:05",
+    rule: "5xx ratio above 1% · billing-svc",
+    severity: "medium",
+    from: "firing",
+    to: "resolved",
+    duration: "9 m",
+    ackBy: PEOPLE[3],
+  },
   { id: "h8", time: "Yesterday 14:30", rule: "edge-fra-02 heartbeat missing", severity: "high", from: "firing", to: "silenced", duration: "–" },
   { id: "h9", time: "Oct 17 03:12", rule: "SSH brute force", severity: "high", from: "firing", to: "resolved", duration: "18 m", ackBy: PEOPLE[4] },
-  { id: "h10", time: "Oct 16 16:44", rule: "Queue lag > 10k · topic orders", severity: "medium", from: "firing", to: "resolved", duration: "41 m", ackBy: PEOPLE[0] },
+  {
+    id: "h10",
+    time: "Oct 16 16:44",
+    rule: "Queue lag > 10k · topic orders",
+    severity: "medium",
+    from: "firing",
+    to: "resolved",
+    duration: "41 m",
+    ackBy: PEOPLE[0],
+  },
 ];
 
 const TO_TONE: Record<string, Tone> = { firing: "danger", resolved: "success", silenced: "neutral", pending: "warning", ok: "success" };
@@ -660,7 +1037,12 @@ function HistoryPage() {
       <PageHeader title="History" description="Every state change and notification, kept 400 days" actions={<Button>Export CSV</Button>} />
       <FilterBar onClear={to.length ? () => setTo([]) : undefined}>
         <TimeRangePicker value={range} onChange={setRange} />
-        <FacetFilter label="Transition" selected={to} onChange={setTo} options={["firing", "resolved", "silenced"].map((v) => ({ value: v, count: HISTORY.filter((h) => h.to === v).length }))} />
+        <FacetFilter
+          label="Transition"
+          selected={to}
+          onChange={setTo}
+          options={["firing", "resolved", "silenced"].map((v) => ({ value: v, count: HISTORY.filter((h) => h.to === v).length }))}
+        />
       </FilterBar>
       <KpiGrid minWidth={170}>
         <KpiCard label="Alerts · 7 d" value="41" delta={{ label: "-12% vs. last week", direction: "down", intent: "good" }} />
@@ -713,9 +1095,31 @@ function HistoryPage() {
             { id: "time", header: "Time", width: "140px", cell: (h) => <span className="text-xs whitespace-nowrap">{h.time}</span> },
             { id: "rule", header: "Rule", pinned: "left", cell: (h) => <span className="font-medium">{h.rule}</span> },
             { id: "severity", header: "Severity", cell: (h) => <SeverityBadge severity={h.severity} /> },
-            { id: "change", header: "Change", cell: (h) => <span className="flex items-center gap-1"><StatusBadge tone={TO_TONE[h.from] ?? "neutral"}>{STATE[h.from].label}</StatusBadge><span aria-hidden>→</span><StatusBadge tone={TO_TONE[h.to] ?? "neutral"}>{h.to[0]!.toUpperCase() + h.to.slice(1)}</StatusBadge></span> },
+            {
+              id: "change",
+              header: "Change",
+              cell: (h) => (
+                <span className="flex items-center gap-1">
+                  <StatusBadge tone={TO_TONE[h.from] ?? "neutral"}>{STATE[h.from].label}</StatusBadge>
+                  <span aria-hidden>→</span>
+                  <StatusBadge tone={TO_TONE[h.to] ?? "neutral"}>{h.to[0]!.toUpperCase() + h.to.slice(1)}</StatusBadge>
+                </span>
+              ),
+            },
             { id: "duration", header: "Duration", align: "right", mono: true, cell: (h) => h.duration, description: "Time from firing to resolved." },
-            { id: "ack", header: "Acknowledged by", cell: (h) => (h.ackBy ? <span className="flex items-center gap-1.5"><Avatar name={h.ackBy} size="sm" /><span className="text-xs">{h.ackBy}</span></span> : <span className="text-xs text-fg-muted">–</span>) },
+            {
+              id: "ack",
+              header: "Acknowledged by",
+              cell: (h) =>
+                h.ackBy ? (
+                  <span className="flex items-center gap-1.5">
+                    <Avatar name={h.ackBy} size="sm" />
+                    <span className="text-xs">{h.ackBy}</span>
+                  </span>
+                ) : (
+                  <span className="text-xs text-fg-muted">–</span>
+                ),
+            },
           ]}
         />
       </Panel>
@@ -731,7 +1135,9 @@ function RulesPage() {
   const [tab, setTab] = useState<TabValue>("all");
   const [sev, setSev] = useState<string[]>([]);
   const [q, setQ] = useState("");
-  const shown = rules.filter((r) => (tab === "all" || r.state === tab) && (sev.length === 0 || sev.includes(r.severity)) && r.name.toLowerCase().includes(q.trim().toLowerCase()));
+  const shown = rules.filter(
+    (r) => (tab === "all" || r.state === tab) && (sev.length === 0 || sev.includes(r.severity)) && r.name.toLowerCase().includes(q.trim().toLowerCase()),
+  );
   return (
     <>
       <PageHeader
@@ -747,7 +1153,14 @@ function RulesPage() {
         }
       />
       <KpiGrid minWidth={160}>
-        <KpiCard label="Firing" value={countOf("firing")} tone="danger" trend={wave(24, { base: 0.4, amp: 0.4, seed: 61, spike: 3, spikeAt: 20, spikeLen: 2 })} trendColor="var(--oa-danger)" footer={<StatusBadge tone="danger">2 critical</StatusBadge>} />
+        <KpiCard
+          label="Firing"
+          value={countOf("firing")}
+          tone="danger"
+          trend={wave(24, { base: 0.4, amp: 0.4, seed: 61, spike: 3, spikeAt: 20, spikeLen: 2 })}
+          trendColor="var(--oa-danger)"
+          footer={<StatusBadge tone="danger">2 critical</StatusBadge>}
+        />
         <KpiCard label="Pending" value={countOf("pending")} tone="warning" footer={<StatusBadge tone="warning">fires in &lt; 5 m</StatusBadge>} />
         <KpiCard label="OK" value={countOf("ok")} footer={<StatusBadge tone="success">Healthy</StatusBadge>} />
         <KpiCard label="Silenced" value={countOf("silenced")} footer={<StatusBadge tone="neutral">until 18:00</StatusBadge>} />
@@ -773,17 +1186,36 @@ function RulesPage() {
                 label="Severity"
                 selected={sev}
                 onChange={setSev}
-                options={(["critical", "high", "medium", "low", "info"] as const).map((s) => ({ value: s, label: <SeverityBadge severity={s} />, count: rules.filter((r) => r.severity === s).length }))}
+                options={(["critical", "high", "medium", "low", "info"] as const).map((s) => ({
+                  value: s,
+                  label: <SeverityBadge severity={s} />,
+                  count: rules.filter((r) => r.severity === s).length,
+                }))}
               />
               <Badge>{shown.length} rules</Badge>
             </FilterBar>
           </div>
           <div className="border-t border-line">
-            <DataTable label="Alert rules" columns={columns} rows={shown} getRowId={(r) => r.id} defaultSort={{ id: "state", direction: "desc" }} pageSize={12} minWidth={900} />
+            <DataTable
+              label="Alert rules"
+              columns={columns}
+              rows={shown}
+              getRowId={(r) => r.id}
+              defaultSort={{ id: "state", direction: "desc" }}
+              pageSize={12}
+              minWidth={900}
+            />
           </div>
         </Panel>
         <div className="flex flex-col gap-2.5">
-          <Panel title="On-call now" actions={<Button size="xs" variant="ghost">Schedule</Button>}>
+          <Panel
+            title="On-call now"
+            actions={
+              <Button size="xs" variant="ghost">
+                Schedule
+              </Button>
+            }
+          >
             <ul className="flex flex-col gap-2">
               {[
                 { who: PEOPLE[2], team: "Platform · primary", until: "until Mon 09:00" },
@@ -938,7 +1370,9 @@ export const AlertHistory: Story = {
     await userEvent.click(c.getByRole("button", { name: /^Transition/ }));
     await userEvent.click(await body.findByRole("checkbox", { name: /resolved/ }));
     await userEvent.keyboard("{Escape}");
-    const rows = within(c.getByRole("table", { name: "Alert history" })).getAllByRole("row").slice(1);
+    const rows = within(c.getByRole("table", { name: "Alert history" }))
+      .getAllByRole("row")
+      .slice(1);
     await expect(rows).toHaveLength(6);
     for (const r of rows) await expect(r).toHaveTextContent("Resolved");
   },

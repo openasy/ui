@@ -26,7 +26,13 @@ export function Sparkline({ data, label, height = 32, color = "var(--oa-accent)"
   const last = data[n - 1];
   return (
     <div className={cn("relative", className)} style={{ height }}>
-      <svg role="img" aria-label={`${label}${last !== undefined ? `, latest ${last}` : ""}`} viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="absolute inset-0 size-full">
+      <svg
+        role="img"
+        aria-label={`${label}${last !== undefined ? `, latest ${last}` : ""}`}
+        viewBox={`0 0 ${W} ${height}`}
+        preserveAspectRatio="none"
+        className="absolute inset-0 size-full"
+      >
         <defs>
           <linearGradient id={uid} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor={color} stopOpacity={0.22} />

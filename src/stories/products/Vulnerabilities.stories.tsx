@@ -152,7 +152,7 @@ const findings: Finding[] = [
 
 const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
-const columns: Column<Finding>[] = [
+const findingColumns = (open: (f: Finding) => void): Column<Finding>[] => [
   { id: "sev", header: "Severity", width: "100px", sortValue: (f) => SEVERITY_META[f.severity].rank, cell: (f) => <SeverityBadge severity={f.severity} /> },
   {
     id: "cve",
@@ -161,8 +161,7 @@ const columns: Column<Finding>[] = [
     sortValue: (f) => f.id,
     cell: (f) => (
       <span className="flex min-w-0 flex-col">
-        {/* Click bubbles to the row handler; the button makes it keyboard reachable. */}
-        <button type="button" className="self-start font-mono text-xs font-medium text-fg hover:underline">
+        <button type="button" onClick={() => open(f)} className="self-start font-mono text-xs font-medium text-fg hover:underline">
           {f.id}
         </button>
         <span className="truncate text-xs text-fg-muted">{f.title}</span>
@@ -181,7 +180,17 @@ const columns: Column<Finding>[] = [
       </span>
     ),
   },
-  { id: "affected", header: "Affected", align: "right", sortValue: (f) => f.hosts + f.images, cell: (f) => <span className="whitespace-nowrap">{f.hosts} hosts · {f.images} images</span> },
+  {
+    id: "affected",
+    header: "Affected",
+    align: "right",
+    sortValue: (f) => f.hosts + f.images,
+    cell: (f) => (
+      <span className="whitespace-nowrap">
+        {f.hosts} hosts · {f.images} images
+      </span>
+    ),
+  },
   { id: "epss", header: "EPSS", align: "right", mono: true, sortValue: (f) => f.epss, cell: (f) => pct(f.epss) },
   {
     id: "tags",
@@ -211,163 +220,173 @@ type TabId = "fix" | "hosts" | "images" | "accepted";
 
 /** Findings ranked by exploitation, with a detail panel for the selected CVE. */
 function FindingsPage() {
-    const [range, setRange] = useState("30d");
-    const [tab, setTab] = useState<TabId>("fix");
-    const [sev, setSev] = useState<string[]>([]);
-    const [open, setOpen] = useState<Finding | null>(null);
-    const rows = findings.filter((f) => sev.length === 0 || sev.includes(f.severity));
-    return (
-      <>
-        <PageHeader
-          title="Findings"
-          description="48 hosts · 61 images · feeds updated 14 min ago (NVD, OSV, CISA KEV, EPSS)"
-          actions={
-            <>
-              <SearchInput label="Search CVE, package or host" shortcut="/" className="w-64" />
-              <Button size="md" variant="primary" icon={<Play />}>
-                Scan now
-              </Button>
-            </>
-          }
-        />
-        <FilterBar>
-          <TimeRangePicker value={range} onChange={setRange} />
-          <FacetFilter
-            label="Severity"
-            selected={sev}
-            onChange={setSev}
-            options={[
-              { value: "critical", label: "Critical", count: 7 },
-              { value: "high", label: "High", count: 38 },
-              { value: "medium", label: "Medium", count: 121 },
-              { value: "low", label: "Low", count: 48 },
-            ]}
-          />
-        </FilterBar>
-        <KpiGrid minWidth={150}>
-          <KpiCard label="Exploited (KEV)" value="3" unit="CVEs" tone="danger" delta={{ label: "+1 added to KEV this week", direction: "up", intent: "bad" }} />
-          <KpiCard label="Critical" value="7" footer={<SeverityBadge severity="critical" />} delta={{ label: "−2 vs. last week", direction: "down", intent: "good" }} />
-          <KpiCard label="High" value="38" footer={<SeverityBadge severity="high" />} delta={{ label: "+4 vs. last week", direction: "up", intent: "bad" }} />
-          <KpiCard label="Medium" value="121" footer={<SeverityBadge severity="medium" />} delta={{ label: "−9 vs. last week", direction: "down", intent: "good" }} />
-          <KpiCard label="Low" value="48" footer={<SeverityBadge severity="low" />} delta={{ label: "No change" }} />
-        </KpiGrid>
-        <Panel title="Open findings" description="By severity, last 30 days">
-          <TimeSeriesChart
-            label="Open vulnerability findings by severity over 30 days"
-            labels={dayLabels}
-            stacked
-            height={180}
-            xTicks={6}
-            series={[
-              { id: "critical", name: "Critical", color: "var(--oa-critical)", data: wave(DAYS, { base: 9, amp: 2, seed: 11 }).map(Math.round) },
-              { id: "high", name: "High", color: "var(--oa-danger)", data: wave(DAYS, { base: 40, amp: 5, seed: 12 }).map(Math.round) },
-              { id: "medium", name: "Medium", color: "var(--oa-warning)", data: wave(DAYS, { base: 126, amp: 10, seed: 13 }).map(Math.round) },
-              { id: "low", name: "Low", color: "var(--oa-seq-2)", data: wave(DAYS, { base: 50, amp: 4, seed: 14 }).map(Math.round) },
-            ]}
-          />
-        </Panel>
-        <Tabs<TabId>
-          label="Finding views"
-          value={tab}
-          onChange={setTab}
-          items={[
-            { value: "fix", label: "Fix first", count: findings.length },
-            { value: "hosts", label: "Hosts", count: 48 },
-            { value: "images", label: "Images", count: 61 },
-            { value: "accepted", label: "Accepted risk", count: 9 },
+  const [range, setRange] = useState("30d");
+  const [tab, setTab] = useState<TabId>("fix");
+  const [sev, setSev] = useState<string[]>([]);
+  const [open, setOpen] = useState<Finding | null>(null);
+  const rows = findings.filter((f) => sev.length === 0 || sev.includes(f.severity));
+  return (
+    <>
+      <PageHeader
+        title="Findings"
+        description="48 hosts · 61 images · feeds updated 14 min ago (NVD, OSV, CISA KEV, EPSS)"
+        actions={
+          <>
+            <SearchInput label="Search CVE, package or host" shortcut="/" className="w-64" />
+            <Button size="md" variant="primary" icon={<Play />}>
+              Scan now
+            </Button>
+          </>
+        }
+      />
+      <FilterBar>
+        <TimeRangePicker value={range} onChange={setRange} />
+        <FacetFilter
+          label="Severity"
+          selected={sev}
+          onChange={setSev}
+          options={[
+            { value: "critical", label: "Critical", count: 7 },
+            { value: "high", label: "High", count: 38 },
+            { value: "medium", label: "Medium", count: 121 },
+            { value: "low", label: "Low", count: 48 },
           ]}
         />
-        <div className={open ? "grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]" : "grid gap-2.5"}>
-          <Panel title="Fix first" description="Ranked by known exploitation, then EPSS probability" flush>
-            <DataTable
-              label="Vulnerability findings"
-              columns={columns}
-              rows={[...rows].sort((a, b) => exploitRank(b) - exploitRank(a))}
-              getRowId={(f) => f.id}
-              onRowClick={setOpen}
-              activeRowId={open?.id}
-              minWidth={960}
-            />
-          </Panel>
-          {open && (
-            <Panel
-              aria-label={`${open.id} details`}
-              title={open.id}
-              description={open.title}
-              actions={
-                <IconButton label="Close details" size="sm" onClick={() => setOpen(null)}>
-                  <X />
-                </IconButton>
-              }
-              footer={
-                <span className="flex flex-wrap gap-1.5">
-                  <Button size="sm" variant="primary">
-                    Create fix ticket
-                  </Button>
-                  <Button size="sm" icon={<ShieldCheck />}>
-                    Accept risk
-                  </Button>
-                </span>
-              }
-            >
-              <div className="flex flex-col gap-2.5 text-sm">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <SeverityBadge severity={open.severity} />
-                  <Badge mono>CVSS {open.cvss.toFixed(1)}</Badge>
-                  <Badge mono>EPSS {pct(open.epss)}</Badge>
-                  {open.tags.includes("Exploited") && <StatusBadge tone="danger">In CISA KEV</StatusBadge>}
-                </div>
-                <p className="text-fg-muted">{open.summary}</p>
-                <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-xs">
-                  <dt className="text-fg-muted">Package</dt>
-                  <dd className="font-mono">{open.pkg}</dd>
-                  <dt className="text-fg-muted">Installed</dt>
-                  <dd className="font-mono">{open.installed}</dd>
-                  <dt className="text-fg-muted">Fixed in</dt>
-                  <dd className="font-mono">{open.fixed ?? "Not yet available"}</dd>
-                  <dt className="text-fg-muted">Affected</dt>
-                  <dd>
-                    {open.hosts} hosts · {open.images} images
-                  </dd>
-                </dl>
-                <div className="flex flex-col gap-1">
-                  <span className="text-2xs font-medium tracking-wider text-fg-muted uppercase">Where</span>
-                  <span className="flex flex-wrap gap-1">
-                    {open.where.map((h) => (
-                      <EntityChip key={h} kind="host" value={h} href="#host" />
-                    ))}
-                  </span>
-                </div>
-                {open.fixed && (
-                  <pre className="overflow-x-auto rounded-md bg-subtle px-2.5 py-2 font-mono text-xs text-fg">
-                    apt-get install --only-upgrade {open.pkg}={open.fixed}
-                  </pre>
-                )}
+      </FilterBar>
+      <KpiGrid minWidth={150}>
+        <KpiCard label="Exploited (KEV)" value="3" unit="CVEs" tone="danger" delta={{ label: "+1 added to KEV this week", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="Critical"
+          value="7"
+          footer={<SeverityBadge severity="critical" />}
+          delta={{ label: "−2 vs. last week", direction: "down", intent: "good" }}
+        />
+        <KpiCard label="High" value="38" footer={<SeverityBadge severity="high" />} delta={{ label: "+4 vs. last week", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="Medium"
+          value="121"
+          footer={<SeverityBadge severity="medium" />}
+          delta={{ label: "−9 vs. last week", direction: "down", intent: "good" }}
+        />
+        <KpiCard label="Low" value="48" footer={<SeverityBadge severity="low" />} delta={{ label: "No change" }} />
+      </KpiGrid>
+      <Panel title="Open findings" description="By severity, last 30 days">
+        <TimeSeriesChart
+          label="Open vulnerability findings by severity over 30 days"
+          labels={dayLabels}
+          stacked
+          height={180}
+          xTicks={6}
+          series={[
+            { id: "critical", name: "Critical", color: "var(--oa-critical)", data: wave(DAYS, { base: 9, amp: 2, seed: 11 }).map(Math.round) },
+            { id: "high", name: "High", color: "var(--oa-danger)", data: wave(DAYS, { base: 40, amp: 5, seed: 12 }).map(Math.round) },
+            { id: "medium", name: "Medium", color: "var(--oa-warning)", data: wave(DAYS, { base: 126, amp: 10, seed: 13 }).map(Math.round) },
+            { id: "low", name: "Low", color: "var(--oa-seq-2)", data: wave(DAYS, { base: 50, amp: 4, seed: 14 }).map(Math.round) },
+          ]}
+        />
+      </Panel>
+      <Tabs<TabId>
+        label="Finding views"
+        value={tab}
+        onChange={setTab}
+        items={[
+          { value: "fix", label: "Fix first", count: findings.length },
+          { value: "hosts", label: "Hosts", count: 48 },
+          { value: "images", label: "Images", count: 61 },
+          { value: "accepted", label: "Accepted risk", count: 9 },
+        ]}
+      />
+      <div className={open ? "grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]" : "grid gap-2.5"}>
+        <Panel title="Fix first" description="Ranked by known exploitation, then EPSS probability" flush>
+          <DataTable
+            label="Vulnerability findings"
+            columns={findingColumns(setOpen)}
+            rows={[...rows].sort((a, b) => exploitRank(b) - exploitRank(a))}
+            getRowId={(f) => f.id}
+            onRowClick={setOpen}
+            activeRowId={open?.id}
+            minWidth={960}
+          />
+        </Panel>
+        {open && (
+          <Panel
+            aria-label={`${open.id} details`}
+            title={open.id}
+            description={open.title}
+            actions={
+              <IconButton label="Close details" size="sm" onClick={() => setOpen(null)}>
+                <X />
+              </IconButton>
+            }
+            footer={
+              <span className="flex flex-wrap gap-1.5">
+                <Button size="sm" variant="primary">
+                  Create fix ticket
+                </Button>
+                <Button size="sm" icon={<ShieldCheck />}>
+                  Accept risk
+                </Button>
+              </span>
+            }
+          >
+            <div className="flex flex-col gap-2.5 text-sm">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <SeverityBadge severity={open.severity} />
+                <Badge mono>CVSS {open.cvss.toFixed(1)}</Badge>
+                <Badge mono>EPSS {pct(open.epss)}</Badge>
+                {open.tags.includes("Exploited") && <StatusBadge tone="danger">In CISA KEV</StatusBadge>}
               </div>
-            </Panel>
-          )}
-        </div>
-      </>
-    );
+              <p className="text-fg-muted">{open.summary}</p>
+              <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-xs">
+                <dt className="text-fg-muted">Package</dt>
+                <dd className="font-mono">{open.pkg}</dd>
+                <dt className="text-fg-muted">Installed</dt>
+                <dd className="font-mono">{open.installed}</dd>
+                <dt className="text-fg-muted">Fixed in</dt>
+                <dd className="font-mono">{open.fixed ?? "Not yet available"}</dd>
+                <dt className="text-fg-muted">Affected</dt>
+                <dd>
+                  {open.hosts} hosts · {open.images} images
+                </dd>
+              </dl>
+              <div className="flex flex-col gap-1">
+                <span className="text-2xs font-medium tracking-wider text-fg-muted uppercase">Where</span>
+                <span className="flex flex-wrap gap-1">
+                  {open.where.map((h) => (
+                    <EntityChip key={h} kind="host" value={h} href="#host" />
+                  ))}
+                </span>
+              </div>
+              {open.fixed && (
+                <pre className="overflow-x-auto rounded-md bg-subtle px-2.5 py-2 font-mono text-xs text-fg">
+                  apt-get install --only-upgrade {open.pkg}={open.fixed}
+                </pre>
+              )}
+            </div>
+          </Panel>
+        )}
+      </div>
+    </>
+  );
 }
 
 const findingsPlay: Story["play"] = async ({ canvasElement }) => {
-    const c = within(canvasElement);
-    await expect(c.getByRole("heading", { level: 1, name: "Findings" })).toBeInTheDocument();
-    const table = c.getByRole("table", { name: "Vulnerability findings" });
-    const rows = within(table).getAllByRole("row");
-    await expect(rows[1]).toHaveTextContent("CVE-2024-6387");
-    await expect(rows[rows.length - 1]).toHaveTextContent("No fix yet");
+  const c = within(canvasElement);
+  await expect(c.getByRole("heading", { level: 1, name: "Findings" })).toBeInTheDocument();
+  const table = c.getByRole("table", { name: "Vulnerability findings" });
+  const rows = within(table).getAllByRole("row");
+  await expect(rows[1]).toHaveTextContent("CVE-2024-6387");
+  await expect(rows[rows.length - 1]).toHaveTextContent("No fix yet");
 
-    await userEvent.click(within(table).getByText("CVE-2024-3094"));
-    const detail = c.getByRole("region", { name: "CVE-2024-3094 details" });
-    await expect(within(detail).getByText("xz-utils")).toBeInTheDocument();
-    await expect(within(detail).getByText("In CISA KEV")).toBeInTheDocument();
-    await userEvent.click(within(detail).getByRole("button", { name: "Close details" }));
-    await expect(c.queryByRole("region", { name: "CVE-2024-3094 details" })).not.toBeInTheDocument();
+  await userEvent.click(within(table).getByText("CVE-2024-3094"));
+  const detail = c.getByRole("region", { name: "CVE-2024-3094 details" });
+  await expect(within(detail).getByText("xz-utils")).toBeInTheDocument();
+  await expect(within(detail).getByText("In CISA KEV")).toBeInTheDocument();
+  await userEvent.click(within(detail).getByRole("button", { name: "Close details" }));
+  await expect(c.queryByRole("region", { name: "CVE-2024-3094 details" })).not.toBeInTheDocument();
 
-    await userEvent.click(c.getByRole("tab", { name: /Accepted risk/ }));
-    await expect(c.getByRole("tab", { name: /Accepted risk/ })).toHaveAttribute("aria-selected", "true");
+  await userEvent.click(c.getByRole("tab", { name: /Accepted risk/ }));
+  await expect(c.getByRole("tab", { name: /Accepted risk/ })).toHaveAttribute("aria-selected", "true");
 };
 
 /* ------------------------------------------------------------------ */
@@ -413,16 +432,136 @@ interface Host {
 }
 
 const HOST_ROWS: Host[] = [
-  { id: HOSTS[0], os: "Ubuntu 24.04 LTS", kernel: "6.8.0-45-generic", internet: true, kev: 2, counts: [2, 4, 11, 3], lastScan: "6 min ago", agent: { version: "2.9.1", ok: true }, ip: "203.0.113.24", owner: "Platform", top: ["CVE-2024-6387", "CVE-2023-44487", "CVE-2024-28182"] },
-  { id: HOSTS[1], os: "Ubuntu 24.04 LTS", kernel: "6.8.0-45-generic", internet: true, kev: 1, counts: [1, 5, 9, 2], lastScan: "6 min ago", agent: { version: "2.9.1", ok: true }, ip: "203.0.113.181", owner: "Platform", top: ["CVE-2024-6387", "CVE-2024-2961"] },
-  { id: HOSTS[2], os: "Ubuntu 24.04 LTS", kernel: "6.8.0-41-generic", internet: true, kev: 1, counts: [1, 4, 10, 4], lastScan: "7 min ago", agent: { version: "2.9.1", ok: true }, ip: "198.51.100.7", owner: "Platform", top: ["CVE-2024-6387", "CVE-2024-2961"] },
-  { id: HOSTS[3], os: "Debian 12", kernel: "6.1.0-25-amd64", internet: false, kev: 1, counts: [1, 2, 8, 6], lastScan: "12 min ago", agent: { version: "2.9.0", ok: true }, ip: "10.20.4.13", owner: "Data", top: ["CVE-2024-3094", "CVE-2024-28182"] },
-  { id: HOSTS[4], os: "Debian 12", kernel: "6.1.0-25-amd64", internet: false, kev: 1, counts: [1, 3, 7, 5], lastScan: "12 min ago", agent: { version: "2.9.0", ok: true }, ip: "10.20.4.19", owner: "Data", top: ["CVE-2024-3094"] },
-  { id: HOSTS[5], os: "Rocky Linux 9.4", kernel: "5.14.0-427.el9", internet: false, kev: 1, counts: [0, 6, 14, 2], lastScan: "41 min ago", agent: { version: "2.8.4", ok: true }, ip: "10.20.8.5", owner: "Database", top: ["CVE-2023-4911"] },
-  { id: HOSTS[6], os: "Rocky Linux 9.4", kernel: "5.14.0-427.el9", internet: false, kev: 1, counts: [0, 6, 13, 2], lastScan: "3 days ago", agent: { version: "2.7.2", ok: false }, ip: "10.20.8.6", owner: "Database", top: ["CVE-2023-4911"] },
-  { id: HOSTS[7], os: "Ubuntu 22.04 LTS", kernel: "5.15.0-122-generic", internet: true, kev: 2, counts: [1, 3, 6, 1], lastScan: "6 min ago", agent: { version: "2.9.1", ok: true }, ip: "198.51.100.96", owner: "Edge", top: ["CVE-2023-44487", "CVE-2024-6387"] },
-  { id: "bastion-01", os: "Amazon Linux 2023", kernel: "6.1.109-118.189", internet: true, kev: 0, counts: [0, 1, 3, 0], lastScan: "18 min ago", agent: { version: "2.9.1", ok: true }, ip: "192.0.2.44", owner: "Security", top: ["CVE-2024-28182"] },
-  { id: "ci-runner-02", os: "Ubuntu 22.04 LTS", kernel: "5.15.0-119-generic", internet: false, kev: 0, counts: [0, 2, 12, 9], lastScan: "2 h ago", agent: { version: "2.9.1", ok: true }, ip: "10.20.12.2", owner: "Developer tools", top: ["CVE-2024-2961"] },
+  {
+    id: HOSTS[0],
+    os: "Ubuntu 24.04 LTS",
+    kernel: "6.8.0-45-generic",
+    internet: true,
+    kev: 2,
+    counts: [2, 4, 11, 3],
+    lastScan: "6 min ago",
+    agent: { version: "2.9.1", ok: true },
+    ip: "203.0.113.24",
+    owner: "Platform",
+    top: ["CVE-2024-6387", "CVE-2023-44487", "CVE-2024-28182"],
+  },
+  {
+    id: HOSTS[1],
+    os: "Ubuntu 24.04 LTS",
+    kernel: "6.8.0-45-generic",
+    internet: true,
+    kev: 1,
+    counts: [1, 5, 9, 2],
+    lastScan: "6 min ago",
+    agent: { version: "2.9.1", ok: true },
+    ip: "203.0.113.181",
+    owner: "Platform",
+    top: ["CVE-2024-6387", "CVE-2024-2961"],
+  },
+  {
+    id: HOSTS[2],
+    os: "Ubuntu 24.04 LTS",
+    kernel: "6.8.0-41-generic",
+    internet: true,
+    kev: 1,
+    counts: [1, 4, 10, 4],
+    lastScan: "7 min ago",
+    agent: { version: "2.9.1", ok: true },
+    ip: "198.51.100.7",
+    owner: "Platform",
+    top: ["CVE-2024-6387", "CVE-2024-2961"],
+  },
+  {
+    id: HOSTS[3],
+    os: "Debian 12",
+    kernel: "6.1.0-25-amd64",
+    internet: false,
+    kev: 1,
+    counts: [1, 2, 8, 6],
+    lastScan: "12 min ago",
+    agent: { version: "2.9.0", ok: true },
+    ip: "10.20.4.13",
+    owner: "Data",
+    top: ["CVE-2024-3094", "CVE-2024-28182"],
+  },
+  {
+    id: HOSTS[4],
+    os: "Debian 12",
+    kernel: "6.1.0-25-amd64",
+    internet: false,
+    kev: 1,
+    counts: [1, 3, 7, 5],
+    lastScan: "12 min ago",
+    agent: { version: "2.9.0", ok: true },
+    ip: "10.20.4.19",
+    owner: "Data",
+    top: ["CVE-2024-3094"],
+  },
+  {
+    id: HOSTS[5],
+    os: "Rocky Linux 9.4",
+    kernel: "5.14.0-427.el9",
+    internet: false,
+    kev: 1,
+    counts: [0, 6, 14, 2],
+    lastScan: "41 min ago",
+    agent: { version: "2.8.4", ok: true },
+    ip: "10.20.8.5",
+    owner: "Database",
+    top: ["CVE-2023-4911"],
+  },
+  {
+    id: HOSTS[6],
+    os: "Rocky Linux 9.4",
+    kernel: "5.14.0-427.el9",
+    internet: false,
+    kev: 1,
+    counts: [0, 6, 13, 2],
+    lastScan: "3 days ago",
+    agent: { version: "2.7.2", ok: false },
+    ip: "10.20.8.6",
+    owner: "Database",
+    top: ["CVE-2023-4911"],
+  },
+  {
+    id: HOSTS[7],
+    os: "Ubuntu 22.04 LTS",
+    kernel: "5.15.0-122-generic",
+    internet: true,
+    kev: 2,
+    counts: [1, 3, 6, 1],
+    lastScan: "6 min ago",
+    agent: { version: "2.9.1", ok: true },
+    ip: "198.51.100.96",
+    owner: "Edge",
+    top: ["CVE-2023-44487", "CVE-2024-6387"],
+  },
+  {
+    id: "bastion-01",
+    os: "Amazon Linux 2023",
+    kernel: "6.1.109-118.189",
+    internet: true,
+    kev: 0,
+    counts: [0, 1, 3, 0],
+    lastScan: "18 min ago",
+    agent: { version: "2.9.1", ok: true },
+    ip: "192.0.2.44",
+    owner: "Security",
+    top: ["CVE-2024-28182"],
+  },
+  {
+    id: "ci-runner-02",
+    os: "Ubuntu 22.04 LTS",
+    kernel: "5.15.0-119-generic",
+    internet: false,
+    kev: 0,
+    counts: [0, 2, 12, 9],
+    lastScan: "2 h ago",
+    agent: { version: "2.9.1", ok: true },
+    ip: "10.20.12.2",
+    owner: "Developer tools",
+    top: ["CVE-2024-2961"],
+  },
 ];
 
 const findingById = (id: string) => findings.find((f) => f.id === id);
@@ -448,7 +587,7 @@ function HostsPage({ initialOpen }: { initialOpen?: string }) {
       sortValue: (h) => h.id,
       cell: (h) => (
         <span className="flex min-w-0 flex-col">
-          <button type="button" className="self-start font-mono text-xs font-medium text-fg hover:underline">
+          <button type="button" onClick={() => setOpen(h)} className="self-start font-mono text-xs font-medium text-fg hover:underline">
             {h.id}
           </button>
           <span className="truncate text-2xs text-fg-muted">
@@ -639,13 +778,89 @@ interface Image {
 }
 
 const IMAGES: Image[] = [
-  { id: "i1", ref: "registry.example.com/payments/api:2.14.1", digest: "sha256:4f1c9e2ab07d", base: "node:20.11-bookworm", baseNext: "node:20.18-bookworm-slim", fixes: 41, pods: 24, clusters: 3, counts: [2, 9, 22, 8], pushed: "3 days ago" },
-  { id: "i2", ref: "registry.example.com/web/frontend:5.3.0", digest: "sha256:9ab2d1f04c33", base: "nginx:1.24-alpine", baseNext: "nginx:1.27-alpine", fixes: 12, pods: 18, clusters: 3, counts: [0, 4, 6, 2], pushed: "yesterday" },
-  { id: "i3", ref: "registry.example.com/data/etl-worker:0.38.2", digest: "sha256:17e0c4be9a52", base: "python:3.10-slim-bullseye", baseNext: "python:3.12-slim-bookworm", fixes: 57, pods: 9, clusters: 2, counts: [1, 11, 31, 14], pushed: "2 weeks ago" },
-  { id: "i4", ref: "registry.example.com/auth/identity:3.1.4", digest: "sha256:c03f7d5e6b81", base: "eclipse-temurin:17-jre-jammy", baseNext: "eclipse-temurin:21-jre-noble", fixes: 19, pods: 6, clusters: 2, counts: [1, 3, 9, 5], pushed: "5 days ago" },
-  { id: "i5", ref: "registry.example.com/platform/ingress-proxy:1.9.0", digest: "sha256:e81a0b33fd27", base: "gcr.io/distroless/static", fixes: 0, pods: 12, clusters: 3, counts: [0, 1, 0, 0], pushed: "today" },
-  { id: "i6", ref: "registry.example.com/ml/feature-store:0.12.0", digest: "sha256:5d9ec210a6f4", base: "ubuntu:22.04", baseNext: "ubuntu:24.04", fixes: 33, pods: 4, clusters: 1, counts: [1, 7, 18, 12], pushed: "1 month ago" },
-  { id: "i7", ref: "registry.example.com/tools/cron-runner:2024.10", digest: "sha256:2b77f9c1e840", base: "alpine:3.18", baseNext: "alpine:3.20", fixes: 6, pods: 2, clusters: 1, counts: [0, 2, 3, 1], pushed: "3 weeks ago" },
+  {
+    id: "i1",
+    ref: "registry.example.com/payments/api:2.14.1",
+    digest: "sha256:4f1c9e2ab07d",
+    base: "node:20.11-bookworm",
+    baseNext: "node:20.18-bookworm-slim",
+    fixes: 41,
+    pods: 24,
+    clusters: 3,
+    counts: [2, 9, 22, 8],
+    pushed: "3 days ago",
+  },
+  {
+    id: "i2",
+    ref: "registry.example.com/web/frontend:5.3.0",
+    digest: "sha256:9ab2d1f04c33",
+    base: "nginx:1.24-alpine",
+    baseNext: "nginx:1.27-alpine",
+    fixes: 12,
+    pods: 18,
+    clusters: 3,
+    counts: [0, 4, 6, 2],
+    pushed: "yesterday",
+  },
+  {
+    id: "i3",
+    ref: "registry.example.com/data/etl-worker:0.38.2",
+    digest: "sha256:17e0c4be9a52",
+    base: "python:3.10-slim-bullseye",
+    baseNext: "python:3.12-slim-bookworm",
+    fixes: 57,
+    pods: 9,
+    clusters: 2,
+    counts: [1, 11, 31, 14],
+    pushed: "2 weeks ago",
+  },
+  {
+    id: "i4",
+    ref: "registry.example.com/auth/identity:3.1.4",
+    digest: "sha256:c03f7d5e6b81",
+    base: "eclipse-temurin:17-jre-jammy",
+    baseNext: "eclipse-temurin:21-jre-noble",
+    fixes: 19,
+    pods: 6,
+    clusters: 2,
+    counts: [1, 3, 9, 5],
+    pushed: "5 days ago",
+  },
+  {
+    id: "i5",
+    ref: "registry.example.com/platform/ingress-proxy:1.9.0",
+    digest: "sha256:e81a0b33fd27",
+    base: "gcr.io/distroless/static",
+    fixes: 0,
+    pods: 12,
+    clusters: 3,
+    counts: [0, 1, 0, 0],
+    pushed: "today",
+  },
+  {
+    id: "i6",
+    ref: "registry.example.com/ml/feature-store:0.12.0",
+    digest: "sha256:5d9ec210a6f4",
+    base: "ubuntu:22.04",
+    baseNext: "ubuntu:24.04",
+    fixes: 33,
+    pods: 4,
+    clusters: 1,
+    counts: [1, 7, 18, 12],
+    pushed: "1 month ago",
+  },
+  {
+    id: "i7",
+    ref: "registry.example.com/tools/cron-runner:2024.10",
+    digest: "sha256:2b77f9c1e840",
+    base: "alpine:3.18",
+    baseNext: "alpine:3.20",
+    fixes: 6,
+    pods: 2,
+    clusters: 1,
+    counts: [0, 2, 3, 1],
+    pushed: "3 weeks ago",
+  },
 ];
 
 function ImagesPage() {
@@ -700,7 +915,13 @@ function ImagesPage() {
                 PR opened
               </Badge>
             ) : (
-              <Button size="xs" icon={<ArrowUpCircle />} className="self-start" aria-label={`Open upgrade PR for ${i.ref}`} onClick={() => setPrs((p) => [...p, i.id])}>
+              <Button
+                size="xs"
+                icon={<ArrowUpCircle />}
+                className="self-start"
+                aria-label={`Open upgrade PR for ${i.ref}`}
+                onClick={() => setPrs((p) => [...p, i.id])}
+              >
                 Open upgrade PR
               </Button>
             )}
@@ -728,7 +949,11 @@ function ImagesPage() {
         }
       />
       <KpiGrid minWidth={150}>
-        <KpiCard label="Images" value={scope === "running" ? "61" : "214"} delta={{ label: scope === "running" ? "in 3 clusters" : "across 38 repositories" }} />
+        <KpiCard
+          label="Images"
+          value={scope === "running" ? "61" : "214"}
+          delta={{ label: scope === "running" ? "in 3 clusters" : "across 38 repositories" }}
+        />
         <KpiCard label="With critical" value="5" tone="danger" delta={{ label: "−1 vs. last week", direction: "down", intent: "good" }} />
         <KpiCard label="Fixable by base upgrade" value="72%" tone="success" delta={{ label: "of high + critical findings" }} />
         <KpiCard label="Older than 90 days" value="9" tone="warning" delta={{ label: "rebuild recommended" }} />
@@ -781,8 +1006,26 @@ const ECO_LABEL: Record<Ecosystem, string> = { deb: "Debian", rpm: "RPM", npm: "
 const purlOf = (c: Component) => `pkg:${c.eco}/${c.eco === "deb" ? "ubuntu/" : c.eco === "rpm" ? "rocky/" : ""}${c.name}@${c.version}`;
 
 const COMPONENTS: Component[] = [
-  { id: "c1", name: "openssl", version: "3.0.13-0ubuntu3.4", eco: "deb", licence: "Apache-2.0", hosts: [HOSTS[0], HOSTS[1], HOSTS[2]], images: ["payments/api"], vulns: 2 },
-  { id: "c2", name: "libc6", version: "2.35-0ubuntu3.6", eco: "deb", licence: "LGPL-2.1", hosts: [HOSTS[7], "ci-runner-02"], images: ["ml/feature-store"], vulns: 2 },
+  {
+    id: "c1",
+    name: "openssl",
+    version: "3.0.13-0ubuntu3.4",
+    eco: "deb",
+    licence: "Apache-2.0",
+    hosts: [HOSTS[0], HOSTS[1], HOSTS[2]],
+    images: ["payments/api"],
+    vulns: 2,
+  },
+  {
+    id: "c2",
+    name: "libc6",
+    version: "2.35-0ubuntu3.6",
+    eco: "deb",
+    licence: "LGPL-2.1",
+    hosts: [HOSTS[7], "ci-runner-02"],
+    images: ["ml/feature-store"],
+    vulns: 2,
+  },
   { id: "c3", name: "xz-utils", version: "5.6.0-0.2", eco: "deb", licence: "0BSD", hosts: [HOSTS[3], HOSTS[4]], images: [], vulns: 1 },
   { id: "c4", name: "glibc", version: "2.34-100.el9", eco: "rpm", licence: "LGPL-2.1", hosts: [HOSTS[5], HOSTS[6]], images: [], vulns: 1 },
   { id: "c5", name: "lodash", version: "4.17.20", eco: "npm", licence: "MIT", hosts: [], images: ["payments/api", "web/frontend"], vulns: 1 },
@@ -801,7 +1044,8 @@ function SbomPage() {
   const [eco, setEco] = useState<string[]>([]);
   const [exported, setExported] = useState<string | null>(null);
   const rows = COMPONENTS.filter(
-    (c) => (eco.length === 0 || eco.includes(c.eco)) && (q === "" || `${c.name} ${c.version} ${purlOf(c)} ${c.licence}`.toLowerCase().includes(q.toLowerCase())),
+    (c) =>
+      (eco.length === 0 || eco.includes(c.eco)) && (q === "" || `${c.name} ${c.version} ${purlOf(c)} ${c.licence}`.toLowerCase().includes(q.toLowerCase())),
   );
   const cols: Column<Component>[] = [
     {
@@ -822,12 +1066,22 @@ function SbomPage() {
     },
     { id: "version", header: "Version", mono: true, sortValue: (c) => c.version, cell: (c) => c.version },
     { id: "eco", header: "Ecosystem", sortValue: (c) => c.eco, cell: (c) => <Badge>{ECO_LABEL[c.eco]}</Badge> },
-    { id: "purl", header: "purl", width: "26%", description: "Package URL: a portable identifier for the package", cell: (c) => <span className="block truncate font-mono text-2xs text-fg-muted">{purlOf(c)}</span> },
+    {
+      id: "purl",
+      header: "purl",
+      width: "26%",
+      description: "Package URL: a portable identifier for the package",
+      cell: (c) => <span className="block truncate font-mono text-2xs text-fg-muted">{purlOf(c)}</span>,
+    },
     {
       id: "licence",
       header: "Licence",
       sortValue: (c) => c.licence,
-      cell: (c) => <Badge tone={c.licence.startsWith("GPL") ? "warning" : "neutral"} mono>{c.licence}</Badge>,
+      cell: (c) => (
+        <Badge tone={c.licence.startsWith("GPL") ? "warning" : "neutral"} mono>
+          {c.licence}
+        </Badge>
+      ),
     },
     {
       id: "used",
@@ -953,7 +1207,13 @@ function PoliciesPage() {
         </span>
       ),
     },
-    { id: "over", header: "Over SLA", align: "right", sortValue: (b) => b.over, cell: (b) => <span className="font-medium text-danger-text">{b.over} days</span> },
+    {
+      id: "over",
+      header: "Over SLA",
+      align: "right",
+      sortValue: (b) => b.over,
+      cell: (b) => <span className="font-medium text-danger-text">{b.over} days</span>,
+    },
   ];
   return (
     <>
@@ -964,11 +1224,21 @@ function PoliciesPage() {
             <caption className="sr-only">SLA by severity</caption>
             <thead>
               <tr className="text-left text-xs text-fg-muted">
-                <th scope="col" className="py-1 font-medium">Severity</th>
-                <th scope="col" className="py-1 text-right font-medium">Fix within</th>
-                <th scope="col" className="py-1 text-right font-medium">Open</th>
-                <th scope="col" className="py-1 text-right font-medium">Breached</th>
-                <th scope="col" className="py-1 pl-3 font-medium">Compliance</th>
+                <th scope="col" className="py-1 font-medium">
+                  Severity
+                </th>
+                <th scope="col" className="py-1 text-right font-medium">
+                  Fix within
+                </th>
+                <th scope="col" className="py-1 text-right font-medium">
+                  Open
+                </th>
+                <th scope="col" className="py-1 text-right font-medium">
+                  Breached
+                </th>
+                <th scope="col" className="py-1 pl-3 font-medium">
+                  Compliance
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -983,7 +1253,10 @@ function PoliciesPage() {
                   <td className="py-1.5 pl-3">
                     <span className="flex items-center gap-2">
                       <span aria-hidden className="h-1.5 w-20 overflow-hidden rounded-full bg-subtle">
-                        <span className={r.compliance >= 0.95 ? "block h-full bg-success" : "block h-full bg-warning"} style={{ width: `${r.compliance * 100}%` }} />
+                        <span
+                          className={r.compliance >= 0.95 ? "block h-full bg-success" : "block h-full bg-warning"}
+                          style={{ width: `${r.compliance * 100}%` }}
+                        />
                       </span>
                       <span className="font-mono text-xs">{Math.round(r.compliance * 100)}%</span>
                     </span>
@@ -1019,8 +1292,21 @@ function PoliciesPage() {
           </ul>
         </Panel>
       </div>
-      <Panel title="SLA breaches" description="Findings past their fix-by date" flush aria-label="SLA breaches" actions={<Button size="sm">Notify owners</Button>}>
-        <DataTable label="SLA breaches" columns={breachCols} rows={BREACHES} getRowId={(b) => b.id} defaultSort={{ id: "over", direction: "desc" }} minWidth={720} />
+      <Panel
+        title="SLA breaches"
+        description="Findings past their fix-by date"
+        flush
+        aria-label="SLA breaches"
+        actions={<Button size="sm">Notify owners</Button>}
+      >
+        <DataTable
+          label="SLA breaches"
+          columns={breachCols}
+          rows={BREACHES}
+          getRowId={(b) => b.id}
+          defaultSort={{ id: "over", direction: "desc" }}
+          minWidth={720}
+        />
       </Panel>
     </>
   );
@@ -1048,12 +1334,78 @@ interface RiskException {
 }
 
 const EXCEPTIONS: RiskException[] = [
-  { id: "EX-101", cve: "CVE-2024-28182", severity: "medium", scope: "All hosts · libnghttp2-14", justification: "No fixed package in Ubuntu 24.04 yet; HTTP/2 disabled at the load balancer.", expires: "28 Oct 2026", daysLeft: 9, requester: PEOPLE[0], approver: PEOPLE[1], status: "active" },
-  { id: "EX-102", cve: "CVE-2024-2961", severity: "high", scope: "ci-runner-02", justification: "Runner is ephemeral and isolated; replaced by new image in sprint 44.", expires: "2 Nov 2026", daysLeft: 14, requester: PEOPLE[6], approver: PEOPLE[3], status: "active" },
-  { id: "EX-103", cve: "CVE-2023-4911", severity: "high", scope: `${HOSTS[5]}, ${HOSTS[6]}`, justification: "No setuid binaries reachable by non-root users; kernel update in maintenance window.", expires: "30 Nov 2026", daysLeft: 42, requester: PEOPLE[3], approver: PEOPLE[1], status: "active" },
-  { id: "EX-104", cve: "CVE-2023-44487", severity: "high", scope: "web/frontend:5.3.0", justification: "Behind CDN that mitigates Rapid Reset; upgrade blocked by module compatibility.", expires: "15 Dec 2026", daysLeft: 57, requester: PEOPLE[0], approver: PEOPLE[1], status: "pending" },
-  { id: "EX-105", cve: "CVE-2022-40897", severity: "medium", scope: "data/etl-worker", justification: "setuptools is a build-time dependency only and not present at runtime.", expires: "31 Jan 2027", daysLeft: 104, requester: PEOPLE[4], approver: PEOPLE[3], status: "pending" },
-  { id: "EX-106", cve: "CVE-2023-29491", severity: "high", scope: "tools/cron-runner", justification: "ncurses not invoked by the job.", expires: "1 Oct 2026", daysLeft: -18, requester: PEOPLE[5], approver: PEOPLE[1], status: "expired" },
+  {
+    id: "EX-101",
+    cve: "CVE-2024-28182",
+    severity: "medium",
+    scope: "All hosts · libnghttp2-14",
+    justification: "No fixed package in Ubuntu 24.04 yet; HTTP/2 disabled at the load balancer.",
+    expires: "28 Oct 2026",
+    daysLeft: 9,
+    requester: PEOPLE[0],
+    approver: PEOPLE[1],
+    status: "active",
+  },
+  {
+    id: "EX-102",
+    cve: "CVE-2024-2961",
+    severity: "high",
+    scope: "ci-runner-02",
+    justification: "Runner is ephemeral and isolated; replaced by new image in sprint 44.",
+    expires: "2 Nov 2026",
+    daysLeft: 14,
+    requester: PEOPLE[6],
+    approver: PEOPLE[3],
+    status: "active",
+  },
+  {
+    id: "EX-103",
+    cve: "CVE-2023-4911",
+    severity: "high",
+    scope: `${HOSTS[5]}, ${HOSTS[6]}`,
+    justification: "No setuid binaries reachable by non-root users; kernel update in maintenance window.",
+    expires: "30 Nov 2026",
+    daysLeft: 42,
+    requester: PEOPLE[3],
+    approver: PEOPLE[1],
+    status: "active",
+  },
+  {
+    id: "EX-104",
+    cve: "CVE-2023-44487",
+    severity: "high",
+    scope: "web/frontend:5.3.0",
+    justification: "Behind CDN that mitigates Rapid Reset; upgrade blocked by module compatibility.",
+    expires: "15 Dec 2026",
+    daysLeft: 57,
+    requester: PEOPLE[0],
+    approver: PEOPLE[1],
+    status: "pending",
+  },
+  {
+    id: "EX-105",
+    cve: "CVE-2022-40897",
+    severity: "medium",
+    scope: "data/etl-worker",
+    justification: "setuptools is a build-time dependency only and not present at runtime.",
+    expires: "31 Jan 2027",
+    daysLeft: 104,
+    requester: PEOPLE[4],
+    approver: PEOPLE[3],
+    status: "pending",
+  },
+  {
+    id: "EX-106",
+    cve: "CVE-2023-29491",
+    severity: "high",
+    scope: "tools/cron-runner",
+    justification: "ncurses not invoked by the job.",
+    expires: "1 Oct 2026",
+    daysLeft: -18,
+    requester: PEOPLE[5],
+    approver: PEOPLE[1],
+    status: "expired",
+  },
 ];
 
 function ExceptionsPage() {
@@ -1150,7 +1502,13 @@ function ExceptionsPage() {
         <KpiCard label="Expiring in 14 days" value={soon.length} tone="warning" />
         <KpiCard label="Covered findings" value="31" delta={{ label: "4% of open findings" }} />
       </KpiGrid>
-      <Panel title="Accepted risks" description="Each exception is time-boxed and scoped to specific assets" flush aria-label="Accepted risks" footer={msg ? <span role="status">{msg}</span> : undefined}>
+      <Panel
+        title="Accepted risks"
+        description="Each exception is time-boxed and scoped to specific assets"
+        flush
+        aria-label="Accepted risks"
+        footer={msg ? <span role="status">{msg}</span> : undefined}
+      >
         <DataTable label="Risk exceptions" columns={cols} rows={rows} getRowId={(r) => r.id} minWidth={1100} />
       </Panel>
     </>

@@ -85,7 +85,14 @@ export const Default: Story = {
           </Callout>
         )}
         <form className="flex flex-col gap-2.5" onSubmit={submit} noValidate>
-          <TextField label="Email" type="email" autoComplete="username" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <TextField
+            label="Email"
+            type="email"
+            autoComplete="username"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <TextField
             label="Password"
             type="password"

@@ -6,7 +6,11 @@ import { THEME_STORAGE_KEY, ThemeToggle, themeScript, useThemePreference } from 
 
 function mockSystem(dark: boolean) {
   const listeners = new Set<() => void>();
-  const mql = { matches: dark, addEventListener: (_: string, l: () => void) => listeners.add(l), removeEventListener: (_: string, l: () => void) => listeners.delete(l) };
+  const mql = {
+    matches: dark,
+    addEventListener: (_: string, l: () => void) => listeners.add(l),
+    removeEventListener: (_: string, l: () => void) => listeners.delete(l),
+  };
   vi.stubGlobal("matchMedia", () => mql);
   return {
     set(next: boolean) {

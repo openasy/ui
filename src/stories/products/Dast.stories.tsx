@@ -64,8 +64,10 @@ const findings: Finding[] = [
     engine: "ZAP",
     rule: "40018 SQL Injection (boolean based)",
     confirmed: true,
-    request: "GET /v1/orders?q=x%27%20AND%20%271%27%3D%271 HTTP/1.1\nHost: staging.example.com\nAuthorization: Bearer eyJhbGciOi…redacted\nUser-Agent: OpenAsy-DAST/1.4 (ZAP 2.15)",
-    response: "HTTP/1.1 200 OK\nContent-Type: application/json\nContent-Length: 48211\n\n{\"items\":[{\"id\":\"ord_9f2c\",\"total\":129.90}, … 412 rows]}\n\n# q=x' AND '1'='2 returned 0 rows: boolean condition controls result",
+    request:
+      "GET /v1/orders?q=x%27%20AND%20%271%27%3D%271 HTTP/1.1\nHost: staging.example.com\nAuthorization: Bearer eyJhbGciOi…redacted\nUser-Agent: OpenAsy-DAST/1.4 (ZAP 2.15)",
+    response:
+      'HTTP/1.1 200 OK\nContent-Type: application/json\nContent-Length: 48211\n\n{"items":[{"id":"ord_9f2c","total":129.90}, … 412 rows]}\n\n# q=x\' AND \'1\'=\'2 returned 0 rows: boolean condition controls result',
   },
   {
     id: "d2",
@@ -132,15 +134,114 @@ interface ScanRow {
 }
 
 const SCANS: ScanRow[] = [
-  { id: "312", target: "staging.example.com", env: "staging", profile: "Full", trigger: "Schedule · nightly-staging", status: "running", duration: "21 min", minutes: 21, counts: { critical: 1, high: 1, medium: 2, low: 1 }, started: "Today 14:02" },
-  { id: "311", target: "api.example.com", env: "prod", profile: "API", trigger: "Schedule · api-weekly", status: "completed", duration: "48 min", minutes: 48, counts: { critical: 0, high: 2, medium: 3, low: 5 }, started: "Today 03:00" },
-  { id: "310", target: "app.example.com", env: "prod", profile: "Baseline", trigger: "Deploy · release 2026.10.3", status: "completed", duration: "12 min", minutes: 12, counts: { critical: 0, high: 0, medium: 1, low: 4 }, started: "Yesterday 17:41" },
-  { id: "309", target: "staging.example.com", env: "staging", profile: "Full", trigger: "Schedule · nightly-staging", status: "completed", duration: "1 h 06 min", minutes: 66, counts: { critical: 1, high: 2, medium: 2, low: 3 }, started: "Yesterday 02:00" },
-  { id: "308", target: "graphql.staging.example.com", env: "staging", profile: "API", trigger: "Manual · Sarah Chen", status: "failed", duration: "3 min", minutes: 3, counts: { critical: 0, high: 0, medium: 0, low: 0 }, started: "Oct 17 16:22" },
-  { id: "307", target: "admin.staging.example.com", env: "staging", profile: "Quick", trigger: "Pull request · #482", status: "completed", duration: "7 min", minutes: 7, counts: { critical: 0, high: 1, medium: 0, low: 2 }, started: "Oct 17 11:09" },
-  { id: "306", target: "staging.example.com", env: "staging", profile: "Full", trigger: "Schedule · nightly-staging", status: "completed", duration: "58 min", minutes: 58, counts: { critical: 0, high: 2, medium: 3, low: 3 }, started: "Oct 17 02:00" },
-  { id: "305", target: "app.example.com", env: "prod", profile: "Baseline", trigger: "Manual · Dana Kim", status: "completed", duration: "14 min", minutes: 14, counts: { critical: 0, high: 0, medium: 1, low: 4 }, started: "Oct 16 10:30" },
-  { id: "304", target: "api.example.com", env: "prod", profile: "API", trigger: "Schedule · api-weekly", status: "failed", duration: "1 min", minutes: 1, counts: { critical: 0, high: 0, medium: 0, low: 0 }, started: "Oct 12 03:00" },
+  {
+    id: "312",
+    target: "staging.example.com",
+    env: "staging",
+    profile: "Full",
+    trigger: "Schedule · nightly-staging",
+    status: "running",
+    duration: "21 min",
+    minutes: 21,
+    counts: { critical: 1, high: 1, medium: 2, low: 1 },
+    started: "Today 14:02",
+  },
+  {
+    id: "311",
+    target: "api.example.com",
+    env: "prod",
+    profile: "API",
+    trigger: "Schedule · api-weekly",
+    status: "completed",
+    duration: "48 min",
+    minutes: 48,
+    counts: { critical: 0, high: 2, medium: 3, low: 5 },
+    started: "Today 03:00",
+  },
+  {
+    id: "310",
+    target: "app.example.com",
+    env: "prod",
+    profile: "Baseline",
+    trigger: "Deploy · release 2026.10.3",
+    status: "completed",
+    duration: "12 min",
+    minutes: 12,
+    counts: { critical: 0, high: 0, medium: 1, low: 4 },
+    started: "Yesterday 17:41",
+  },
+  {
+    id: "309",
+    target: "staging.example.com",
+    env: "staging",
+    profile: "Full",
+    trigger: "Schedule · nightly-staging",
+    status: "completed",
+    duration: "1 h 06 min",
+    minutes: 66,
+    counts: { critical: 1, high: 2, medium: 2, low: 3 },
+    started: "Yesterday 02:00",
+  },
+  {
+    id: "308",
+    target: "graphql.staging.example.com",
+    env: "staging",
+    profile: "API",
+    trigger: "Manual · Sarah Chen",
+    status: "failed",
+    duration: "3 min",
+    minutes: 3,
+    counts: { critical: 0, high: 0, medium: 0, low: 0 },
+    started: "Oct 17 16:22",
+  },
+  {
+    id: "307",
+    target: "admin.staging.example.com",
+    env: "staging",
+    profile: "Quick",
+    trigger: "Pull request · #482",
+    status: "completed",
+    duration: "7 min",
+    minutes: 7,
+    counts: { critical: 0, high: 1, medium: 0, low: 2 },
+    started: "Oct 17 11:09",
+  },
+  {
+    id: "306",
+    target: "staging.example.com",
+    env: "staging",
+    profile: "Full",
+    trigger: "Schedule · nightly-staging",
+    status: "completed",
+    duration: "58 min",
+    minutes: 58,
+    counts: { critical: 0, high: 2, medium: 3, low: 3 },
+    started: "Oct 17 02:00",
+  },
+  {
+    id: "305",
+    target: "app.example.com",
+    env: "prod",
+    profile: "Baseline",
+    trigger: "Manual · Dana Kim",
+    status: "completed",
+    duration: "14 min",
+    minutes: 14,
+    counts: { critical: 0, high: 0, medium: 1, low: 4 },
+    started: "Oct 16 10:30",
+  },
+  {
+    id: "304",
+    target: "api.example.com",
+    env: "prod",
+    profile: "API",
+    trigger: "Schedule · api-weekly",
+    status: "failed",
+    duration: "1 min",
+    minutes: 1,
+    counts: { critical: 0, high: 0, medium: 0, low: 0 },
+    started: "Oct 12 03:00",
+  },
 ];
 
 const SCAN_TONE: Record<ScanStatus, Tone> = { running: "info", completed: "success", failed: "danger" };
@@ -165,7 +266,7 @@ function SevCountsCell({ counts }: { counts: SevCounts }) {
 /* Scans: list + running scan detail                                   */
 /* ------------------------------------------------------------------ */
 
-const findingColumns: Column<Finding>[] = [
+const findingColumns = (open: (f: Finding) => void): Column<Finding>[] => [
   { id: "sev", header: "Severity", width: "100px", sortValue: (f) => SEVERITY_META[f.severity].rank, cell: (f) => <SeverityBadge severity={f.severity} /> },
   {
     id: "title",
@@ -173,8 +274,7 @@ const findingColumns: Column<Finding>[] = [
     width: "34%",
     cell: (f) => (
       <span className="flex min-w-0 flex-col">
-        {/* Click bubbles to the row handler; the button makes it keyboard reachable. */}
-        <button type="button" className="self-start truncate text-left font-medium text-fg hover:underline">
+        <button type="button" onClick={() => open(f)} className="self-start truncate text-left font-medium text-fg hover:underline">
           {f.title}
         </button>
         <span className="truncate font-mono text-2xs text-fg-muted">{f.rule}</span>
@@ -184,7 +284,11 @@ const findingColumns: Column<Finding>[] = [
   { id: "url", header: "Location", cell: (f) => <EntityChip kind="url" value={f.url} hideKind /> },
   { id: "param", header: "Param", mono: true, cell: (f) => f.param ?? "–" },
   { id: "engine", header: "Engine", cell: (f) => <Badge>{f.engine}</Badge> },
-  { id: "state", header: "Status", cell: (f) => (f.confirmed ? <StatusBadge tone="danger">Confirmed</StatusBadge> : <StatusBadge tone="neutral">Detected</StatusBadge>) },
+  {
+    id: "state",
+    header: "Status",
+    cell: (f) => (f.confirmed ? <StatusBadge tone="danger">Confirmed</StatusBadge> : <StatusBadge tone="neutral">Detected</StatusBadge>),
+  },
 ];
 
 const N = 30;
@@ -232,7 +336,17 @@ function ScanDetail({ scan, onBack }: { scan: ScanRow; onBack: () => void }) {
             </span>
           </span>
         }
-        meta={running ? paused ? <StatusBadge tone="warning">Paused</StatusBadge> : <StatusBadge tone="info">Running</StatusBadge> : <StatusBadge tone={SCAN_TONE[scan.status]}>{cap(scan.status)}</StatusBadge>}
+        meta={
+          running ? (
+            paused ? (
+              <StatusBadge tone="warning">Paused</StatusBadge>
+            ) : (
+              <StatusBadge tone="info">Running</StatusBadge>
+            )
+          ) : (
+            <StatusBadge tone={SCAN_TONE[scan.status]}>{cap(scan.status)}</StatusBadge>
+          )
+        }
         actions={
           <>
             <Button size="md" variant="ghost" icon={<ArrowLeft />} onClick={onBack}>
@@ -304,7 +418,7 @@ function ScanDetail({ scan, onBack }: { scan: ScanRow; onBack: () => void }) {
         <Panel title="Findings" description="5 so far · 3 confirmed with a working payload" flush>
           <DataTable
             label="DAST findings"
-            columns={findingColumns}
+            columns={findingColumns(setOpen)}
             rows={findings}
             getRowId={(f) => f.id}
             onRowClick={setOpen}
@@ -388,7 +502,7 @@ function ScansPage({ initialOpen }: { initialOpen?: string }) {
       pinned: "left",
       sortValue: (s) => Number(s.id),
       cell: (s) => (
-        <button type="button" className="font-mono font-medium text-fg hover:underline">
+        <button type="button" onClick={() => setOpenId(s.id)} className="font-mono font-medium text-fg hover:underline">
           #{s.id}
         </button>
       ),
@@ -405,11 +519,22 @@ function ScansPage({ initialOpen }: { initialOpen?: string }) {
         </span>
       ),
     },
-    { id: "profile", header: "Profile", description: "Full: spider + active scan. Baseline: passive only. API: driven by the spec. Quick: changed routes only.", cell: (s) => <Badge variant="outline">{s.profile}</Badge> },
+    {
+      id: "profile",
+      header: "Profile",
+      description: "Full: spider + active scan. Baseline: passive only. API: driven by the spec. Quick: changed routes only.",
+      cell: (s) => <Badge variant="outline">{s.profile}</Badge>,
+    },
     { id: "trigger", header: "Trigger", cell: (s) => <span className="text-fg-muted">{s.trigger}</span> },
     { id: "status", header: "Status", sortValue: (s) => s.status, cell: (s) => <StatusBadge tone={SCAN_TONE[s.status]}>{cap(s.status)}</StatusBadge> },
     { id: "duration", header: "Duration", align: "right", mono: true, sortValue: (s) => s.minutes, cell: (s) => s.duration },
-    { id: "findings", header: "Findings", description: "New and open findings by severity: C critical, H high, M medium, L low.", sortValue: (s) => s.counts.critical * 1000 + s.counts.high * 100 + s.counts.medium * 10 + s.counts.low, cell: (s) => <SevCountsCell counts={s.counts} /> },
+    {
+      id: "findings",
+      header: "Findings",
+      description: "New and open findings by severity: C critical, H high, M medium, L low.",
+      sortValue: (s) => s.counts.critical * 1000 + s.counts.high * 100 + s.counts.medium * 10 + s.counts.low,
+      cell: (s) => <SevCountsCell counts={s.counts} />,
+    },
     { id: "started", header: "Started", cell: (s) => s.started },
   ];
   return (
@@ -435,17 +560,34 @@ function ScansPage({ initialOpen }: { initialOpen?: string }) {
           categories={DAYS}
           height={130}
           xTicks={7}
-          segments={(["critical", "high", "medium", "low"] as const).map((k) => ({ id: k, name: SEVERITY_META[k].label, color: `var(--oa-${k === "critical" ? "critical" : k === "high" ? "danger" : k === "medium" ? "warning" : "accent"})` }))}
+          segments={(["critical", "high", "medium", "low"] as const).map((k) => ({
+            id: k,
+            name: SEVERITY_META[k].label,
+            color: `var(--oa-${k === "critical" ? "critical" : k === "high" ? "danger" : k === "medium" ? "warning" : "accent"})`,
+          }))}
           values={DAYS.map((_, i) => [i % 5 === 0 ? 1 : 0, (i * 3) % 4 === 0 ? 2 : i % 2, 1 + (i % 3), 2 + (i % 4)])}
         />
       </Panel>
       <FilterBar onClear={query || statuses.length || profiles.length ? () => (setQuery(""), setStatuses([]), setProfiles([])) : undefined}>
         <SearchInput label="Search scans" value={query} onChange={(e) => setQuery(e.target.value)} className="w-56" />
-        <FacetFilter label="Status" selected={statuses} onChange={setStatuses} options={(["running", "completed", "failed"] as const).map((v) => ({ value: v, label: cap(v), count: SCANS.filter((s) => s.status === v).length }))} />
+        <FacetFilter
+          label="Status"
+          selected={statuses}
+          onChange={setStatuses}
+          options={(["running", "completed", "failed"] as const).map((v) => ({ value: v, label: cap(v), count: SCANS.filter((s) => s.status === v).length }))}
+        />
         <FacetFilter label="Profile" selected={profiles} onChange={setProfiles} options={["Full", "Baseline", "API", "Quick"].map((v) => ({ value: v }))} />
       </FilterBar>
       <Panel title="Recent scans" description={`${shown.length} of ${SCANS.length}`} flush>
-        <DataTable label="Scans" columns={cols} rows={shown} getRowId={(s) => s.id} onRowClick={(s) => setOpenId(s.id)} defaultSort={{ id: "id", direction: "desc" }} minWidth={980} />
+        <DataTable
+          label="Scans"
+          columns={cols}
+          rows={shown}
+          getRowId={(s) => s.id}
+          onRowClick={(s) => setOpenId(s.id)}
+          defaultSort={{ id: "id", direction: "desc" }}
+          minWidth={980}
+        />
       </Panel>
     </>
   );
@@ -473,11 +615,78 @@ interface Target {
 }
 
 const TARGETS: Target[] = [
-  { id: "t1", name: "Storefront staging", url: "https://staging.example.com", env: "staging", kind: "Web app", verify: "verified", method: "DNS TXT record", lastScan: "#312 · running", risk: "critical", include: ["https://staging.example.com/*"], exclude: ["/logout", "/account/delete", "/static/*"], auth: "staging-user" },
-  { id: "t2", name: "Storefront", url: "https://app.example.com", env: "prod", kind: "Web app", verify: "verified", method: "DNS TXT record", lastScan: "#310 · yesterday", risk: "medium", include: ["https://app.example.com/*"], exclude: ["/logout", "/checkout/pay", "/admin/*"], auth: "prod-readonly" },
-  { id: "t3", name: "Public API", url: "https://api.example.com", env: "prod", kind: "OpenAPI", spec: "openapi.yaml · v3.1 · 142 operations", verify: "verified", method: "File at /.well-known/openasy.txt", lastScan: "#311 · today", risk: "high", include: ["https://api.example.com/v1/*"], exclude: ["DELETE *", "/v1/payments/*"], auth: "api-token" },
-  { id: "t4", name: "GraphQL gateway", url: "https://graphql.staging.example.com", env: "staging", kind: "GraphQL", spec: "Introspection · 38 queries · 21 mutations", verify: "failed", method: "DNS TXT record", lastScan: "#308 · failed", risk: "low", include: ["https://graphql.staging.example.com/graphql"], exclude: ["mutation deleteAccount"], auth: "staging-user" },
-  { id: "t5", name: "Admin console staging", url: "https://admin.staging.example.com", env: "staging", kind: "Web app", verify: "pending", method: "HTTP header", lastScan: "#307 · Oct 17", risk: "high", include: ["https://admin.staging.example.com/*"], exclude: ["/users/*/impersonate"], auth: "staging-admin" },
+  {
+    id: "t1",
+    name: "Storefront staging",
+    url: "https://staging.example.com",
+    env: "staging",
+    kind: "Web app",
+    verify: "verified",
+    method: "DNS TXT record",
+    lastScan: "#312 · running",
+    risk: "critical",
+    include: ["https://staging.example.com/*"],
+    exclude: ["/logout", "/account/delete", "/static/*"],
+    auth: "staging-user",
+  },
+  {
+    id: "t2",
+    name: "Storefront",
+    url: "https://app.example.com",
+    env: "prod",
+    kind: "Web app",
+    verify: "verified",
+    method: "DNS TXT record",
+    lastScan: "#310 · yesterday",
+    risk: "medium",
+    include: ["https://app.example.com/*"],
+    exclude: ["/logout", "/checkout/pay", "/admin/*"],
+    auth: "prod-readonly",
+  },
+  {
+    id: "t3",
+    name: "Public API",
+    url: "https://api.example.com",
+    env: "prod",
+    kind: "OpenAPI",
+    spec: "openapi.yaml · v3.1 · 142 operations",
+    verify: "verified",
+    method: "File at /.well-known/openasy.txt",
+    lastScan: "#311 · today",
+    risk: "high",
+    include: ["https://api.example.com/v1/*"],
+    exclude: ["DELETE *", "/v1/payments/*"],
+    auth: "api-token",
+  },
+  {
+    id: "t4",
+    name: "GraphQL gateway",
+    url: "https://graphql.staging.example.com",
+    env: "staging",
+    kind: "GraphQL",
+    spec: "Introspection · 38 queries · 21 mutations",
+    verify: "failed",
+    method: "DNS TXT record",
+    lastScan: "#308 · failed",
+    risk: "low",
+    include: ["https://graphql.staging.example.com/graphql"],
+    exclude: ["mutation deleteAccount"],
+    auth: "staging-user",
+  },
+  {
+    id: "t5",
+    name: "Admin console staging",
+    url: "https://admin.staging.example.com",
+    env: "staging",
+    kind: "Web app",
+    verify: "pending",
+    method: "HTTP header",
+    lastScan: "#307 · Oct 17",
+    risk: "high",
+    include: ["https://admin.staging.example.com/*"],
+    exclude: ["/users/*/impersonate"],
+    auth: "staging-admin",
+  },
 ];
 
 const VERIFY_TONE: Record<Verify, Tone> = { verified: "success", pending: "warning", failed: "danger" };
@@ -498,7 +707,7 @@ function TargetsPage() {
       sortValue: (r) => r.name,
       cell: (r) => (
         <span className="flex min-w-0 flex-col">
-          <button type="button" className="self-start truncate text-left font-medium text-fg hover:underline">
+          <button type="button" onClick={() => setActiveId(r.id)} className="self-start truncate text-left font-medium text-fg hover:underline">
             {r.name}
           </button>
           <span className="truncate font-mono text-2xs text-fg-muted">{r.url}</span>
@@ -507,7 +716,13 @@ function TargetsPage() {
     },
     { id: "env", header: "Env", cell: (r) => <Badge tone={r.env === "prod" ? "danger" : "neutral"}>{r.env}</Badge> },
     { id: "kind", header: "Type", cell: (r) => r.kind },
-    { id: "verify", header: "Ownership", description: "Scans only run against targets whose ownership is verified.", sortValue: (r) => r.verify, cell: (r) => <StatusBadge tone={VERIFY_TONE[r.verify]}>{cap(r.verify)}</StatusBadge> },
+    {
+      id: "verify",
+      header: "Ownership",
+      description: "Scans only run against targets whose ownership is verified.",
+      sortValue: (r) => r.verify,
+      cell: (r) => <StatusBadge tone={VERIFY_TONE[r.verify]}>{cap(r.verify)}</StatusBadge>,
+    },
     { id: "last", header: "Last scan", cell: (r) => <span className="text-fg-muted">{r.lastScan}</span> },
     { id: "risk", header: "Risk", sortValue: (r) => SEVERITY_META[r.risk].rank, cell: (r) => <SeverityBadge severity={r.risk} /> },
   ];
@@ -518,7 +733,15 @@ function TargetsPage() {
   };
   return (
     <>
-      <PageHeader title="Targets" description="Apps and APIs under example.com that DAST may scan, with their scope." actions={<Button variant="primary" icon={<Plus />}>Add target</Button>} />
+      <PageHeader
+        title="Targets"
+        description="Apps and APIs under example.com that DAST may scan, with their scope."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add target
+          </Button>
+        }
+      />
       <KpiGrid>
         <KpiCard label="Targets" value="5" unit="3 staging · 2 prod" />
         <KpiCard label="Verified" value="3" tone="success" delta={{ label: "1 pending, 1 failed" }} />
@@ -527,7 +750,15 @@ function TargetsPage() {
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(320px,2fr)]">
         <Panel title="All targets" flush>
-          <DataTable label="Targets" columns={cols} rows={rows} getRowId={(r) => r.id} onRowClick={(r) => setActiveId(r.id)} activeRowId={activeId} minWidth={780} />
+          <DataTable
+            label="Targets"
+            columns={cols}
+            rows={rows}
+            getRowId={(r) => r.id}
+            onRowClick={(r) => setActiveId(r.id)}
+            activeRowId={activeId}
+            minWidth={780}
+          />
         </Panel>
         <Panel
           aria-label="Target detail"
@@ -587,7 +818,15 @@ function TargetsPage() {
                 addRule();
               }}
             >
-              <SelectField label="Rule" value={ruleKind} onChange={(e) => setRuleKind(e.target.value as "include" | "exclude")} options={[{ value: "exclude", label: "Exclude" }, { value: "include", label: "Include" }]} />
+              <SelectField
+                label="Rule"
+                value={ruleKind}
+                onChange={(e) => setRuleKind(e.target.value as "include" | "exclude")}
+                options={[
+                  { value: "exclude", label: "Exclude" },
+                  { value: "include", label: "Include" },
+                ]}
+              />
               <TextField label="Path or pattern" mono placeholder="/admin/*" value={rule} onChange={(e) => setRule(e.target.value)} />
               <Button type="submit">Add rule</Button>
             </form>
@@ -618,19 +857,169 @@ interface AllFinding {
 }
 
 const ALL_FINDINGS: AllFinding[] = [
-  { id: "f1", severity: "critical", title: "SQL injection", target: "staging.example.com", path: "/v1/orders?q=", cwe: "CWE-89", status: "confirmed", firstSeen: "Oct 17", scans: 3, owner: "Ben Ortiz", fix: "Use parameterised queries in the order search handler." },
-  { id: "f2", severity: "high", title: "Reflected cross-site scripting", target: "staging.example.com", path: "/search", cwe: "CWE-79", status: "confirmed", firstSeen: "Oct 14", scans: 6, owner: "Sarah Chen", fix: "Encode the search term with the template engine's HTML escaping." },
-  { id: "f3", severity: "high", title: "Broken object level authorization", target: "api.example.com", path: "/v1/invoices/{id}", cwe: "CWE-639", status: "confirmed", firstSeen: "Oct 12", scans: 2, owner: "Dana Kim", fix: "Check that the invoice belongs to the caller's account." },
-  { id: "f4", severity: "high", title: "GraphQL introspection enabled", target: "graphql.staging.example.com", path: "/graphql", cwe: "CWE-200", status: "detected", firstSeen: "Oct 9", scans: 4, fix: "Disable introspection outside development." },
-  { id: "f5", severity: "high", title: "Missing authorization on user export", target: "admin.staging.example.com", path: "/users/export.csv", cwe: "CWE-862", status: "detected", firstSeen: "Oct 17", scans: 1, fix: "Require the admin role on the export route." },
-  { id: "f6", severity: "medium", title: "Open redirect", target: "staging.example.com", path: "/login?next=", cwe: "CWE-601", status: "confirmed", firstSeen: "Oct 3", scans: 12, owner: "Chris Shaw", fix: "Allow only relative paths in the next parameter." },
-  { id: "f7", severity: "medium", title: "TLS 1.0 enabled", target: "staging.example.com", path: ":443", cwe: "CWE-327", status: "detected", firstSeen: "Sep 28", scans: 15, fix: "Set the minimum TLS version to 1.2 on the load balancer." },
-  { id: "f8", severity: "medium", title: "Rate limiting missing on login", target: "api.example.com", path: "/v1/auth/token", cwe: "CWE-307", status: "fixed", firstSeen: "Sep 20", scans: 9, owner: "Mark Wilson", fix: "Fixed in release 2026.10.1." },
-  { id: "f9", severity: "medium", title: "Cookie without SameSite attribute", target: "app.example.com", path: "/", cwe: "CWE-1275", status: "detected", firstSeen: "Oct 1", scans: 7, fix: "Set SameSite=Lax on the session cookie." },
-  { id: "f10", severity: "low", title: "Missing Content-Security-Policy header", target: "staging.example.com", path: "/", cwe: "CWE-693", status: "detected", firstSeen: "Sep 15", scans: 20, fix: "Add a Content-Security-Policy header." },
-  { id: "f11", severity: "low", title: "Server version disclosed", target: "app.example.com", path: "/", cwe: "CWE-200", status: "false-positive", firstSeen: "Sep 10", scans: 18, owner: "Amy Davis", fix: "Header comes from the CDN and shows no version." },
-  { id: "f12", severity: "low", title: "Verbose error messages", target: "api.example.com", path: "/v1/orders", cwe: "CWE-209", status: "fixed", firstSeen: "Aug 30", scans: 11, owner: "Ben Ortiz", fix: "Fixed in release 2026.09.4." },
-  { id: "f13", severity: "info", title: "Robots.txt lists admin paths", target: "app.example.com", path: "/robots.txt", cwe: "CWE-200", status: "detected", firstSeen: "Aug 22", scans: 22, fix: "Remove internal paths from robots.txt." },
+  {
+    id: "f1",
+    severity: "critical",
+    title: "SQL injection",
+    target: "staging.example.com",
+    path: "/v1/orders?q=",
+    cwe: "CWE-89",
+    status: "confirmed",
+    firstSeen: "Oct 17",
+    scans: 3,
+    owner: "Ben Ortiz",
+    fix: "Use parameterised queries in the order search handler.",
+  },
+  {
+    id: "f2",
+    severity: "high",
+    title: "Reflected cross-site scripting",
+    target: "staging.example.com",
+    path: "/search",
+    cwe: "CWE-79",
+    status: "confirmed",
+    firstSeen: "Oct 14",
+    scans: 6,
+    owner: "Sarah Chen",
+    fix: "Encode the search term with the template engine's HTML escaping.",
+  },
+  {
+    id: "f3",
+    severity: "high",
+    title: "Broken object level authorization",
+    target: "api.example.com",
+    path: "/v1/invoices/{id}",
+    cwe: "CWE-639",
+    status: "confirmed",
+    firstSeen: "Oct 12",
+    scans: 2,
+    owner: "Dana Kim",
+    fix: "Check that the invoice belongs to the caller's account.",
+  },
+  {
+    id: "f4",
+    severity: "high",
+    title: "GraphQL introspection enabled",
+    target: "graphql.staging.example.com",
+    path: "/graphql",
+    cwe: "CWE-200",
+    status: "detected",
+    firstSeen: "Oct 9",
+    scans: 4,
+    fix: "Disable introspection outside development.",
+  },
+  {
+    id: "f5",
+    severity: "high",
+    title: "Missing authorization on user export",
+    target: "admin.staging.example.com",
+    path: "/users/export.csv",
+    cwe: "CWE-862",
+    status: "detected",
+    firstSeen: "Oct 17",
+    scans: 1,
+    fix: "Require the admin role on the export route.",
+  },
+  {
+    id: "f6",
+    severity: "medium",
+    title: "Open redirect",
+    target: "staging.example.com",
+    path: "/login?next=",
+    cwe: "CWE-601",
+    status: "confirmed",
+    firstSeen: "Oct 3",
+    scans: 12,
+    owner: "Chris Shaw",
+    fix: "Allow only relative paths in the next parameter.",
+  },
+  {
+    id: "f7",
+    severity: "medium",
+    title: "TLS 1.0 enabled",
+    target: "staging.example.com",
+    path: ":443",
+    cwe: "CWE-327",
+    status: "detected",
+    firstSeen: "Sep 28",
+    scans: 15,
+    fix: "Set the minimum TLS version to 1.2 on the load balancer.",
+  },
+  {
+    id: "f8",
+    severity: "medium",
+    title: "Rate limiting missing on login",
+    target: "api.example.com",
+    path: "/v1/auth/token",
+    cwe: "CWE-307",
+    status: "fixed",
+    firstSeen: "Sep 20",
+    scans: 9,
+    owner: "Mark Wilson",
+    fix: "Fixed in release 2026.10.1.",
+  },
+  {
+    id: "f9",
+    severity: "medium",
+    title: "Cookie without SameSite attribute",
+    target: "app.example.com",
+    path: "/",
+    cwe: "CWE-1275",
+    status: "detected",
+    firstSeen: "Oct 1",
+    scans: 7,
+    fix: "Set SameSite=Lax on the session cookie.",
+  },
+  {
+    id: "f10",
+    severity: "low",
+    title: "Missing Content-Security-Policy header",
+    target: "staging.example.com",
+    path: "/",
+    cwe: "CWE-693",
+    status: "detected",
+    firstSeen: "Sep 15",
+    scans: 20,
+    fix: "Add a Content-Security-Policy header.",
+  },
+  {
+    id: "f11",
+    severity: "low",
+    title: "Server version disclosed",
+    target: "app.example.com",
+    path: "/",
+    cwe: "CWE-200",
+    status: "false-positive",
+    firstSeen: "Sep 10",
+    scans: 18,
+    owner: "Amy Davis",
+    fix: "Header comes from the CDN and shows no version.",
+  },
+  {
+    id: "f12",
+    severity: "low",
+    title: "Verbose error messages",
+    target: "api.example.com",
+    path: "/v1/orders",
+    cwe: "CWE-209",
+    status: "fixed",
+    firstSeen: "Aug 30",
+    scans: 11,
+    owner: "Ben Ortiz",
+    fix: "Fixed in release 2026.09.4.",
+  },
+  {
+    id: "f13",
+    severity: "info",
+    title: "Robots.txt lists admin paths",
+    target: "app.example.com",
+    path: "/robots.txt",
+    cwe: "CWE-200",
+    status: "detected",
+    firstSeen: "Aug 22",
+    scans: 22,
+    fix: "Remove internal paths from robots.txt.",
+  },
 ];
 
 const FSTATUS_META: Record<FindingStatus, { label: string; tone: Tone }> = {
@@ -664,7 +1053,7 @@ function FindingsPage() {
       width: "30%",
       cell: (f) => (
         <span className="flex min-w-0 flex-col">
-          <button type="button" className="self-start truncate text-left font-medium text-fg hover:underline">
+          <button type="button" onClick={() => setActiveId(f.id)} className="self-start truncate text-left font-medium text-fg hover:underline">
             {f.title}
           </button>
           <span className="truncate font-mono text-2xs text-fg-muted">
@@ -674,14 +1063,31 @@ function FindingsPage() {
       ),
     },
     { id: "target", header: "Target", sortValue: (f) => f.target, cell: (f) => <span className="truncate">{f.target}</span> },
-    { id: "status", header: "Status", sortValue: (f) => f.status, cell: (f) => <StatusBadge tone={FSTATUS_META[f.status].tone}>{FSTATUS_META[f.status].label}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      sortValue: (f) => f.status,
+      cell: (f) => <StatusBadge tone={FSTATUS_META[f.status].tone}>{FSTATUS_META[f.status].label}</StatusBadge>,
+    },
     { id: "seen", header: "First seen", cell: (f) => f.firstSeen },
-    { id: "scans", header: "Scans", align: "right", mono: true, description: "How many scans reported this finding.", sortValue: (f) => f.scans, cell: (f) => f.scans },
+    {
+      id: "scans",
+      header: "Scans",
+      align: "right",
+      mono: true,
+      description: "How many scans reported this finding.",
+      sortValue: (f) => f.scans,
+      cell: (f) => f.scans,
+    },
   ];
   const facet = <K extends keyof AllFinding>(k: K, v: string) => rows.filter((r) => r[k] === v).length;
   return (
     <>
-      <PageHeader title="Findings" description="Every DAST finding across all targets, deduplicated by rule and location." actions={<Button>Export CSV</Button>} />
+      <PageHeader
+        title="Findings"
+        description="Every DAST finding across all targets, deduplicated by rule and location."
+        actions={<Button>Export CSV</Button>}
+      />
       <KpiGrid>
         <KpiCard label="Open" value="10" delta={{ label: "+3 this week", direction: "up", intent: "bad" }} trend={[6, 7, 7, 8, 8, 9, 7, 8, 9, 10]} />
         <KpiCard label="Confirmed" value="4" tone="danger" unit="working payload" />
@@ -692,22 +1098,64 @@ function FindingsPage() {
         <Panel title="Open by target">
           <BarList
             label="Open findings by target"
-            items={Array.from(new Set(ALL_FINDINGS.map((f) => f.target))).map((t) => ({ id: t, label: t, value: ALL_FINDINGS.filter((f) => f.target === t && f.status !== "fixed" && f.status !== "false-positive").length }))}
+            items={Array.from(new Set(ALL_FINDINGS.map((f) => f.target))).map((t) => ({
+              id: t,
+              label: t,
+              value: ALL_FINDINGS.filter((f) => f.target === t && f.status !== "fixed" && f.status !== "false-positive").length,
+            }))}
           />
         </Panel>
         <Panel title="Open findings over time" description="Last 14 days">
-          <TimeSeriesChart label="Open DAST findings over 14 days" labels={DAYS} height={120} xTicks={5} series={[{ id: "open", name: "Open", data: [6, 6, 7, 7, 8, 8, 7, 8, 8, 9, 9, 8, 9, 10] }]} />
+          <TimeSeriesChart
+            label="Open DAST findings over 14 days"
+            labels={DAYS}
+            height={120}
+            xTicks={5}
+            series={[{ id: "open", name: "Open", data: [6, 6, 7, 7, 8, 8, 7, 8, 8, 9, 9, 8, 9, 10] }]}
+          />
         </Panel>
       </div>
-      <FilterBar onClear={query || sevs.length || statuses.length || targets.length ? () => (setQuery(""), setSevs([]), setStatuses([]), setTargets([])) : undefined}>
+      <FilterBar
+        onClear={query || sevs.length || statuses.length || targets.length ? () => (setQuery(""), setSevs([]), setStatuses([]), setTargets([])) : undefined}
+      >
         <SearchInput label="Search findings" value={query} onChange={(e) => setQuery(e.target.value)} className="w-56" />
-        <FacetFilter label="Severity" selected={sevs} onChange={setSevs} options={(["critical", "high", "medium", "low", "info"] as const).map((s) => ({ value: s, label: SEVERITY_META[s].label, count: facet("severity", s) }))} />
-        <FacetFilter label="Status" selected={statuses} onChange={setStatuses} options={(Object.keys(FSTATUS_META) as FindingStatus[]).map((s) => ({ value: s, label: FSTATUS_META[s].label, count: facet("status", s) }))} />
-        <FacetFilter label="Target" selected={targets} onChange={setTargets} searchable options={Array.from(new Set(rows.map((r) => r.target))).map((t) => ({ value: t, count: facet("target", t) }))} />
+        <FacetFilter
+          label="Severity"
+          selected={sevs}
+          onChange={setSevs}
+          options={(["critical", "high", "medium", "low", "info"] as const).map((s) => ({
+            value: s,
+            label: SEVERITY_META[s].label,
+            count: facet("severity", s),
+          }))}
+        />
+        <FacetFilter
+          label="Status"
+          selected={statuses}
+          onChange={setStatuses}
+          options={(Object.keys(FSTATUS_META) as FindingStatus[]).map((s) => ({ value: s, label: FSTATUS_META[s].label, count: facet("status", s) }))}
+        />
+        <FacetFilter
+          label="Target"
+          selected={targets}
+          onChange={setTargets}
+          searchable
+          options={Array.from(new Set(rows.map((r) => r.target))).map((t) => ({ value: t, count: facet("target", t) }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(320px,2fr)]">
         <Panel title="All findings" description={`${shown.length} of ${rows.length}`} flush>
-          <DataTable label="All findings" columns={cols} rows={shown} getRowId={(f) => f.id} onRowClick={(f) => setActiveId(f.id)} activeRowId={activeId} defaultSort={{ id: "sev", direction: "desc" }} pageSize={10} minWidth={820} />
+          <DataTable
+            label="All findings"
+            columns={cols}
+            rows={shown}
+            getRowId={(f) => f.id}
+            onRowClick={(f) => setActiveId(f.id)}
+            activeRowId={activeId}
+            defaultSort={{ id: "sev", direction: "desc" }}
+            pageSize={10}
+            minWidth={820}
+          />
         </Panel>
         <Panel
           aria-label="Finding detail"
@@ -794,7 +1242,14 @@ const AUTH: AuthProfile[] = [
     vault: "vault://dast/staging-user",
     checkUrl: "https://staging.example.com/account",
     loggedOut: "Sign in to continue|/login",
-    steps: ["Open https://staging.example.com/login", "Type username into #email", "Type password into #password", "Click button “Sign in”", "Enter TOTP from vault into #otp", "Wait for /account to load"],
+    steps: [
+      "Open https://staging.example.com/login",
+      "Type username into #email",
+      "Type password into #password",
+      "Click button “Sign in”",
+      "Enter TOTP from vault into #otp",
+      "Wait for /account to load",
+    ],
     targets: ["staging.example.com", "graphql.staging.example.com"],
     lastTest: { ok: true, when: "Today 13:58" },
   },
@@ -820,7 +1275,12 @@ const AUTH: AuthProfile[] = [
     vault: "vault://dast/api-client",
     checkUrl: "https://api.example.com/v1/me",
     loggedOut: "HTTP 401",
-    steps: ["POST /v1/auth/token with client credentials", "Read access_token from JSON response", "Send Authorization: Bearer header", "Refresh 60 s before expiry"],
+    steps: [
+      "POST /v1/auth/token with client credentials",
+      "Read access_token from JSON response",
+      "Send Authorization: Bearer header",
+      "Refresh 60 s before expiry",
+    ],
     targets: ["api.example.com"],
     lastTest: { ok: true, when: "Today 03:00" },
   },
@@ -833,7 +1293,15 @@ function AuthPage() {
   const result = test[p.id];
   return (
     <>
-      <PageHeader title="Auth profiles" description="How scans sign in: recorded logins, form logins and API tokens. Secrets stay in the vault." actions={<Button variant="primary" icon={<Plus />}>Record login</Button>} />
+      <PageHeader
+        title="Auth profiles"
+        description="How scans sign in: recorded logins, form logins and API tokens. Secrets stay in the vault."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Record login
+          </Button>
+        }
+      />
       <div className="grid gap-2.5 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
         <Panel title="Profiles" flush>
           <ul aria-label="Auth profiles" className="flex flex-col">
@@ -934,11 +1402,56 @@ interface Schedule {
 }
 
 const SCHEDULES: Schedule[] = [
-  { id: "s1", name: "nightly-staging", target: "staging.example.com", cron: "0 2 * * *", human: "Every day at 02:00", profile: "Full", next: "Tomorrow 02:00", enabled: true },
-  { id: "s2", name: "api-weekly", target: "api.example.com", cron: "0 3 * * 1", human: "Mondays at 03:00", profile: "API", next: "Oct 26 03:00", enabled: true },
-  { id: "s3", name: "prod-baseline", target: "app.example.com", cron: "30 4 * * 1-5", human: "Weekdays at 04:30", profile: "Baseline", next: "Tomorrow 04:30", enabled: true },
-  { id: "s4", name: "graphql-nightly", target: "graphql.staging.example.com", cron: "0 1 * * *", human: "Every day at 01:00", profile: "API", next: "Paused", enabled: false },
-  { id: "s5", name: "admin-weekly", target: "admin.staging.example.com", cron: "0 22 * * 5", human: "Fridays at 22:00", profile: "Full", next: "Oct 24 22:00", enabled: true },
+  {
+    id: "s1",
+    name: "nightly-staging",
+    target: "staging.example.com",
+    cron: "0 2 * * *",
+    human: "Every day at 02:00",
+    profile: "Full",
+    next: "Tomorrow 02:00",
+    enabled: true,
+  },
+  {
+    id: "s2",
+    name: "api-weekly",
+    target: "api.example.com",
+    cron: "0 3 * * 1",
+    human: "Mondays at 03:00",
+    profile: "API",
+    next: "Oct 26 03:00",
+    enabled: true,
+  },
+  {
+    id: "s3",
+    name: "prod-baseline",
+    target: "app.example.com",
+    cron: "30 4 * * 1-5",
+    human: "Weekdays at 04:30",
+    profile: "Baseline",
+    next: "Tomorrow 04:30",
+    enabled: true,
+  },
+  {
+    id: "s4",
+    name: "graphql-nightly",
+    target: "graphql.staging.example.com",
+    cron: "0 1 * * *",
+    human: "Every day at 01:00",
+    profile: "API",
+    next: "Paused",
+    enabled: false,
+  },
+  {
+    id: "s5",
+    name: "admin-weekly",
+    target: "admin.staging.example.com",
+    cron: "0 22 * * 5",
+    human: "Fridays at 22:00",
+    profile: "Full",
+    next: "Oct 24 22:00",
+    enabled: true,
+  },
 ];
 
 const BLACKOUTS = [
@@ -957,7 +1470,14 @@ function SchedulesPage() {
   const [profile, setProfile] = useState("Full");
   const toggle = (id: string, on: boolean) => setRows((rs) => rs.map((r) => (r.id === id ? { ...r, enabled: on, next: on ? "Tomorrow 01:00" : "Paused" } : r)));
   const cols: Column<Schedule>[] = [
-    { id: "name", header: "Schedule", width: "20%", pinned: "left", sortValue: (s) => s.name, cell: (s) => <span className="font-mono font-medium">{s.name}</span> },
+    {
+      id: "name",
+      header: "Schedule",
+      width: "20%",
+      pinned: "left",
+      sortValue: (s) => s.name,
+      cell: (s) => <span className="font-mono font-medium">{s.name}</span>,
+    },
     { id: "target", header: "Target", sortValue: (s) => s.target, cell: (s) => s.target },
     {
       id: "cron",
@@ -1002,22 +1522,42 @@ function SchedulesPage() {
         />
       </PageHeader>
       {creating && (
-        <Panel title="New schedule" actions={<Button size="sm" variant="ghost" onClick={() => setCreating(false)}>Cancel</Button>}>
+        <Panel
+          title="New schedule"
+          actions={
+            <Button size="sm" variant="ghost" onClick={() => setCreating(false)}>
+              Cancel
+            </Button>
+          }
+        >
           <form
             className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end"
             onSubmit={(e) => {
               e.preventDefault();
               if (!name.trim()) return;
-              setRows((rs) => [...rs, { id: `s${rs.length + 1}`, name: name.trim(), target, cron, human: "Custom", profile, next: "Tomorrow 02:00", enabled: true }]);
+              setRows((rs) => [
+                ...rs,
+                { id: `s${rs.length + 1}`, name: name.trim(), target, cron, human: "Custom", profile, next: "Tomorrow 02:00", enabled: true },
+              ]);
               setName("");
               setCreating(false);
               setTab("schedules");
             }}
           >
             <TextField label="Name" mono placeholder="nightly-api" value={name} onChange={(e) => setName(e.target.value)} />
-            <SelectField label="Target" value={target} onChange={(e) => setTarget(e.target.value)} options={TARGETS.map((t) => ({ value: t.url.replace("https://", ""), label: t.url.replace("https://", "") }))} />
+            <SelectField
+              label="Target"
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+              options={TARGETS.map((t) => ({ value: t.url.replace("https://", ""), label: t.url.replace("https://", "") }))}
+            />
             <TextField label="Cron (UTC)" mono value={cron} onChange={(e) => setCron(e.target.value)} />
-            <SelectField label="Scan profile" value={profile} onChange={(e) => setProfile(e.target.value)} options={["Full", "Baseline", "API", "Quick"].map((v) => ({ value: v, label: v }))} />
+            <SelectField
+              label="Scan profile"
+              value={profile}
+              onChange={(e) => setProfile(e.target.value)}
+              options={["Full", "Baseline", "API", "Quick"].map((v) => ({ value: v, label: v }))}
+            />
             <Button type="submit" variant="primary">
               Create schedule
             </Button>
@@ -1040,7 +1580,10 @@ function SchedulesPage() {
         <Panel title="Blackout windows" description="No scan starts or keeps running inside these windows." flush>
           <ul aria-label="Blackout windows" className="flex flex-col">
             {BLACKOUTS.map((b) => (
-              <li key={b.id} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 border-b border-subtle px-3 py-2 text-sm last:border-0">
+              <li
+                key={b.id}
+                className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 border-b border-subtle px-3 py-2 text-sm last:border-0"
+              >
                 <span className="font-medium">{b.name}</span>
                 <span className="flex min-w-0 flex-col">
                   <span>{b.when}</span>

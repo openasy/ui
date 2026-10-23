@@ -1,7 +1,22 @@
 import { useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
-import { AppWindow, Building2, Fingerprint, KeyRound, LayoutGrid, Mail, Palette, Plus, RefreshCw, ScrollText, ShieldCheck, Smartphone, Users, UsersRound } from "lucide-react";
+import {
+  AppWindow,
+  Building2,
+  Fingerprint,
+  KeyRound,
+  LayoutGrid,
+  Mail,
+  Palette,
+  Plus,
+  RefreshCw,
+  ScrollText,
+  ShieldCheck,
+  Smartphone,
+  Users,
+  UsersRound,
+} from "lucide-react";
 import { ProductApp } from "../ProductFrame";
 import { PageHeader } from "../../components/PageHeader";
 import { Button, IconButton } from "../../components/Button";
@@ -56,14 +71,78 @@ interface App {
 
 const apps: App[] = [
   { id: "vpn", name: "OpenAsy VPN", protocol: "OIDC", redirect: "https://vpn.example.com/oauth/callback", users: 214, lastUsed: "1 min ago", lastUsedMin: 1 },
-  { id: "logs", name: "OpenAsy Logs", protocol: "OIDC", redirect: "https://logs.example.com/auth/oidc/callback", users: 96, lastUsed: "3 min ago", lastUsedMin: 3 },
-  { id: "metrics", name: "OpenAsy Metrics", protocol: "OIDC", redirect: "https://metrics.example.com/auth/oidc/callback", users: 88, lastUsed: "6 min ago", lastUsedMin: 6 },
-  { id: "grafana", name: "Grafana", protocol: "OIDC", redirect: "https://grafana.example.com/login/generic_oauth", users: 71, lastUsed: "12 min ago", lastUsedMin: 12 },
-  { id: "jira", name: "Jira", protocol: "SAML 2.0", redirect: "https://acme.atlassian.net/plugins/servlet/samlconsumer", users: 187, lastUsed: "2 min ago", lastUsedMin: 2 },
-  { id: "gitlab", name: "GitLab", protocol: "SAML 2.0", redirect: "https://gitlab.example.com/users/auth/saml/callback", users: 132, lastUsed: "4 min ago", lastUsedMin: 4 },
-  { id: "keycloak", name: "Keycloak federation", protocol: "OIDC", redirect: "https://sso.example.com/realms/ops/broker/openasy/endpoint", users: 39, lastUsed: "38 min ago", lastUsedMin: 38 },
-  { id: "aws", name: "AWS IAM Identity Center", protocol: "SAML 2.0", redirect: "https://signin.aws.amazon.com/saml", users: 24, lastUsed: "1 h ago", lastUsedMin: 60 },
-  { id: "wiki", name: "Wiki.js", protocol: "OIDC", redirect: "https://wiki.example.com/login/oidc/callback", users: 143, lastUsed: "Yesterday", lastUsedMin: 1440 },
+  {
+    id: "logs",
+    name: "OpenAsy Logs",
+    protocol: "OIDC",
+    redirect: "https://logs.example.com/auth/oidc/callback",
+    users: 96,
+    lastUsed: "3 min ago",
+    lastUsedMin: 3,
+  },
+  {
+    id: "metrics",
+    name: "OpenAsy Metrics",
+    protocol: "OIDC",
+    redirect: "https://metrics.example.com/auth/oidc/callback",
+    users: 88,
+    lastUsed: "6 min ago",
+    lastUsedMin: 6,
+  },
+  {
+    id: "grafana",
+    name: "Grafana",
+    protocol: "OIDC",
+    redirect: "https://grafana.example.com/login/generic_oauth",
+    users: 71,
+    lastUsed: "12 min ago",
+    lastUsedMin: 12,
+  },
+  {
+    id: "jira",
+    name: "Jira",
+    protocol: "SAML 2.0",
+    redirect: "https://acme.atlassian.net/plugins/servlet/samlconsumer",
+    users: 187,
+    lastUsed: "2 min ago",
+    lastUsedMin: 2,
+  },
+  {
+    id: "gitlab",
+    name: "GitLab",
+    protocol: "SAML 2.0",
+    redirect: "https://gitlab.example.com/users/auth/saml/callback",
+    users: 132,
+    lastUsed: "4 min ago",
+    lastUsedMin: 4,
+  },
+  {
+    id: "keycloak",
+    name: "Keycloak federation",
+    protocol: "OIDC",
+    redirect: "https://sso.example.com/realms/ops/broker/openasy/endpoint",
+    users: 39,
+    lastUsed: "38 min ago",
+    lastUsedMin: 38,
+  },
+  {
+    id: "aws",
+    name: "AWS IAM Identity Center",
+    protocol: "SAML 2.0",
+    redirect: "https://signin.aws.amazon.com/saml",
+    users: 24,
+    lastUsed: "1 h ago",
+    lastUsedMin: 60,
+  },
+  {
+    id: "wiki",
+    name: "Wiki.js",
+    protocol: "OIDC",
+    redirect: "https://wiki.example.com/login/oidc/callback",
+    users: 143,
+    lastUsed: "Yesterday",
+    lastUsedMin: 1440,
+  },
 ];
 
 const columns: Column<App>[] = [
@@ -103,7 +182,13 @@ const columns: Column<App>[] = [
     ),
   },
   { id: "users", header: "Users", align: "right", mono: true, sortValue: (a) => a.users, cell: (a) => a.users },
-  { id: "last", header: "Last used", align: "right", sortValue: (a) => -a.lastUsedMin, cell: (a) => <span className="whitespace-nowrap text-fg-muted">{a.lastUsed}</span> },
+  {
+    id: "last",
+    header: "Last used",
+    align: "right",
+    sortValue: (a) => -a.lastUsedMin,
+    cell: (a) => <span className="whitespace-nowrap text-fg-muted">{a.lastUsed}</span>,
+  },
 ];
 
 interface Provider {
@@ -115,8 +200,20 @@ interface Provider {
 }
 
 const providers: Provider[] = [
-  { id: "kc", name: "Upstream Keycloak", detail: "OIDC · realm ops", status: { label: "Connected", tone: "success" }, meta: "39 users · last login 38 min ago" },
-  { id: "ad", name: "Corporate AD", detail: "LDAP · ldaps://dc01.corp.example.com:636", status: { label: "Sync failed", tone: "danger" }, meta: "Bind failed: invalid credentials · 2 h ago" },
+  {
+    id: "kc",
+    name: "Upstream Keycloak",
+    detail: "OIDC · realm ops",
+    status: { label: "Connected", tone: "success" },
+    meta: "39 users · last login 38 min ago",
+  },
+  {
+    id: "ad",
+    name: "Corporate AD",
+    detail: "LDAP · ldaps://dc01.corp.example.com:636",
+    status: { label: "Sync failed", tone: "danger" },
+    meta: "Bind failed: invalid credentials · 2 h ago",
+  },
   { id: "gw", name: "Google Workspace", detail: "OIDC · example.com", status: { label: "Connected", tone: "success" }, meta: "152 users · synced 9 min ago" },
 ];
 
@@ -142,13 +239,31 @@ const EXTRA = ["Liam Turner", "Nina Patel", "Owen Price", "Grace Lee", "Tom Bake
 
 const USERS: User[] = [
   { id: "u0", name: PEOPLE[0], source: "Google Workspace", groups: ["Engineering", "Database admins"], mfa: ["Passkey"], last: "2 min ago", status: "active" },
-  { id: "u1", name: PEOPLE[1], source: "Google Workspace", groups: ["Security", "Admins"], mfa: ["Passkey", "TOTP"], last: "now", status: "active", admin: true },
+  {
+    id: "u1",
+    name: PEOPLE[1],
+    source: "Google Workspace",
+    groups: ["Security", "Admins"],
+    mfa: ["Passkey", "TOTP"],
+    last: "now",
+    status: "active",
+    admin: true,
+  },
   { id: "u2", name: PEOPLE[2], source: "Corporate AD", groups: ["SRE on-call", "Engineering"], mfa: ["TOTP"], last: "18 min ago", status: "active" },
   { id: "u3", name: PEOPLE[3], source: "Google Workspace", groups: ["Data team"], mfa: ["Security key"], last: "1 h ago", status: "active" },
   { id: "u4", name: PEOPLE[4], source: "Corporate AD", groups: ["Support"], mfa: [], last: "3 days ago", status: "active" },
   { id: "u5", name: PEOPLE[5], source: "Keycloak", groups: ["Engineering"], mfa: ["Passkey"], last: "35 min ago", status: "active" },
   { id: "u6", name: PEOPLE[6], source: "Google Workspace", groups: ["Finance"], mfa: ["TOTP"], last: "yesterday", status: "active" },
-  { id: "u7", name: PEOPLE[7], source: "Keycloak", groups: ["Security", "SRE on-call"], mfa: ["Passkey", "Security key"], last: "6 min ago", status: "active", admin: true },
+  {
+    id: "u7",
+    name: PEOPLE[7],
+    source: "Keycloak",
+    groups: ["Security", "SRE on-call"],
+    mfa: ["Passkey", "Security key"],
+    last: "6 min ago",
+    status: "active",
+    admin: true,
+  },
   { id: "u8", name: EXTRA[0]!, source: "Local", groups: ["Contractors"], mfa: [], last: "never", status: "invited" },
   { id: "u9", name: EXTRA[1]!, source: "Google Workspace", groups: ["Data team"], mfa: [], last: "never", status: "invited" },
   { id: "u10", name: EXTRA[2]!, source: "Corporate AD", groups: ["Support"], mfa: ["TOTP"], last: "41 days ago", status: "disabled" },
@@ -168,15 +283,63 @@ interface Group {
 }
 
 const GROUPS: Group[] = [
-  { id: "g-eng", name: "Engineering", source: "Google Workspace", members: 92, apps: ["GitLab", "Grafana", "OpenAsy Logs", "OpenAsy Metrics", "Jira", "Wiki.js"], rule: "department = Engineering", mfa: "Any second factor" },
-  { id: "g-sre", name: "SRE on-call", source: "Corporate AD", members: 14, apps: ["AWS IAM Identity Center", "OpenAsy VPN", "Grafana"], rule: "memberOf = CN=sre,OU=Groups", mfa: "Passkey only" },
-  { id: "g-sec", name: "Security", source: "Google Workspace", members: 8, apps: ["OpenAsy Logs", "AWS IAM Identity Center", "Jira"], rule: "Manual", mfa: "Passkey only" },
+  {
+    id: "g-eng",
+    name: "Engineering",
+    source: "Google Workspace",
+    members: 92,
+    apps: ["GitLab", "Grafana", "OpenAsy Logs", "OpenAsy Metrics", "Jira", "Wiki.js"],
+    rule: "department = Engineering",
+    mfa: "Any second factor",
+  },
+  {
+    id: "g-sre",
+    name: "SRE on-call",
+    source: "Corporate AD",
+    members: 14,
+    apps: ["AWS IAM Identity Center", "OpenAsy VPN", "Grafana"],
+    rule: "memberOf = CN=sre,OU=Groups",
+    mfa: "Passkey only",
+  },
+  {
+    id: "g-sec",
+    name: "Security",
+    source: "Google Workspace",
+    members: 8,
+    apps: ["OpenAsy Logs", "AWS IAM Identity Center", "Jira"],
+    rule: "Manual",
+    mfa: "Passkey only",
+  },
   { id: "g-admins", name: "Admins", source: "Local", members: 4, apps: ["All applications"], rule: "Manual", mfa: "Passkey only" },
   { id: "g-dba", name: "Database admins", source: "Keycloak", members: 6, apps: ["OpenAsy VPN", "Grafana"], rule: "realm role dba", mfa: "Passkey only" },
-  { id: "g-data", name: "Data team", source: "Google Workspace", members: 11, apps: ["Grafana", "Wiki.js", "Jira"], rule: "department = Data", mfa: "Any second factor" },
-  { id: "g-support", name: "Support", source: "Corporate AD", members: 41, apps: ["Jira", "Wiki.js"], rule: "memberOf = CN=support,OU=Groups", mfa: "Any second factor" },
+  {
+    id: "g-data",
+    name: "Data team",
+    source: "Google Workspace",
+    members: 11,
+    apps: ["Grafana", "Wiki.js", "Jira"],
+    rule: "department = Data",
+    mfa: "Any second factor",
+  },
+  {
+    id: "g-support",
+    name: "Support",
+    source: "Corporate AD",
+    members: 41,
+    apps: ["Jira", "Wiki.js"],
+    rule: "memberOf = CN=support,OU=Groups",
+    mfa: "Any second factor",
+  },
   { id: "g-sales", name: "Sales", source: "Google Workspace", members: 29, apps: ["Wiki.js"], rule: "department = Sales", mfa: "Optional" },
-  { id: "g-contractors", name: "Contractors", source: "Local", members: 18, apps: ["OpenAsy VPN", "Jira"], rule: "Manual · expires after 90 days", mfa: "Any second factor" },
+  {
+    id: "g-contractors",
+    name: "Contractors",
+    source: "Local",
+    members: 18,
+    apps: ["OpenAsy VPN", "Jira"],
+    rule: "Manual · expires after 90 days",
+    mfa: "Any second factor",
+  },
   { id: "g-finance", name: "Finance", source: "Google Workspace", members: 7, apps: ["Wiki.js"], rule: "department = Finance", mfa: "Any second factor" },
 ];
 
@@ -202,18 +365,150 @@ interface SignIn {
 }
 
 const SIGNINS: SignIn[] = [
-  { id: "a1", time: "14:02:11", user: PEOPLE[1], app: "OpenAsy Logs", result: "success", method: "Passkey", ip: DOC_IPS[0], location: "London, GB", risk: "low", kind: "sign-in" },
-  { id: "a2", time: "13:58:40", user: PEOPLE[4], app: "Jira", result: "failed", method: "Password", ip: DOC_IPS[6], location: "Unknown", risk: "high", kind: "sign-in" },
-  { id: "a3", time: "13:58:21", user: PEOPLE[4], app: "Jira", result: "failed", method: "Password", ip: DOC_IPS[6], location: "Unknown", risk: "high", kind: "sign-in" },
-  { id: "a4", time: "13:57:02", user: PEOPLE[4], app: "Jira", result: "blocked", method: "Password", ip: DOC_IPS[6], location: "Unknown", risk: "high", kind: "sign-in" },
-  { id: "a5", time: "13:44:18", user: PEOPLE[0], app: "GitLab", result: "success", method: "Passkey", ip: DOC_IPS[1], location: "Dublin, IE", risk: "low", kind: "sign-in" },
-  { id: "a6", time: "13:31:09", user: PEOPLE[1], app: "Identity admin", result: "success", method: "Passkey", ip: DOC_IPS[0], location: "London, GB", risk: "low", kind: "admin" },
-  { id: "a7", time: "13:12:55", user: PEOPLE[3], app: "Grafana", result: "mfa-denied", method: "Push", ip: DOC_IPS[3], location: "Berlin, DE", risk: "medium", kind: "sign-in" },
-  { id: "a8", time: "12:50:33", user: PEOPLE[7], app: "AWS IAM Identity Center", result: "success", method: "Security key", ip: DOC_IPS[5], location: "London, GB", risk: "low", kind: "sign-in" },
-  { id: "a9", time: "12:40:01", user: PEOPLE[1], app: "Identity admin", result: "success", method: "Passkey", ip: DOC_IPS[0], location: "London, GB", risk: "low", kind: "admin" },
-  { id: "a10", time: "12:22:47", user: PEOPLE[2], app: "OpenAsy VPN", result: "success", method: "TOTP", ip: DOC_IPS[2], location: "Manchester, GB", risk: "low", kind: "sign-in" },
-  { id: "a11", time: "11:58:13", user: PEOPLE[6], app: "Wiki.js", result: "success", method: "TOTP", ip: DOC_IPS[4], location: "Lisbon, PT", risk: "medium", kind: "sign-in" },
-  { id: "a12", time: "11:02:30", user: EXTRA[4]!, app: "Wiki.js", result: "success", method: "Password", ip: DOC_IPS[3], location: "Berlin, DE", risk: "medium", kind: "sign-in" },
+  {
+    id: "a1",
+    time: "14:02:11",
+    user: PEOPLE[1],
+    app: "OpenAsy Logs",
+    result: "success",
+    method: "Passkey",
+    ip: DOC_IPS[0],
+    location: "London, GB",
+    risk: "low",
+    kind: "sign-in",
+  },
+  {
+    id: "a2",
+    time: "13:58:40",
+    user: PEOPLE[4],
+    app: "Jira",
+    result: "failed",
+    method: "Password",
+    ip: DOC_IPS[6],
+    location: "Unknown",
+    risk: "high",
+    kind: "sign-in",
+  },
+  {
+    id: "a3",
+    time: "13:58:21",
+    user: PEOPLE[4],
+    app: "Jira",
+    result: "failed",
+    method: "Password",
+    ip: DOC_IPS[6],
+    location: "Unknown",
+    risk: "high",
+    kind: "sign-in",
+  },
+  {
+    id: "a4",
+    time: "13:57:02",
+    user: PEOPLE[4],
+    app: "Jira",
+    result: "blocked",
+    method: "Password",
+    ip: DOC_IPS[6],
+    location: "Unknown",
+    risk: "high",
+    kind: "sign-in",
+  },
+  {
+    id: "a5",
+    time: "13:44:18",
+    user: PEOPLE[0],
+    app: "GitLab",
+    result: "success",
+    method: "Passkey",
+    ip: DOC_IPS[1],
+    location: "Dublin, IE",
+    risk: "low",
+    kind: "sign-in",
+  },
+  {
+    id: "a6",
+    time: "13:31:09",
+    user: PEOPLE[1],
+    app: "Identity admin",
+    result: "success",
+    method: "Passkey",
+    ip: DOC_IPS[0],
+    location: "London, GB",
+    risk: "low",
+    kind: "admin",
+  },
+  {
+    id: "a7",
+    time: "13:12:55",
+    user: PEOPLE[3],
+    app: "Grafana",
+    result: "mfa-denied",
+    method: "Push",
+    ip: DOC_IPS[3],
+    location: "Berlin, DE",
+    risk: "medium",
+    kind: "sign-in",
+  },
+  {
+    id: "a8",
+    time: "12:50:33",
+    user: PEOPLE[7],
+    app: "AWS IAM Identity Center",
+    result: "success",
+    method: "Security key",
+    ip: DOC_IPS[5],
+    location: "London, GB",
+    risk: "low",
+    kind: "sign-in",
+  },
+  {
+    id: "a9",
+    time: "12:40:01",
+    user: PEOPLE[1],
+    app: "Identity admin",
+    result: "success",
+    method: "Passkey",
+    ip: DOC_IPS[0],
+    location: "London, GB",
+    risk: "low",
+    kind: "admin",
+  },
+  {
+    id: "a10",
+    time: "12:22:47",
+    user: PEOPLE[2],
+    app: "OpenAsy VPN",
+    result: "success",
+    method: "TOTP",
+    ip: DOC_IPS[2],
+    location: "Manchester, GB",
+    risk: "low",
+    kind: "sign-in",
+  },
+  {
+    id: "a11",
+    time: "11:58:13",
+    user: PEOPLE[6],
+    app: "Wiki.js",
+    result: "success",
+    method: "TOTP",
+    ip: DOC_IPS[4],
+    location: "Lisbon, PT",
+    risk: "medium",
+    kind: "sign-in",
+  },
+  {
+    id: "a12",
+    time: "11:02:30",
+    user: EXTRA[4]!,
+    app: "Wiki.js",
+    result: "success",
+    method: "Password",
+    ip: DOC_IPS[3],
+    location: "Berlin, DE",
+    risk: "medium",
+    kind: "sign-in",
+  },
 ];
 
 const ADMIN_TEXT: Record<string, string> = {
@@ -277,13 +572,27 @@ function OverviewPage() {
         <TimeRangePicker value={range} onChange={setRange} />
       </FilterBar>
       <Callout tone="danger" title="Corporate AD has not synced for 2 hours">
-        Bind failed with invalid credentials. 63 users from AD keep their last known groups until the next successful sync; disabled AD accounts are not disabled here yet.
+        Bind failed with invalid credentials. 63 users from AD keep their last known groups until the next successful sync; disabled AD accounts are not
+        disabled here yet.
       </Callout>
       <KpiGrid>
-        <KpiCard label="Sign-ins · 24 h" value="3,412" unit="successful" trend={wave(24, { base: 140, amp: 90, seed: 61, phase: -1 })} delta={{ label: "+6% vs. yesterday", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Sign-ins · 24 h"
+          value="3,412"
+          unit="successful"
+          trend={wave(24, { base: 140, amp: 90, seed: 61, phase: -1 })}
+          delta={{ label: "+6% vs. yesterday", direction: "up", intent: "good" }}
+        />
         <KpiCard label="Active sessions" value="186" unit="now" trend={wave(24, { base: 150, amp: 40, seed: 64 })} />
         <KpiCard label="MFA adoption" value="92%" unit="197 of 214" tone="success" delta={{ label: "17 without a second factor" }} />
-        <KpiCard label="Risky sign-ins · 24 h" value={risky.length} tone="danger" trendColor="var(--oa-danger)" trend={[0, 1, 0, 0, 2, 1, 0, 3, 1, 0, 0, 1]} delta={{ label: "3 blocked from 198.51.100.201", intent: "bad" }} />
+        <KpiCard
+          label="Risky sign-ins · 24 h"
+          value={risky.length}
+          tone="danger"
+          trendColor="var(--oa-danger)"
+          trend={[0, 1, 0, 0, 2, 1, 0, 3, 1, 0, 0, 1]}
+          delta={{ label: "3 blocked from 198.51.100.201", intent: "bad" }}
+        />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Sign-ins by result" description="Per hour, all applications">
@@ -300,7 +609,13 @@ function OverviewPage() {
           />
         </Panel>
         <Panel title="Sign-ins by application" description="Last 24 h">
-          <BarList label="Sign-ins by application" items={[...apps].sort((a, b) => b.users - a.users).slice(0, 7).map((a) => ({ id: a.id, label: a.name, value: a.users * 4 }))} />
+          <BarList
+            label="Sign-ins by application"
+            items={[...apps]
+              .sort((a, b) => b.users - a.users)
+              .slice(0, 7)
+              .map((a) => ({ id: a.id, label: a.name, value: a.users * 4 }))}
+          />
         </Panel>
       </div>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
@@ -365,7 +680,13 @@ function ApplicationsPage() {
         />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Sign-ins · 24 h" value="3,412" unit="successful" trend={wave(24, { base: 140, amp: 90, seed: 61, phase: -1 })} delta={{ label: "+6% vs. yesterday", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Sign-ins · 24 h"
+          value="3,412"
+          unit="successful"
+          trend={wave(24, { base: 140, amp: 90, seed: 61, phase: -1 })}
+          delta={{ label: "+6% vs. yesterday", direction: "up", intent: "good" }}
+        />
         <KpiCard label="MFA adoption" value="92%" unit="197 of 214" tone="success" delta={{ label: "17 users without a second factor" }} />
         <KpiCard label="Passkeys" value="41%" unit="88 users" delta={{ label: "+9 this week", direction: "up", intent: "good" }} />
         <KpiCard
@@ -390,7 +711,16 @@ function ApplicationsPage() {
             ]}
           />
         </Panel>
-        <Panel title="Providers" description="Upstream identity sources" actions={<Button size="sm" variant="ghost">Manage</Button>} flush>
+        <Panel
+          title="Providers"
+          description="Upstream identity sources"
+          actions={
+            <Button size="sm" variant="ghost">
+              Manage
+            </Button>
+          }
+          flush
+        >
           <ProviderList />
         </Panel>
       </div>
@@ -418,17 +748,51 @@ function UsersPage() {
   );
   const cols: Column<User>[] = [
     { id: "name", header: "User", pinned: "left", width: "24%", sortValue: (u) => u.name, cell: (u) => <Person name={u.name} /> },
-    { id: "source", header: "Source", description: "Where the account comes from. Synced accounts are read-only here.", sortValue: (u) => u.source, cell: (u) => <span className="text-xs">{u.source}</span> },
-    { id: "groups", header: "Groups", cell: (u) => <span className="flex flex-wrap gap-1">{u.groups.map((g) => <Badge key={g} variant="outline">{g}</Badge>)}</span> },
+    {
+      id: "source",
+      header: "Source",
+      description: "Where the account comes from. Synced accounts are read-only here.",
+      sortValue: (u) => u.source,
+      cell: (u) => <span className="text-xs">{u.source}</span>,
+    },
+    {
+      id: "groups",
+      header: "Groups",
+      cell: (u) => (
+        <span className="flex flex-wrap gap-1">
+          {u.groups.map((g) => (
+            <Badge key={g} variant="outline">
+              {g}
+            </Badge>
+          ))}
+        </span>
+      ),
+    },
     {
       id: "mfa",
       header: "MFA",
       sortValue: (u) => u.mfa.length,
-      cell: (u) => (u.mfa.length ? <span className="flex flex-wrap gap-1">{u.mfa.map((m) => <Badge key={m} tone={m === "Passkey" ? "success" : "neutral"}>{m}</Badge>)}</span> : <StatusBadge tone="warning">None</StatusBadge>),
+      cell: (u) =>
+        u.mfa.length ? (
+          <span className="flex flex-wrap gap-1">
+            {u.mfa.map((m) => (
+              <Badge key={m} tone={m === "Passkey" ? "success" : "neutral"}>
+                {m}
+              </Badge>
+            ))}
+          </span>
+        ) : (
+          <StatusBadge tone="warning">None</StatusBadge>
+        ),
     },
     { id: "role", header: "Role", cell: (u) => (u.admin ? <Badge tone="info">Admin</Badge> : <span className="text-xs text-fg-muted">Member</span>) },
     { id: "last", header: "Last sign-in", cell: (u) => <span className="text-xs whitespace-nowrap text-fg-muted">{u.last}</span> },
-    { id: "status", header: "Status", sortValue: (u) => u.status, cell: (u) => <StatusBadge tone={USER_STATUS[u.status]}>{u.status[0]!.toUpperCase() + u.status.slice(1)}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      sortValue: (u) => u.status,
+      cell: (u) => <StatusBadge tone={USER_STATUS[u.status]}>{u.status[0]!.toUpperCase() + u.status.slice(1)}</StatusBadge>,
+    },
   ];
   const bulk = (fn: (u: User) => User, verb: string) => {
     setRows((rs) => rs.map((r) => (selected.includes(r.id) ? fn(r) : r)));
@@ -468,7 +832,15 @@ function UsersPage() {
         }
       >
         <SearchInput label="Search users" className="w-56" value={q} onChange={(e) => setQ(e.target.value)} />
-        <FacetFilter label="Source" selected={sources} onChange={setSources} options={(["Google Workspace", "Corporate AD", "Keycloak", "Local"] as Source[]).map((s) => ({ value: s, count: rows.filter((u) => u.source === s).length }))} />
+        <FacetFilter
+          label="Source"
+          selected={sources}
+          onChange={setSources}
+          options={(["Google Workspace", "Corporate AD", "Keycloak", "Local"] as Source[]).map((s) => ({
+            value: s,
+            count: rows.filter((u) => u.source === s).length,
+          }))}
+        />
         <FacetFilter
           label="MFA"
           selected={mfa}
@@ -480,7 +852,11 @@ function UsersPage() {
         />
       </FilterBar>
       {selected.length > 0 && (
-        <div role="toolbar" aria-label="Bulk actions" className="flex flex-wrap items-center gap-2 rounded-lg border border-accent bg-accent-soft px-3 py-1.5 text-sm">
+        <div
+          role="toolbar"
+          aria-label="Bulk actions"
+          className="flex flex-wrap items-center gap-2 rounded-lg border border-accent bg-accent-soft px-3 py-1.5 text-sm"
+        >
           <span className="font-medium">{selected.length} selected</span>
           <Button size="sm" onClick={() => bulk((u) => ({ ...u, mfa: [] }), "Reset MFA for")}>
             Reset MFA
@@ -494,7 +870,17 @@ function UsersPage() {
         </div>
       )}
       <Panel title="Users" description={`${shown.length} of ${rows.length}`} flush>
-        <DataTable label="Users" columns={cols} rows={shown} getRowId={(u) => u.id} selectable selectedIds={selected} onSelectionChange={setSelected} pageSize={10} minWidth={1000} />
+        <DataTable
+          label="Users"
+          columns={cols}
+          rows={shown}
+          getRowId={(u) => u.id}
+          selectable
+          selectedIds={selected}
+          onSelectionChange={setSelected}
+          pageSize={10}
+          minWidth={1000}
+        />
       </Panel>
     </>
   );
@@ -511,10 +897,26 @@ function GroupsPage() {
   const cols: Column<Group>[] = [
     { id: "name", header: "Group", sortValue: (x) => x.name, cell: (x) => <span className="font-medium">{x.name}</span> },
     { id: "source", header: "Source", sortValue: (x) => x.source, cell: (x) => <span className="text-xs">{x.source}</span> },
-    { id: "rule", header: "Membership", description: "Synced groups follow a rule on the provider; local groups are managed here.", cell: (x) => <span className="font-mono text-2xs">{x.rule}</span> },
+    {
+      id: "rule",
+      header: "Membership",
+      description: "Synced groups follow a rule on the provider; local groups are managed here.",
+      cell: (x) => <span className="font-mono text-2xs">{x.rule}</span>,
+    },
     { id: "members", header: "Members", align: "right", mono: true, sortValue: (x) => x.members, cell: (x) => x.members },
-    { id: "apps", header: "Applications", align: "right", mono: true, sortValue: (x) => (assigned[x.id] ?? []).length, cell: (x) => (assigned[x.id] ?? []).length },
-    { id: "mfa", header: "MFA policy", cell: (x) => <Badge tone={x.mfa === "Passkey only" ? "success" : x.mfa === "Optional" ? "warning" : "neutral"}>{x.mfa}</Badge> },
+    {
+      id: "apps",
+      header: "Applications",
+      align: "right",
+      mono: true,
+      sortValue: (x) => (assigned[x.id] ?? []).length,
+      cell: (x) => (assigned[x.id] ?? []).length,
+    },
+    {
+      id: "mfa",
+      header: "MFA policy",
+      cell: (x) => <Badge tone={x.mfa === "Passkey only" ? "success" : x.mfa === "Optional" ? "warning" : "neutral"}>{x.mfa}</Badge>,
+    },
   ];
   return (
     <>
@@ -529,7 +931,15 @@ function GroupsPage() {
       />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Groups" description={`${GROUPS.length} groups · 6 synced, 4 local`} flush>
-          <DataTable label="Groups" columns={cols} rows={GROUPS} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={active} minWidth={760} />
+          <DataTable
+            label="Groups"
+            columns={cols}
+            rows={GROUPS}
+            getRowId={(x) => x.id}
+            onRowClick={(x) => setActive(x.id)}
+            activeRowId={active}
+            minWidth={760}
+          />
         </Panel>
         <Panel title={g.name} description={`${g.members} members · ${g.source}`} aria-label="Group detail">
           <div className="flex flex-col gap-3">
@@ -551,7 +961,12 @@ function GroupsPage() {
                 setAssigned((s) => ({ ...s, [g.id]: Array.from(new Set([...(s[g.id] ?? []), name])) }));
               }}
             >
-              <SelectField label="Assign application" value={pick} onChange={(e) => setPick(e.target.value)} options={apps.map((a) => ({ value: a.id, label: a.name }))} />
+              <SelectField
+                label="Assign application"
+                value={pick}
+                onChange={(e) => setPick(e.target.value)}
+                options={apps.map((a) => ({ value: a.id, label: a.name }))}
+              />
               <Button type="submit">Assign</Button>
             </form>
             <div className="flex flex-col gap-1">
@@ -602,7 +1017,12 @@ function ProvidersPage() {
             <dd className="font-mono">realm_access.roles</dd>
           </dl>
         </Panel>
-        <Panel title="Corporate AD" description="LDAP · ldaps://dc01.corp.example.com:636" actions={<StatusBadge tone={adState === "ok" ? "success" : "danger"}>{adState === "ok" ? "Connected" : "Sync failed"}</StatusBadge>} aria-label="Corporate AD">
+        <Panel
+          title="Corporate AD"
+          description="LDAP · ldaps://dc01.corp.example.com:636"
+          actions={<StatusBadge tone={adState === "ok" ? "success" : "danger"}>{adState === "ok" ? "Connected" : "Sync failed"}</StatusBadge>}
+          aria-label="Corporate AD"
+        >
           <div className="flex flex-col gap-2">
             <dl className="grid grid-cols-[110px_minmax(0,1fr)] gap-x-2 gap-y-1 text-xs">
               <dt className="text-fg-muted">Bind DN</dt>
@@ -612,7 +1032,9 @@ function ProvidersPage() {
               <dt className="text-fg-muted">Schedule</dt>
               <dd>Every 15 min · full sync nightly</dd>
               <dt className="text-fg-muted">Last result</dt>
-              <dd className={adState === "ok" ? "text-success" : "text-danger-text"}>{adState === "ok" ? "Synced 63 users, 12 groups just now" : "Bind failed: invalid credentials · 2 h ago"}</dd>
+              <dd className={adState === "ok" ? "text-success" : "text-danger-text"}>
+                {adState === "ok" ? "Synced 63 users, 12 groups just now" : "Bind failed: invalid credentials · 2 h ago"}
+              </dd>
             </dl>
             <div className="flex items-center gap-2">
               <Button size="sm" icon={<RefreshCw />} onClick={() => setAdState("ok")}>
@@ -661,13 +1083,22 @@ function ProvidersPage() {
               { id: "kc", header: "Keycloak", mono: true, cell: (r) => r.kc },
               { id: "ad", header: "Corporate AD", mono: true, cell: (r) => r.ad },
               { id: "google", header: "Google", mono: true, cell: (r) => r.google },
-              { id: "req", header: "Required", cell: (r) => (r.required ? <Badge tone="info">Required</Badge> : <span className="text-xs text-fg-muted">Optional</span>) },
+              {
+                id: "req",
+                header: "Required",
+                cell: (r) => (r.required ? <Badge tone="info">Required</Badge> : <span className="text-xs text-fg-muted">Optional</span>),
+              },
             ]}
           />
         </Panel>
         <Panel title="Provisioning">
           <div className="flex flex-col gap-3">
-            <Switch checked={jit} onCheckedChange={setJit} label="Create users on first sign-in" description="Just-in-time provisioning for people who are not synced yet." />
+            <Switch
+              checked={jit}
+              onCheckedChange={setJit}
+              label="Create users on first sign-in"
+              description="Just-in-time provisioning for people who are not synced yet."
+            />
             <SelectField
               label="When a user is removed upstream"
               defaultValue="disable"
@@ -694,20 +1125,42 @@ function ProvidersPage() {
 
 /* -------------------------------------------------------------------- MFA */
 
-const DAY30 = Array.from({ length: 30 }, (_, i) => new Date(Date.UTC(2026, 9, 19 - (29 - i))).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }));
+const DAY30 = Array.from({ length: 30 }, (_, i) =>
+  new Date(Date.UTC(2026, 9, 19 - (29 - i))).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }),
+);
 
 const POLICY_GROUPS = ["Admins", "SRE on-call", "Engineering", "Support", "Sales", "Contractors"];
 
 function MfaPage() {
-  const [required, setRequired] = useState<Record<string, boolean>>({ Admins: true, "SRE on-call": true, Engineering: true, Support: true, Sales: false, Contractors: false });
+  const [required, setRequired] = useState<Record<string, boolean>>({
+    Admins: true,
+    "SRE on-call": true,
+    Engineering: true,
+    Support: true,
+    Sales: false,
+    Contractors: false,
+  });
   const [reminded, setReminded] = useState<string[]>([]);
   const without = USERS.filter((u) => u.mfa.length === 0 && u.status !== "disabled");
   return (
     <>
       <PageHeader title="MFA" description="Second factors, passkey adoption, recovery and who still signs in with a password alone" />
       <KpiGrid>
-        <KpiCard label="Any second factor" value="92%" unit="197 of 214" tone="success" trend={wave(12, { base: 88, amp: 3, seed: 91 })} delta={{ label: "+3 pts this month", direction: "up", intent: "good" }} />
-        <KpiCard label="Passkeys" value="41%" unit="88 users" trend={wave(12, { base: 30, amp: 8, seed: 92 })} delta={{ label: "+9 this week", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Any second factor"
+          value="92%"
+          unit="197 of 214"
+          tone="success"
+          trend={wave(12, { base: 88, amp: 3, seed: 91 })}
+          delta={{ label: "+3 pts this month", direction: "up", intent: "good" }}
+        />
+        <KpiCard
+          label="Passkeys"
+          value="41%"
+          unit="88 users"
+          trend={wave(12, { base: 30, amp: 8, seed: 92 })}
+          delta={{ label: "+9 this week", direction: "up", intent: "good" }}
+        />
         <KpiCard label="Recovery codes saved" value="71%" unit="of MFA users" delta={{ label: "57 never downloaded" }} />
         <KpiCard label="Recovery requests · 30 d" value="6" unit="helpdesk resets" delta={{ label: "All verified by manager" }} />
       </KpiGrid>
@@ -738,7 +1191,13 @@ function MfaPage() {
         <Panel title="Enforcement" description="Require a second factor per group">
           <div className="flex flex-col gap-2.5">
             {POLICY_GROUPS.map((g) => (
-              <Switch key={g} checked={required[g] ?? false} onCheckedChange={(v) => setRequired((r) => ({ ...r, [g]: v }))} label={`Require MFA for ${g}`} description={g === "Admins" || g === "SRE on-call" ? "Passkey or security key only" : "Any second factor"} />
+              <Switch
+                key={g}
+                checked={required[g] ?? false}
+                onCheckedChange={(v) => setRequired((r) => ({ ...r, [g]: v }))}
+                label={`Require MFA for ${g}`}
+                description={g === "Admins" || g === "SRE on-call" ? "Passkey or security key only" : "Any second factor"}
+              />
             ))}
             <span role="status" className="text-xs text-fg-muted">
               {POLICY_GROUPS.filter((g) => required[g]).length} of {POLICY_GROUPS.length} groups require MFA
@@ -825,8 +1284,19 @@ function BrandingPage() {
             }}
           >
             <TextField label="Product name" value={name} onChange={(e) => (setName(e.target.value), setSaved(false))} />
-            <TextField label="Accent colour" mono value={accent} onChange={(e) => (setAccent(e.target.value), setSaved(false))} error={valid ? undefined : "Use a 6-digit hex colour like #1f4fd8"} />
-            <TextField label="Sign-in domain" mono defaultValue="id.example.com" hint="CNAME to edge.openasy.example.com; certificate is issued automatically." />
+            <TextField
+              label="Accent colour"
+              mono
+              value={accent}
+              onChange={(e) => (setAccent(e.target.value), setSaved(false))}
+              error={valid ? undefined : "Use a 6-digit hex colour like #1f4fd8"}
+            />
+            <TextField
+              label="Sign-in domain"
+              mono
+              defaultValue="id.example.com"
+              hint="CNAME to edge.openasy.example.com; certificate is issued automatically."
+            />
             <div className="flex items-center gap-2">
               <Button type="submit" variant="primary" disabled={!valid}>
                 Save branding
@@ -850,7 +1320,11 @@ function BrandingPage() {
               </span>
               <span className="text-xs text-fg-muted">Sign in with your work account</span>
               <span aria-hidden className="h-8 rounded-md border border-line-strong" />
-              <span aria-hidden className="grid h-8 place-items-center rounded-md text-xs font-medium text-white" style={{ background: valid ? accent : "#1f4fd8" }}>
+              <span
+                aria-hidden
+                className="grid h-8 place-items-center rounded-md text-xs font-medium text-white"
+                style={{ background: valid ? accent : "#1f4fd8" }}
+              >
                 Continue
               </span>
             </div>
@@ -868,7 +1342,9 @@ function AuditPage() {
   const [range, setRange] = useState("24h");
   const [q, setQ] = useState("");
   const rows = SIGNINS.filter(
-    (s) => (tab === "all" || (tab === "failed" && s.result !== "success") || (tab === "admin" && s.kind === "admin")) && `${s.user} ${s.app} ${s.ip}`.toLowerCase().includes(q.toLowerCase()),
+    (s) =>
+      (tab === "all" || (tab === "failed" && s.result !== "success") || (tab === "admin" && s.kind === "admin")) &&
+      `${s.user} ${s.app} ${s.ip}`.toLowerCase().includes(q.toLowerCase()),
   );
   const cols: Column<SignIn>[] = [
     { id: "time", header: "Time", width: "90px", mono: true, cell: (s) => s.time },
@@ -887,11 +1363,23 @@ function AuditPage() {
     },
     { id: "ip", header: "IP", cell: (s) => <EntityChip kind="ip" value={s.ip} hideKind href="#ip" /> },
     { id: "loc", header: "Location", cell: (s) => <span className="text-xs">{s.location}</span> },
-    { id: "risk", header: "Risk", description: "Scored from location, device, time and failure history.", sortValue: (s) => ["low", "medium", "high"].indexOf(s.risk), cell: (s) => <Badge tone={s.risk === "high" ? "danger" : s.risk === "medium" ? "warning" : "neutral"}>{s.risk[0]!.toUpperCase() + s.risk.slice(1)}</Badge> },
+    {
+      id: "risk",
+      header: "Risk",
+      description: "Scored from location, device, time and failure history.",
+      sortValue: (s) => ["low", "medium", "high"].indexOf(s.risk),
+      cell: (s) => (
+        <Badge tone={s.risk === "high" ? "danger" : s.risk === "medium" ? "warning" : "neutral"}>{s.risk[0]!.toUpperCase() + s.risk.slice(1)}</Badge>
+      ),
+    },
   ];
   return (
     <>
-      <PageHeader title="Audit" description="Every sign-in and admin change. Retained 400 days and forwarded to SIEM." actions={<Button icon={<ShieldCheck />}>Export CSV</Button>}>
+      <PageHeader
+        title="Audit"
+        description="Every sign-in and admin change. Retained 400 days and forwarded to SIEM."
+        actions={<Button icon={<ShieldCheck />}>Export CSV</Button>}
+      >
         <Tabs
           label="Audit events"
           value={tab}

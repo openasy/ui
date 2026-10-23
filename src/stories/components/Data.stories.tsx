@@ -52,7 +52,11 @@ const columns: Column<Session>[] = [
       </span>
     ),
   },
-  { id: "status", header: "Status", cell: (s) => <StatusBadge tone={s.status === "connected" ? "success" : "warning"}>{s.status === "connected" ? "Connected" : "Pending MFA"}</StatusBadge> },
+  {
+    id: "status",
+    header: "Status",
+    cell: (s) => <StatusBadge tone={s.status === "connected" ? "success" : "warning"}>{s.status === "connected" ? "Connected" : "Pending MFA"}</StatusBadge>,
+  },
   { id: "client", header: "Client", cell: (s) => s.client },
   { id: "real", header: "Real IP", mono: true, cell: (s) => <EntityChip kind="ip" value={s.realIp} hideKind href="#ip" /> },
   { id: "vpn", header: "VPN IP", mono: true, cell: (s) => s.vpnIp, sortValue: (s) => Number(s.vpnIp.split(".")[3]) },
@@ -122,20 +126,31 @@ export const InteractiveColumns: Story = {
   args: {} as never,
   render: () => {
     const cols: Column<Session>[] = columns.map((c) => {
-      const extra: Partial<Column<Session>> = {
-        person: { pinned: "left" as const, description: "Who is connected. Click the avatar row to open their profile.", label: "Person" },
-        status: { description: "Connected once the tunnel is up; Pending MFA while the TOTP prompt is open." },
-        real: { description: "Public address the client connected from. Documentation ranges only in this demo." },
-        vpn: { description: "Static address from the person's IP group, used by firewall rules." },
-        bytes: { description: "Bytes in plus out since the session started." },
-        act: { pinned: "right" as const, label: "Actions", hideable: false, resizable: false },
-      }[c.id] ?? {};
+      const extra: Partial<Column<Session>> =
+        {
+          person: { pinned: "left" as const, description: "Who is connected. Click the avatar row to open their profile.", label: "Person" },
+          status: { description: "Connected once the tunnel is up; Pending MFA while the TOTP prompt is open." },
+          real: { description: "Public address the client connected from. Documentation ranges only in this demo." },
+          vpn: { description: "Static address from the person's IP group, used by firewall rules." },
+          bytes: { description: "Bytes in plus out since the session started." },
+          act: { pinned: "right" as const, label: "Actions", hideable: false, resizable: false },
+        }[c.id] ?? {};
       return { ...c, ...extra };
     });
     return (
       <div className="max-w-[880px]">
         <Panel title="Live connections" description="Resize, pin and hide columns; layout is remembered for this table." flush>
-          <DataTable label="Interactive connections" columns={cols} rows={sessions} getRowId={(s) => s.id} minWidth={1180} stickyHeader maxHeight={320} persistKey="story-sessions" selectable />
+          <DataTable
+            label="Interactive connections"
+            columns={cols}
+            rows={sessions}
+            getRowId={(s) => s.id}
+            minWidth={1180}
+            stickyHeader
+            maxHeight={320}
+            persistKey="story-sessions"
+            selectable
+          />
         </Panel>
       </div>
     );
@@ -176,7 +191,14 @@ export const Empty: Story = {
   args: {} as never,
   render: () => (
     <Panel title="Live connections" flush>
-      <DataTable label="No connections" columns={columns} rows={[]} getRowId={(s) => s.id} empty={<p className="py-8">Nobody is connected right now.</p>} minWidth={960} />
+      <DataTable
+        label="No connections"
+        columns={columns}
+        rows={[]}
+        getRowId={(s) => s.id}
+        empty={<p className="py-8">Nobody is connected right now.</p>}
+        minWidth={960}
+      />
     </Panel>
   ),
 };
@@ -186,7 +208,13 @@ export const Kpis: Story = {
   args: {} as never,
   render: () => (
     <KpiGrid>
-      <KpiCard label="Active connections" value="128" unit="now" trend={wave(24, { base: 90, amp: 50, seed: 3 })} delta={{ label: "+12 vs. yesterday", direction: "up", intent: "neutral" }} />
+      <KpiCard
+        label="Active connections"
+        value="128"
+        unit="now"
+        trend={wave(24, { base: 90, amp: 50, seed: 3 })}
+        delta={{ label: "+12 vs. yesterday", direction: "up", intent: "neutral" }}
+      />
       <KpiCard label="Traffic · 24 h" value="412" unit="GB" trend={wave(24, { base: 40, seed: 5 })} delta={{ label: "61% via split routes" }} />
       <KpiCard
         label="Failed sign-ins · 24 h"

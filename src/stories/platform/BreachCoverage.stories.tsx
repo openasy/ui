@@ -29,14 +29,43 @@ type Story = StoryObj<typeof meta>;
 const STAGES = BREACH_STAGES;
 const SCENARIO = BREACH_SCENARIO;
 
-const CORE: ProductId[] = ["identity", "vpn", "siem", "logs", "metrics", "alerts", "incidents", "infrastructure", "runtime", "malware", "network-ids", "deception", "secrets", "access", "attack-surface", "waf", "awareness", "threat-intel", "cost", "endpoints", "posture", "vulnerabilities", "backups"];
+const CORE: ProductId[] = [
+  "identity",
+  "vpn",
+  "siem",
+  "logs",
+  "metrics",
+  "alerts",
+  "incidents",
+  "infrastructure",
+  "runtime",
+  "malware",
+  "network-ids",
+  "deception",
+  "secrets",
+  "access",
+  "attack-surface",
+  "waf",
+  "awareness",
+  "threat-intel",
+  "cost",
+  "endpoints",
+  "posture",
+  "vulnerabilities",
+  "backups",
+];
 
 const OPTIONAL: ProductId[] = ["network-ids", "runtime", "deception", "secrets", "access", "endpoints", "threat-intel", "awareness", "attack-surface", "waf"];
 
 function ProductChip({ id, on = true }: { id: ProductId; on?: boolean }) {
   const P = PRODUCTS[id];
   return (
-    <span className={cn("inline-flex h-5 items-center gap-1 rounded border px-1.5 text-xs", on ? "border-line bg-surface text-fg" : "border-dashed border-line-strong bg-canvas text-fg-muted line-through")}>
+    <span
+      className={cn(
+        "inline-flex h-5 items-center gap-1 rounded border px-1.5 text-xs",
+        on ? "border-line bg-surface text-fg" : "border-dashed border-line-strong bg-canvas text-fg-muted line-through",
+      )}
+    >
       <P.icon aria-hidden className="size-3" />
       {P.name}
       {!on && <span className="sr-only"> (not deployed)</span>}
@@ -71,7 +100,13 @@ export const Coverage: Story = {
 
     const stepColumns: Column<(typeof steps)[number]>[] = [
       { id: "at", header: "When", width: "72px", mono: true, cell: (s) => minutes(s.at), description: "Minutes since the attacker's first action." },
-      { id: "technique", header: "Technique", width: "22%", cell: (s) => <span className="font-mono text-xs">{s.technique}</span>, description: "MITRE ATT&CK technique id." },
+      {
+        id: "technique",
+        header: "Technique",
+        width: "22%",
+        cell: (s) => <span className="font-mono text-xs">{s.technique}</span>,
+        description: "MITRE ATT&CK technique id.",
+      },
       { id: "action", header: "What the attacker did", cell: (s) => s.action },
       {
         id: "caught",
@@ -90,12 +125,7 @@ export const Coverage: Story = {
         id: "result",
         header: "Result",
         width: "120px",
-        cell: (s) =>
-          s.caughtBy.length ? (
-            <StatusBadge tone="success">Detected</StatusBadge>
-          ) : (
-            <StatusBadge tone="danger">Missed</StatusBadge>
-          ),
+        cell: (s) => (s.caughtBy.length ? <StatusBadge tone="success">Detected</StatusBadge> : <StatusBadge tone="danger">Missed</StatusBadge>),
       },
     ];
 
@@ -105,12 +135,28 @@ export const Coverage: Story = {
           breadcrumbs={[{ label: "Platform" }, { label: "Breach coverage" }]}
           title="Would we catch a breach?"
           description="Each attack stage needs at least one detector, ideally two. Turn products off below to see what would be missed."
-          meta={gaps.length ? <StatusBadge tone="danger">{gaps.length} uncovered stages</StatusBadge> : <StatusBadge tone="success">Every stage covered</StatusBadge>}
+          meta={
+            gaps.length ? (
+              <StatusBadge tone="danger">{gaps.length} uncovered stages</StatusBadge>
+            ) : (
+              <StatusBadge tone="success">Every stage covered</StatusBadge>
+            )
+          }
           actions={<Button variant="primary">Run Attack Simulation</Button>}
         />
         <KpiGrid>
-          <KpiCard label="ATT&CK stages covered" value={`${STAGES.length - gaps.length}/${STAGES.length}`} tone={gaps.length ? "danger" : "success"} delta={{ label: `${single.length} with a single detector` }} />
-          <KpiCard label="Scenario steps detected" value={`${SCENARIO.length - missed.length}/${SCENARIO.length}`} tone={missed.length ? "warning" : "success"} delta={{ label: "phished credentials → miner and data theft" }} />
+          <KpiCard
+            label="ATT&CK stages covered"
+            value={`${STAGES.length - gaps.length}/${STAGES.length}`}
+            tone={gaps.length ? "danger" : "success"}
+            delta={{ label: `${single.length} with a single detector` }}
+          />
+          <KpiCard
+            label="Scenario steps detected"
+            value={`${SCENARIO.length - missed.length}/${SCENARIO.length}`}
+            tone={missed.length ? "warning" : "success"}
+            delta={{ label: "phished credentials → miner and data theft" }}
+          />
           <KpiCard
             label="Time to first detection"
             value={firstCatch ? minutes(firstCatch.at) : "Never"}
@@ -132,7 +178,14 @@ export const Coverage: Story = {
               {stageStats.map((st, i) => {
                 const s = strength(st.live.length);
                 return (
-                  <li key={st.id} className={cn("flex flex-col gap-1.5 rounded-lg border p-2.5", s.tone === "danger" ? "border-danger bg-danger-soft" : "border-line bg-surface")} data-stage={st.id}>
+                  <li
+                    key={st.id}
+                    className={cn(
+                      "flex flex-col gap-1.5 rounded-lg border p-2.5",
+                      s.tone === "danger" ? "border-danger bg-danger-soft" : "border-line bg-surface",
+                    )}
+                    data-stage={st.id}
+                  >
                     <span className="flex items-center justify-between gap-2">
                       <span className="font-mono text-2xs text-fg-muted">
                         {String(i + 1).padStart(2, "0")} · {st.tactic}
@@ -161,7 +214,11 @@ export const Coverage: Story = {
           </Panel>
         </div>
 
-        <Panel title="Scenario: phished credentials → crypto miner and data theft" description="Ten steps over 82 minutes, replayed weekly by Attack Simulation with safe techniques" flush>
+        <Panel
+          title="Scenario: phished credentials → crypto miner and data theft"
+          description="Ten steps over 82 minutes, replayed weekly by Attack Simulation with safe techniques"
+          flush
+        >
           <DataTable label="Breach scenario steps" columns={stepColumns} rows={steps} getRowId={(s) => s.id} minWidth={980} columnMenu={false} />
         </Panel>
 
@@ -176,7 +233,11 @@ export const Coverage: Story = {
               { ok: false, text: "Clocks drift more than 2 s on 3 hosts, which breaks event correlation", by: "infrastructure" as ProductId },
             ].map((r, i) => (
               <li key={i} className="flex items-start gap-2 text-sm">
-                {r.ok ? <CircleCheck aria-label="Met" role="img" className="mt-px size-4 shrink-0 text-success" /> : <CircleX aria-label="Not met" role="img" className="mt-px size-4 shrink-0 text-danger" />}
+                {r.ok ? (
+                  <CircleCheck aria-label="Met" role="img" className="mt-px size-4 shrink-0 text-success" />
+                ) : (
+                  <CircleX aria-label="Not met" role="img" className="mt-px size-4 shrink-0 text-danger" />
+                )}
                 <span className="flex min-w-0 flex-col gap-1">
                   <span>{r.text}</span>
                   <span>

@@ -1,7 +1,22 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
-import { BadgeCheck, BellOff, Download, FileCode2, FolderGit2, GitPullRequest, Play, Plus, RefreshCw, Scale, ShieldAlert, Trash2, Workflow, X } from "lucide-react";
+import {
+  BadgeCheck,
+  BellOff,
+  Download,
+  FileCode2,
+  FolderGit2,
+  GitPullRequest,
+  Play,
+  Plus,
+  RefreshCw,
+  Scale,
+  ShieldAlert,
+  Trash2,
+  Workflow,
+  X,
+} from "lucide-react";
 import { ProductApp } from "../ProductFrame";
 import { PageHeader } from "../../components/PageHeader";
 import { Button, IconButton } from "../../components/Button";
@@ -81,12 +96,66 @@ interface Advisory {
 }
 
 const advisories: Advisory[] = [
-  { id: "CVE-2024-45337", severity: "critical", title: "Misuse of ServerConfig.PublicKeyCallback may cause authorization bypass", pkg: "golang.org/x/crypto", ecosystem: "Go", from: "v0.28.0", to: "v0.31.0", path: "direct" },
-  { id: "CVE-2024-21538", severity: "high", title: "Regular expression denial of service in cross-spawn", pkg: "cross-spawn", ecosystem: "npm", from: "7.0.3", to: "7.0.5", path: "via execa" },
-  { id: "CVE-2024-4068", severity: "high", title: "Memory exhaustion in braces with unbalanced input", pkg: "braces", ecosystem: "npm", from: "3.0.2", to: "3.0.3", path: "via chokidar" },
-  { id: "CVE-2024-45296", severity: "high", title: "Backtracking regular expressions in path-to-regexp", pkg: "path-to-regexp", ecosystem: "npm", from: "0.1.7", to: "0.1.12", path: "via express" },
-  { id: "CVE-2024-4067", severity: "medium", title: "Regular expression denial of service in micromatch", pkg: "micromatch", ecosystem: "npm", from: "4.0.5", to: "4.0.8", path: "via fast-glob" },
-  { id: "CVE-2024-47764", severity: "low", title: "cookie accepts out-of-bounds characters in name, path and domain", pkg: "cookie", ecosystem: "npm", from: "0.5.0", to: "0.7.0", path: "via express" },
+  {
+    id: "CVE-2024-45337",
+    severity: "critical",
+    title: "Misuse of ServerConfig.PublicKeyCallback may cause authorization bypass",
+    pkg: "golang.org/x/crypto",
+    ecosystem: "Go",
+    from: "v0.28.0",
+    to: "v0.31.0",
+    path: "direct",
+  },
+  {
+    id: "CVE-2024-21538",
+    severity: "high",
+    title: "Regular expression denial of service in cross-spawn",
+    pkg: "cross-spawn",
+    ecosystem: "npm",
+    from: "7.0.3",
+    to: "7.0.5",
+    path: "via execa",
+  },
+  {
+    id: "CVE-2024-4068",
+    severity: "high",
+    title: "Memory exhaustion in braces with unbalanced input",
+    pkg: "braces",
+    ecosystem: "npm",
+    from: "3.0.2",
+    to: "3.0.3",
+    path: "via chokidar",
+  },
+  {
+    id: "CVE-2024-45296",
+    severity: "high",
+    title: "Backtracking regular expressions in path-to-regexp",
+    pkg: "path-to-regexp",
+    ecosystem: "npm",
+    from: "0.1.7",
+    to: "0.1.12",
+    path: "via express",
+  },
+  {
+    id: "CVE-2024-4067",
+    severity: "medium",
+    title: "Regular expression denial of service in micromatch",
+    pkg: "micromatch",
+    ecosystem: "npm",
+    from: "4.0.5",
+    to: "4.0.8",
+    path: "via fast-glob",
+  },
+  {
+    id: "CVE-2024-47764",
+    severity: "low",
+    title: "cookie accepts out-of-bounds characters in name, path and domain",
+    pkg: "cookie",
+    ecosystem: "npm",
+    from: "0.5.0",
+    to: "0.7.0",
+    path: "via express",
+  },
 ];
 
 /** Org-wide advisories (deduplicated across repositories). */
@@ -104,20 +173,174 @@ interface OrgAdvisory {
 }
 
 const ORG_ADVISORIES: OrgAdvisory[] = [
-  { id: "CVE-2024-45337", severity: "critical", title: "Authorization bypass via ServerConfig.PublicKeyCallback misuse", pkg: "golang.org/x/crypto", ecosystem: "Go", repos: ["orders-api", "payments-api"], fix: "v0.31.0", reachable: true, direct: true, published: "Dec 11, 2024" },
-  { id: "CVE-2024-27304", severity: "critical", title: "SQL injection via integer overflow in pgx protocol messages", pkg: "github.com/jackc/pgx/v5", ecosystem: "Go", repos: ["orders-api"], fix: "v5.5.4", reachable: true, direct: true, published: "Mar 6, 2024" },
-  { id: "CVE-2024-24790", severity: "critical", title: "net/netip Is* methods misclassify IPv4-mapped IPv6 addresses", pkg: "stdlib", ecosystem: "Go", repos: ["orders-api", "payments-api"], fix: "go1.22.4", reachable: false, direct: true, published: "Jun 4, 2024" },
-  { id: "CVE-2024-21538", severity: "high", title: "Regular expression denial of service in cross-spawn", pkg: "cross-spawn", ecosystem: "npm", repos: ["web-console", "orders-api", "legacy-portal"], fix: "7.0.5", reachable: false, direct: false, published: "Nov 8, 2024" },
-  { id: "CVE-2024-4068", severity: "high", title: "Memory exhaustion in braces with unbalanced input", pkg: "braces", ecosystem: "npm", repos: ["web-console", "legacy-portal"], fix: "3.0.3", reachable: false, direct: false, published: "May 14, 2024" },
-  { id: "CVE-2024-45296", severity: "high", title: "Backtracking regular expressions in path-to-regexp", pkg: "path-to-regexp", ecosystem: "npm", repos: ["web-console", "legacy-portal", "orders-api"], fix: "0.1.12", reachable: true, direct: false, published: "Sep 9, 2024" },
-  { id: "CVE-2024-29415", severity: "high", title: "ip.isPublic misclassifies some private addresses (SSRF)", pkg: "ip", ecosystem: "npm", repos: ["legacy-portal", "web-console"], fix: null, reachable: true, direct: false, published: "May 27, 2024" },
-  { id: "CVE-2024-3651", severity: "high", title: "Quadratic complexity in idna.encode on crafted input", pkg: "idna", ecosystem: "pip", repos: ["ml-scoring"], fix: "3.7", reachable: true, direct: false, published: "Jul 7, 2024" },
-  { id: "CVE-2023-29197", severity: "high", title: "Improper header validation in guzzlehttp/psr7", pkg: "guzzlehttp/psr7", ecosystem: "Composer", repos: ["legacy-portal"], fix: "2.4.5", reachable: false, direct: true, published: "Apr 17, 2023" },
-  { id: "CVE-2024-32650", severity: "high", title: "rustls ConnectionCommon::complete_io infinite loop on close_notify", pkg: "rustls", ecosystem: "Cargo", repos: ["edge-proxy"], fix: "0.23.5", reachable: true, direct: true, published: "Apr 19, 2024" },
-  { id: "CVE-2024-35195", severity: "medium", title: "requests Session keeps verify=False for later requests", pkg: "requests", ecosystem: "pip", repos: ["ml-scoring"], fix: "2.32.0", reachable: false, direct: true, published: "May 20, 2024" },
-  { id: "CVE-2024-5206", severity: "medium", title: "TfidfVectorizer stores sensitive tokens in stop_words_", pkg: "scikit-learn", ecosystem: "pip", repos: ["ml-scoring"], fix: "1.5.0", reachable: false, direct: true, published: "Jun 6, 2024" },
-  { id: "CVE-2024-4067", severity: "medium", title: "Regular expression denial of service in micromatch", pkg: "micromatch", ecosystem: "npm", repos: ["web-console"], fix: "4.0.8", reachable: false, direct: false, published: "May 14, 2024" },
-  { id: "CVE-2024-47764", severity: "low", title: "cookie accepts out-of-bounds characters in name, path and domain", pkg: "cookie", ecosystem: "npm", repos: ["legacy-portal", "web-console"], fix: "0.7.0", reachable: false, direct: false, published: "Oct 4, 2024" },
+  {
+    id: "CVE-2024-45337",
+    severity: "critical",
+    title: "Authorization bypass via ServerConfig.PublicKeyCallback misuse",
+    pkg: "golang.org/x/crypto",
+    ecosystem: "Go",
+    repos: ["orders-api", "payments-api"],
+    fix: "v0.31.0",
+    reachable: true,
+    direct: true,
+    published: "Dec 11, 2024",
+  },
+  {
+    id: "CVE-2024-27304",
+    severity: "critical",
+    title: "SQL injection via integer overflow in pgx protocol messages",
+    pkg: "github.com/jackc/pgx/v5",
+    ecosystem: "Go",
+    repos: ["orders-api"],
+    fix: "v5.5.4",
+    reachable: true,
+    direct: true,
+    published: "Mar 6, 2024",
+  },
+  {
+    id: "CVE-2024-24790",
+    severity: "critical",
+    title: "net/netip Is* methods misclassify IPv4-mapped IPv6 addresses",
+    pkg: "stdlib",
+    ecosystem: "Go",
+    repos: ["orders-api", "payments-api"],
+    fix: "go1.22.4",
+    reachable: false,
+    direct: true,
+    published: "Jun 4, 2024",
+  },
+  {
+    id: "CVE-2024-21538",
+    severity: "high",
+    title: "Regular expression denial of service in cross-spawn",
+    pkg: "cross-spawn",
+    ecosystem: "npm",
+    repos: ["web-console", "orders-api", "legacy-portal"],
+    fix: "7.0.5",
+    reachable: false,
+    direct: false,
+    published: "Nov 8, 2024",
+  },
+  {
+    id: "CVE-2024-4068",
+    severity: "high",
+    title: "Memory exhaustion in braces with unbalanced input",
+    pkg: "braces",
+    ecosystem: "npm",
+    repos: ["web-console", "legacy-portal"],
+    fix: "3.0.3",
+    reachable: false,
+    direct: false,
+    published: "May 14, 2024",
+  },
+  {
+    id: "CVE-2024-45296",
+    severity: "high",
+    title: "Backtracking regular expressions in path-to-regexp",
+    pkg: "path-to-regexp",
+    ecosystem: "npm",
+    repos: ["web-console", "legacy-portal", "orders-api"],
+    fix: "0.1.12",
+    reachable: true,
+    direct: false,
+    published: "Sep 9, 2024",
+  },
+  {
+    id: "CVE-2024-29415",
+    severity: "high",
+    title: "ip.isPublic misclassifies some private addresses (SSRF)",
+    pkg: "ip",
+    ecosystem: "npm",
+    repos: ["legacy-portal", "web-console"],
+    fix: null,
+    reachable: true,
+    direct: false,
+    published: "May 27, 2024",
+  },
+  {
+    id: "CVE-2024-3651",
+    severity: "high",
+    title: "Quadratic complexity in idna.encode on crafted input",
+    pkg: "idna",
+    ecosystem: "pip",
+    repos: ["ml-scoring"],
+    fix: "3.7",
+    reachable: true,
+    direct: false,
+    published: "Jul 7, 2024",
+  },
+  {
+    id: "CVE-2023-29197",
+    severity: "high",
+    title: "Improper header validation in guzzlehttp/psr7",
+    pkg: "guzzlehttp/psr7",
+    ecosystem: "Composer",
+    repos: ["legacy-portal"],
+    fix: "2.4.5",
+    reachable: false,
+    direct: true,
+    published: "Apr 17, 2023",
+  },
+  {
+    id: "CVE-2024-32650",
+    severity: "high",
+    title: "rustls ConnectionCommon::complete_io infinite loop on close_notify",
+    pkg: "rustls",
+    ecosystem: "Cargo",
+    repos: ["edge-proxy"],
+    fix: "0.23.5",
+    reachable: true,
+    direct: true,
+    published: "Apr 19, 2024",
+  },
+  {
+    id: "CVE-2024-35195",
+    severity: "medium",
+    title: "requests Session keeps verify=False for later requests",
+    pkg: "requests",
+    ecosystem: "pip",
+    repos: ["ml-scoring"],
+    fix: "2.32.0",
+    reachable: false,
+    direct: true,
+    published: "May 20, 2024",
+  },
+  {
+    id: "CVE-2024-5206",
+    severity: "medium",
+    title: "TfidfVectorizer stores sensitive tokens in stop_words_",
+    pkg: "scikit-learn",
+    ecosystem: "pip",
+    repos: ["ml-scoring"],
+    fix: "1.5.0",
+    reachable: false,
+    direct: true,
+    published: "Jun 6, 2024",
+  },
+  {
+    id: "CVE-2024-4067",
+    severity: "medium",
+    title: "Regular expression denial of service in micromatch",
+    pkg: "micromatch",
+    ecosystem: "npm",
+    repos: ["web-console"],
+    fix: "4.0.8",
+    reachable: false,
+    direct: false,
+    published: "May 14, 2024",
+  },
+  {
+    id: "CVE-2024-47764",
+    severity: "low",
+    title: "cookie accepts out-of-bounds characters in name, path and domain",
+    pkg: "cookie",
+    ecosystem: "npm",
+    repos: ["legacy-portal", "web-console"],
+    fix: "0.7.0",
+    reachable: false,
+    direct: false,
+    published: "Oct 4, 2024",
+  },
 ];
 
 type LicenceCategory = "allowed" | "review" | "denied";
@@ -162,8 +385,26 @@ interface Violation {
 }
 
 const VIOLATIONS: Violation[] = [
-  { id: "v1", repo: "legacy-portal", pkg: "ghostscript-wrapper", version: "1.4.2", licence: "AGPL-3.0-only", category: "denied", via: "direct", found: "Oct 12" },
-  { id: "v2", repo: "orders-api", pkg: "github.com/mongodb/mongo-tools", version: "100.9.4", licence: "SSPL-1.0", category: "denied", via: "direct", found: "Oct 16" },
+  {
+    id: "v1",
+    repo: "legacy-portal",
+    pkg: "ghostscript-wrapper",
+    version: "1.4.2",
+    licence: "AGPL-3.0-only",
+    category: "denied",
+    via: "direct",
+    found: "Oct 12",
+  },
+  {
+    id: "v2",
+    repo: "orders-api",
+    pkg: "github.com/mongodb/mongo-tools",
+    version: "100.9.4",
+    licence: "SSPL-1.0",
+    category: "denied",
+    via: "direct",
+    found: "Oct 16",
+  },
   { id: "v3", repo: "legacy-portal", pkg: "readline", version: "1.3.0", licence: "GPL-3.0-only", category: "denied", via: "via repl-tools", found: "Sep 30" },
   { id: "v4", repo: "web-console", pkg: "pdfjs-viewer-ext", version: "2.1.0", licence: "AGPL-3.0-only", category: "denied", via: "direct", found: "Oct 18" },
   { id: "v5", repo: "orders-api", pkg: "libgit2-sys", version: "0.16.2", licence: "GPL-3.0-only", category: "denied", via: "via git2", found: "Oct 3" },
@@ -226,14 +467,102 @@ interface GateRun {
 }
 
 const RUNS: GateRun[] = [
-  { id: "g1", run: "#4812", repo: "orders-api", pipeline: "GitHub Actions · ci.yml", branch: "feat/refunds", commit: "4f1c2ab", author: PEOPLE[0]!, result: "fail", reasons: ["CVE-2024-45337 critical in golang.org/x/crypto v0.28.0", "SSPL-1.0 in github.com/mongodb/mongo-tools"], time: "6 min ago" },
-  { id: "g2", run: "#2207", repo: "web-console", pipeline: "GitHub Actions · build.yml", branch: "main", commit: "c81aa0f", author: PEOPLE[1]!, result: "fail", reasons: ["CVE-2024-45296 high, fix 0.1.12 available", "AGPL-3.0-only in pdfjs-viewer-ext"], time: "22 min ago" },
-  { id: "g3", run: "#981", repo: "edge-proxy", pipeline: "GitLab CI · audit", branch: "main", commit: "e5a9d10", author: PEOPLE[2]!, result: "pass", reasons: [], time: "40 min ago" },
-  { id: "g4", run: "#1530", repo: "payments-api", pipeline: "GitHub Actions · ci.yml", branch: "fix/retry-backoff", commit: "9d03e71", author: PEOPLE[3]!, result: "warn", reasons: ["CVE-2023-45288 in golang.org/x/net (medium, reachable)"], time: "1 h ago" },
-  { id: "g5", run: "#660", repo: "billing-worker", pipeline: "Jenkins · audit-stage", branch: "main", commit: "77f0c3e", author: PEOPLE[4]!, result: "pass", reasons: [], time: "2 h ago" },
-  { id: "g6", run: "#3302", repo: "ml-scoring", pipeline: "GitHub Actions · train.yml", branch: "exp/feature-store", commit: "12be7d4", author: PEOPLE[5]!, result: "fail", reasons: ["2 critical advisories", "CVE-2024-3651 high, fix 3.7 available"], time: "3 h ago" },
-  { id: "g7", run: "#4809", repo: "orders-api", pipeline: "GitHub Actions · ci.yml", branch: "main", commit: "a07de52", author: PEOPLE[6]!, result: "warn", reasons: ["MPL-2.0 in certifi needs review"], time: "5 h ago" },
-  { id: "g8", run: "#118", repo: "legacy-portal", pipeline: "Jenkins · nightly", branch: "master", commit: "0b4c6aa", author: PEOPLE[7]!, result: "fail", reasons: ["3 critical advisories", "AGPL-3.0-only in ghostscript-wrapper", "GPL-3.0-only in readline"], time: "Yesterday" },
+  {
+    id: "g1",
+    run: "#4812",
+    repo: "orders-api",
+    pipeline: "GitHub Actions · ci.yml",
+    branch: "feat/refunds",
+    commit: "4f1c2ab",
+    author: PEOPLE[0]!,
+    result: "fail",
+    reasons: ["CVE-2024-45337 critical in golang.org/x/crypto v0.28.0", "SSPL-1.0 in github.com/mongodb/mongo-tools"],
+    time: "6 min ago",
+  },
+  {
+    id: "g2",
+    run: "#2207",
+    repo: "web-console",
+    pipeline: "GitHub Actions · build.yml",
+    branch: "main",
+    commit: "c81aa0f",
+    author: PEOPLE[1]!,
+    result: "fail",
+    reasons: ["CVE-2024-45296 high, fix 0.1.12 available", "AGPL-3.0-only in pdfjs-viewer-ext"],
+    time: "22 min ago",
+  },
+  {
+    id: "g3",
+    run: "#981",
+    repo: "edge-proxy",
+    pipeline: "GitLab CI · audit",
+    branch: "main",
+    commit: "e5a9d10",
+    author: PEOPLE[2]!,
+    result: "pass",
+    reasons: [],
+    time: "40 min ago",
+  },
+  {
+    id: "g4",
+    run: "#1530",
+    repo: "payments-api",
+    pipeline: "GitHub Actions · ci.yml",
+    branch: "fix/retry-backoff",
+    commit: "9d03e71",
+    author: PEOPLE[3]!,
+    result: "warn",
+    reasons: ["CVE-2023-45288 in golang.org/x/net (medium, reachable)"],
+    time: "1 h ago",
+  },
+  {
+    id: "g5",
+    run: "#660",
+    repo: "billing-worker",
+    pipeline: "Jenkins · audit-stage",
+    branch: "main",
+    commit: "77f0c3e",
+    author: PEOPLE[4]!,
+    result: "pass",
+    reasons: [],
+    time: "2 h ago",
+  },
+  {
+    id: "g6",
+    run: "#3302",
+    repo: "ml-scoring",
+    pipeline: "GitHub Actions · train.yml",
+    branch: "exp/feature-store",
+    commit: "12be7d4",
+    author: PEOPLE[5]!,
+    result: "fail",
+    reasons: ["2 critical advisories", "CVE-2024-3651 high, fix 3.7 available"],
+    time: "3 h ago",
+  },
+  {
+    id: "g7",
+    run: "#4809",
+    repo: "orders-api",
+    pipeline: "GitHub Actions · ci.yml",
+    branch: "main",
+    commit: "a07de52",
+    author: PEOPLE[6]!,
+    result: "warn",
+    reasons: ["MPL-2.0 in certifi needs review"],
+    time: "5 h ago",
+  },
+  {
+    id: "g8",
+    run: "#118",
+    repo: "legacy-portal",
+    pipeline: "Jenkins · nightly",
+    branch: "master",
+    commit: "0b4c6aa",
+    author: PEOPLE[7]!,
+    result: "fail",
+    reasons: ["3 critical advisories", "AGPL-3.0-only in ghostscript-wrapper", "GPL-3.0-only in readline"],
+    time: "Yesterday",
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -273,7 +602,11 @@ const advisoryColumns: Column<Advisory>[] = [
       </span>
     ),
   },
-  { id: "path", header: "Path", cell: (a) => (a.path === "direct" ? <Badge tone="info">Direct</Badge> : <span className="font-mono text-xs text-fg-muted">{a.path}</span>) },
+  {
+    id: "path",
+    header: "Path",
+    cell: (a) => (a.path === "direct" ? <Badge tone="info">Direct</Badge> : <span className="font-mono text-xs text-fg-muted">{a.path}</span>),
+  },
   {
     id: "act",
     header: <span className="sr-only">Actions</span>,
@@ -364,7 +697,12 @@ function ProjectsPage() {
         <KpiGrid minWidth={150}>
           <KpiCard label="Dependencies" value={p.deps.toLocaleString("en-US")} unit="total" />
           <KpiCard label="Direct" value={p.direct} unit="declared" />
-          <KpiCard label="Licences flagged" value={p.licences} tone={p.licences ? "warning" : undefined} delta={{ label: p.licences ? "AGPL-3.0, SSPL-1.0" : "All allowed" }} />
+          <KpiCard
+            label="Licences flagged"
+            value={p.licences}
+            tone={p.licences ? "warning" : undefined}
+            delta={{ label: p.licences ? "AGPL-3.0, SSPL-1.0" : "All allowed" }}
+          />
           <KpiCard label="CI gate" value={GATE[p.gate].label} tone={GATE[p.gate].tone} delta={{ label: "orders-ci · GitHub Actions" }} />
         </KpiGrid>
         <Panel
@@ -377,7 +715,14 @@ function ProjectsPage() {
           }
           flush
         >
-          <DataTable label="Advisories" columns={advisoryColumns} rows={advisories} getRowId={(a) => a.id} defaultSort={{ id: "sev", direction: "desc" }} minWidth={940} />
+          <DataTable
+            label="Advisories"
+            columns={advisoryColumns}
+            rows={advisories}
+            getRowId={(a) => a.id}
+            defaultSort={{ id: "sev", direction: "desc" }}
+            minWidth={940}
+          />
         </Panel>
       </div>
     </div>
@@ -436,8 +781,21 @@ function AdvisoriesPage() {
         </span>
       ),
     },
-    { id: "repos", header: "Repos", align: "right", mono: true, description: "Repositories whose lockfile resolves an affected version.", sortValue: (a) => a.repos.length, cell: (a) => a.repos.length },
-    { id: "fix", header: "Fix", sortValue: (a) => (a.fix ? 1 : 0), cell: (a) => (a.fix ? <span className="font-mono text-xs text-success">{a.fix}</span> : <Badge tone="warning">No fix yet</Badge>) },
+    {
+      id: "repos",
+      header: "Repos",
+      align: "right",
+      mono: true,
+      description: "Repositories whose lockfile resolves an affected version.",
+      sortValue: (a) => a.repos.length,
+      cell: (a) => a.repos.length,
+    },
+    {
+      id: "fix",
+      header: "Fix",
+      sortValue: (a) => (a.fix ? 1 : 0),
+      cell: (a) => (a.fix ? <span className="font-mono text-xs text-success">{a.fix}</span> : <Badge tone="warning">No fix yet</Badge>),
+    },
     {
       id: "reach",
       header: "Reachability",
@@ -450,7 +808,12 @@ function AdvisoriesPage() {
         </span>
       ),
     },
-    { id: "pr", header: "PR", width: "90px", cell: (a) => (prs.includes(a.id) ? <StatusBadge tone="info">Opened</StatusBadge> : <span className="text-xs text-fg-muted">–</span>) },
+    {
+      id: "pr",
+      header: "PR",
+      width: "90px",
+      cell: (a) => (prs.includes(a.id) ? <StatusBadge tone="info">Opened</StatusBadge> : <span className="text-xs text-fg-muted">–</span>),
+    },
   ];
   const openPrs = () => {
     const fixable = selected.filter((id) => ORG_ADVISORIES.find((a) => a.id === id)?.fix);
@@ -463,12 +826,22 @@ function AdvisoriesPage() {
   const clear = sev.length || eco.length || fix.length || reach.length || q ? () => (setSev([]), setEco([]), setFix([]), setReach([]), setQ("")) : undefined;
   return (
     <>
-      <PageHeader title="Advisories" description="Every known vulnerability across all 23 repositories, deduplicated by advisory. Data from OSV and the GitHub Advisory Database." actions={<Button icon={<RefreshCw />}>Sync advisory data</Button>} />
+      <PageHeader
+        title="Advisories"
+        description="Every known vulnerability across all 23 repositories, deduplicated by advisory. Data from OSV and the GitHub Advisory Database."
+        actions={<Button icon={<RefreshCw />}>Sync advisory data</Button>}
+      />
       <KpiGrid>
         <KpiCard label="Open advisories" value="96" unit="14 unique packages" delta={{ label: "+4 this week", direction: "up", intent: "bad" }} />
         <KpiCard label="Critical" value={count((a) => a.severity === "critical")} tone="danger" delta={{ label: "2 reachable" }} />
         <KpiCard label="Fix available" value="91%" tone="success" delta={{ label: `${count((a) => !a.fix)} without a patched version` }} />
-        <KpiCard label="Median time to fix" value="6.2" unit="days" trend={[11, 10, 9, 9, 8, 7, 7, 6.5, 6.2]} delta={{ label: "−1.4 d vs. last month", direction: "down", intent: "good" }} />
+        <KpiCard
+          label="Median time to fix"
+          value="6.2"
+          unit="days"
+          trend={[11, 10, 9, 9, 8, 7, 7, 6.5, 6.2]}
+          delta={{ label: "−1.4 d vs. last month", direction: "down", intent: "good" }}
+        />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Open advisories by ecosystem" description="Stacked by severity">
@@ -476,20 +849,54 @@ function AdvisoriesPage() {
             label="Open advisories by ecosystem and severity"
             categories={ECOSYSTEMS}
             segments={SEVERITIES.map((s) => ({ id: s, name: SEVERITY_META[s].label }))}
-            values={ECOSYSTEMS.map((e) => SEVERITIES.map((s) => ORG_ADVISORIES.filter((a) => a.ecosystem === e && a.severity === s).reduce((n, a) => n + a.repos.length, 0)))}
+            values={ECOSYSTEMS.map((e) =>
+              SEVERITIES.map((s) => ORG_ADVISORIES.filter((a) => a.ecosystem === e && a.severity === s).reduce((n, a) => n + a.repos.length, 0)),
+            )}
             height={170}
           />
         </Panel>
         <Panel title="Most affected repositories">
-          <BarList label="Repositories with the most open advisories" items={projects.map((p) => ({ id: p.id, label: p.id, value: p.crit * 3 + p.high * 2 + 4 })).sort((a, b) => b.value - a.value).slice(0, 5)} />
+          <BarList
+            label="Repositories with the most open advisories"
+            items={projects
+              .map((p) => ({ id: p.id, label: p.id, value: p.crit * 3 + p.high * 2 + 4 }))
+              .sort((a, b) => b.value - a.value)
+              .slice(0, 5)}
+          />
         </Panel>
       </div>
       <FilterBar onClear={clear}>
         <SearchInput label="Search advisories" value={q} onChange={(e) => setQ(e.target.value)} className="w-56" />
-        <FacetFilter label="Severity" selected={sev} onChange={setSev} options={SEVERITIES.map((s) => ({ value: s, label: SEVERITY_META[s].label, count: count((a) => a.severity === s) }))} />
-        <FacetFilter label="Ecosystem" selected={eco} onChange={setEco} options={ECOSYSTEMS.map((e) => ({ value: e, count: count((a) => a.ecosystem === e) }))} />
-        <FacetFilter label="Fix" selected={fix} onChange={setFix} options={[{ value: "Fix available", count: count((a) => !!a.fix) }, { value: "No fix yet", count: count((a) => !a.fix) }]} />
-        <FacetFilter label="Reachability" selected={reach} onChange={setReach} options={[{ value: "Reachable", count: count((a) => a.reachable) }, { value: "Not reachable", count: count((a) => !a.reachable) }]} />
+        <FacetFilter
+          label="Severity"
+          selected={sev}
+          onChange={setSev}
+          options={SEVERITIES.map((s) => ({ value: s, label: SEVERITY_META[s].label, count: count((a) => a.severity === s) }))}
+        />
+        <FacetFilter
+          label="Ecosystem"
+          selected={eco}
+          onChange={setEco}
+          options={ECOSYSTEMS.map((e) => ({ value: e, count: count((a) => a.ecosystem === e) }))}
+        />
+        <FacetFilter
+          label="Fix"
+          selected={fix}
+          onChange={setFix}
+          options={[
+            { value: "Fix available", count: count((a) => !!a.fix) },
+            { value: "No fix yet", count: count((a) => !a.fix) },
+          ]}
+        />
+        <FacetFilter
+          label="Reachability"
+          selected={reach}
+          onChange={setReach}
+          options={[
+            { value: "Reachable", count: count((a) => a.reachable) },
+            { value: "Not reachable", count: count((a) => !a.reachable) },
+          ]}
+        />
       </FilterBar>
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       {selected.length > 0 && (
@@ -569,16 +976,52 @@ function LicencesPage() {
   const [waived, setWaived] = useState<string[]>([]);
   const inv = LICENCES.filter((l) => tab === "all" || l.category === tab);
   const invCols: Column<LicenceRow>[] = [
-    { id: "id", header: "Licence", sortValue: (l) => l.id, cell: (l) => <span className="flex min-w-0 flex-col"><span className="font-mono text-xs font-medium">{l.id}</span><span className="truncate text-2xs text-fg-muted">{l.name}</span></span> },
-    { id: "cat", header: "Category", sortValue: (l) => l.category, cell: (l) => <StatusBadge tone={CATEGORY[l.category].tone}>{CATEGORY[l.category].label}</StatusBadge> },
+    {
+      id: "id",
+      header: "Licence",
+      sortValue: (l) => l.id,
+      cell: (l) => (
+        <span className="flex min-w-0 flex-col">
+          <span className="font-mono text-xs font-medium">{l.id}</span>
+          <span className="truncate text-2xs text-fg-muted">{l.name}</span>
+        </span>
+      ),
+    },
+    {
+      id: "cat",
+      header: "Category",
+      sortValue: (l) => l.category,
+      cell: (l) => <StatusBadge tone={CATEGORY[l.category].tone}>{CATEGORY[l.category].label}</StatusBadge>,
+    },
     { id: "pkgs", header: "Packages", align: "right", mono: true, sortValue: (l) => l.packages, cell: (l) => l.packages.toLocaleString("en-US") },
     { id: "repos", header: "Repos", align: "right", mono: true, sortValue: (l) => l.repos, cell: (l) => l.repos },
   ];
   const vCols: Column<Violation>[] = [
     { id: "repo", header: "Repository", sortValue: (v) => v.repo, cell: (v) => <span className="font-mono text-xs">{v.repo}</span> },
-    { id: "pkg", header: "Package", sortValue: (v) => v.pkg, cell: (v) => <span className="flex min-w-0 flex-col"><span className="truncate font-mono text-xs">{v.pkg}@{v.version}</span><span className="text-2xs text-fg-muted">{v.via}</span></span> },
+    {
+      id: "pkg",
+      header: "Package",
+      sortValue: (v) => v.pkg,
+      cell: (v) => (
+        <span className="flex min-w-0 flex-col">
+          <span className="truncate font-mono text-xs">
+            {v.pkg}@{v.version}
+          </span>
+          <span className="text-2xs text-fg-muted">{v.via}</span>
+        </span>
+      ),
+    },
     { id: "lic", header: "Licence", cell: (v) => <span className="font-mono text-xs">{v.licence}</span> },
-    { id: "cat", header: "Policy", cell: (v) => (waived.includes(v.id) ? <StatusBadge tone="info">Waived</StatusBadge> : <StatusBadge tone={CATEGORY[v.category].tone}>{CATEGORY[v.category].label}</StatusBadge>) },
+    {
+      id: "cat",
+      header: "Policy",
+      cell: (v) =>
+        waived.includes(v.id) ? (
+          <StatusBadge tone="info">Waived</StatusBadge>
+        ) : (
+          <StatusBadge tone={CATEGORY[v.category].tone}>{CATEGORY[v.category].label}</StatusBadge>
+        ),
+    },
     { id: "found", header: "Found", cell: (v) => v.found },
     {
       id: "act",
@@ -588,7 +1031,13 @@ function LicencesPage() {
       width: "110px",
       hideable: false,
       cell: (v) => (
-        <Button size="xs" variant="ghost" disabled={waived.includes(v.id)} aria-label={`Waive ${v.licence} for ${v.pkg} in ${v.repo}`} onClick={() => setWaived((w) => [...w, v.id])}>
+        <Button
+          size="xs"
+          variant="ghost"
+          disabled={waived.includes(v.id)}
+          aria-label={`Waive ${v.licence} for ${v.pkg} in ${v.repo}`}
+          onClick={() => setWaived((w) => [...w, v.id])}
+        >
           Waive
         </Button>
       ),
@@ -627,7 +1076,11 @@ function LicencesPage() {
   const openViolations = VIOLATIONS.filter((v) => !waived.includes(v.id)).length;
   return (
     <>
-      <PageHeader title="Licences" description="Licence inventory across every resolved dependency, checked against your organisation's policy." actions={<Button icon={<Download />}>Export notice file</Button>} />
+      <PageHeader
+        title="Licences"
+        description="Licence inventory across every resolved dependency, checked against your organisation's policy."
+        actions={<Button icon={<Download />}>Export notice file</Button>}
+      />
       <KpiGrid>
         <KpiCard label="Distinct licences" value={LICENCES.length} unit="SPDX identifiers" />
         <KpiCard label="Allowed" value="6,141" unit="packages" tone="success" />
@@ -635,8 +1088,31 @@ function LicencesPage() {
         <KpiCard label="Policy violations" value={openViolations} tone="danger" delta={{ label: `${waived.length} waived` }} />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <Panel title="Inventory" flush actions={<Tabs label="Licence category" value={tab} onChange={setTab} items={[{ value: "all", label: "All", count: LICENCES.length }, { value: "allowed", label: "Allowed", count: LICENCES.filter((l) => l.category === "allowed").length }, { value: "review", label: "Review", count: LICENCES.filter((l) => l.category === "review").length }, { value: "denied", label: "Denied", count: LICENCES.filter((l) => l.category === "denied").length }]} />}>
-          <DataTable label="Licence inventory" columns={invCols} rows={inv} getRowId={(l) => l.id} defaultSort={{ id: "pkgs", direction: "desc" }} minWidth={520} />
+        <Panel
+          title="Inventory"
+          flush
+          actions={
+            <Tabs
+              label="Licence category"
+              value={tab}
+              onChange={setTab}
+              items={[
+                { value: "all", label: "All", count: LICENCES.length },
+                { value: "allowed", label: "Allowed", count: LICENCES.filter((l) => l.category === "allowed").length },
+                { value: "review", label: "Review", count: LICENCES.filter((l) => l.category === "review").length },
+                { value: "denied", label: "Denied", count: LICENCES.filter((l) => l.category === "denied").length },
+              ]}
+            />
+          }
+        >
+          <DataTable
+            label="Licence inventory"
+            columns={invCols}
+            rows={inv}
+            getRowId={(l) => l.id}
+            defaultSort={{ id: "pkgs", direction: "desc" }}
+            minWidth={520}
+          />
         </Panel>
         <Panel title="Packages by licence" description="Top 6">
           <BarList label="Packages per licence" items={LICENCES.slice(0, 6).map((l) => ({ id: l.id, label: l.id, value: l.packages }))} />
@@ -714,11 +1190,30 @@ function SbomPage() {
     setMessage(`Regenerated the SBOM for ${s.repo} from ${s.ref}`);
   };
   const cols: Column<SbomRow>[] = [
-    { id: "repo", header: "Repository", sortValue: (s) => s.repo, cell: (s) => <span className="flex min-w-0 flex-col"><span className="font-mono text-xs font-medium">{s.repo}</span><span className="font-mono text-2xs text-fg-muted">{s.ref}</span></span> },
+    {
+      id: "repo",
+      header: "Repository",
+      sortValue: (s) => s.repo,
+      cell: (s) => (
+        <span className="flex min-w-0 flex-col">
+          <span className="font-mono text-xs font-medium">{s.repo}</span>
+          <span className="font-mono text-2xs text-fg-muted">{s.ref}</span>
+        </span>
+      ),
+    },
     { id: "components", header: "Components", align: "right", mono: true, sortValue: (s) => s.components, cell: (s) => s.components.toLocaleString("en-US") },
     { id: "generated", header: "Last generated", cell: (s) => s.generated },
-    { id: "signed", header: "Attestation", description: "Signed with Sigstore keyless signing and recorded in the Rekor transparency log.", cell: (s) => (s.signed ? <StatusBadge tone="success">Signed</StatusBadge> : <StatusBadge tone="warning">Unsigned</StatusBadge>) },
-    { id: "status", header: "Status", cell: (s) => (status[s.repo] ? <StatusBadge tone="info">{status[s.repo]}</StatusBadge> : <span className="text-xs text-fg-muted">–</span>) },
+    {
+      id: "signed",
+      header: "Attestation",
+      description: "Signed with Sigstore keyless signing and recorded in the Rekor transparency log.",
+      cell: (s) => (s.signed ? <StatusBadge tone="success">Signed</StatusBadge> : <StatusBadge tone="warning">Unsigned</StatusBadge>),
+    },
+    {
+      id: "status",
+      header: "Status",
+      cell: (s) => (status[s.repo] ? <StatusBadge tone="info">{status[s.repo]}</StatusBadge> : <span className="text-xs text-fg-muted">–</span>),
+    },
     {
       id: "act",
       header: <span className="sr-only">Actions</span>,
@@ -744,7 +1239,11 @@ function SbomPage() {
         title="SBOM"
         description="Software bills of materials generated on every default-branch scan. Exports include licences, hashes and dependency relationships."
         actions={
-          <Button variant="primary" icon={<Download />} onClick={() => setMessage(`acme-all-repos.${FORMAT[format].ext}.zip downloaded · ${SBOMS.length} repositories`)}>
+          <Button
+            variant="primary"
+            icon={<Download />}
+            onClick={() => setMessage(`acme-all-repos.${FORMAT[format].ext}.zip downloaded · ${SBOMS.length} repositories`)}
+          >
             Download all
           </Button>
         }
@@ -770,7 +1269,15 @@ function SbomPage() {
       {message && <Callout tone="success" title={message} onDismiss={() => setMessage("")} />}
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Per-repository SBOMs" description={`Exports as ${FORMAT[format].label}`} flush>
-          <DataTable label="Repository SBOMs" columns={cols} rows={SBOMS} getRowId={(s) => s.repo} onRowClick={(s) => setActive(s.repo)} activeRowId={active} minWidth={860} />
+          <DataTable
+            label="Repository SBOMs"
+            columns={cols}
+            rows={SBOMS}
+            getRowId={(s) => s.repo}
+            onRowClick={(s) => setActive(s.repo)}
+            activeRowId={active}
+            minWidth={860}
+          />
         </Panel>
         <Panel title="Attestation" description={a.repo} aria-label="Attestation detail" className="self-start">
           {a.signed ? (
@@ -823,15 +1330,59 @@ function GatesPage() {
   const enabled = rules.filter((r) => r.enabled).length;
   const cols: Column<GateRun>[] = [
     { id: "run", header: "Run", width: "80px", mono: true, cell: (r) => r.run },
-    { id: "repo", header: "Repository", sortValue: (r) => r.repo, cell: (r) => <span className="flex min-w-0 flex-col"><span className="font-mono text-xs font-medium">{r.repo}</span><span className="truncate text-2xs text-fg-muted">{r.pipeline}</span></span> },
-    { id: "branch", header: "Branch", cell: (r) => <span className="font-mono text-xs">{r.branch} · {r.commit}</span> },
-    { id: "result", header: "Result", sortValue: (r) => r.result, cell: (r) => <StatusBadge tone={RESULT[r.result].tone}>{RESULT[r.result].label}</StatusBadge> },
-    { id: "reasons", header: "Reasons", width: "34%", cell: (r) => (r.reasons.length ? <span className="truncate text-xs">{r.reasons[0]}{r.reasons.length > 1 ? ` (+${r.reasons.length - 1})` : ""}</span> : <span className="text-xs text-fg-muted">All rules passed</span>) },
+    {
+      id: "repo",
+      header: "Repository",
+      sortValue: (r) => r.repo,
+      cell: (r) => (
+        <span className="flex min-w-0 flex-col">
+          <span className="font-mono text-xs font-medium">{r.repo}</span>
+          <span className="truncate text-2xs text-fg-muted">{r.pipeline}</span>
+        </span>
+      ),
+    },
+    {
+      id: "branch",
+      header: "Branch",
+      cell: (r) => (
+        <span className="font-mono text-xs">
+          {r.branch} · {r.commit}
+        </span>
+      ),
+    },
+    {
+      id: "result",
+      header: "Result",
+      sortValue: (r) => r.result,
+      cell: (r) => <StatusBadge tone={RESULT[r.result].tone}>{RESULT[r.result].label}</StatusBadge>,
+    },
+    {
+      id: "reasons",
+      header: "Reasons",
+      width: "34%",
+      cell: (r) =>
+        r.reasons.length ? (
+          <span className="truncate text-xs">
+            {r.reasons[0]}
+            {r.reasons.length > 1 ? ` (+${r.reasons.length - 1})` : ""}
+          </span>
+        ) : (
+          <span className="text-xs text-fg-muted">All rules passed</span>
+        ),
+    },
     { id: "time", header: "When", cell: (r) => r.time },
   ];
   return (
     <>
-      <PageHeader title="CI gates" description="Rules evaluated by the audit step in every pipeline. Block fails the build; warn annotates the pull request." actions={<Button variant="primary" icon={<Plus />}>New rule</Button>} />
+      <PageHeader
+        title="CI gates"
+        description="Rules evaluated by the audit step in every pipeline. Block fails the build; warn annotates the pull request."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New rule
+          </Button>
+        }
+      />
       <KpiGrid>
         <KpiCard label="Enabled rules" value={enabled} unit={`of ${rules.length}`} />
         <KpiCard label="Runs · 7 days" value="1,284" trend={[160, 182, 171, 205, 190, 98, 77, 201]} />
@@ -875,9 +1426,22 @@ function GatesPage() {
               />
             }
           >
-            <DataTable label="Gate results" columns={cols} rows={runs} getRowId={(r) => r.id} onRowClick={(r) => setActive(r.id)} activeRowId={active} minWidth={820} />
+            <DataTable
+              label="Gate results"
+              columns={cols}
+              rows={runs}
+              getRowId={(r) => r.id}
+              onRowClick={(r) => setActive(r.id)}
+              activeRowId={active}
+              minWidth={820}
+            />
           </Panel>
-          <Panel title={`${run.repo} ${run.run}`} description={`${run.pipeline} · ${run.branch} @ ${run.commit} · by ${run.author}`} aria-label="Gate run detail" actions={<StatusBadge tone={RESULT[run.result].tone}>{RESULT[run.result].label}</StatusBadge>}>
+          <Panel
+            title={`${run.repo} ${run.run}`}
+            description={`${run.pipeline} · ${run.branch} @ ${run.commit} · by ${run.author}`}
+            aria-label="Gate run detail"
+            actions={<StatusBadge tone={RESULT[run.result].tone}>{RESULT[run.result].label}</StatusBadge>}
+          >
             {run.reasons.length ? (
               <ul aria-label="Failure reasons" className="flex flex-col gap-1 text-sm">
                 {run.reasons.map((x) => (

@@ -503,9 +503,12 @@ describe("filters", () => {
     }
     const { user } = renderUI(<H />);
     await user.click(screen.getByRole("button", { name: "Time range: Last 1 hour" }));
-    const list = await screen.findByRole("listbox", { name: "Time range" });
-    expect(within(list).getByRole("option", { name: "Last 1 hour" })).toHaveAttribute("aria-selected", "true");
-    await user.click(within(list).getByRole("button", { name: "Last 7 days" }));
+    const menu = await screen.findByRole("menu", { name: "Time range" });
+    expect(within(menu).getByRole("menuitemradio", { name: "Last 1 hour" })).toHaveAttribute("aria-checked", "true");
+    expect(within(menu).getByRole("menuitemradio", { name: "Last 1 hour" })).toHaveFocus();
+    await user.keyboard("{ArrowDown}");
+    expect(within(menu).getByRole("menuitemradio", { name: "Last 6 hours" })).toHaveFocus();
+    await user.click(within(menu).getByRole("menuitemradio", { name: "Last 7 days" }));
     expect(screen.getByRole("button", { name: "Time range: Last 7 days" })).toBeInTheDocument();
   });
 

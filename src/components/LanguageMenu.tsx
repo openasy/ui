@@ -49,11 +49,16 @@ export function LanguageMenu({ value, languages, onChange, className }: Language
           sideOffset={4}
           onOpenAutoFocus={(e) => {
             e.preventDefault();
-            items.current[Math.max(0, languages.findIndex((l) => l.code === value))]?.focus();
+            items.current[
+              Math.max(
+                0,
+                languages.findIndex((l) => l.code === value),
+              )
+            ]?.focus();
           }}
           className="oa-root z-50 w-48 rounded-lg border border-line bg-surface p-1 shadow-overlay"
         >
-          <div role="menu" aria-label={t("shell.language")} onKeyDown={onKey} className="flex flex-col gap-0.5">
+          <div role="menu" tabIndex={-1} aria-label={t("shell.language")} onKeyDown={onKey} className="flex flex-col gap-0.5">
             {languages.map((l, i) => {
               const on = l.code === value;
               return (

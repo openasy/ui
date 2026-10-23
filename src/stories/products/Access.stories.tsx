@@ -147,7 +147,11 @@ function RequestsPage() {
       width: "44px",
       align: "right",
       cell: (s) => (
-        <IconButton label={`Terminate session for ${s.person} on ${s.resource}`} size="xs" onClick={() => setSessions((all) => all.filter((x) => x.id !== s.id))}>
+        <IconButton
+          label={`Terminate session for ${s.person} on ${s.resource}`}
+          size="xs"
+          onClick={() => setSessions((all) => all.filter((x) => x.id !== s.id))}
+        >
           <Square />
         </IconButton>
       ),
@@ -180,7 +184,10 @@ function RequestsPage() {
           {requests.map((r) => {
             const s = status[r.id] ?? "pending";
             return (
-              <li key={r.id} className="grid grid-cols-1 gap-2 border-b border-subtle px-3 py-2.5 last:border-0 lg:grid-cols-[220px_minmax(0,1fr)_auto] lg:items-center">
+              <li
+                key={r.id}
+                className="grid grid-cols-1 gap-2 border-b border-subtle px-3 py-2.5 last:border-0 lg:grid-cols-[220px_minmax(0,1fr)_auto] lg:items-center"
+              >
                 <Person name={r.person} />
                 <div className="flex min-w-0 flex-col gap-1">
                   <span className="flex flex-wrap items-center gap-1.5 text-sm">
@@ -220,7 +227,15 @@ function RequestsPage() {
       <Callout tone="info" title="Sessions end automatically when the grant expires">
         Recordings are kept for 365 days and are searchable by command in Recordings.
       </Callout>
-      <Panel title="Active sessions" actions={<Button size="sm" variant="ghost" icon={<FileClock />}>History</Button>} flush>
+      <Panel
+        title="Active sessions"
+        actions={
+          <Button size="sm" variant="ghost" icon={<FileClock />}>
+            History
+          </Button>
+        }
+        flush
+      >
         <DataTable
           label="Active sessions"
           columns={sessionColumns}
@@ -240,11 +255,38 @@ function RequestsPage() {
 /* ------------------------------------------------------------------ */
 
 const LIVE: Record<string, string[]> = {
-  s1: ["$ sudo systemctl status nginx", "● nginx.service - A high performance web server", "     Active: active (running) since Mon 2026-10-19 08:02:11 UTC", "$ sudo tail -n 3 /var/log/nginx/error.log", "2026/10/19 13:10:44 [warn] 812#812: *4411 upstream response is buffered", "$ sudo nginx -t", "nginx: configuration file /etc/nginx/nginx.conf test is successful"],
-  s2: ["orders=> SELECT count(*) FROM orders WHERE created_at > now() - interval '1 day';", " count ", "-------", " 18422", "orders=> SELECT id, total FROM orders WHERE customer_id = 88213 ORDER BY id DESC LIMIT 3;", "   id    | total ", " 1928412 | 49.90", " 1928407 | 49.90"],
-  s3: ["[RDP] Window focus: Accounting Client 9.4 Setup", "[RDP] Clipboard: blocked by policy (outbound)", "[RDP] Window focus: Services (Local)", "[RDP] Process started: msiexec.exe /i AcctClient-9.5.msi"],
+  s1: [
+    "$ sudo systemctl status nginx",
+    "● nginx.service - A high performance web server",
+    "     Active: active (running) since Mon 2026-10-19 08:02:11 UTC",
+    "$ sudo tail -n 3 /var/log/nginx/error.log",
+    "2026/10/19 13:10:44 [warn] 812#812: *4411 upstream response is buffered",
+    "$ sudo nginx -t",
+    "nginx: configuration file /etc/nginx/nginx.conf test is successful",
+  ],
+  s2: [
+    "orders=> SELECT count(*) FROM orders WHERE created_at > now() - interval '1 day';",
+    " count ",
+    "-------",
+    " 18422",
+    "orders=> SELECT id, total FROM orders WHERE customer_id = 88213 ORDER BY id DESC LIMIT 3;",
+    "   id    | total ",
+    " 1928412 | 49.90",
+    " 1928407 | 49.90",
+  ],
+  s3: [
+    "[RDP] Window focus: Accounting Client 9.4 Setup",
+    "[RDP] Clipboard: blocked by policy (outbound)",
+    "[RDP] Window focus: Services (Local)",
+    "[RDP] Process started: msiexec.exe /i AcctClient-9.5.msi",
+  ],
   s4: ["$ ls /var/log/reports/", "run-2026-10-19.log  run-2026-10-18.log", "$ grep -c ERROR /var/log/reports/run-2026-10-19.log", "3"],
-  s5: ["analytics=> \\dt mart.*", " mart | daily_revenue | table", " mart | churn_cohorts | table", "analytics=> SELECT * FROM mart.daily_revenue ORDER BY day DESC LIMIT 2;"],
+  s5: [
+    "analytics=> \\dt mart.*",
+    " mart | daily_revenue | table",
+    " mart | churn_cohorts | table",
+    "analytics=> SELECT * FROM mart.daily_revenue ORDER BY day DESC LIMIT 2;",
+  ],
 };
 
 function SessionsPage() {
@@ -290,7 +332,16 @@ function SessionsPage() {
       )}
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Live sessions" flush>
-          <DataTable label="Live sessions" columns={cols} rows={sessions} getRowId={(s) => s.id} onRowClick={(s) => setActive(s.id)} activeRowId={active} minWidth={560} empty={<p className="py-8">No live sessions</p>} />
+          <DataTable
+            label="Live sessions"
+            columns={cols}
+            rows={sessions}
+            getRowId={(s) => s.id}
+            onRowClick={(s) => setActive(s.id)}
+            activeRowId={active}
+            minWidth={560}
+            empty={<p className="py-8">No live sessions</p>}
+          />
         </Panel>
         <Panel
           title="Watching"
@@ -313,7 +364,11 @@ function SessionsPage() {
           }
         >
           {cur ? (
-            <pre tabIndex={0} aria-label={`Live output for ${cur.person}`} className="max-h-72 overflow-auto rounded border border-line bg-subtle p-2 font-mono text-xs whitespace-pre-wrap">
+            <pre
+              tabIndex={0}
+              aria-label={`Live output for ${cur.person}`}
+              className="max-h-72 overflow-auto rounded border border-line bg-subtle p-2 font-mono text-xs whitespace-pre-wrap"
+            >
               {(LIVE[cur.id] ?? []).join("\n")}
             </pre>
           ) : (
@@ -343,31 +398,181 @@ interface Resource {
 }
 
 const RESOURCES: Resource[] = [
-  { id: "x1", name: "db-prod-01", kind: "Postgres", env: "production", roles: ["read-only", "writer"], approval: "1 approver", maxGrant: "4 h", owner: PEOPLE[2], sessions7d: 31, health: "reachable" },
-  { id: "x2", name: "db-prod-02", kind: "Postgres", env: "production", roles: ["read-only"], approval: "1 approver", maxGrant: "4 h", owner: PEOPLE[2], sessions7d: 18, health: "reachable" },
-  { id: "x3", name: "db-analytics-01", kind: "Postgres", env: "production", roles: ["analyst"], approval: "Auto", maxGrant: "8 h", owner: PEOPLE[7], sessions7d: 44, health: "reachable" },
-  { id: "x4", name: "api-prod-03", kind: "SSH", env: "production", roles: ["read-only", "sudo"], approval: "1 approver", maxGrant: "2 h", owner: PEOPLE[0], sessions7d: 12, health: "reachable" },
-  { id: "x5", name: "api-prod-05", kind: "SSH", env: "production", roles: ["read-only", "sudo"], approval: "2 approvers", maxGrant: "1 h", owner: PEOPLE[0], sessions7d: 6, health: "reachable" },
-  { id: "x6", name: "worker-prod-09", kind: "SSH", env: "production", roles: ["read-only"], approval: "Auto", maxGrant: "2 h", owner: PEOPLE[4], sessions7d: 9, health: "reachable" },
-  { id: "x7", name: "win-bastion-01", kind: "RDP", env: "corp", roles: ["operator"], approval: "1 approver", maxGrant: "4 h", owner: PEOPLE[6], sessions7d: 5, health: "reachable" },
-  { id: "x8", name: "win-bastion-02", kind: "RDP", env: "corp", roles: ["operator"], approval: "1 approver", maxGrant: "4 h", owner: PEOPLE[6], sessions7d: 2, health: "unreachable" },
-  { id: "x9", name: "k8s-prod-eu", kind: "Kubernetes", env: "production", roles: ["view", "edit", "cluster-admin"], approval: "2 approvers", maxGrant: "1 h", owner: PEOPLE[1], sessions7d: 27, health: "reachable" },
-  { id: "x10", name: "k8s-staging", kind: "Kubernetes", env: "staging", roles: ["view", "edit"], approval: "Auto", maxGrant: "8 h", owner: PEOPLE[1], sessions7d: 71, health: "reachable" },
-  { id: "x11", name: "grafana.example.com", kind: "Web", env: "corp", roles: ["viewer", "editor"], approval: "Auto", maxGrant: "12 h", owner: PEOPLE[3], sessions7d: 120, health: "reachable" },
-  { id: "x12", name: "mysql-legacy-01", kind: "MySQL", env: "production", roles: ["read-only"], approval: "2 approvers", maxGrant: "1 h", owner: PEOPLE[5], sessions7d: 1, health: "reachable" },
+  {
+    id: "x1",
+    name: "db-prod-01",
+    kind: "Postgres",
+    env: "production",
+    roles: ["read-only", "writer"],
+    approval: "1 approver",
+    maxGrant: "4 h",
+    owner: PEOPLE[2],
+    sessions7d: 31,
+    health: "reachable",
+  },
+  {
+    id: "x2",
+    name: "db-prod-02",
+    kind: "Postgres",
+    env: "production",
+    roles: ["read-only"],
+    approval: "1 approver",
+    maxGrant: "4 h",
+    owner: PEOPLE[2],
+    sessions7d: 18,
+    health: "reachable",
+  },
+  {
+    id: "x3",
+    name: "db-analytics-01",
+    kind: "Postgres",
+    env: "production",
+    roles: ["analyst"],
+    approval: "Auto",
+    maxGrant: "8 h",
+    owner: PEOPLE[7],
+    sessions7d: 44,
+    health: "reachable",
+  },
+  {
+    id: "x4",
+    name: "api-prod-03",
+    kind: "SSH",
+    env: "production",
+    roles: ["read-only", "sudo"],
+    approval: "1 approver",
+    maxGrant: "2 h",
+    owner: PEOPLE[0],
+    sessions7d: 12,
+    health: "reachable",
+  },
+  {
+    id: "x5",
+    name: "api-prod-05",
+    kind: "SSH",
+    env: "production",
+    roles: ["read-only", "sudo"],
+    approval: "2 approvers",
+    maxGrant: "1 h",
+    owner: PEOPLE[0],
+    sessions7d: 6,
+    health: "reachable",
+  },
+  {
+    id: "x6",
+    name: "worker-prod-09",
+    kind: "SSH",
+    env: "production",
+    roles: ["read-only"],
+    approval: "Auto",
+    maxGrant: "2 h",
+    owner: PEOPLE[4],
+    sessions7d: 9,
+    health: "reachable",
+  },
+  {
+    id: "x7",
+    name: "win-bastion-01",
+    kind: "RDP",
+    env: "corp",
+    roles: ["operator"],
+    approval: "1 approver",
+    maxGrant: "4 h",
+    owner: PEOPLE[6],
+    sessions7d: 5,
+    health: "reachable",
+  },
+  {
+    id: "x8",
+    name: "win-bastion-02",
+    kind: "RDP",
+    env: "corp",
+    roles: ["operator"],
+    approval: "1 approver",
+    maxGrant: "4 h",
+    owner: PEOPLE[6],
+    sessions7d: 2,
+    health: "unreachable",
+  },
+  {
+    id: "x9",
+    name: "k8s-prod-eu",
+    kind: "Kubernetes",
+    env: "production",
+    roles: ["view", "edit", "cluster-admin"],
+    approval: "2 approvers",
+    maxGrant: "1 h",
+    owner: PEOPLE[1],
+    sessions7d: 27,
+    health: "reachable",
+  },
+  {
+    id: "x10",
+    name: "k8s-staging",
+    kind: "Kubernetes",
+    env: "staging",
+    roles: ["view", "edit"],
+    approval: "Auto",
+    maxGrant: "8 h",
+    owner: PEOPLE[1],
+    sessions7d: 71,
+    health: "reachable",
+  },
+  {
+    id: "x11",
+    name: "grafana.example.com",
+    kind: "Web",
+    env: "corp",
+    roles: ["viewer", "editor"],
+    approval: "Auto",
+    maxGrant: "12 h",
+    owner: PEOPLE[3],
+    sessions7d: 120,
+    health: "reachable",
+  },
+  {
+    id: "x12",
+    name: "mysql-legacy-01",
+    kind: "MySQL",
+    env: "production",
+    roles: ["read-only"],
+    approval: "2 approvers",
+    maxGrant: "1 h",
+    owner: PEOPLE[5],
+    sessions7d: 1,
+    health: "reachable",
+  },
 ];
 
 function ResourcesPage() {
   const [kind, setKind] = useState<string[]>([]);
   const [env, setEnv] = useState<string[]>([]);
   const [query, setQuery] = useState("");
-  const rows = RESOURCES.filter((r) => (kind.length === 0 || kind.includes(r.kind)) && (env.length === 0 || env.includes(r.env)) && r.name.includes(query.toLowerCase()));
+  const rows = RESOURCES.filter(
+    (r) => (kind.length === 0 || kind.includes(r.kind)) && (env.length === 0 || env.includes(r.env)) && r.name.includes(query.toLowerCase()),
+  );
   const cols: Column<Resource>[] = [
-    { id: "name", header: "Resource", pinned: "left", width: "22%", sortValue: (r) => r.name, cell: (r) => <EntityChip kind={r.kind === "Web" ? "url" : "host"} value={r.name} hideKind /> },
+    {
+      id: "name",
+      header: "Resource",
+      pinned: "left",
+      width: "22%",
+      sortValue: (r) => r.name,
+      cell: (r) => <EntityChip kind={r.kind === "Web" ? "url" : "host"} value={r.name} hideKind />,
+    },
     { id: "kind", header: "Type", sortValue: (r) => r.kind, cell: (r) => <Badge mono>{r.kind}</Badge> },
-    { id: "env", header: "Environment", cell: (r) => <Badge tone={r.env === "production" ? "danger" : r.env === "staging" ? "info" : "neutral"}>{r.env}</Badge> },
+    {
+      id: "env",
+      header: "Environment",
+      cell: (r) => <Badge tone={r.env === "production" ? "danger" : r.env === "staging" ? "info" : "neutral"}>{r.env}</Badge>,
+    },
     { id: "roles", header: "Roles", cell: (r) => <span className="font-mono text-xs">{r.roles.join(", ")}</span> },
-    { id: "approval", header: "Approval", description: "Who must approve a request before the grant starts.", cell: (r) => <span className="text-xs">{r.approval}</span> },
+    {
+      id: "approval",
+      header: "Approval",
+      description: "Who must approve a request before the grant starts.",
+      cell: (r) => <span className="text-xs">{r.approval}</span>,
+    },
     { id: "max", header: "Max grant", mono: true, cell: (r) => r.maxGrant },
     { id: "owner", header: "Owner", cell: (r) => <span className="text-xs">{r.owner}</span> },
     { id: "sessions", header: "Sessions · 7 d", align: "right", mono: true, sortValue: (r) => r.sessions7d, cell: (r) => r.sessions7d },
@@ -376,7 +581,15 @@ function ResourcesPage() {
   const kinds = ["SSH", "RDP", "Postgres", "MySQL", "Kubernetes", "Web"];
   return (
     <>
-      <PageHeader title="Resources" description="48 resources reachable through the access proxy. Nobody holds standing credentials to any of them." actions={<Button variant="primary" icon={<Plus />}>Add resource</Button>} />
+      <PageHeader
+        title="Resources"
+        description="48 resources reachable through the access proxy. Nobody holds standing credentials to any of them."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add resource
+          </Button>
+        }
+      />
       <KpiGrid>
         <KpiCard label="Resources" value="48" unit="12 shown" />
         <KpiCard label="Production" value="29" delta={{ label: "All need an approver" }} />
@@ -385,15 +598,39 @@ function ResourcesPage() {
       </KpiGrid>
       <FilterBar onClear={kind.length || env.length || query ? () => (setKind([]), setEnv([]), setQuery("")) : undefined}>
         <SearchInput label="Search resources" value={query} onChange={(e) => setQuery(e.target.value)} className="w-56" />
-        <FacetFilter label="Type" selected={kind} onChange={setKind} options={kinds.map((k) => ({ value: k, count: RESOURCES.filter((r) => r.kind === k).length }))} />
-        <FacetFilter label="Environment" selected={env} onChange={setEnv} options={["production", "staging", "corp"].map((e) => ({ value: e, count: RESOURCES.filter((r) => r.env === e).length }))} />
+        <FacetFilter
+          label="Type"
+          selected={kind}
+          onChange={setKind}
+          options={kinds.map((k) => ({ value: k, count: RESOURCES.filter((r) => r.kind === k).length }))}
+        />
+        <FacetFilter
+          label="Environment"
+          selected={env}
+          onChange={setEnv}
+          options={["production", "staging", "corp"].map((e) => ({ value: e, count: RESOURCES.filter((r) => r.env === e).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Resources" description={`${rows.length} shown`} flush>
-          <DataTable label="Resources" columns={cols} rows={rows} getRowId={(r) => r.id} defaultSort={{ id: "sessions", direction: "desc" }} minWidth={1080} empty={<p className="py-8">No resources match</p>} />
+          <DataTable
+            label="Resources"
+            columns={cols}
+            rows={rows}
+            getRowId={(r) => r.id}
+            defaultSort={{ id: "sessions", direction: "desc" }}
+            minWidth={1080}
+            empty={<p className="py-8">No resources match</p>}
+          />
         </Panel>
         <Panel title="Most used" description="Sessions, 7 days">
-          <BarList label="Most used resources" items={[...RESOURCES].sort((a, b) => b.sessions7d - a.sessions7d).slice(0, 6).map((r) => ({ id: r.id, label: r.name, value: r.sessions7d }))} />
+          <BarList
+            label="Most used resources"
+            items={[...RESOURCES]
+              .sort((a, b) => b.sessions7d - a.sessions7d)
+              .slice(0, 6)
+              .map((r) => ({ id: r.id, label: r.name, value: r.sessions7d }))}
+          />
         </Panel>
       </div>
     </>
@@ -502,13 +739,28 @@ function RecordingsPage() {
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Recordings" description={`${rows.length} recordings`} flush>
-          <DataTable label="Recordings" columns={cols} rows={rows} getRowId={(r) => r.id} onRowClick={(r) => setActive(r.id)} activeRowId={active} minWidth={620} empty={<p className="py-8">No recording contains that command</p>} />
+          <DataTable
+            label="Recordings"
+            columns={cols}
+            rows={rows}
+            getRowId={(r) => r.id}
+            onRowClick={(r) => setActive(r.id)}
+            activeRowId={active}
+            minWidth={620}
+            empty={<p className="py-8">No recording contains that command</p>}
+          />
         </Panel>
         <Panel
           title="Transcript"
           description={cur ? `${cur.person} · ${cur.resource} · ${cur.ticket}` : "No recording selected"}
           aria-label="Transcript"
-          actions={cur && <Button size="sm" variant="ghost" icon={<Download />}>Export</Button>}
+          actions={
+            cur && (
+              <Button size="sm" variant="ghost" icon={<Download />}>
+                Export
+              </Button>
+            )
+          }
         >
           {cur && (
             <div className="flex flex-col gap-2">
@@ -545,11 +797,56 @@ interface AccessPolicy {
 }
 
 const ACCESS_POLICIES: AccessPolicy[] = [
-  { id: "ap1", name: "Production databases", who: "Group: engineering", what: "Postgres, MySQL · production", approvers: "1 from Platform on-call", maxGrant: "4 h", mfa: true, ticket: true },
-  { id: "ap2", name: "Production SSH with sudo", who: "Group: sre", what: "SSH sudo · production", approvers: "2 from Platform on-call", maxGrant: "1 h", mfa: true, ticket: true },
-  { id: "ap3", name: "Analytics warehouse", who: "Group: data", what: "db-analytics-01 · analyst", approvers: "Auto-approve", maxGrant: "8 h", mfa: true, ticket: false },
-  { id: "ap4", name: "Staging cluster", who: "Group: engineering", what: "k8s-staging · view, edit", approvers: "Auto-approve", maxGrant: "8 h", mfa: false, ticket: false },
-  { id: "ap5", name: "Cluster admin", who: "Group: sre", what: "k8s-prod-eu · cluster-admin", approvers: "2 from Security", maxGrant: "1 h", mfa: true, ticket: true },
+  {
+    id: "ap1",
+    name: "Production databases",
+    who: "Group: engineering",
+    what: "Postgres, MySQL · production",
+    approvers: "1 from Platform on-call",
+    maxGrant: "4 h",
+    mfa: true,
+    ticket: true,
+  },
+  {
+    id: "ap2",
+    name: "Production SSH with sudo",
+    who: "Group: sre",
+    what: "SSH sudo · production",
+    approvers: "2 from Platform on-call",
+    maxGrant: "1 h",
+    mfa: true,
+    ticket: true,
+  },
+  {
+    id: "ap3",
+    name: "Analytics warehouse",
+    who: "Group: data",
+    what: "db-analytics-01 · analyst",
+    approvers: "Auto-approve",
+    maxGrant: "8 h",
+    mfa: true,
+    ticket: false,
+  },
+  {
+    id: "ap4",
+    name: "Staging cluster",
+    who: "Group: engineering",
+    what: "k8s-staging · view, edit",
+    approvers: "Auto-approve",
+    maxGrant: "8 h",
+    mfa: false,
+    ticket: false,
+  },
+  {
+    id: "ap5",
+    name: "Cluster admin",
+    who: "Group: sre",
+    what: "k8s-prod-eu · cluster-admin",
+    approvers: "2 from Security",
+    maxGrant: "1 h",
+    mfa: true,
+    ticket: true,
+  },
   { id: "ap6", name: "Vendor RDP", who: "Group: vendors", what: "win-bastion-* · operator", approvers: "1 from IT", maxGrant: "4 h", mfa: true, ticket: true },
 ];
 
@@ -569,10 +866,26 @@ function PoliciesPage() {
   ];
   return (
     <>
-      <PageHeader title="Policies" description="Who may request what, who approves it and for how long. The most specific policy wins." actions={<Button variant="primary" icon={<Plus />}>New policy</Button>} />
+      <PageHeader
+        title="Policies"
+        description="Who may request what, who approves it and for how long. The most specific policy wins."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New policy
+          </Button>
+        }
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Policies" flush>
-          <DataTable label="Access policies" columns={cols} rows={ACCESS_POLICIES} getRowId={(p) => p.id} onRowClick={(p) => (setActive(p.id), setSaved(null))} activeRowId={active} minWidth={820} />
+          <DataTable
+            label="Access policies"
+            columns={cols}
+            rows={ACCESS_POLICIES}
+            getRowId={(p) => p.id}
+            onRowClick={(p) => (setActive(p.id), setSaved(null))}
+            activeRowId={active}
+            minWidth={820}
+          />
         </Panel>
         <Panel title="Edit policy" description={cur.name} aria-label="Edit policy">
           <form
@@ -587,11 +900,24 @@ function PoliciesPage() {
               label="Approval"
               value={cur.approvers}
               onChange={(e) => set({ approvers: e.target.value })}
-              options={["Auto-approve", "1 from Platform on-call", "2 from Platform on-call", "1 from IT", "2 from Security"].map((v) => ({ value: v, label: v }))}
+              options={["Auto-approve", "1 from Platform on-call", "2 from Platform on-call", "1 from IT", "2 from Security"].map((v) => ({
+                value: v,
+                label: v,
+              }))}
             />
-            <SelectField label="Max grant" value={cur.maxGrant} onChange={(e) => set({ maxGrant: e.target.value })} options={["30 min", "1 h", "2 h", "4 h", "8 h", "12 h"].map((v) => ({ value: v, label: v }))} />
+            <SelectField
+              label="Max grant"
+              value={cur.maxGrant}
+              onChange={(e) => set({ maxGrant: e.target.value })}
+              options={["30 min", "1 h", "2 h", "4 h", "8 h", "12 h"].map((v) => ({ value: v, label: v }))}
+            />
             <Switch checked={cur.mfa} onCheckedChange={(v) => set({ mfa: v })} label="Require MFA at session start" />
-            <Switch checked={cur.ticket} onCheckedChange={(v) => set({ ticket: v })} label="Require a ticket reference" description="INC-, CHG- or OPS- keys are checked against the incident and change trackers." />
+            <Switch
+              checked={cur.ticket}
+              onCheckedChange={(v) => set({ ticket: v })}
+              label="Require a ticket reference"
+              description="INC-, CHG- or OPS- keys are checked against the incident and change trackers."
+            />
             <div className="flex items-center gap-2 border-t border-line pt-2">
               <Button type="submit" variant="primary">
                 Save policy
@@ -671,7 +997,12 @@ function AuditPage() {
       )}
       <FilterBar onClear={result.length ? () => setResult([]) : undefined}>
         <TimeRangePicker value={range} onChange={setRange} />
-        <FacetFilter label="Result" selected={result} onChange={setResult} options={(["success", "denied", "error"] as const).map((r) => ({ value: r, count: AUDIT.filter((a) => a.result === r).length }))} />
+        <FacetFilter
+          label="Result"
+          selected={result}
+          onChange={setResult}
+          options={(["success", "denied", "error"] as const).map((r) => ({ value: r, count: AUDIT.filter((a) => a.result === r).length }))}
+        />
       </FilterBar>
       <Tabs
         label="Event type"
@@ -686,7 +1017,15 @@ function AuditPage() {
         ]}
       />
       <Panel title="Events" description={`${rows.length} events`} flush>
-        <DataTable label="Audit events" columns={cols} rows={rows} getRowId={(a) => a.id} defaultSort={{ id: "time", direction: "desc" }} minWidth={860} empty={<p className="py-8">No events match</p>} />
+        <DataTable
+          label="Audit events"
+          columns={cols}
+          rows={rows}
+          getRowId={(a) => a.id}
+          defaultSort={{ id: "time", direction: "desc" }}
+          minWidth={860}
+          empty={<p className="py-8">No events match</p>}
+        />
       </Panel>
     </>
   );

@@ -57,12 +57,84 @@ interface Campaign {
 }
 
 const campaigns: Campaign[] = [
-  { id: "cmp-6", name: "Q4 payroll update", template: "HR: updated payslip portal", month: "Oct", sent: 214, opened: 162, clicked: 19, submitted: 6, reported: 88, status: "running", department: "All staff" },
-  { id: "cmp-5", name: "Shared invoice", template: "Finance: invoice shared via file link", month: "Sep", sent: 214, opened: 171, clicked: 26, submitted: 9, reported: 71, status: "completed", department: "All staff" },
-  { id: "cmp-4", name: "MFA reset required", template: "IT: re-enrol your authenticator", month: "Aug", sent: 208, opened: 175, clicked: 33, submitted: 14, reported: 58, status: "completed", department: "All staff" },
-  { id: "cmp-3", name: "Parcel on hold", template: "Courier: customs fee due", month: "Jul", sent: 205, opened: 150, clicked: 39, submitted: 11, reported: 44, status: "completed", department: "All staff" },
-  { id: "cmp-2", name: "Benefits enrolment", template: "HR: choose your 2026 plan", month: "Jun", sent: 201, opened: 158, clicked: 47, submitted: 21, reported: 33, status: "completed", department: "All staff" },
-  { id: "cmp-1", name: "CEO wire request", template: "Exec: urgent payment approval", month: "May", sent: 38, opened: 34, clicked: 11, submitted: 4, reported: 6, status: "completed", department: "Finance" },
+  {
+    id: "cmp-6",
+    name: "Q4 payroll update",
+    template: "HR: updated payslip portal",
+    month: "Oct",
+    sent: 214,
+    opened: 162,
+    clicked: 19,
+    submitted: 6,
+    reported: 88,
+    status: "running",
+    department: "All staff",
+  },
+  {
+    id: "cmp-5",
+    name: "Shared invoice",
+    template: "Finance: invoice shared via file link",
+    month: "Sep",
+    sent: 214,
+    opened: 171,
+    clicked: 26,
+    submitted: 9,
+    reported: 71,
+    status: "completed",
+    department: "All staff",
+  },
+  {
+    id: "cmp-4",
+    name: "MFA reset required",
+    template: "IT: re-enrol your authenticator",
+    month: "Aug",
+    sent: 208,
+    opened: 175,
+    clicked: 33,
+    submitted: 14,
+    reported: 58,
+    status: "completed",
+    department: "All staff",
+  },
+  {
+    id: "cmp-3",
+    name: "Parcel on hold",
+    template: "Courier: customs fee due",
+    month: "Jul",
+    sent: 205,
+    opened: 150,
+    clicked: 39,
+    submitted: 11,
+    reported: 44,
+    status: "completed",
+    department: "All staff",
+  },
+  {
+    id: "cmp-2",
+    name: "Benefits enrolment",
+    template: "HR: choose your 2026 plan",
+    month: "Jun",
+    sent: 201,
+    opened: 158,
+    clicked: 47,
+    submitted: 21,
+    reported: 33,
+    status: "completed",
+    department: "All staff",
+  },
+  {
+    id: "cmp-1",
+    name: "CEO wire request",
+    template: "Exec: urgent payment approval",
+    month: "May",
+    sent: 38,
+    opened: 34,
+    clicked: 11,
+    submitted: 4,
+    reported: 6,
+    status: "completed",
+    department: "Finance",
+  },
 ];
 
 const pct = (n: number, d: number) => Math.round((n / d) * 1000) / 10;
@@ -95,7 +167,12 @@ const campaignColumns: Column<Campaign>[] = [
     cell: (c) => <span className={c.submitted >= 10 ? "text-danger-text" : undefined}>{c.submitted}</span>,
   },
   { id: "reported", header: "Reported", align: "right", mono: true, sortValue: (c) => c.reported / c.sent, cell: (c) => `${pct(c.reported, c.sent)}%` },
-  { id: "status", header: "Status", width: "110px", cell: (c) => <StatusBadge tone={CAMPAIGN_STATUS[c.status].tone}>{CAMPAIGN_STATUS[c.status].label}</StatusBadge> },
+  {
+    id: "status",
+    header: "Status",
+    width: "110px",
+    cell: (c) => <StatusBadge tone={CAMPAIGN_STATUS[c.status].tone}>{CAMPAIGN_STATUS[c.status].label}</StatusBadge>,
+  },
 ];
 
 type TrainingStatus = "overdue" | "in-progress" | "assigned" | "done";
@@ -233,12 +310,30 @@ function CampaignsPage() {
           label="Status"
           selected={status}
           onChange={setStatus}
-          options={(Object.keys(CAMPAIGN_STATUS) as CampaignStatus[]).map((s) => ({ value: s, label: CAMPAIGN_STATUS[s].label, count: campaigns.filter((c) => c.status === s).length }))}
+          options={(Object.keys(CAMPAIGN_STATUS) as CampaignStatus[]).map((s) => ({
+            value: s,
+            label: CAMPAIGN_STATUS[s].label,
+            count: campaigns.filter((c) => c.status === s).length,
+          }))}
         />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Click rate" value="8.9%" unit="last campaign" trend={chronological.map((c) => pct(c.clicked, c.sent))} trendColor="var(--oa-warning)" delta={{ label: "−20 pts since May", direction: "down", intent: "good" }} />
-        <KpiCard label="Report rate" value="41.1%" unit="last campaign" trend={chronological.map((c) => pct(c.reported, c.sent))} trendColor="var(--oa-success)" delta={{ label: "+25 pts since May", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Click rate"
+          value="8.9%"
+          unit="last campaign"
+          trend={chronological.map((c) => pct(c.clicked, c.sent))}
+          trendColor="var(--oa-warning)"
+          delta={{ label: "−20 pts since May", direction: "down", intent: "good" }}
+        />
+        <KpiCard
+          label="Report rate"
+          value="41.1%"
+          unit="last campaign"
+          trend={chronological.map((c) => pct(c.reported, c.sent))}
+          trendColor="var(--oa-success)"
+          delta={{ label: "+25 pts since May", direction: "up", intent: "good" }}
+        />
         <KpiCard label="Training completion" value="87%" unit="186 of 214" delta={{ label: "11 overdue", direction: "up", intent: "bad" }} />
         <KpiCard label="Credentials submitted" value="6" unit="this campaign" tone="warning" delta={{ label: "All 6 passwords force-reset" }} />
       </KpiGrid>
@@ -260,10 +355,22 @@ function CampaignsPage() {
           />
         </Panel>
         <Panel title="People at risk" description="Repeat clickers, sorted by credentials submitted" flush>
-          <DataTable label="People at risk" columns={atRiskColumns} rows={atRisk} getRowId={(p) => p.name} defaultSort={{ id: "submitted", direction: "desc" }} minWidth={520} />
+          <DataTable
+            label="People at risk"
+            columns={atRiskColumns}
+            rows={atRisk}
+            getRowId={(p) => p.name}
+            defaultSort={{ id: "submitted", direction: "desc" }}
+            minWidth={520}
+          />
         </Panel>
       </div>
-      <Panel title="Campaigns" description={`${rows.length} of ${campaigns.length} shown · select a row for details`} actions={<Badge tone="neutral">GoPhish engine</Badge>} flush>
+      <Panel
+        title="Campaigns"
+        description={`${rows.length} of ${campaigns.length} shown · select a row for details`}
+        actions={<Badge tone="neutral">GoPhish engine</Badge>}
+        flush
+      >
         <DataTable
           label="Campaigns"
           columns={campaignColumns}
@@ -278,7 +385,6 @@ function CampaignsPage() {
       {open && <CampaignDetail c={open} onClose={() => setOpenId(undefined)} />}
     </>
   );
-  
 }
 
 /* ------------------------------------------------------------------ */
@@ -298,10 +404,40 @@ interface Module {
 }
 
 const MODULES: Module[] = [
-  { id: "m1", title: "Spotting credential phishing", minutes: 12, audience: "Clicked a simulation", assigned: 31, completed: 22, overdue: 4, avgScore: 88, required: true },
-  { id: "m2", title: "Security basics 2026", minutes: 25, audience: "All staff · yearly", assigned: 214, completed: 186, overdue: 11, avgScore: 91, required: true },
+  {
+    id: "m1",
+    title: "Spotting credential phishing",
+    minutes: 12,
+    audience: "Clicked a simulation",
+    assigned: 31,
+    completed: 22,
+    overdue: 4,
+    avgScore: 88,
+    required: true,
+  },
+  {
+    id: "m2",
+    title: "Security basics 2026",
+    minutes: 25,
+    audience: "All staff · yearly",
+    assigned: 214,
+    completed: 186,
+    overdue: 11,
+    avgScore: 91,
+    required: true,
+  },
   { id: "m3", title: "Payment fraud and CEO scams", minutes: 15, audience: "Finance", assigned: 38, completed: 36, overdue: 0, avgScore: 94, required: true },
-  { id: "m4", title: "Handling customer data under GDPR", minutes: 20, audience: "Support, Sales", assigned: 64, completed: 51, overdue: 3, avgScore: 86, required: true },
+  {
+    id: "m4",
+    title: "Handling customer data under GDPR",
+    minutes: 20,
+    audience: "Support, Sales",
+    assigned: 64,
+    completed: 51,
+    overdue: 3,
+    avgScore: 86,
+    required: true,
+  },
   { id: "m5", title: "Secure coding: injection", minutes: 30, audience: "Engineering", assigned: 42, completed: 30, overdue: 2, avgScore: 79, required: false },
   { id: "m6", title: "Travelling with a laptop", minutes: 8, audience: "Optional", assigned: 0, completed: 17, overdue: 0, avgScore: 97, required: false },
 ];
@@ -326,13 +462,35 @@ function TrainingPage() {
     },
     { id: "req", header: "Type", cell: (m) => (m.required ? <Badge tone="info">Required</Badge> : <Badge>Optional</Badge>) },
     { id: "assigned", header: "Assigned", align: "right", mono: true, cell: (m) => m.assigned || "–" },
-    { id: "done", header: "Completed", align: "right", mono: true, sortValue: (m) => (m.assigned ? m.completed / m.assigned : 1), cell: (m) => (m.assigned ? `${pct(m.completed, m.assigned)}%` : m.completed) },
-    { id: "overdue", header: "Overdue", align: "right", mono: true, sortValue: (m) => m.overdue, cell: (m) => (m.overdue ? <span className="text-danger-text">{m.overdue}</span> : 0) },
+    {
+      id: "done",
+      header: "Completed",
+      align: "right",
+      mono: true,
+      sortValue: (m) => (m.assigned ? m.completed / m.assigned : 1),
+      cell: (m) => (m.assigned ? `${pct(m.completed, m.assigned)}%` : m.completed),
+    },
+    {
+      id: "overdue",
+      header: "Overdue",
+      align: "right",
+      mono: true,
+      sortValue: (m) => m.overdue,
+      cell: (m) => (m.overdue ? <span className="text-danger-text">{m.overdue}</span> : 0),
+    },
     { id: "score", header: "Avg. quiz score", align: "right", mono: true, cell: (m) => `${m.avgScore}%` },
   ];
   return (
     <>
-      <PageHeader title="Training" description="Short modules with a quiz. Required ones are assigned by rule; completion is sent to Compliance as evidence." actions={<Button variant="primary" icon={<Plus />}>New module</Button>} />
+      <PageHeader
+        title="Training"
+        description="Short modules with a quiz. Required ones are assigned by rule; completion is sent to Compliance as evidence."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New module
+          </Button>
+        }
+      />
       <KpiGrid>
         <KpiCard label="Completion" value="87" unit="% required" tone="success" />
         <KpiCard label="Overdue" value="20" unit="assignments" tone="danger" />
@@ -341,7 +499,15 @@ function TrainingPage() {
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Modules" flush>
-          <DataTable label="Training modules" columns={cols} rows={MODULES} getRowId={(m) => m.id} onRowClick={(m) => (setActive(m.id), setReminded(null))} activeRowId={active} minWidth={780} />
+          <DataTable
+            label="Training modules"
+            columns={cols}
+            rows={MODULES}
+            getRowId={(m) => m.id}
+            onRowClick={(m) => (setActive(m.id), setReminded(null))}
+            activeRowId={active}
+            minWidth={780}
+          />
         </Panel>
         <Panel title="Assignment rule" description={cur?.title} aria-label="Assignment rule">
           {cur && (
@@ -362,7 +528,13 @@ function TrainingPage() {
                   { id: "overdue", label: "Overdue", value: cur.overdue, color: "var(--oa-danger)" },
                 ]}
               />
-              <Button size="sm" className="self-start" icon={<Mail />} disabled={cur.overdue === 0} onClick={() => setReminded(`Reminder sent to ${cur.overdue} people with ${cur.title} overdue`)}>
+              <Button
+                size="sm"
+                className="self-start"
+                icon={<Mail />}
+                disabled={cur.overdue === 0}
+                onClick={() => setReminded(`Reminder sent to ${cur.overdue} people with ${cur.title} overdue`)}
+              >
                 Remind overdue
               </Button>
               {reminded && (
@@ -453,9 +625,18 @@ function PeoplePage() {
   const allTeams = [...new Set(EMPLOYEES.map((e) => e.team))];
   return (
     <>
-      <PageHeader title="People" description="214 people synced from Identity. Contractors and service accounts are excluded from campaigns." actions={<SearchInput label="Search people" value={query} onChange={(e) => setQuery(e.target.value)} className="w-56" />} />
+      <PageHeader
+        title="People"
+        description="214 people synced from Identity. Contractors and service accounts are excluded from campaigns."
+        actions={<SearchInput label="Search people" value={query} onChange={(e) => setQuery(e.target.value)} className="w-56" />}
+      />
       <FilterBar onClear={teams.length ? () => setTeams([]) : undefined}>
-        <FacetFilter label="Team" selected={teams} onChange={setTeams} options={allTeams.map((t) => ({ value: t, count: EMPLOYEES.filter((e) => e.team === t).length }))} />
+        <FacetFilter
+          label="Team"
+          selected={teams}
+          onChange={setTeams}
+          options={allTeams.map((t) => ({ value: t, count: EMPLOYEES.filter((e) => e.team === t).length }))}
+        />
       </FilterBar>
       {reminded.length > 0 && (
         <p role="status" className="text-sm text-success">
@@ -463,7 +644,15 @@ function PeoplePage() {
         </p>
       )}
       <Panel title="People" description={`${rows.length} shown, highest risk first`} flush>
-        <DataTable label="People" columns={cols} rows={rows} getRowId={(e) => e.name} defaultSort={{ id: "risk", direction: "desc" }} minWidth={860} empty={<p className="py-8">Nobody matches</p>} />
+        <DataTable
+          label="People"
+          columns={cols}
+          rows={rows}
+          getRowId={(e) => e.name}
+          defaultSort={{ id: "risk", direction: "desc" }}
+          minWidth={860}
+          empty={<p className="py-8">Nobody matches</p>}
+        />
       </Panel>
     </>
   );
@@ -486,11 +675,61 @@ interface Template {
 }
 
 const TEMPLATES: Template[] = [
-  { id: "t1", name: "HR: updated payslip portal", category: "HR", difficulty: 2, from: "payroll@hr-example.com", subject: "Your October payslip is ready", body: "Hi {first_name},\n\nWe have moved payslips to a new portal. Sign in with your work account to see October's payslip.\n\n[View payslip]\n\nPeople team", used: 1, clickRate: 8.9 },
-  { id: "t2", name: "Finance: invoice shared via file link", category: "Finance", difficulty: 2, from: "billing@docs-share.example.net", subject: "Invoice INV-20931 shared with you", body: "{sender} shared a file with you.\n\nINV-20931.pdf · 212 KB\n\n[Open in browser]", used: 1, clickRate: 12.1 },
-  { id: "t3", name: "IT: re-enrol your authenticator", category: "IT", difficulty: 3, from: "it-support@example-helpdesk.com", subject: "Action required: MFA re-enrolment by Friday", body: "Your authenticator registration expires on Friday. Re-enrol now to keep access to email and VPN.\n\n[Re-enrol now]\n\nIT Service Desk", used: 1, clickRate: 15.9 },
-  { id: "t4", name: "Courier: customs fee due", category: "Courier", difficulty: 1, from: "noreply@parcel-track.example.org", subject: "Your parcel is on hold: €1.99 fee", body: "Your parcel could not be delivered because a customs fee of €1.99 is unpaid.\n\n[Pay and release]", used: 1, clickRate: 19.0 },
-  { id: "t5", name: "Exec: urgent payment approval", category: "Exec", difficulty: 3, from: "ceo.office@example-mail.com", subject: "Quick favour, confidential", body: "Are you at your desk? I need a wire sent today before 3 pm for an acquisition. Keep this between us.\n\nSent from my phone", used: 1, clickRate: 28.9 },
+  {
+    id: "t1",
+    name: "HR: updated payslip portal",
+    category: "HR",
+    difficulty: 2,
+    from: "payroll@hr-example.com",
+    subject: "Your October payslip is ready",
+    body: "Hi {first_name},\n\nWe have moved payslips to a new portal. Sign in with your work account to see October's payslip.\n\n[View payslip]\n\nPeople team",
+    used: 1,
+    clickRate: 8.9,
+  },
+  {
+    id: "t2",
+    name: "Finance: invoice shared via file link",
+    category: "Finance",
+    difficulty: 2,
+    from: "billing@docs-share.example.net",
+    subject: "Invoice INV-20931 shared with you",
+    body: "{sender} shared a file with you.\n\nINV-20931.pdf · 212 KB\n\n[Open in browser]",
+    used: 1,
+    clickRate: 12.1,
+  },
+  {
+    id: "t3",
+    name: "IT: re-enrol your authenticator",
+    category: "IT",
+    difficulty: 3,
+    from: "it-support@example-helpdesk.com",
+    subject: "Action required: MFA re-enrolment by Friday",
+    body: "Your authenticator registration expires on Friday. Re-enrol now to keep access to email and VPN.\n\n[Re-enrol now]\n\nIT Service Desk",
+    used: 1,
+    clickRate: 15.9,
+  },
+  {
+    id: "t4",
+    name: "Courier: customs fee due",
+    category: "Courier",
+    difficulty: 1,
+    from: "noreply@parcel-track.example.org",
+    subject: "Your parcel is on hold: €1.99 fee",
+    body: "Your parcel could not be delivered because a customs fee of €1.99 is unpaid.\n\n[Pay and release]",
+    used: 1,
+    clickRate: 19.0,
+  },
+  {
+    id: "t5",
+    name: "Exec: urgent payment approval",
+    category: "Exec",
+    difficulty: 3,
+    from: "ceo.office@example-mail.com",
+    subject: "Quick favour, confidential",
+    body: "Are you at your desk? I need a wire sent today before 3 pm for an acquisition. Keep this between us.\n\nSent from my phone",
+    used: 1,
+    clickRate: 28.9,
+  },
 ];
 
 function TemplatesPage() {
@@ -502,18 +741,45 @@ function TemplatesPage() {
   const cols: Column<Template>[] = [
     { id: "name", header: "Template", width: "40%", cell: (t) => <span className="block truncate font-medium">{t.name}</span> },
     { id: "cat", header: "Category", cell: (t) => <Badge>{t.category}</Badge> },
-    { id: "diff", header: "Difficulty", description: "1: obvious tells. 3: convincing sender, timing and branding.", sortValue: (t) => t.difficulty, cell: (t) => <Badge tone={t.difficulty === 3 ? "danger" : t.difficulty === 2 ? "warning" : "neutral"}>{"●".repeat(t.difficulty)}</Badge> },
+    {
+      id: "diff",
+      header: "Difficulty",
+      description: "1: obvious tells. 3: convincing sender, timing and branding.",
+      sortValue: (t) => t.difficulty,
+      cell: (t) => <Badge tone={t.difficulty === 3 ? "danger" : t.difficulty === 2 ? "warning" : "neutral"}>{"●".repeat(t.difficulty)}</Badge>,
+    },
     { id: "click", header: "Click rate", align: "right", mono: true, sortValue: (t) => t.clickRate, cell: (t) => `${t.clickRate}%` },
   ];
   return (
     <>
-      <PageHeader title="Templates" description="Simulated phishing emails. Senders use look-alike domains you own, so nothing reaches real third parties." actions={<Button variant="primary" icon={<Plus />}>New template</Button>} />
+      <PageHeader
+        title="Templates"
+        description="Simulated phishing emails. Senders use look-alike domains you own, so nothing reaches real third parties."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New template
+          </Button>
+        }
+      />
       <FilterBar onClear={cat.length ? () => setCat([]) : undefined}>
-        <FacetFilter label="Category" selected={cat} onChange={setCat} options={(["HR", "Finance", "IT", "Courier", "Exec"] as const).map((c) => ({ value: c, count: TEMPLATES.filter((t) => t.category === c).length }))} />
+        <FacetFilter
+          label="Category"
+          selected={cat}
+          onChange={setCat}
+          options={(["HR", "Finance", "IT", "Courier", "Exec"] as const).map((c) => ({ value: c, count: TEMPLATES.filter((t) => t.category === c).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Templates" description={`${rows.length} shown`} flush>
-          <DataTable label="Templates" columns={cols} rows={rows} getRowId={(t) => t.id} onRowClick={(t) => (setActive(t.id), setSent(false))} activeRowId={active} minWidth={560} />
+          <DataTable
+            label="Templates"
+            columns={cols}
+            rows={rows}
+            getRowId={(t) => t.id}
+            onRowClick={(t) => (setActive(t.id), setSent(false))}
+            activeRowId={active}
+            minWidth={560}
+          />
         </Panel>
         <Panel
           title="Preview"
@@ -574,8 +840,20 @@ function ReportsPage() {
         description="Trends by team and evidence packs for auditors."
         actions={
           <>
-            <SelectField label="Framework" value={framework} onChange={(e) => setFramework(e.target.value)} options={[{ value: "iso", label: "ISO 27001 A.6.3" }, { value: "soc2", label: "SOC 2 CC2.2" }, { value: "gdpr", label: "GDPR Art. 39" }]} />
-            <Button icon={<FileBarChart />} onClick={() => setExported(framework === "iso" ? "ISO 27001 A.6.3" : framework === "soc2" ? "SOC 2 CC2.2" : "GDPR Art. 39")}>
+            <SelectField
+              label="Framework"
+              value={framework}
+              onChange={(e) => setFramework(e.target.value)}
+              options={[
+                { value: "iso", label: "ISO 27001 A.6.3" },
+                { value: "soc2", label: "SOC 2 CC2.2" },
+                { value: "gdpr", label: "GDPR Art. 39" },
+              ]}
+            />
+            <Button
+              icon={<FileBarChart />}
+              onClick={() => setExported(framework === "iso" ? "ISO 27001 A.6.3" : framework === "soc2" ? "SOC 2 CC2.2" : "GDPR Art. 39")}
+            >
               Export evidence
             </Button>
           </>
@@ -595,7 +873,11 @@ function ReportsPage() {
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Reported within 10 min" description="Share of all reports, by team, last campaign">
-          <BarList label="Fast reports by team" items={TEAMS.map((t, i) => ({ id: t, label: t, value: [21, 34, 40, 38, 45, 62, 90][i] ?? 0 }))} format={(v) => `${v}%`} />
+          <BarList
+            label="Fast reports by team"
+            items={TEAMS.map((t, i) => ({ id: t, label: t, value: [21, 34, 40, 38, 45, 62, 90][i] ?? 0 }))}
+            format={(v) => `${v}%`}
+          />
         </Panel>
         <Panel title="Board summary" description="Q3 2026">
           <ul className="flex list-disc flex-col gap-1 pl-5 text-sm">

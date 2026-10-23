@@ -144,7 +144,10 @@ const alerts: Alert[] = [
     bytesIn: 410_000,
     duration: "18 m 40 s",
     ja3: "–",
-    zeek: ["conn  1760878531.007  Cq2Lm8z  192.0.2.8  50211  203.0.113.181  2222  tcp  ssh  1120.4  2310000  410000  SF", "ssh   1760878531.044  Cq2Lm8z  192.0.2.8  50211  203.0.113.181  2222  2  T  SSH-2.0-OpenSSH_9.6"],
+    zeek: [
+      "conn  1760878531.007  Cq2Lm8z  192.0.2.8  50211  203.0.113.181  2222  tcp  ssh  1120.4  2310000  410000  SF",
+      "ssh   1760878531.044  Cq2Lm8z  192.0.2.8  50211  203.0.113.181  2222  2  T  SSH-2.0-OpenSSH_9.6",
+    ],
   },
   {
     id: "a5",
@@ -323,18 +326,198 @@ interface Conn {
 }
 
 const CONNS: Conn[] = [
-  { uid: "CmEu3t2", ts: "13:58:12.114", orig_h: "192.0.2.17", orig_p: 53122, resp_h: "203.0.113.53", resp_p: 53, proto: "udp", service: "dns", duration: 2466.2, orig_bytes: 48_211_000, resp_bytes: 3_904_000, conn_state: "SF", history: "Dd", sensor: "nids-core-01" },
-  { uid: "C8aKq91", ts: "13:41:50.902", orig_h: "192.0.2.42", orig_p: 49811, resp_h: "198.51.100.77", resp_p: 443, proto: "tcp", service: "ssl", duration: 22320.4, orig_bytes: 182_000, resp_bytes: 96_400, conn_state: "S1", history: "ShADad", sensor: "nids-core-01" },
-  { uid: "CbX0e2Q", ts: "13:20:04.330", orig_h: "192.0.2.44", orig_p: 61402, resp_h: "192.0.2.10", resp_p: 443, proto: "tcp", service: "http", duration: 138.1, orig_bytes: 12_400, resp_bytes: 88_900, conn_state: "SF", history: "ShADadFf", sensor: "nids-edge-fra" },
-  { uid: "Cq2Lm8z", ts: "12:55:31.007", orig_h: "192.0.2.8", orig_p: 50211, resp_h: "203.0.113.181", resp_p: 2222, proto: "tcp", service: "ssh", duration: 1120.4, orig_bytes: 2_310_000, resp_bytes: 410_000, conn_state: "SF", history: "ShADadFf", sensor: "nids-core-02" },
-  { uid: "CzP4w1n", ts: "12:31:09.512", orig_h: "192.0.2.31", orig_p: 41022, resp_h: "198.51.100.53", resp_p: 53, proto: "udp", service: "dns", duration: 0.02, orig_bytes: 92, resp_bytes: 148, conn_state: "SF", history: "Dd", sensor: "nids-core-02" },
-  { uid: "Cm5Nf0e", ts: "11:47:45.200", orig_h: "192.0.2.9", orig_p: 38110, resp_h: "203.0.113.24", resp_p: 80, proto: "tcp", service: "http", duration: 3.4, orig_bytes: 840, resp_bytes: 2_150_000, conn_state: "SF", history: "ShADadFf", sensor: "nids-core-01" },
-  { uid: "Ck9Rt3v", ts: "11:02:18.640", orig_h: "192.0.2.14", orig_p: 55300, resp_h: "198.51.100.10", resp_p: 443, proto: "tcp", service: "ssl", duration: 0.8, orig_bytes: 5_200, resp_bytes: 3_100, conn_state: "RSTO", history: "ShADR", sensor: "nids-edge-lon" },
-  { uid: "Cw7Hx2a", ts: "10:44:02.018", orig_h: "192.0.2.5", orig_p: 44120, resp_h: "192.0.2.60", resp_p: 5432, proto: "tcp", service: "postgresql", duration: 3600.0, orig_bytes: 1_840_000_000, resp_bytes: 9_120_000_000, conn_state: "S1", history: "ShADad", sensor: "nids-core-02" },
-  { uid: "Cr1Pk8d", ts: "10:31:55.771", orig_h: "198.51.100.201", orig_p: 51002, resp_h: "192.0.2.10", resp_p: 22, proto: "tcp", service: "ssh", duration: 2.1, orig_bytes: 1_204, resp_bytes: 2_008, conn_state: "RSTR", history: "ShAdR", sensor: "nids-edge-fra" },
-  { uid: "Cy3Mv0q", ts: "10:12:40.004", orig_h: "192.0.2.17", orig_p: 0, resp_h: "192.0.2.1", resp_p: 0, proto: "icmp", service: "-", duration: 0.001, orig_bytes: 64, resp_bytes: 64, conn_state: "OTH", history: "-", sensor: "nids-core-01" },
-  { uid: "Ct6Bn4s", ts: "09:58:13.330", orig_h: "192.0.2.22", orig_p: 39004, resp_h: "203.0.113.9", resp_p: 25, proto: "tcp", service: "smtp", duration: 4.8, orig_bytes: 48_200, resp_bytes: 1_920, conn_state: "SF", history: "ShADadFf", sensor: "nids-edge-lon" },
-  { uid: "Cj2Fd9u", ts: "09:40:21.909", orig_h: "203.0.113.181", orig_p: 60111, resp_h: "192.0.2.10", resp_p: 3389, proto: "tcp", service: "-", duration: 0.0, orig_bytes: 0, resp_bytes: 0, conn_state: "REJ", history: "Sr", sensor: "nids-edge-fra" },
+  {
+    uid: "CmEu3t2",
+    ts: "13:58:12.114",
+    orig_h: "192.0.2.17",
+    orig_p: 53122,
+    resp_h: "203.0.113.53",
+    resp_p: 53,
+    proto: "udp",
+    service: "dns",
+    duration: 2466.2,
+    orig_bytes: 48_211_000,
+    resp_bytes: 3_904_000,
+    conn_state: "SF",
+    history: "Dd",
+    sensor: "nids-core-01",
+  },
+  {
+    uid: "C8aKq91",
+    ts: "13:41:50.902",
+    orig_h: "192.0.2.42",
+    orig_p: 49811,
+    resp_h: "198.51.100.77",
+    resp_p: 443,
+    proto: "tcp",
+    service: "ssl",
+    duration: 22320.4,
+    orig_bytes: 182_000,
+    resp_bytes: 96_400,
+    conn_state: "S1",
+    history: "ShADad",
+    sensor: "nids-core-01",
+  },
+  {
+    uid: "CbX0e2Q",
+    ts: "13:20:04.330",
+    orig_h: "192.0.2.44",
+    orig_p: 61402,
+    resp_h: "192.0.2.10",
+    resp_p: 443,
+    proto: "tcp",
+    service: "http",
+    duration: 138.1,
+    orig_bytes: 12_400,
+    resp_bytes: 88_900,
+    conn_state: "SF",
+    history: "ShADadFf",
+    sensor: "nids-edge-fra",
+  },
+  {
+    uid: "Cq2Lm8z",
+    ts: "12:55:31.007",
+    orig_h: "192.0.2.8",
+    orig_p: 50211,
+    resp_h: "203.0.113.181",
+    resp_p: 2222,
+    proto: "tcp",
+    service: "ssh",
+    duration: 1120.4,
+    orig_bytes: 2_310_000,
+    resp_bytes: 410_000,
+    conn_state: "SF",
+    history: "ShADadFf",
+    sensor: "nids-core-02",
+  },
+  {
+    uid: "CzP4w1n",
+    ts: "12:31:09.512",
+    orig_h: "192.0.2.31",
+    orig_p: 41022,
+    resp_h: "198.51.100.53",
+    resp_p: 53,
+    proto: "udp",
+    service: "dns",
+    duration: 0.02,
+    orig_bytes: 92,
+    resp_bytes: 148,
+    conn_state: "SF",
+    history: "Dd",
+    sensor: "nids-core-02",
+  },
+  {
+    uid: "Cm5Nf0e",
+    ts: "11:47:45.200",
+    orig_h: "192.0.2.9",
+    orig_p: 38110,
+    resp_h: "203.0.113.24",
+    resp_p: 80,
+    proto: "tcp",
+    service: "http",
+    duration: 3.4,
+    orig_bytes: 840,
+    resp_bytes: 2_150_000,
+    conn_state: "SF",
+    history: "ShADadFf",
+    sensor: "nids-core-01",
+  },
+  {
+    uid: "Ck9Rt3v",
+    ts: "11:02:18.640",
+    orig_h: "192.0.2.14",
+    orig_p: 55300,
+    resp_h: "198.51.100.10",
+    resp_p: 443,
+    proto: "tcp",
+    service: "ssl",
+    duration: 0.8,
+    orig_bytes: 5_200,
+    resp_bytes: 3_100,
+    conn_state: "RSTO",
+    history: "ShADR",
+    sensor: "nids-edge-lon",
+  },
+  {
+    uid: "Cw7Hx2a",
+    ts: "10:44:02.018",
+    orig_h: "192.0.2.5",
+    orig_p: 44120,
+    resp_h: "192.0.2.60",
+    resp_p: 5432,
+    proto: "tcp",
+    service: "postgresql",
+    duration: 3600.0,
+    orig_bytes: 1_840_000_000,
+    resp_bytes: 9_120_000_000,
+    conn_state: "S1",
+    history: "ShADad",
+    sensor: "nids-core-02",
+  },
+  {
+    uid: "Cr1Pk8d",
+    ts: "10:31:55.771",
+    orig_h: "198.51.100.201",
+    orig_p: 51002,
+    resp_h: "192.0.2.10",
+    resp_p: 22,
+    proto: "tcp",
+    service: "ssh",
+    duration: 2.1,
+    orig_bytes: 1_204,
+    resp_bytes: 2_008,
+    conn_state: "RSTR",
+    history: "ShAdR",
+    sensor: "nids-edge-fra",
+  },
+  {
+    uid: "Cy3Mv0q",
+    ts: "10:12:40.004",
+    orig_h: "192.0.2.17",
+    orig_p: 0,
+    resp_h: "192.0.2.1",
+    resp_p: 0,
+    proto: "icmp",
+    service: "-",
+    duration: 0.001,
+    orig_bytes: 64,
+    resp_bytes: 64,
+    conn_state: "OTH",
+    history: "-",
+    sensor: "nids-core-01",
+  },
+  {
+    uid: "Ct6Bn4s",
+    ts: "09:58:13.330",
+    orig_h: "192.0.2.22",
+    orig_p: 39004,
+    resp_h: "203.0.113.9",
+    resp_p: 25,
+    proto: "tcp",
+    service: "smtp",
+    duration: 4.8,
+    orig_bytes: 48_200,
+    resp_bytes: 1_920,
+    conn_state: "SF",
+    history: "ShADadFf",
+    sensor: "nids-edge-lon",
+  },
+  {
+    uid: "Cj2Fd9u",
+    ts: "09:40:21.909",
+    orig_h: "203.0.113.181",
+    orig_p: 60111,
+    resp_h: "192.0.2.10",
+    resp_p: 3389,
+    proto: "tcp",
+    service: "-",
+    duration: 0.0,
+    orig_bytes: 0,
+    resp_bytes: 0,
+    conn_state: "REJ",
+    history: "Sr",
+    sensor: "nids-edge-fra",
+  },
 ];
 
 const CONN_STATE: Record<string, string> = {
@@ -386,11 +569,58 @@ interface TlsServer {
 }
 
 const TLS_SERVERS: TlsServer[] = [
-  { id: "t1", sni: "cdn.example.com", version: "TLSv1.2", cipher: "ECDHE-RSA-AES256-GCM-SHA384", ja3s: "ae4edc6faf64d08308082ad26be60767", issuer: "Self-signed", expires: "in 3 d", conns: 412, flag: "Cobalt Strike default JA3" },
-  { id: "t2", sni: "api.example.com", version: "TLSv1.3", cipher: "TLS_AES_128_GCM_SHA256", ja3s: "15af977ce25de452b96affa2addb1036", issuer: "Let's Encrypt R11", expires: "in 61 d", conns: 18_204 },
-  { id: "t3", sni: "registry.example.com", version: "TLSv1.3", cipher: "TLS_AES_256_GCM_SHA384", ja3s: "907bf3ecef1c987c889946b737b43de8", issuer: "Let's Encrypt R10", expires: "in 44 d", conns: 6_120 },
-  { id: "t4", sni: "legacy.example.com", version: "TLSv1.0", cipher: "TLS_RSA_WITH_AES_128_CBC_SHA", ja3s: "6d4e5b73a8a1f2b2a3d1c7e9a0b8c6d2", issuer: "Example Internal CA", expires: "expired 12 d ago", conns: 88, flag: "TLS 1.0 and expired certificate" },
-  { id: "t5", sni: "mail.example.com", version: "TLSv1.2", cipher: "ECDHE-ECDSA-AES128-GCM-SHA256", ja3s: "c4b3a2d1e0f9a8b7c6d5e4f3a2b1c0d9", issuer: "Example Internal CA", expires: "in 210 d", conns: 1_402 },
+  {
+    id: "t1",
+    sni: "cdn.example.com",
+    version: "TLSv1.2",
+    cipher: "ECDHE-RSA-AES256-GCM-SHA384",
+    ja3s: "ae4edc6faf64d08308082ad26be60767",
+    issuer: "Self-signed",
+    expires: "in 3 d",
+    conns: 412,
+    flag: "Cobalt Strike default JA3",
+  },
+  {
+    id: "t2",
+    sni: "api.example.com",
+    version: "TLSv1.3",
+    cipher: "TLS_AES_128_GCM_SHA256",
+    ja3s: "15af977ce25de452b96affa2addb1036",
+    issuer: "Let's Encrypt R11",
+    expires: "in 61 d",
+    conns: 18_204,
+  },
+  {
+    id: "t3",
+    sni: "registry.example.com",
+    version: "TLSv1.3",
+    cipher: "TLS_AES_256_GCM_SHA384",
+    ja3s: "907bf3ecef1c987c889946b737b43de8",
+    issuer: "Let's Encrypt R10",
+    expires: "in 44 d",
+    conns: 6_120,
+  },
+  {
+    id: "t4",
+    sni: "legacy.example.com",
+    version: "TLSv1.0",
+    cipher: "TLS_RSA_WITH_AES_128_CBC_SHA",
+    ja3s: "6d4e5b73a8a1f2b2a3d1c7e9a0b8c6d2",
+    issuer: "Example Internal CA",
+    expires: "expired 12 d ago",
+    conns: 88,
+    flag: "TLS 1.0 and expired certificate",
+  },
+  {
+    id: "t5",
+    sni: "mail.example.com",
+    version: "TLSv1.2",
+    cipher: "ECDHE-ECDSA-AES128-GCM-SHA256",
+    ja3s: "c4b3a2d1e0f9a8b7c6d5e4f3a2b1c0d9",
+    issuer: "Example Internal CA",
+    expires: "in 210 d",
+    conns: 1_402,
+  },
 ];
 
 const HTTP_UA = [
@@ -415,8 +645,24 @@ const RULESETS: Ruleset[] = [
   { id: "et-open", name: "ET Open", source: "rules.emergingthreats.net · daily", rules: 48_912, enabled: 41_207, updated: "Today 04:00", on: true },
   { id: "suricata", name: "Suricata protocol events", source: "Bundled with Suricata 7.0.7", rules: 812, enabled: 812, updated: "Sep 30", on: true },
   { id: "sslbl", name: "abuse.ch SSLBL", source: "JA3 and certificate blacklist · hourly", rules: 3_204, enabled: 3_204, updated: "Today 13:00", on: true },
-  { id: "threat-intel", name: "OpenAsy Threat Intel", source: "Generated from indicators with confidence ≥ 75", rules: 9_480, enabled: 9_480, updated: "Live", on: true },
-  { id: "ptresearch", name: "PT Research attack detection", source: "github.com/example/AttackDetection", rules: 1_120, enabled: 0, updated: "Oct 2", on: false },
+  {
+    id: "threat-intel",
+    name: "OpenAsy Threat Intel",
+    source: "Generated from indicators with confidence ≥ 75",
+    rules: 9_480,
+    enabled: 9_480,
+    updated: "Live",
+    on: true,
+  },
+  {
+    id: "ptresearch",
+    name: "PT Research attack detection",
+    source: "github.com/example/AttackDetection",
+    rules: 1_120,
+    enabled: 0,
+    updated: "Oct 2",
+    on: false,
+  },
 ];
 
 interface CustomRule {
@@ -429,9 +675,30 @@ interface CustomRule {
 }
 
 const CUSTOM_RULES: CustomRule[] = [
-  { id: "r1", sid: 9_000_101, msg: "LOCAL Outbound SSH to non-standard port", text: 'alert tcp $HOME_NET any -> $EXTERNAL_NET !22 (msg:"LOCAL Outbound SSH to non-standard port"; app-layer-protocol:ssh; sid:9000101; rev:2;)', hits: 3, author: "Mark Wilson" },
-  { id: "r2", sid: 9_000_102, msg: "LOCAL Long DNS TXT label", text: 'alert dns $HOME_NET any -> any any (msg:"LOCAL Long DNS TXT label"; dns.query; pcre:"/^[A-Za-z0-9]{40,}\\./"; sid:9000102; rev:1;)', hits: 2_413, author: "Sarah Chen" },
-  { id: "r3", sid: 9_000_103, msg: "LOCAL Database traffic leaving the data subnet", text: 'alert tcp 192.0.2.60/32 5432 -> !$HOME_NET any (msg:"LOCAL Database traffic leaving the data subnet"; sid:9000103; rev:1;)', hits: 0, author: "Dana Kim" },
+  {
+    id: "r1",
+    sid: 9_000_101,
+    msg: "LOCAL Outbound SSH to non-standard port",
+    text: 'alert tcp $HOME_NET any -> $EXTERNAL_NET !22 (msg:"LOCAL Outbound SSH to non-standard port"; app-layer-protocol:ssh; sid:9000101; rev:2;)',
+    hits: 3,
+    author: "Mark Wilson",
+  },
+  {
+    id: "r2",
+    sid: 9_000_102,
+    msg: "LOCAL Long DNS TXT label",
+    text: 'alert dns $HOME_NET any -> any any (msg:"LOCAL Long DNS TXT label"; dns.query; pcre:"/^[A-Za-z0-9]{40,}\\./"; sid:9000102; rev:1;)',
+    hits: 2_413,
+    author: "Sarah Chen",
+  },
+  {
+    id: "r3",
+    sid: 9_000_103,
+    msg: "LOCAL Database traffic leaving the data subnet",
+    text: 'alert tcp 192.0.2.60/32 5432 -> !$HOME_NET any (msg:"LOCAL Database traffic leaving the data subnet"; sid:9000103; rev:1;)',
+    hits: 0,
+    author: "Dana Kim",
+  },
 ];
 
 const SUPPRESSIONS = [
@@ -456,10 +723,65 @@ interface Sensor {
 }
 
 const SENSORS: Sensor[] = [
-  { id: "nids-core-01", site: "Frankfurt DC · core switch SPAN", status: "healthy", version: "Suricata 7.0.7 · Zeek 7.0.3", uptime: "41 d", gbps: 1.8, drop: 0.01, cpu: 38, mem: 61, eps: 2_140, ifaces: [{ name: "ens2f0", mode: "AF_PACKET · 8 workers", speed: "10 Gbps", util: 18, drops: "0.01%" }, { name: "ens2f1", mode: "AF_PACKET · 8 workers", speed: "10 Gbps", util: 7, drops: "0%" }], drops: wave(24, { base: 0.01, amp: 0.01, seed: 91 }) },
-  { id: "nids-core-02", site: "Frankfurt DC · data VLAN tap", status: "healthy", version: "Suricata 7.0.7 · Zeek 7.0.3", uptime: "41 d", gbps: 1.2, drop: 0.0, cpu: 29, mem: 54, eps: 1_310, ifaces: [{ name: "ens3f0", mode: "AF_PACKET · 4 workers", speed: "10 Gbps", util: 12, drops: "0%" }], drops: wave(24, { base: 0.005, amp: 0.005, seed: 92 }) },
-  { id: "nids-edge-fra", site: "Frankfurt edge · internet uplink", status: "degraded", version: "Suricata 7.0.7 · Zeek 7.0.3", uptime: "6 d", gbps: 0.7, drop: 1.8, cpu: 92, mem: 71, eps: 880, ifaces: [{ name: "eth1", mode: "AF_PACKET · 2 workers", speed: "1 Gbps", util: 71, drops: "1.8%" }], drops: wave(24, { base: 0.4, amp: 0.3, seed: 93, spike: 1.5, spikeAt: 16 }) },
-  { id: "nids-edge-lon", site: "London edge · internet uplink", status: "healthy", version: "Suricata 7.0.6 · Zeek 7.0.3", uptime: "88 d", gbps: 0.1, drop: 0.0, cpu: 12, mem: 33, eps: 140, ifaces: [{ name: "eth1", mode: "AF_PACKET · 2 workers", speed: "1 Gbps", util: 9, drops: "0%" }], drops: wave(24, { base: 0.002, amp: 0.002, seed: 94 }) },
+  {
+    id: "nids-core-01",
+    site: "Frankfurt DC · core switch SPAN",
+    status: "healthy",
+    version: "Suricata 7.0.7 · Zeek 7.0.3",
+    uptime: "41 d",
+    gbps: 1.8,
+    drop: 0.01,
+    cpu: 38,
+    mem: 61,
+    eps: 2_140,
+    ifaces: [
+      { name: "ens2f0", mode: "AF_PACKET · 8 workers", speed: "10 Gbps", util: 18, drops: "0.01%" },
+      { name: "ens2f1", mode: "AF_PACKET · 8 workers", speed: "10 Gbps", util: 7, drops: "0%" },
+    ],
+    drops: wave(24, { base: 0.01, amp: 0.01, seed: 91 }),
+  },
+  {
+    id: "nids-core-02",
+    site: "Frankfurt DC · data VLAN tap",
+    status: "healthy",
+    version: "Suricata 7.0.7 · Zeek 7.0.3",
+    uptime: "41 d",
+    gbps: 1.2,
+    drop: 0.0,
+    cpu: 29,
+    mem: 54,
+    eps: 1_310,
+    ifaces: [{ name: "ens3f0", mode: "AF_PACKET · 4 workers", speed: "10 Gbps", util: 12, drops: "0%" }],
+    drops: wave(24, { base: 0.005, amp: 0.005, seed: 92 }),
+  },
+  {
+    id: "nids-edge-fra",
+    site: "Frankfurt edge · internet uplink",
+    status: "degraded",
+    version: "Suricata 7.0.7 · Zeek 7.0.3",
+    uptime: "6 d",
+    gbps: 0.7,
+    drop: 1.8,
+    cpu: 92,
+    mem: 71,
+    eps: 880,
+    ifaces: [{ name: "eth1", mode: "AF_PACKET · 2 workers", speed: "1 Gbps", util: 71, drops: "1.8%" }],
+    drops: wave(24, { base: 0.4, amp: 0.3, seed: 93, spike: 1.5, spikeAt: 16 }),
+  },
+  {
+    id: "nids-edge-lon",
+    site: "London edge · internet uplink",
+    status: "healthy",
+    version: "Suricata 7.0.6 · Zeek 7.0.3",
+    uptime: "88 d",
+    gbps: 0.1,
+    drop: 0.0,
+    cpu: 12,
+    mem: 33,
+    eps: 140,
+    ifaces: [{ name: "eth1", mode: "AF_PACKET · 2 workers", speed: "1 Gbps", util: 9, drops: "0%" }],
+    drops: wave(24, { base: 0.002, amp: 0.002, seed: 94 }),
+  },
 ];
 
 type CaptureStatus = "queued" | "running" | "ready" | "expired";
@@ -483,11 +805,61 @@ interface Capture {
 }
 
 const CAPTURES: Capture[] = [
-  { id: "pc-118", name: "DNS tunnel from 192.0.2.17", sensor: "nids-core-01", filter: "host 192.0.2.17 and udp port 53", requested: "Today 14:01", by: "Sarah Chen", size: 412_000_000, packets: 1_802_114, status: "running" },
-  { id: "pc-117", name: "Alert a2 · Cobalt Strike beacon", sensor: "nids-core-01", filter: "community-id 1:7mJ1cQnQ0uWj5vPq3yXc1sZ9aB4=", requested: "Today 13:44", by: "auto · critical alert", size: 2_900_000, packets: 4_120, status: "ready" },
-  { id: "pc-116", name: "Nmap scan from 192.0.2.44", sensor: "nids-edge-fra", filter: "host 192.0.2.44", requested: "Today 13:21", by: "auto · high alert", size: 18_400_000, packets: 61_008, status: "ready" },
-  { id: "pc-115", name: "SSH on 2222 to 203.0.113.181", sensor: "nids-core-02", filter: "host 203.0.113.181 and tcp port 2222", requested: "Today 12:58", by: "Mark Wilson", size: 3_100_000, packets: 7_411, status: "ready" },
-  { id: "pc-109", name: "TLS errors to legacy.example.com", sensor: "nids-edge-lon", filter: "tcp port 443 and host 198.51.100.10", requested: "Oct 11", by: "Dana Kim", size: 640_000, packets: 1_002, status: "expired" },
+  {
+    id: "pc-118",
+    name: "DNS tunnel from 192.0.2.17",
+    sensor: "nids-core-01",
+    filter: "host 192.0.2.17 and udp port 53",
+    requested: "Today 14:01",
+    by: "Sarah Chen",
+    size: 412_000_000,
+    packets: 1_802_114,
+    status: "running",
+  },
+  {
+    id: "pc-117",
+    name: "Alert a2 · Cobalt Strike beacon",
+    sensor: "nids-core-01",
+    filter: "community-id 1:7mJ1cQnQ0uWj5vPq3yXc1sZ9aB4=",
+    requested: "Today 13:44",
+    by: "auto · critical alert",
+    size: 2_900_000,
+    packets: 4_120,
+    status: "ready",
+  },
+  {
+    id: "pc-116",
+    name: "Nmap scan from 192.0.2.44",
+    sensor: "nids-edge-fra",
+    filter: "host 192.0.2.44",
+    requested: "Today 13:21",
+    by: "auto · high alert",
+    size: 18_400_000,
+    packets: 61_008,
+    status: "ready",
+  },
+  {
+    id: "pc-115",
+    name: "SSH on 2222 to 203.0.113.181",
+    sensor: "nids-core-02",
+    filter: "host 203.0.113.181 and tcp port 2222",
+    requested: "Today 12:58",
+    by: "Mark Wilson",
+    size: 3_100_000,
+    packets: 7_411,
+    status: "ready",
+  },
+  {
+    id: "pc-109",
+    name: "TLS errors to legacy.example.com",
+    sensor: "nids-edge-lon",
+    filter: "tcp port 443 and host 198.51.100.10",
+    requested: "Oct 11",
+    by: "Dana Kim",
+    size: 640_000,
+    packets: 1_002,
+    status: "expired",
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -527,12 +899,20 @@ function AlertsPage() {
         }
       >
         <TimeRangePicker value={range} onChange={setRange} />
-        <FacetFilter label="Severity" selected={sev} onChange={setSev} options={SEV_ORDER.map((s) => ({ value: s, label: SEVERITY_META[s].label, count: SEV_COUNTS[s] }))} />
+        <FacetFilter
+          label="Severity"
+          selected={sev}
+          onChange={setSev}
+          options={SEV_ORDER.map((s) => ({ value: s, label: SEVERITY_META[s].label, count: SEV_COUNTS[s] }))}
+        />
         <FacetFilter
           label="Sensor"
           selected={sensor}
           onChange={setSensor}
-          options={["nids-core-01", "nids-core-02", "nids-edge-fra", "nids-edge-lon"].map((s) => ({ value: s, count: alerts.filter((a) => a.sensor === s).length }))}
+          options={["nids-core-01", "nids-core-02", "nids-edge-fra", "nids-edge-lon"].map((s) => ({
+            value: s,
+            count: alerts.filter((a) => a.sensor === s).length,
+          }))}
         />
       </FilterBar>
       <KpiGrid minWidth={170}>
@@ -553,7 +933,13 @@ function AlertsPage() {
         />
         <KpiCard label="Critical · 24 h" value="2" unit="open" tone="critical" delta={{ label: "+2 in the last hour", direction: "up", intent: "bad" }} />
         <KpiCard label="Sensors up" value="4" unit="of 4" delta={{ label: "0.02% packets dropped", intent: "good" }} />
-        <KpiCard label="Inspected" value="3.8" unit="Gbps now" trend={wave(24, { base: 3.2, amp: 1.1, seed: 75 })} delta={{ label: "peak 6.1 Gbps at 10:00" }} />
+        <KpiCard
+          label="Inspected"
+          value="3.8"
+          unit="Gbps now"
+          trend={wave(24, { base: 3.2, amp: 1.1, seed: 75 })}
+          delta={{ label: "peak 6.1 Gbps at 10:00" }}
+        />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Alerts per hour" description="By severity, last 24 h">
@@ -584,7 +970,11 @@ function AlertsPage() {
             empty={<p className="py-8">No alerts match these filters</p>}
           />
         </Panel>
-        <Panel title="Flow detail" description={current ? `${current.src}:${current.srcPort} → ${current.dst}:${current.dstPort}` : "No alert selected"} aria-label="Flow detail">
+        <Panel
+          title="Flow detail"
+          description={current ? `${current.src}:${current.srcPort} → ${current.dst}:${current.dstPort}` : "No alert selected"}
+          aria-label="Flow detail"
+        >
           {current ? <FlowDetail alert={current} /> : <p className="py-6 text-center text-sm text-fg-muted">Select an alert to see bytes, JA3 and Zeek logs</p>}
         </Panel>
       </div>
@@ -601,20 +991,54 @@ function FlowsPage() {
   const cur = CONNS.find((c) => c.uid === active);
   const cols: Column<Conn>[] = [
     { id: "ts", header: "ts", mono: true, width: "110px", sortValue: (c) => c.ts, cell: (c) => c.ts, description: "Time of the first packet." },
-    { id: "uid", header: "uid", mono: true, pinned: "left", width: "90px", cell: (c) => c.uid, description: "Zeek connection id; joins conn.log to dns, ssl, http and files logs." },
-    { id: "orig", header: "id.orig_h:p", cell: (c) => <span className="font-mono text-xs whitespace-nowrap">{c.orig_h}:{c.orig_p}</span> },
-    { id: "resp", header: "id.resp_h:p", cell: (c) => <span className="font-mono text-xs whitespace-nowrap">{c.resp_h}:{c.resp_p}</span> },
+    {
+      id: "uid",
+      header: "uid",
+      mono: true,
+      pinned: "left",
+      width: "90px",
+      cell: (c) => c.uid,
+      description: "Zeek connection id; joins conn.log to dns, ssl, http and files logs.",
+    },
+    {
+      id: "orig",
+      header: "id.orig_h:p",
+      cell: (c) => (
+        <span className="font-mono text-xs whitespace-nowrap">
+          {c.orig_h}:{c.orig_p}
+        </span>
+      ),
+    },
+    {
+      id: "resp",
+      header: "id.resp_h:p",
+      cell: (c) => (
+        <span className="font-mono text-xs whitespace-nowrap">
+          {c.resp_h}:{c.resp_p}
+        </span>
+      ),
+    },
     { id: "proto", header: "proto", mono: true, cell: (c) => c.proto },
     { id: "service", header: "service", sortValue: (c) => c.service, cell: (c) => <Badge mono>{c.service}</Badge> },
     { id: "duration", header: "duration", align: "right", mono: true, sortValue: (c) => c.duration, cell: (c) => `${c.duration} s` },
     { id: "ob", header: "orig_bytes", align: "right", mono: true, sortValue: (c) => c.orig_bytes, cell: (c) => formatBytes(c.orig_bytes) },
     { id: "rb", header: "resp_bytes", align: "right", mono: true, sortValue: (c) => c.resp_bytes, cell: (c) => formatBytes(c.resp_bytes) },
-    { id: "state", header: "conn_state", mono: true, description: "How the connection started and ended, e.g. SF normal, REJ rejected, S1 still open.", cell: (c) => c.conn_state },
+    {
+      id: "state",
+      header: "conn_state",
+      mono: true,
+      description: "How the connection started and ended, e.g. SF normal, REJ rejected, S1 still open.",
+      cell: (c) => c.conn_state,
+    },
     { id: "history", header: "history", mono: true, cell: (c) => c.history },
   ];
   return (
     <>
-      <PageHeader title="Flows" description="Every connection Zeek saw, searchable by conn.log fields. 30 days hot, 400 days in the archive." actions={<Button icon={<Download />}>Export TSV</Button>} />
+      <PageHeader
+        title="Flows"
+        description="Every connection Zeek saw, searchable by conn.log fields. 30 days hot, 400 days in the archive."
+        actions={<Button icon={<Download />}>Export TSV</Button>}
+      />
       <FilterBar>
         <TimeRangePicker value={range} onChange={setRange} />
         <QueryBar label="Zeek query" placeholder="service:dns orig_h:192.0.2.17" value={draft} onChange={setDraft} onSubmit={(v) => setQuery(v)} />
@@ -643,7 +1067,19 @@ function FlowsPage() {
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="conn.log" description={`${rows.length} of ${CONNS.length} shown${query ? ` · ${query}` : ""}`} flush>
-          <DataTable label="Flows" columns={cols} rows={rows} getRowId={(c) => c.uid} onRowClick={(c) => setActive(c.uid)} activeRowId={active} defaultSort={{ id: "ts", direction: "desc" }} minWidth={1180} stickyHeader maxHeight={420} empty={<p className="py-8">No flows match this query</p>} />
+          <DataTable
+            label="Flows"
+            columns={cols}
+            rows={rows}
+            getRowId={(c) => c.uid}
+            onRowClick={(c) => setActive(c.uid)}
+            activeRowId={active}
+            defaultSort={{ id: "ts", direction: "desc" }}
+            minWidth={1180}
+            stickyHeader
+            maxHeight={420}
+            empty={<p className="py-8">No flows match this query</p>}
+          />
         </Panel>
         <Panel title="Connection" description={cur ? cur.uid : "Select a flow"} aria-label="Connection detail">
           {cur ? (
@@ -763,11 +1199,33 @@ function ProtocolsPage() {
                     </span>
                   ),
                 },
-                { id: "ver", header: "Version", mono: true, cell: (t) => <span className={t.version === "TLSv1.0" ? "text-warning-text" : undefined}>{t.version}</span> },
+                {
+                  id: "ver",
+                  header: "Version",
+                  mono: true,
+                  cell: (t) => <span className={t.version === "TLSv1.0" ? "text-warning-text" : undefined}>{t.version}</span>,
+                },
                 { id: "cipher", header: "Cipher", cell: (t) => <span className="block max-w-[220px] truncate font-mono text-2xs">{t.cipher}</span> },
-                { id: "ja3s", header: "JA3S", description: "Fingerprint of the server's TLS hello.", cell: (t) => <span className="block max-w-[150px] truncate font-mono text-2xs text-fg-muted">{t.ja3s}</span> },
+                {
+                  id: "ja3s",
+                  header: "JA3S",
+                  description: "Fingerprint of the server's TLS hello.",
+                  cell: (t) => <span className="block max-w-[150px] truncate font-mono text-2xs text-fg-muted">{t.ja3s}</span>,
+                },
                 { id: "issuer", header: "Issuer", cell: (t) => t.issuer },
-                { id: "exp", header: "Certificate", cell: (t) => <span className={t.expires.startsWith("expired") || t.expires === "in 3 d" ? "whitespace-nowrap text-danger-text" : "whitespace-nowrap text-fg-muted"}>{t.expires}</span> },
+                {
+                  id: "exp",
+                  header: "Certificate",
+                  cell: (t) => (
+                    <span
+                      className={
+                        t.expires.startsWith("expired") || t.expires === "in 3 d" ? "whitespace-nowrap text-danger-text" : "whitespace-nowrap text-fg-muted"
+                      }
+                    >
+                      {t.expires}
+                    </span>
+                  ),
+                },
                 { id: "conns", header: "Sessions", align: "right", mono: true, sortValue: (t) => t.conns, cell: (t) => t.conns.toLocaleString("en-US") },
               ]}
             />
@@ -808,7 +1266,9 @@ function ProtocolsPage() {
 function RulesPage() {
   const [sets, setSets] = useState(RULESETS);
   const [custom, setCustom] = useState(CUSTOM_RULES);
-  const [text, setText] = useState('alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"LOCAL Admin path probe"; http.uri; content:"/admin"; sid:9000104; rev:1;)');
+  const [text, setText] = useState(
+    'alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"LOCAL Admin path probe"; http.uri; content:"/admin"; sid:9000104; rev:1;)',
+  );
   const [check, setCheck] = useState<{ ok: boolean; msg: string } | null>(null);
   const [notice, setNotice] = useState("");
   const validate = () => {
@@ -823,7 +1283,15 @@ function RulesPage() {
   };
   return (
     <>
-      <PageHeader title="Rules" description="Suricata rulesets, local rules and suppressions. Changes reload sensors without dropping packets." actions={<Button variant="primary" icon={<RefreshCw />}>Update rulesets</Button>} />
+      <PageHeader
+        title="Rules"
+        description="Suricata rulesets, local rules and suppressions. Changes reload sensors without dropping packets."
+        actions={
+          <Button variant="primary" icon={<RefreshCw />}>
+            Update rulesets
+          </Button>
+        }
+      />
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       <KpiGrid>
         <KpiCard label="Rules loaded" value="54,703" unit="on 4 sensors" />
@@ -849,7 +1317,14 @@ function RulesPage() {
               ),
             },
             { id: "rules", header: "Rules", align: "right", mono: true, sortValue: (r) => r.rules, cell: (r) => r.rules.toLocaleString("en-US") },
-            { id: "enabled", header: "Enabled", align: "right", mono: true, description: "Rules enabled after local disable lists are applied.", cell: (r) => (r.on ? r.enabled.toLocaleString("en-US") : "0") },
+            {
+              id: "enabled",
+              header: "Enabled",
+              align: "right",
+              mono: true,
+              description: "Rules enabled after local disable lists are applied.",
+              cell: (r) => (r.on ? r.enabled.toLocaleString("en-US") : "0"),
+            },
             { id: "updated", header: "Updated", cell: (r) => <span className="whitespace-nowrap text-fg-muted">{r.updated}</span> },
             {
               id: "on",
@@ -885,7 +1360,13 @@ function RulesPage() {
           >
             <label className="flex flex-col gap-1">
               <span className="text-xs font-medium text-fg">Rule</span>
-              <textarea value={text} onChange={(e) => (setText(e.target.value), setCheck(null))} rows={4} spellCheck={false} className="w-full rounded-md border border-line-strong bg-surface px-2.5 py-1.5 font-mono text-xs text-fg" />
+              <textarea
+                value={text}
+                onChange={(e) => (setText(e.target.value), setCheck(null))}
+                rows={4}
+                spellCheck={false}
+                className="w-full rounded-md border border-line-strong bg-surface px-2.5 py-1.5 font-mono text-xs text-fg"
+              />
             </label>
             {check && (
               <span role="status" className={check.ok ? "text-xs text-success" : "text-xs text-danger-text"}>
@@ -949,7 +1430,16 @@ function SensorsPage() {
   const [restarted, setRestarted] = useState<string[]>([]);
   return (
     <>
-      <PageHeader title="Sensors" description="Capture points, interfaces and packet loss. Drop rate above 1% means rules miss traffic." meta={<StatusBadge tone="warning">1 degraded</StatusBadge>} actions={<Button variant="primary" icon={<Plus />}>Add sensor</Button>} />
+      <PageHeader
+        title="Sensors"
+        description="Capture points, interfaces and packet loss. Drop rate above 1% means rules miss traffic."
+        meta={<StatusBadge tone="warning">1 degraded</StatusBadge>}
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add sensor
+          </Button>
+        }
+      />
       <Callout tone="warning" title="nids-edge-fra drops 1.8% of packets">
         CPU is at 92% with 2 workers on a 1 Gbps link. Add workers or move the sensor to a larger host.
       </Callout>
@@ -985,7 +1475,13 @@ function SensorsPage() {
                   <dd className="font-mono font-semibold">{s.eps.toLocaleString("en-US")}</dd>
                 </div>
               </dl>
-              <Sparkline data={s.drops} label={`Packet drop rate for ${s.id}, last 24 hours`} height={28} color={s.drop >= 1 ? "var(--oa-warning)" : undefined} format={(v) => `${v.toFixed(2)}%`} />
+              <Sparkline
+                data={s.drops}
+                label={`Packet drop rate for ${s.id}, last 24 hours`}
+                height={28}
+                color={s.drop >= 1 ? "var(--oa-warning)" : undefined}
+                format={(v) => `${v.toFixed(2)}%`}
+              />
               <table className="w-full text-sm">
                 <caption className="sr-only">Interfaces on {s.id}</caption>
                 <thead>
@@ -1049,10 +1545,11 @@ function PcapPage() {
   const [notice, setNotice] = useState("");
   return (
     <>
-      <PageHeader title="PCAP" description="Full packet capture on demand. Critical and high alerts capture 60 s around the flow automatically. Kept 14 days." />
-      {notice && (
-        <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />
-      )}
+      <PageHeader
+        title="PCAP"
+        description="Full packet capture on demand. Critical and high alerts capture 60 s around the flow automatically. Kept 14 days."
+      />
+      {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
         <Panel title="New capture" description="BPF filter on one sensor">
           <form
@@ -1062,16 +1559,58 @@ function PcapPage() {
               e.preventDefault();
               if (!filter.trim()) return;
               const id = `pc-${119 + rows.length - CAPTURES.length}`;
-              setRows((rs) => [{ id, name: `Capture ${filter.trim()}`, sensor, filter: filter.trim(), requested: "Just now", by: "Emily Clark", size: 0, packets: 0, status: "queued" }, ...rs]);
+              setRows((rs) => [
+                {
+                  id,
+                  name: `Capture ${filter.trim()}`,
+                  sensor,
+                  filter: filter.trim(),
+                  requested: "Just now",
+                  by: "Emily Clark",
+                  size: 0,
+                  packets: 0,
+                  status: "queued",
+                },
+                ...rs,
+              ]);
               setFilter("");
               setNotice(`${id} queued on ${sensor} for ${duration} minutes`);
             }}
           >
-            <SelectField label="Sensor" value={sensor} onChange={(e) => setSensor(e.target.value)} options={SENSORS.map((s) => ({ value: s.id, label: s.id }))} />
-            <TextField label="BPF filter" mono placeholder="host 192.0.2.17 and port 53" value={filter} onChange={(e) => setFilter(e.target.value)} hint="Berkeley Packet Filter syntax, as in tcpdump." />
+            <SelectField
+              label="Sensor"
+              value={sensor}
+              onChange={(e) => setSensor(e.target.value)}
+              options={SENSORS.map((s) => ({ value: s.id, label: s.id }))}
+            />
+            <TextField
+              label="BPF filter"
+              mono
+              placeholder="host 192.0.2.17 and port 53"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              hint="Berkeley Packet Filter syntax, as in tcpdump."
+            />
             <div className="grid grid-cols-2 gap-2.5">
-              <SelectField label="Duration" value={duration} onChange={(e) => setDuration(e.target.value)} options={[{ value: "1", label: "1 minute" }, { value: "10", label: "10 minutes" }, { value: "60", label: "1 hour" }]} />
-              <SelectField label="Size limit" defaultValue="1g" options={[{ value: "100m", label: "100 MB" }, { value: "1g", label: "1 GB" }, { value: "10g", label: "10 GB" }]} />
+              <SelectField
+                label="Duration"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                options={[
+                  { value: "1", label: "1 minute" },
+                  { value: "10", label: "10 minutes" },
+                  { value: "60", label: "1 hour" },
+                ]}
+              />
+              <SelectField
+                label="Size limit"
+                defaultValue="1g"
+                options={[
+                  { value: "100m", label: "100 MB" },
+                  { value: "1g", label: "1 GB" },
+                  { value: "10g", label: "10 GB" },
+                ]}
+              />
             </div>
             <div>
               <Button type="submit" variant="primary" icon={<FileArchive />}>
@@ -1100,10 +1639,24 @@ function PcapPage() {
                 ),
               },
               { id: "sensor", header: "Sensor", mono: true, cell: (r) => r.sensor },
-              { id: "req", header: "Requested", cell: (r) => <span className="flex flex-col whitespace-nowrap"><span>{r.requested}</span><span className="text-2xs text-fg-muted">{r.by}</span></span> },
+              {
+                id: "req",
+                header: "Requested",
+                cell: (r) => (
+                  <span className="flex flex-col whitespace-nowrap">
+                    <span>{r.requested}</span>
+                    <span className="text-2xs text-fg-muted">{r.by}</span>
+                  </span>
+                ),
+              },
               { id: "size", header: "Size", align: "right", mono: true, sortValue: (r) => r.size, cell: (r) => (r.size ? formatBytes(r.size) : "–") },
               { id: "pk", header: "Packets", align: "right", mono: true, cell: (r) => (r.packets ? r.packets.toLocaleString("en-US") : "–") },
-              { id: "status", header: "Status", sortValue: (r) => r.status, cell: (r) => <StatusBadge tone={CAPTURE_STATUS[r.status].tone}>{CAPTURE_STATUS[r.status].label}</StatusBadge> },
+              {
+                id: "status",
+                header: "Status",
+                sortValue: (r) => r.status,
+                cell: (r) => <StatusBadge tone={CAPTURE_STATUS[r.status].tone}>{CAPTURE_STATUS[r.status].label}</StatusBadge>,
+              },
               {
                 id: "act",
                 header: <span className="sr-only">Actions</span>,

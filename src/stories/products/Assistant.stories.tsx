@@ -60,8 +60,7 @@ function Cite({ n }: { n: number }) {
       className="mx-0.5 inline-flex h-5 items-center gap-1 rounded border border-line bg-surface px-1.5 align-middle font-mono text-2xs text-fg no-underline hover:border-line-strong hover:bg-subtle"
     >
       <P.icon aria-hidden className="size-3 text-fg-muted" />
-      {P.name}{" "}
-      <span className="text-fg-muted">{n}</span>
+      {P.name} <span className="text-fg-muted">{n}</span>
     </a>
   );
 }
@@ -83,19 +82,23 @@ const initial: Message[] = [
     body: (
       <div className="flex flex-col gap-2 text-sm leading-6 text-fg">
         <p>
-          A crypto miner ran on <EntityChip kind="host" value="api-prod-03" hideKind href="#infrastructure/api-prod-03" /> for about 34 minutes, from 01:57 to 02:31. CPU went from a normal 22% to 97% on all 8 cores.
+          A crypto miner ran on <EntityChip kind="host" value="api-prod-03" hideKind href="#infrastructure/api-prod-03" /> for about 34 minutes, from 01:57 to
+          02:31. CPU went from a normal 22% to 97% on all 8 cores.
           <Cite n={1} />
         </p>
         <p>
-          The SIEM raised a critical signal at 02:07 for a process named <code className="font-mono text-xs">kdevtmpfsi</code> started by the <code className="font-mono text-xs">www-data</code> user.
+          The SIEM raised a critical signal at 02:07 for a process named <code className="font-mono text-xs">kdevtmpfsi</code> started by the{" "}
+          <code className="font-mono text-xs">www-data</code> user.
           <Cite n={2} />
         </p>
         <p>
-          The way in looks like an SSH login with a valid key for the deploy account from <EntityChip kind="ip" value="198.51.100.201" hideKind href="#siem/entity/ip/198.51.100.201" /> at 01:54, followed by a download from the same address.
+          The way in looks like an SSH login with a valid key for the deploy account from{" "}
+          <EntityChip kind="ip" value="198.51.100.201" hideKind href="#siem/entity/ip/198.51.100.201" /> at 01:54, followed by a download from the same address.
           <Cite n={3} />
         </p>
         <p>
-          Malware matched the binary to the XMRig family and quarantined it at 02:19; the Automation playbook isolated the host and INC-214 was opened. It was mitigated at 02:41.
+          Malware matched the binary to the XMRig family and quarantined it at 02:19; the Automation playbook isolated the host and INC-214 was opened. It was
+          mitigated at 02:41.
           <Cite n={4} />
           <Cite n={5} />
         </p>
@@ -109,7 +112,15 @@ const initial: Message[] = [
             xTicks={4}
             format={(v) => `${Math.round(v)}%`}
             threshold={{ value: 85, label: "alert 85%" }}
-            series={[{ id: "cpu", name: "CPU %", data: wave(N, { base: 22, amp: 4, seed: 61, spike: 75, spikeAt: 6, spikeLen: 2 }).map((v, i) => (i > 13 ? Math.max(18, v - 75) : Math.min(98, v))) }]}
+            series={[
+              {
+                id: "cpu",
+                name: "CPU %",
+                data: wave(N, { base: 22, amp: 4, seed: 61, spike: 75, spikeAt: 6, spikeLen: 2 }).map((v, i) =>
+                  i > 13 ? Math.max(18, v - 75) : Math.min(98, v),
+                ),
+              },
+            ]}
           />
         </figure>
         <p className="text-fg-muted">Still open: the deploy key is not rotated yet and the access grant revoke step failed in the playbook run.</p>
@@ -247,7 +258,6 @@ function AskPage() {
       </div>
     </>
   );
-
 }
 
 /* ------------------------------------------------------------------ */
@@ -267,12 +277,70 @@ interface Conversation {
 }
 
 const CONVERSATIONS: Conversation[] = [
-  { id: "c1", title: "What happened on api-prod-03 last night?", person: USER.name, started: "Today 08:12", turns: 2, products: ["metrics", "siem", "logs", "malware", "incidents"], rating: "up", summary: "Crypto miner from 01:57 to 02:31 via a deploy key used from 198.51.100.201. Quarantined and isolated; key not yet rotated.", questions: ["What happened on api-prod-03 last night?"] },
-  { id: "c2", title: "Why did checkout latency spike at 10:00?", person: PEOPLE[0], started: "Today 10:22", turns: 6, products: ["traces", "metrics", "database"], rating: "up", summary: "A missing index on orders.customer_id after migration 0142 made p95 go from 180 ms to 1.4 s. Index added at 10:41.", questions: ["Why did checkout latency spike at 10:00?", "Which query got slower?", "Who ran migration 0142?"] },
-  { id: "c3", title: "Which public repos have leaked secrets?", person: PEOPLE[3], started: "Yesterday 16:05", turns: 3, products: ["secrets", "sast"], summary: "One: acme/legacy-portal has a revoked AWS key in history. Push protection is off on that repo.", questions: ["Which public repos have leaked secrets?", "Is the key still valid?"] },
-  { id: "c4", title: "Summarise SOC 2 evidence gaps", person: PEOPLE[2], started: "Yesterday 11:40", turns: 4, products: ["compliance", "access", "backups"], rating: "down", summary: "Three controls lack evidence for Q3: CC6.2 access reviews, A1.2 restore tests, CC7.3 incident drill.", questions: ["Summarise SOC 2 evidence gaps", "Which owners are late?"] },
-  { id: "c5", title: "Is 203.0.113.181 known bad?", person: PEOPLE[4], started: "Oct 17 · 14:18", turns: 2, products: ["threat-intel", "network-ids", "waf"], rating: "up", summary: "Yes: listed in two feeds as a malware download host since Oct 12. WAF blocked 44 requests from it this week.", questions: ["Is 203.0.113.181 known bad?"] },
-  { id: "c6", title: "Hosts without a recent backup", person: PEOPLE[1], started: "Oct 16 · 09:03", turns: 3, products: ["backups", "infrastructure"], summary: "db-prod-02 last backed up 3 days ago; the job fails on a full disk.", questions: ["Hosts without a recent backup", "Why is db-prod-02 failing?"] },
+  {
+    id: "c1",
+    title: "What happened on api-prod-03 last night?",
+    person: USER.name,
+    started: "Today 08:12",
+    turns: 2,
+    products: ["metrics", "siem", "logs", "malware", "incidents"],
+    rating: "up",
+    summary: "Crypto miner from 01:57 to 02:31 via a deploy key used from 198.51.100.201. Quarantined and isolated; key not yet rotated.",
+    questions: ["What happened on api-prod-03 last night?"],
+  },
+  {
+    id: "c2",
+    title: "Why did checkout latency spike at 10:00?",
+    person: PEOPLE[0],
+    started: "Today 10:22",
+    turns: 6,
+    products: ["traces", "metrics", "database"],
+    rating: "up",
+    summary: "A missing index on orders.customer_id after migration 0142 made p95 go from 180 ms to 1.4 s. Index added at 10:41.",
+    questions: ["Why did checkout latency spike at 10:00?", "Which query got slower?", "Who ran migration 0142?"],
+  },
+  {
+    id: "c3",
+    title: "Which public repos have leaked secrets?",
+    person: PEOPLE[3],
+    started: "Yesterday 16:05",
+    turns: 3,
+    products: ["secrets", "sast"],
+    summary: "One: acme/legacy-portal has a revoked AWS key in history. Push protection is off on that repo.",
+    questions: ["Which public repos have leaked secrets?", "Is the key still valid?"],
+  },
+  {
+    id: "c4",
+    title: "Summarise SOC 2 evidence gaps",
+    person: PEOPLE[2],
+    started: "Yesterday 11:40",
+    turns: 4,
+    products: ["compliance", "access", "backups"],
+    rating: "down",
+    summary: "Three controls lack evidence for Q3: CC6.2 access reviews, A1.2 restore tests, CC7.3 incident drill.",
+    questions: ["Summarise SOC 2 evidence gaps", "Which owners are late?"],
+  },
+  {
+    id: "c5",
+    title: "Is 203.0.113.181 known bad?",
+    person: PEOPLE[4],
+    started: "Oct 17 · 14:18",
+    turns: 2,
+    products: ["threat-intel", "network-ids", "waf"],
+    rating: "up",
+    summary: "Yes: listed in two feeds as a malware download host since Oct 12. WAF blocked 44 requests from it this week.",
+    questions: ["Is 203.0.113.181 known bad?"],
+  },
+  {
+    id: "c6",
+    title: "Hosts without a recent backup",
+    person: PEOPLE[1],
+    started: "Oct 16 · 09:03",
+    turns: 3,
+    products: ["backups", "infrastructure"],
+    summary: "db-prod-02 last backed up 3 days ago; the job fails on a full disk.",
+    questions: ["Hosts without a recent backup", "Why is db-prod-02 failing?"],
+  },
 ];
 
 function HistoryPage() {
@@ -280,25 +348,61 @@ function HistoryPage() {
   const [people, setPeople] = useState<string[]>([]);
   const [items, setItems] = useState(CONVERSATIONS);
   const [active, setActive] = useState("c2");
-  const rows = items.filter((c) => (people.length === 0 || people.includes(c.person)) && (!query || `${c.title} ${c.summary}`.toLowerCase().includes(query.toLowerCase())));
+  const rows = items.filter(
+    (c) => (people.length === 0 || people.includes(c.person)) && (!query || `${c.title} ${c.summary}`.toLowerCase().includes(query.toLowerCase())),
+  );
   const cur = items.find((c) => c.id === active);
   const cols: Column<Conversation>[] = [
     { id: "title", header: "Conversation", width: "40%", cell: (c) => <span className="block truncate font-medium">{c.title}</span> },
-    { id: "person", header: "Asked by", cell: (c) => <span className="flex items-center gap-1.5"><Avatar name={c.person} size="sm" /><span className="truncate text-xs">{c.person}</span></span> },
+    {
+      id: "person",
+      header: "Asked by",
+      cell: (c) => (
+        <span className="flex items-center gap-1.5">
+          <Avatar name={c.person} size="sm" />
+          <span className="truncate text-xs">{c.person}</span>
+        </span>
+      ),
+    },
     { id: "started", header: "Started", mono: true, cell: (c) => c.started },
     { id: "turns", header: "Turns", align: "right", mono: true, sortValue: (c) => c.turns, cell: (c) => c.turns },
-    { id: "rating", header: "Rating", cell: (c) => (c.rating === "up" ? <Badge tone="success">Helpful</Badge> : c.rating === "down" ? <Badge tone="danger">Not helpful</Badge> : <span className="text-fg-subtle">–</span>) },
+    {
+      id: "rating",
+      header: "Rating",
+      cell: (c) =>
+        c.rating === "up" ? (
+          <Badge tone="success">Helpful</Badge>
+        ) : c.rating === "down" ? (
+          <Badge tone="danger">Not helpful</Badge>
+        ) : (
+          <span className="text-fg-subtle">–</span>
+        ),
+    },
   ];
   return (
     <>
       <PageHeader title="History" description="Conversations in this workspace. Admins see everyone's; members see their own." />
       <FilterBar onClear={query || people.length ? () => (setQuery(""), setPeople([])) : undefined}>
         <SearchInput label="Search conversations" value={query} onChange={(e) => setQuery(e.target.value)} className="w-72" />
-        <FacetFilter label="Asked by" selected={people} onChange={setPeople} options={[...new Set(CONVERSATIONS.map((c) => c.person))].map((p) => ({ value: p, count: CONVERSATIONS.filter((c) => c.person === p).length }))} />
+        <FacetFilter
+          label="Asked by"
+          selected={people}
+          onChange={setPeople}
+          options={[...new Set(CONVERSATIONS.map((c) => c.person))].map((p) => ({ value: p, count: CONVERSATIONS.filter((c) => c.person === p).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Conversations" description={`${rows.length} shown`} flush>
-          <DataTable label="Conversations" columns={cols} rows={rows} getRowId={(c) => c.id} onRowClick={(c) => setActive(c.id)} activeRowId={active} minWidth={720} empty={<p className="py-8">No conversations match</p>} />
+          <DataTable
+            label="Conversations"
+            columns={cols}
+            rows={rows}
+            getRowId={(c) => c.id}
+            onRowClick={(c) => setActive(c.id)}
+            activeRowId={active}
+            minWidth={720}
+            empty={<p className="py-8">No conversations match</p>}
+          />
         </Panel>
         <Panel
           title="Summary"
@@ -398,12 +502,21 @@ function SourcesPage() {
       id: "on",
       header: "Allowed",
       width: "100px",
-      cell: (d) => <Switch checked={enabled[d.product] ?? false} onCheckedChange={(v) => setEnabled((e) => ({ ...e, [d.product]: v }))} label={<span className="sr-only">Allow {PRODUCTS[d.product].name}</span>} />,
+      cell: (d) => (
+        <Switch
+          checked={enabled[d.product] ?? false}
+          onCheckedChange={(v) => setEnabled((e) => ({ ...e, [d.product]: v }))}
+          label={<span className="sr-only">Allow {PRODUCTS[d.product].name}</span>}
+        />
+      ),
     },
   ];
   return (
     <>
-      <PageHeader title="Sources" description="Which products the assistant may read. It always runs with the asking person's own permissions on top of this." />
+      <PageHeader
+        title="Sources"
+        description="Which products the assistant may read. It always runs with the asking person's own permissions on top of this."
+      />
       <KpiGrid>
         <KpiCard label="Products allowed" value={`${on}`} unit={`of ${DATA_SOURCES.length} linked`} />
         <KpiCard label="Reads · 7 d" value="1,634" delta={{ label: "Logs and Metrics most used" }} />
@@ -414,7 +527,14 @@ function SourcesPage() {
         Secrets shares only finding metadata and Access shares only who connected where and when.
       </Callout>
       <Panel title="Linked products" flush>
-        <DataTable label="Data sources" columns={cols} rows={DATA_SOURCES} getRowId={(d) => d.product} defaultSort={{ id: "q", direction: "desc" }} minWidth={820} />
+        <DataTable
+          label="Data sources"
+          columns={cols}
+          rows={DATA_SOURCES}
+          getRowId={(d) => d.product}
+          defaultSort={{ id: "q", direction: "desc" }}
+          minWidth={820}
+        />
       </Panel>
     </>
   );
@@ -435,7 +555,14 @@ interface Feedback {
 
 const FEEDBACK: Feedback[] = [
   { id: "f1", question: "Summarise SOC 2 evidence gaps", person: PEOPLE[2], when: "Yesterday", rating: "down", comment: "Missed the vendor review control." },
-  { id: "f2", question: "Why did checkout latency spike at 10:00?", person: PEOPLE[0], when: "Today", rating: "up", comment: "Found the migration in one step." },
+  {
+    id: "f2",
+    question: "Why did checkout latency spike at 10:00?",
+    person: PEOPLE[0],
+    when: "Today",
+    rating: "up",
+    comment: "Found the migration in one step.",
+  },
   { id: "f3", question: "Top noisy alert rules this week", person: PEOPLE[5], when: "Oct 17", rating: "down", comment: "Counted silenced alerts too." },
   { id: "f4", question: "Is 203.0.113.181 known bad?", person: PEOPLE[4], when: "Oct 17", rating: "up", comment: "" },
   { id: "f5", question: "Which certificates expire this month?", person: PEOPLE[6], when: "Oct 16", rating: "up", comment: "Linked straight to the renewals." },
@@ -460,7 +587,13 @@ function UsagePage() {
         <TimeRangePicker value={range} onChange={setRange} />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Questions" value="842" unit="7 d" trend={wave(14, { base: 110, amp: 30, seed: 41 })} delta={{ label: "+18% vs. last week", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Questions"
+          value="842"
+          unit="7 d"
+          trend={wave(14, { base: 110, amp: 30, seed: 41 })}
+          delta={{ label: "+18% vs. last week", direction: "up", intent: "good" }}
+        />
         <KpiCard label="People" value="37" unit="asked" />
         <KpiCard label="Helpful" value="86" unit="%" tone="success" delta={{ label: "of 214 rated answers" }} />
         <KpiCard label="Median answer" value="3.4" unit="s" />
@@ -492,7 +625,18 @@ function UsagePage() {
       <Panel
         title="Feedback"
         description="Not-helpful answers are reviewed weekly"
-        actions={<SelectField label="Rating" value={rating} onChange={(e) => setRating(e.target.value)} options={[{ value: "all", label: "All" }, { value: "up", label: "Helpful" }, { value: "down", label: "Not helpful" }]} />}
+        actions={
+          <SelectField
+            label="Rating"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
+            options={[
+              { value: "all", label: "All" },
+              { value: "up", label: "Helpful" },
+              { value: "down", label: "Not helpful" },
+            ]}
+          />
+        }
         flush
       >
         <DataTable label="Answer feedback" columns={cols} rows={rows} getRowId={(f) => f.id} minWidth={760} />

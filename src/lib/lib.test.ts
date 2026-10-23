@@ -5,7 +5,8 @@ import { colorAt, indexFromPointer, linearPath, niceScale, smoothPath } from "./
 
 describe("cn", () => {
   it("merges conditional classes and lets later Tailwind utilities win", () => {
-    expect(cn("px-2 py-1", false && "hidden", "px-4")).toBe("py-1 px-4");
+    const hidden = false as boolean;
+    expect(cn("px-2 py-1", hidden && "hidden", "px-4")).toBe("py-1 px-4");
   });
 });
 

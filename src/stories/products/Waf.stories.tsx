@@ -54,15 +54,123 @@ interface Blocked {
 }
 
 const blocked: Blocked[] = [
-  { id: "b1", time: "14:02:41", ip: "203.0.113.24", country: "NL", method: "GET", path: "/v1/orders?q=1'%20OR%20'1'='1", rule: "942100", ruleName: "SQLi via libinjection", score: 18, action: "blocked", site: "api.example.com" },
-  { id: "b2", time: "14:02:13", ip: "198.51.100.201", country: "US", method: "POST", path: "/login", rule: "941100", ruleName: "XSS via libinjection", score: 10, action: "blocked", site: "app.example.com" },
-  { id: "b3", time: "14:01:57", ip: "192.0.2.44", country: "DE", method: "GET", path: "/static/../../etc/passwd", rule: "930120", ruleName: "OS file access attempt", score: 15, action: "blocked", site: "www.example.com" },
-  { id: "b4", time: "14:01:30", ip: "203.0.113.181", country: "SG", method: "GET", path: "/wp-login.php", rule: "913100", ruleName: "Scanner user-agent (sqlmap)", score: 5, action: "logged", site: "www.example.com" },
-  { id: "b5", time: "14:00:52", ip: "198.51.100.7", country: "BR", method: "POST", path: "/v1/import", rule: "932160", ruleName: "Unix shell code found", score: 20, action: "blocked", site: "api.example.com" },
-  { id: "b6", time: "14:00:11", ip: "203.0.113.9", country: "FR", method: "GET", path: "/search?q=<script>alert(1)</script>", rule: "941110", ruleName: "XSS script tag vector", score: 10, action: "blocked", site: "app.example.com" },
-  { id: "b7", time: "13:59:48", ip: "198.51.100.96", country: "GB", method: "PUT", path: "/v1/users/42", rule: "920420", ruleName: "Content-Type not allowed", score: 3, action: "logged", site: "api.example.com" },
-  { id: "b8", time: "13:59:20", ip: "203.0.113.24", country: "NL", method: "GET", path: "/v1/orders?q=1;SELECT%20pg_sleep(5)", rule: "942160", ruleName: "Blind SQLi sleep() test", score: 23, action: "blocked", site: "api.example.com" },
-  { id: "b9", time: "13:58:44", ip: "192.0.2.44", country: "DE", method: "GET", path: "/.env", rule: "930130", ruleName: "Restricted file access", score: 8, action: "blocked", site: "www.example.com" },
+  {
+    id: "b1",
+    time: "14:02:41",
+    ip: "203.0.113.24",
+    country: "NL",
+    method: "GET",
+    path: "/v1/orders?q=1'%20OR%20'1'='1",
+    rule: "942100",
+    ruleName: "SQLi via libinjection",
+    score: 18,
+    action: "blocked",
+    site: "api.example.com",
+  },
+  {
+    id: "b2",
+    time: "14:02:13",
+    ip: "198.51.100.201",
+    country: "US",
+    method: "POST",
+    path: "/login",
+    rule: "941100",
+    ruleName: "XSS via libinjection",
+    score: 10,
+    action: "blocked",
+    site: "app.example.com",
+  },
+  {
+    id: "b3",
+    time: "14:01:57",
+    ip: "192.0.2.44",
+    country: "DE",
+    method: "GET",
+    path: "/static/../../etc/passwd",
+    rule: "930120",
+    ruleName: "OS file access attempt",
+    score: 15,
+    action: "blocked",
+    site: "www.example.com",
+  },
+  {
+    id: "b4",
+    time: "14:01:30",
+    ip: "203.0.113.181",
+    country: "SG",
+    method: "GET",
+    path: "/wp-login.php",
+    rule: "913100",
+    ruleName: "Scanner user-agent (sqlmap)",
+    score: 5,
+    action: "logged",
+    site: "www.example.com",
+  },
+  {
+    id: "b5",
+    time: "14:00:52",
+    ip: "198.51.100.7",
+    country: "BR",
+    method: "POST",
+    path: "/v1/import",
+    rule: "932160",
+    ruleName: "Unix shell code found",
+    score: 20,
+    action: "blocked",
+    site: "api.example.com",
+  },
+  {
+    id: "b6",
+    time: "14:00:11",
+    ip: "203.0.113.9",
+    country: "FR",
+    method: "GET",
+    path: "/search?q=<script>alert(1)</script>",
+    rule: "941110",
+    ruleName: "XSS script tag vector",
+    score: 10,
+    action: "blocked",
+    site: "app.example.com",
+  },
+  {
+    id: "b7",
+    time: "13:59:48",
+    ip: "198.51.100.96",
+    country: "GB",
+    method: "PUT",
+    path: "/v1/users/42",
+    rule: "920420",
+    ruleName: "Content-Type not allowed",
+    score: 3,
+    action: "logged",
+    site: "api.example.com",
+  },
+  {
+    id: "b8",
+    time: "13:59:20",
+    ip: "203.0.113.24",
+    country: "NL",
+    method: "GET",
+    path: "/v1/orders?q=1;SELECT%20pg_sleep(5)",
+    rule: "942160",
+    ruleName: "Blind SQLi sleep() test",
+    score: 23,
+    action: "blocked",
+    site: "api.example.com",
+  },
+  {
+    id: "b9",
+    time: "13:58:44",
+    ip: "192.0.2.44",
+    country: "DE",
+    method: "GET",
+    path: "/.env",
+    rule: "930130",
+    ruleName: "Restricted file access",
+    score: 8,
+    action: "blocked",
+    site: "www.example.com",
+  },
 ];
 
 const blockedColumns: Column<Blocked>[] = [
@@ -113,9 +221,30 @@ interface Suggestion {
 }
 
 const initialSuggestions: Suggestion[] = [
-  { id: "vp-1", title: "Virtual patch: SQL injection in q", target: "GET api.example.com/v1/orders?q=", finding: "DAST-318 · confirmed · High", rule: "SecRule ARGS:q \"@detectSQLi\" id:1000318,phase:2,deny", enabled: false },
-  { id: "vp-2", title: "Virtual patch: reflected XSS in redirect", target: "GET app.example.com/auth/callback?redirect=", finding: "DAST-322 · confirmed · Medium", rule: "SecRule ARGS:redirect \"@detectXSS\" id:1000322,phase:2,deny", enabled: false },
-  { id: "vp-3", title: "Rate limit password reset", target: "POST app.example.com/password/reset", finding: "DAST-301 · Low", rule: "SecAction id:1000301 · 5 req/min per IP", enabled: true },
+  {
+    id: "vp-1",
+    title: "Virtual patch: SQL injection in q",
+    target: "GET api.example.com/v1/orders?q=",
+    finding: "DAST-318 · confirmed · High",
+    rule: 'SecRule ARGS:q "@detectSQLi" id:1000318,phase:2,deny',
+    enabled: false,
+  },
+  {
+    id: "vp-2",
+    title: "Virtual patch: reflected XSS in redirect",
+    target: "GET app.example.com/auth/callback?redirect=",
+    finding: "DAST-322 · confirmed · Medium",
+    rule: 'SecRule ARGS:redirect "@detectXSS" id:1000322,phase:2,deny',
+    enabled: false,
+  },
+  {
+    id: "vp-3",
+    title: "Rate limit password reset",
+    target: "POST app.example.com/password/reset",
+    finding: "DAST-301 · Low",
+    rule: "SecAction id:1000301 · 5 req/min per IP",
+    enabled: true,
+  },
 ];
 
 /** Traffic: allowed vs blocked, blocked requests with CRS rule ids, and virtual patches generated from DAST findings. */
@@ -183,7 +312,13 @@ function TrafficPage() {
         <SearchInput label="Search IP, path or rule id" className="w-64" />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Requests · 24 h" value="18.4M" unit="212 req/s avg" trend={wave(24, { base: 210, amp: 80, seed: 61 })} delta={{ label: "+4% vs. yesterday", direction: "up" }} />
+        <KpiCard
+          label="Requests · 24 h"
+          value="18.4M"
+          unit="212 req/s avg"
+          trend={wave(24, { base: 210, amp: 80, seed: 61 })}
+          delta={{ label: "+4% vs. yesterday", direction: "up" }}
+        />
         <KpiCard
           label="Blocked"
           value="0.42%"
@@ -207,7 +342,12 @@ function TrafficPage() {
             format={(v) => `${Math.round(v)} req/s`}
             series={[
               { id: "allowed", name: "Allowed", data: wave(N, { base: 200, amp: 80, seed: 63, phase: -1 }) },
-              { id: "blocked", name: "Blocked", color: "var(--oa-danger)", data: wave(N, { base: 2, amp: 1.5, seed: 64, spike: 14, spikeAt: 36, spikeLen: 4 }) },
+              {
+                id: "blocked",
+                name: "Blocked",
+                color: "var(--oa-danger)",
+                data: wave(N, { base: 2, amp: 1.5, seed: 64, spike: 14, spikeAt: 36, spikeLen: 4 }),
+              },
             ]}
           />
         </Panel>
@@ -226,7 +366,16 @@ function TrafficPage() {
         </Panel>
       </div>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <Panel title="Blocked requests" description={`${rows.length} of ${blocked.length} shown · last 5 minutes`} actions={<Button size="sm" variant="ghost">Open Blocked</Button>} flush>
+        <Panel
+          title="Blocked requests"
+          description={`${rows.length} of ${blocked.length} shown · last 5 minutes`}
+          actions={
+            <Button size="sm" variant="ghost">
+              Open Blocked
+            </Button>
+          }
+          flush
+        >
           <DataTable
             label="Blocked requests"
             columns={blockedColumns}
@@ -275,7 +424,6 @@ function TrafficPage() {
       </div>
     </>
   );
-  
 }
 
 /* ------------------------------------------------------------------ */
@@ -304,10 +452,24 @@ function BlockedPage() {
   const m = cur ? MATCHED[cur.id] : undefined;
   return (
     <>
-      <PageHeader title="Blocked" description="Requests that matched CRS or custom rules. Logged requests scored below the blocking threshold of 5." actions={<SearchInput label="Search blocked requests" value={q} onChange={(e) => setQ(e.target.value)} className="w-64" />} />
+      <PageHeader
+        title="Blocked"
+        description="Requests that matched CRS or custom rules. Logged requests scored below the blocking threshold of 5."
+        actions={<SearchInput label="Search blocked requests" value={q} onChange={(e) => setQ(e.target.value)} className="w-64" />}
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Requests" description={`${rows.length} shown`} flush>
-          <DataTable label="Blocked log" columns={blockedColumns} rows={rows} getRowId={(b) => b.id} onRowClick={(b) => (setActive(b.id), setExcluded(null))} activeRowId={active} defaultSort={{ id: "time", direction: "desc" }} minWidth={920} empty={<p className="py-8">No requests match</p>} />
+          <DataTable
+            label="Blocked log"
+            columns={blockedColumns}
+            rows={rows}
+            getRowId={(b) => b.id}
+            onRowClick={(b) => (setActive(b.id), setExcluded(null))}
+            activeRowId={active}
+            defaultSort={{ id: "time", direction: "desc" }}
+            minWidth={920}
+            empty={<p className="py-8">No requests match</p>}
+          />
         </Panel>
         <Panel title="Match" description={cur ? `${cur.rule} · ${cur.ruleName}` : "No request selected"} aria-label="Match detail">
           {cur && m && (
@@ -378,15 +540,37 @@ function RulesPage() {
     { id: "id", header: "Group", mono: true, width: "70px", cell: (g) => `${g.id}xxx` },
     { id: "name", header: "Name", cell: (g) => <span className="font-medium">{g.name}</span> },
     { id: "rules", header: "Rules", align: "right", mono: true, cell: (g) => g.rules },
-    { id: "pl", header: "From paranoia", align: "right", mono: true, description: "Rules in this group start applying at this paranoia level. Higher levels catch more and cause more false positives.", cell: (g) => `PL${g.paranoia}` },
+    {
+      id: "pl",
+      header: "From paranoia",
+      align: "right",
+      mono: true,
+      description: "Rules in this group start applying at this paranoia level. Higher levels catch more and cause more false positives.",
+      cell: (g) => `PL${g.paranoia}`,
+    },
     { id: "hits", header: "Hits · 24 h", align: "right", mono: true, sortValue: (g) => g.hits24h, cell: (g) => formatNumber(g.hits24h) },
-    { id: "on", header: "Enabled", cell: (g) => <Switch checked={enabled[g.id] ?? false} onCheckedChange={(v) => setEnabled((e) => ({ ...e, [g.id]: v }))} label={<span className="sr-only">Enable {g.name}</span>} /> },
+    {
+      id: "on",
+      header: "Enabled",
+      cell: (g) => (
+        <Switch
+          checked={enabled[g.id] ?? false}
+          onCheckedChange={(v) => setEnabled((e) => ({ ...e, [g.id]: v }))}
+          label={<span className="sr-only">Enable {g.name}</span>}
+        />
+      ),
+    },
   ];
   return (
     <>
       <PageHeader title="Rules (OWASP CRS)" description="OWASP Core Rule Set 4.7, updated weekly. Disable a group only if no site uses that stack." />
       <FilterBar>
-        <SelectField label="Paranoia level" value={paranoia} onChange={(e) => setParanoia(e.target.value)} options={["1", "2", "3", "4"].map((v) => ({ value: v, label: `PL${v}${v === "2" ? " (recommended)" : ""}` }))} />
+        <SelectField
+          label="Paranoia level"
+          value={paranoia}
+          onChange={(e) => setParanoia(e.target.value)}
+          options={["1", "2", "3", "4"].map((v) => ({ value: v, label: `PL${v}${v === "2" ? " (recommended)" : ""}` }))}
+        />
       </FilterBar>
       {paranoia !== "2" && (
         <Callout tone="warning" title={`PL${paranoia} ${Number(paranoia) > 2 ? "will raise false positives" : "lets more attacks through"}`}>
@@ -394,7 +578,14 @@ function RulesPage() {
         </Callout>
       )}
       <Panel title="Rule groups" description={`${Object.values(enabled).filter(Boolean).length} of ${RULE_GROUPS.length} enabled`} flush>
-        <DataTable label="CRS rule groups" columns={cols} rows={RULE_GROUPS} getRowId={(g) => g.id} defaultSort={{ id: "hits", direction: "desc" }} minWidth={760} />
+        <DataTable
+          label="CRS rule groups"
+          columns={cols}
+          rows={RULE_GROUPS}
+          getRowId={(g) => g.id}
+          defaultSort={{ id: "hits", direction: "desc" }}
+          minWidth={760}
+        />
       </Panel>
     </>
   );
@@ -414,10 +605,38 @@ interface CustomRule {
 }
 
 const CUSTOM: CustomRule[] = [
-  ...initialSuggestions.map((s, i) => ({ id: s.id, name: s.title, rule: s.rule, site: s.target.split(" ")[1]!.split("/")[0]!, hits24h: [0, 0, 41][i] ?? 0, author: "DAST" })),
-  { id: "cr-4", name: "Block admin paths from outside VPN", rule: "SecRule REQUEST_URI \"@beginsWith /admin\" \"chain,id:1000401,phase:1,deny\"\n  SecRule REMOTE_ADDR \"!@ipMatch 10.8.0.0/16\"", site: "app.example.com", hits24h: 812, author: PEOPLE[4] },
-  { id: "cr-5", name: "Geo block for payment API", rule: "SecRule GEO:COUNTRY_CODE \"@pm KP IR\" \"id:1000402,phase:1,deny\"", site: "api.example.com", hits24h: 6, author: PEOPLE[4] },
-  { id: "cr-6", name: "Limit /v1/orders?q length", rule: "SecRule ARGS:q \"@gt 256\" \"id:1000403,phase:2,deny,t:length\"", site: "api.example.com", hits24h: 19, author: PEOPLE[0] },
+  ...initialSuggestions.map((s, i) => ({
+    id: s.id,
+    name: s.title,
+    rule: s.rule,
+    site: s.target.split(" ")[1]!.split("/")[0]!,
+    hits24h: [0, 0, 41][i] ?? 0,
+    author: "DAST",
+  })),
+  {
+    id: "cr-4",
+    name: "Block admin paths from outside VPN",
+    rule: 'SecRule REQUEST_URI "@beginsWith /admin" "chain,id:1000401,phase:1,deny"\n  SecRule REMOTE_ADDR "!@ipMatch 10.8.0.0/16"',
+    site: "app.example.com",
+    hits24h: 812,
+    author: PEOPLE[4],
+  },
+  {
+    id: "cr-5",
+    name: "Geo block for payment API",
+    rule: 'SecRule GEO:COUNTRY_CODE "@pm KP IR" "id:1000402,phase:1,deny"',
+    site: "api.example.com",
+    hits24h: 6,
+    author: PEOPLE[4],
+  },
+  {
+    id: "cr-6",
+    name: "Limit /v1/orders?q length",
+    rule: 'SecRule ARGS:q "@gt 256" "id:1000403,phase:2,deny,t:length"',
+    site: "api.example.com",
+    hits24h: 19,
+    author: PEOPLE[0],
+  },
 ];
 
 function CustomRulesPage() {
@@ -433,17 +652,38 @@ function CustomRulesPage() {
   ];
   return (
     <>
-      <PageHeader title="Custom rules" description="SecLang rules evaluated after CRS. IDs 1000000–1999999 are reserved for you." actions={<Button variant="primary" icon={<Plus />}>New rule</Button>} />
+      <PageHeader
+        title="Custom rules"
+        description="SecLang rules evaluated after CRS. IDs 1000000–1999999 are reserved for you."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New rule
+          </Button>
+        }
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Rules" flush>
-          <DataTable label="Custom rules" columns={cols} rows={CUSTOM} getRowId={(r) => r.id} onRowClick={(r) => (setActive(r.id), setTested(null))} activeRowId={active} minWidth={560} />
+          <DataTable
+            label="Custom rules"
+            columns={cols}
+            rows={CUSTOM}
+            getRowId={(r) => r.id}
+            onRowClick={(r) => (setActive(r.id), setTested(null))}
+            activeRowId={active}
+            minWidth={560}
+          />
         </Panel>
         {cur && (
           <Panel title="Edit rule" description={cur.name} aria-label="Edit rule">
             <div className="flex flex-col gap-2">
               <label className="flex flex-col gap-1 text-xs font-medium">
                 SecLang
-                <textarea value={drafts[cur.id] ?? ""} onChange={(e) => (setDrafts((d) => ({ ...d, [cur.id]: e.target.value })), setTested(null))} rows={5} className="rounded-md border border-line-strong bg-surface p-2 font-mono text-xs text-fg" />
+                <textarea
+                  value={drafts[cur.id] ?? ""}
+                  onChange={(e) => (setDrafts((d) => ({ ...d, [cur.id]: e.target.value })), setTested(null))}
+                  rows={5}
+                  className="rounded-md border border-line-strong bg-surface p-2 font-mono text-xs text-fg"
+                />
               </label>
               <div className="flex gap-1.5">
                 <Button size="sm" onClick={() => setTested(`Syntax OK · would have matched ${cur.hits24h} of 18.4 M requests in the last 24 h`)}>
@@ -482,11 +722,56 @@ interface Site {
 }
 
 const SITES: Site[] = [
-  { id: "s1", host: "api.example.com", upstream: "http://10.20.4.0:8080 (4 targets)", mode: "block", rps: 118, blockedPct: 0.61, tls: "TLS 1.3 · expires in 64 d", exclusions: 5 },
-  { id: "s2", host: "app.example.com", upstream: "http://10.20.5.0:3000 (3 targets)", mode: "block", rps: 64, blockedPct: 0.38, tls: "TLS 1.3 · expires in 64 d", exclusions: 4 },
-  { id: "s3", host: "www.example.com", upstream: "http://10.20.6.10:80", mode: "block", rps: 22, blockedPct: 0.21, tls: "TLS 1.3 · expires in 201 d", exclusions: 1 },
-  { id: "s4", host: "status.example.com", upstream: "http://10.20.6.20:80", mode: "block", rps: 4, blockedPct: 0.02, tls: "TLS 1.3 · expires in 201 d", exclusions: 0 },
-  { id: "s5", host: "legacy-api.example.com", upstream: "http://10.30.1.4:8080", mode: "detect", rps: 4, blockedPct: 0, tls: "TLS 1.2 · expires in 9 d", exclusions: 2 },
+  {
+    id: "s1",
+    host: "api.example.com",
+    upstream: "http://10.20.4.0:8080 (4 targets)",
+    mode: "block",
+    rps: 118,
+    blockedPct: 0.61,
+    tls: "TLS 1.3 · expires in 64 d",
+    exclusions: 5,
+  },
+  {
+    id: "s2",
+    host: "app.example.com",
+    upstream: "http://10.20.5.0:3000 (3 targets)",
+    mode: "block",
+    rps: 64,
+    blockedPct: 0.38,
+    tls: "TLS 1.3 · expires in 64 d",
+    exclusions: 4,
+  },
+  {
+    id: "s3",
+    host: "www.example.com",
+    upstream: "http://10.20.6.10:80",
+    mode: "block",
+    rps: 22,
+    blockedPct: 0.21,
+    tls: "TLS 1.3 · expires in 201 d",
+    exclusions: 1,
+  },
+  {
+    id: "s4",
+    host: "status.example.com",
+    upstream: "http://10.20.6.20:80",
+    mode: "block",
+    rps: 4,
+    blockedPct: 0.02,
+    tls: "TLS 1.3 · expires in 201 d",
+    exclusions: 0,
+  },
+  {
+    id: "s5",
+    host: "legacy-api.example.com",
+    upstream: "http://10.30.1.4:8080",
+    mode: "detect",
+    rps: 4,
+    blockedPct: 0,
+    tls: "TLS 1.2 · expires in 9 d",
+    exclusions: 2,
+  },
 ];
 
 function SitesPage() {
@@ -517,7 +802,15 @@ function SitesPage() {
   ];
   return (
     <>
-      <PageHeader title="Sites" description="Hostnames the WAF proxies. Each site has its own mode, exclusions and upstream." actions={<Button variant="primary" icon={<Plus />}>Add site</Button>} />
+      <PageHeader
+        title="Sites"
+        description="Hostnames the WAF proxies. Each site has its own mode, exclusions and upstream."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Add site
+          </Button>
+        }
+      />
       <Callout tone="warning" title="legacy-api.example.com is in detect mode">
         It has logged 1,204 attacks this week that were not blocked. Switch it to Block once the 2 exclusions are reviewed.
       </Callout>
@@ -544,11 +837,56 @@ interface Exclusion {
 }
 
 const EXCLUSIONS: Exclusion[] = [
-  { id: "e1", rule: "942100", site: "api.example.com", target: "ARGS:filter on /v1/reports", reason: "Report filter accepts SQL-like expressions", author: PEOPLE[0], created: "Sep 3", hits7d: 1840 },
-  { id: "e2", rule: "941100", site: "app.example.com", target: "ARGS:body on /notes", reason: "Rich-text editor sends HTML", author: PEOPLE[7], created: "Aug 21", hits7d: 920 },
-  { id: "e3", rule: "920420", site: "api.example.com", target: "Content-Type application/x-yaml on /v1/import", reason: "Import accepts YAML", author: PEOPLE[3], created: "Oct 2", hits7d: 34 },
-  { id: "e4", rule: "932160", site: "legacy-api.example.com", target: "ARGS:cmd on /ops/run", reason: "Legacy ops endpoint, VPN only", author: PEOPLE[4], created: "Jun 11", hits7d: 0 },
-  { id: "e5", rule: "930120", site: "www.example.com", target: "REQUEST_FILENAME /docs/../", reason: "Old doc links", author: PEOPLE[5], created: "Mar 4", hits7d: 0 },
+  {
+    id: "e1",
+    rule: "942100",
+    site: "api.example.com",
+    target: "ARGS:filter on /v1/reports",
+    reason: "Report filter accepts SQL-like expressions",
+    author: PEOPLE[0],
+    created: "Sep 3",
+    hits7d: 1840,
+  },
+  {
+    id: "e2",
+    rule: "941100",
+    site: "app.example.com",
+    target: "ARGS:body on /notes",
+    reason: "Rich-text editor sends HTML",
+    author: PEOPLE[7],
+    created: "Aug 21",
+    hits7d: 920,
+  },
+  {
+    id: "e3",
+    rule: "920420",
+    site: "api.example.com",
+    target: "Content-Type application/x-yaml on /v1/import",
+    reason: "Import accepts YAML",
+    author: PEOPLE[3],
+    created: "Oct 2",
+    hits7d: 34,
+  },
+  {
+    id: "e4",
+    rule: "932160",
+    site: "legacy-api.example.com",
+    target: "ARGS:cmd on /ops/run",
+    reason: "Legacy ops endpoint, VPN only",
+    author: PEOPLE[4],
+    created: "Jun 11",
+    hits7d: 0,
+  },
+  {
+    id: "e5",
+    rule: "930120",
+    site: "www.example.com",
+    target: "REQUEST_FILENAME /docs/../",
+    reason: "Old doc links",
+    author: PEOPLE[5],
+    created: "Mar 4",
+    hits7d: 0,
+  },
 ];
 
 function ExclusionsPage() {
@@ -561,14 +899,26 @@ function ExclusionsPage() {
     { id: "target", header: "Applies to", width: "26%", cell: (e) => <span className="block truncate font-mono text-xs">{e.target}</span> },
     { id: "reason", header: "Reason", width: "24%", cell: (e) => <span className="block truncate text-xs">{e.reason}</span> },
     { id: "author", header: "Author", cell: (e) => <span className="text-xs">{e.author}</span> },
-    { id: "hits", header: "Hits · 7 d", align: "right", mono: true, sortValue: (e) => e.hits7d, cell: (e) => (e.hits7d === 0 ? <Badge tone="warning">0</Badge> : formatNumber(e.hits7d)) },
+    {
+      id: "hits",
+      header: "Hits · 7 d",
+      align: "right",
+      mono: true,
+      sortValue: (e) => e.hits7d,
+      cell: (e) => (e.hits7d === 0 ? <Badge tone="warning">0</Badge> : formatNumber(e.hits7d)),
+    },
     {
       id: "act",
       header: "",
       width: "84px",
       hideable: false,
       cell: (e) => (
-        <Button size="xs" variant="ghost" onClick={() => setItems((all) => all.filter((x) => x.id !== e.id))} aria-label={`Remove exclusion ${e.rule} on ${e.site}`}>
+        <Button
+          size="xs"
+          variant="ghost"
+          onClick={() => setItems((all) => all.filter((x) => x.id !== e.id))}
+          aria-label={`Remove exclusion ${e.rule} on ${e.site}`}
+        >
           Remove
         </Button>
       ),
@@ -576,7 +926,15 @@ function ExclusionsPage() {
   ];
   return (
     <>
-      <PageHeader title="Exclusions" description="Narrow exceptions for false positives. Each one weakens protection a little, so unused ones should go." actions={<Button variant="primary" icon={<Plus />}>New exclusion</Button>} />
+      <PageHeader
+        title="Exclusions"
+        description="Narrow exceptions for false positives. Each one weakens protection a little, so unused ones should go."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New exclusion
+          </Button>
+        }
+      />
       <FilterBar onClear={unused ? () => setUnused(false) : undefined}>
         <Switch checked={unused} onCheckedChange={setUnused} label="Only unused for 7 days" />
       </FilterBar>

@@ -26,7 +26,16 @@ export interface StackedBarChartProps {
 }
 
 /** Counts per bucket split by a category, with a per-segment tooltip. */
-export function StackedBarChart({ label, categories, segments, values, height = 160, format = (v) => formatNumber(v), xTicks = 5, className }: StackedBarChartProps) {
+export function StackedBarChart({
+  label,
+  categories,
+  segments,
+  values,
+  height = 160,
+  format = (v) => formatNumber(v),
+  xTicks = 5,
+  className,
+}: StackedBarChartProps) {
   const [hover, setHover] = useState<{ i: number; k: number } | null>(null);
   const segs = segments.map((s, i) => ({ ...s, color: s.color ?? colorAt(i) }));
   const totals = values.map((row) => row.reduce((a, b) => a + b, 0));

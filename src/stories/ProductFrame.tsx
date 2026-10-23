@@ -14,17 +14,7 @@ function linkedProducts(product: ProductId) {
  * Story helper: a product inside its shell, wired to a local nav state and a
  * switcher that lists the other products as connected.
  */
-export function ProductFrame({
-  product,
-  nav,
-  active,
-  children,
-}: {
-  product: ProductId;
-  nav: NavItem[];
-  active?: string;
-  children: ReactNode;
-}) {
+export function ProductFrame({ product, nav, active, children }: { product: ProductId; nav: NavItem[]; active?: string; children: ReactNode }) {
   const [current, setCurrent] = useState(active ?? nav[0]?.id);
   const { connected, available } = linkedProducts(product);
   return (

@@ -76,18 +76,139 @@ interface Risk {
 }
 
 const risks: Risk[] = [
-  { id: "R-014", title: "Ransomware encrypts production databases", owner: PEOPLE[0], inherent: [4, 5], residual: [3, 5], treatment: "Mitigate", links: [{ product: "Compliance", ref: "A.8.13 Backup" }, { product: "Posture", ref: "CIS 5.1.3" }], review: "2026-11-02" },
-  { id: "R-009", title: "Customer data exposed via public S3 bucket", owner: PEOPLE[3], inherent: [4, 5], residual: [2, 5], treatment: "Mitigate", links: [{ product: "Posture", ref: "S3 block public access" }, { product: "Compliance", ref: "GDPR Art. 32" }], review: "2026-10-28" },
-  { id: "R-021", title: "Unpatched edge VPN appliance exploited", owner: PEOPLE[2], inherent: [5, 4], residual: [4, 4], treatment: "Mitigate", links: [{ product: "Vulnerabilities", ref: "CVE-2024-3400" }], review: "2026-10-12", overdue: true },
-  { id: "R-003", title: "Payroll vendor breach leaks employee data", owner: PEOPLE[4], inherent: [3, 4], residual: [3, 3], treatment: "Transfer", links: [{ product: "Compliance", ref: "A.5.19 Supplier relationships" }], review: "2026-12-15" },
-  { id: "R-017", title: "Phishing leads to finance account takeover", owner: PEOPLE[1], inherent: [5, 3], residual: [3, 3], treatment: "Mitigate", links: [{ product: "Compliance", ref: "SOC 2 CC2.2" }, { product: "Compliance", ref: "A.6.3 Awareness" }], review: "2026-11-20" },
-  { id: "R-030", title: "Single region outage stops checkout", owner: PEOPLE[5], inherent: [2, 4], residual: [2, 4], treatment: "Accept", links: [{ product: "Posture", ref: "Multi-AZ RDS" }], review: "2027-01-10" },
-  { id: "R-011", title: "Leaked CI token pushes malicious build", owner: PEOPLE[6], inherent: [3, 5], residual: [2, 4], treatment: "Mitigate", links: [{ product: "Vulnerabilities", ref: "GHSA-mw99-9chc-xw7r" }, { product: "Compliance", ref: "A.8.28 Secure coding" }], review: "2026-11-05" },
-  { id: "R-025", title: "Laptop theft with unencrypted disk", owner: PEOPLE[7], inherent: [3, 3], residual: [1, 3], treatment: "Mitigate", links: [{ product: "Posture", ref: "FileVault enforced" }], review: "2027-02-01" },
-  { id: "R-006", title: "Legacy FTP service kept for one partner", owner: PEOPLE[2], inherent: [3, 3], residual: [1, 1], treatment: "Avoid", links: [{ product: "Posture", ref: "Port 21 closed" }], review: "2027-03-01" },
-  { id: "R-019", title: "Insider exports CRM contacts", owner: PEOPLE[4], inherent: [2, 3], residual: [2, 2], treatment: "Accept", links: [{ product: "Compliance", ref: "A.8.12 DLP" }], review: "2026-12-01" },
-  { id: "R-033", title: "Log retention below SOC 2 commitment", owner: PEOPLE[0], inherent: [4, 2], residual: [2, 2], treatment: "Mitigate", links: [{ product: "Compliance", ref: "SOC 2 CC7.2" }], review: "2026-11-15" },
-  { id: "R-041", title: "Expired TLS certificate on API", owner: PEOPLE[3], inherent: [3, 3], residual: [1, 3], treatment: "Mitigate", links: [{ product: "Posture", ref: "ACME auto-renew" }], review: "2027-01-20" },
+  {
+    id: "R-014",
+    title: "Ransomware encrypts production databases",
+    owner: PEOPLE[0],
+    inherent: [4, 5],
+    residual: [3, 5],
+    treatment: "Mitigate",
+    links: [
+      { product: "Compliance", ref: "A.8.13 Backup" },
+      { product: "Posture", ref: "CIS 5.1.3" },
+    ],
+    review: "2026-11-02",
+  },
+  {
+    id: "R-009",
+    title: "Customer data exposed via public S3 bucket",
+    owner: PEOPLE[3],
+    inherent: [4, 5],
+    residual: [2, 5],
+    treatment: "Mitigate",
+    links: [
+      { product: "Posture", ref: "S3 block public access" },
+      { product: "Compliance", ref: "GDPR Art. 32" },
+    ],
+    review: "2026-10-28",
+  },
+  {
+    id: "R-021",
+    title: "Unpatched edge VPN appliance exploited",
+    owner: PEOPLE[2],
+    inherent: [5, 4],
+    residual: [4, 4],
+    treatment: "Mitigate",
+    links: [{ product: "Vulnerabilities", ref: "CVE-2024-3400" }],
+    review: "2026-10-12",
+    overdue: true,
+  },
+  {
+    id: "R-003",
+    title: "Payroll vendor breach leaks employee data",
+    owner: PEOPLE[4],
+    inherent: [3, 4],
+    residual: [3, 3],
+    treatment: "Transfer",
+    links: [{ product: "Compliance", ref: "A.5.19 Supplier relationships" }],
+    review: "2026-12-15",
+  },
+  {
+    id: "R-017",
+    title: "Phishing leads to finance account takeover",
+    owner: PEOPLE[1],
+    inherent: [5, 3],
+    residual: [3, 3],
+    treatment: "Mitigate",
+    links: [
+      { product: "Compliance", ref: "SOC 2 CC2.2" },
+      { product: "Compliance", ref: "A.6.3 Awareness" },
+    ],
+    review: "2026-11-20",
+  },
+  {
+    id: "R-030",
+    title: "Single region outage stops checkout",
+    owner: PEOPLE[5],
+    inherent: [2, 4],
+    residual: [2, 4],
+    treatment: "Accept",
+    links: [{ product: "Posture", ref: "Multi-AZ RDS" }],
+    review: "2027-01-10",
+  },
+  {
+    id: "R-011",
+    title: "Leaked CI token pushes malicious build",
+    owner: PEOPLE[6],
+    inherent: [3, 5],
+    residual: [2, 4],
+    treatment: "Mitigate",
+    links: [
+      { product: "Vulnerabilities", ref: "GHSA-mw99-9chc-xw7r" },
+      { product: "Compliance", ref: "A.8.28 Secure coding" },
+    ],
+    review: "2026-11-05",
+  },
+  {
+    id: "R-025",
+    title: "Laptop theft with unencrypted disk",
+    owner: PEOPLE[7],
+    inherent: [3, 3],
+    residual: [1, 3],
+    treatment: "Mitigate",
+    links: [{ product: "Posture", ref: "FileVault enforced" }],
+    review: "2027-02-01",
+  },
+  {
+    id: "R-006",
+    title: "Legacy FTP service kept for one partner",
+    owner: PEOPLE[2],
+    inherent: [3, 3],
+    residual: [1, 1],
+    treatment: "Avoid",
+    links: [{ product: "Posture", ref: "Port 21 closed" }],
+    review: "2027-03-01",
+  },
+  {
+    id: "R-019",
+    title: "Insider exports CRM contacts",
+    owner: PEOPLE[4],
+    inherent: [2, 3],
+    residual: [2, 2],
+    treatment: "Accept",
+    links: [{ product: "Compliance", ref: "A.8.12 DLP" }],
+    review: "2026-12-01",
+  },
+  {
+    id: "R-033",
+    title: "Log retention below SOC 2 commitment",
+    owner: PEOPLE[0],
+    inherent: [4, 2],
+    residual: [2, 2],
+    treatment: "Mitigate",
+    links: [{ product: "Compliance", ref: "SOC 2 CC7.2" }],
+    review: "2026-11-15",
+  },
+  {
+    id: "R-041",
+    title: "Expired TLS certificate on API",
+    owner: PEOPLE[3],
+    inherent: [3, 3],
+    residual: [1, 3],
+    treatment: "Mitigate",
+    links: [{ product: "Posture", ref: "ACME auto-renew" }],
+    review: "2027-01-20",
+  },
 ];
 
 const score = ([l, i]: [number, number]) => l * i;
@@ -119,7 +240,11 @@ const riskColumns: Column<Risk>[] = [
           l.ref.startsWith("CVE-") ? (
             <EntityChip key={l.ref} kind="cve" value={l.ref} href="#cve" />
           ) : (
-            <a key={l.ref} href={`#${l.product.toLowerCase()}`} className="inline-flex h-5 items-center gap-1 rounded border border-line px-1.5 text-xs text-fg no-underline hover:bg-subtle">
+            <a
+              key={l.ref}
+              href={`#${l.product.toLowerCase()}`}
+              className="inline-flex h-5 items-center gap-1 rounded border border-line px-1.5 text-xs text-fg no-underline hover:bg-subtle"
+            >
               <span className="text-fg-muted">{l.product}</span>
               <span className="font-mono">{l.ref}</span>
             </a>
@@ -178,7 +303,13 @@ function RiskMatrix({
                     on ? "ring-2 ring-fg ring-offset-1 ring-offset-surface" : "hover:ring-1 hover:ring-line-strong",
                   )}
                 >
-                  {n > 0 ? n : <span aria-hidden className="font-normal">·</span>}
+                  {n > 0 ? (
+                    n
+                  ) : (
+                    <span aria-hidden className="font-normal">
+                      ·
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -192,7 +323,7 @@ function RiskMatrix({
         ))}
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2 pl-[76px] text-2xs text-fg-muted">
-        <span>Likelihood →  ·  Impact ↑</span>
+        <span>Likelihood → · Impact ↑</span>
         <span className="flex gap-1">
           <Badge tone="info">1–4 Low</Badge>
           <Badge tone="warning">5–9 Medium</Badge>
@@ -214,11 +345,31 @@ interface Vendor {
 }
 
 const vendors: Vendor[] = [
-  { name: "Northwind Payroll", service: "Payroll and HR", data: "Employee PII, bank details", tier: "Tier 1", status: { label: "Review overdue", tone: "danger" }, next: "Due 2026-10-01" },
-  { name: "Contoso Cloud Mail", service: "Email and calendar", data: "All internal mail", tier: "Tier 1", status: { label: "In review", tone: "warning" }, next: "SOC 2 Type II report received" },
-  { name: "Fabrikam Analytics", service: "Product analytics", data: "Pseudonymised events", tier: "Tier 2", status: { label: "Approved", tone: "success" }, next: "Next review 2027-04" },
+  {
+    name: "Northwind Payroll",
+    service: "Payroll and HR",
+    data: "Employee PII, bank details",
+    tier: "Tier 1",
+    status: { label: "Review overdue", tone: "danger" },
+    next: "Due 2026-10-01",
+  },
+  {
+    name: "Contoso Cloud Mail",
+    service: "Email and calendar",
+    data: "All internal mail",
+    tier: "Tier 1",
+    status: { label: "In review", tone: "warning" },
+    next: "SOC 2 Type II report received",
+  },
+  {
+    name: "Fabrikam Analytics",
+    service: "Product analytics",
+    data: "Pseudonymised events",
+    tier: "Tier 2",
+    status: { label: "Approved", tone: "success" },
+    next: "Next review 2027-04",
+  },
 ];
-
 
 /** Thin labelled progress bar used for questionnaires and treatment plans. */
 function Meter({ label, value, max, tone = "info" }: { label: string; value: number; max: number; tone?: Tone }) {
@@ -274,7 +425,13 @@ function RegisterPage() {
       />
       <KpiGrid>
         <KpiCard label="Open risks" value="48" unit="12 shown here" delta={{ label: "+3 this quarter", direction: "up" }} />
-        <KpiCard label="Above appetite" value="4" unit="residual ≥ 15" tone="danger" delta={{ label: "−2 since last review", direction: "down", intent: "good" }} />
+        <KpiCard
+          label="Above appetite"
+          value="4"
+          unit="residual ≥ 15"
+          tone="danger"
+          delta={{ label: "−2 since last review", direction: "down", intent: "good" }}
+        />
         <KpiCard label="Treatments on track" value="83%" unit="20 of 24" delta={{ label: "4 behind plan", intent: "bad" }} />
         <KpiCard label="Reviews due · 30 d" value="9" unit="1 overdue" tone="warning" />
       </KpiGrid>
@@ -381,25 +538,215 @@ interface VendorRow {
   residual: number;
 }
 
-const VENDOR_STATUS: Record<VendorStatus, Tone> = { Approved: "success", "In review": "info", "Review overdue": "danger", Onboarding: "warning", Offboarding: "neutral" };
+const VENDOR_STATUS: Record<VendorStatus, Tone> = {
+  Approved: "success",
+  "In review": "info",
+  "Review overdue": "danger",
+  Onboarding: "warning",
+  Offboarding: "neutral",
+};
 const DPA_TONE: Record<DpaStatus, Tone> = { Signed: "success", "In negotiation": "warning", Missing: "danger", "Not required": "neutral" };
 
 const VENDORS: VendorRow[] = [
-  { id: "v1", name: "Northwind Payroll", service: "Payroll and HR", tier: 1, data: ["Employee PII", "Bank details"], dpa: "Signed", transfer: "EU only", certs: ["ISO 27001"], answered: 64, questions: 64, next: "2026-10-01", status: "Review overdue", owner: PEOPLE[4], residual: 9 },
-  { id: "v2", name: "Contoso Cloud Mail", service: "Email and calendar", tier: 1, data: ["Internal mail", "Customer correspondence"], dpa: "Signed", transfer: "SCCs", certs: ["SOC 2 Type II", "ISO 27001"], answered: 58, questions: 64, next: "2026-10-30", status: "In review", owner: PEOPLE[3], residual: 8 },
-  { id: "v3", name: "Fabrikam Analytics", service: "Product analytics", tier: 2, data: ["Pseudonymised events"], dpa: "Signed", transfer: "EU–US DPF", certs: ["SOC 2 Type II"], answered: 40, questions: 40, next: "2027-04-12", status: "Approved", owner: PEOPLE[0], residual: 4 },
-  { id: "v4", name: "Litware Payments", service: "Card processing", tier: 1, data: ["Cardholder data", "Billing addresses"], dpa: "Signed", transfer: "EU only", certs: ["PCI DSS", "SOC 2 Type II"], answered: 22, questions: 64, next: "2026-11-08", status: "In review", owner: PEOPLE[2], residual: 12 },
-  { id: "v5", name: "Tailspin Support Desk", service: "Customer support tickets", tier: 2, data: ["Customer names", "Emails", "Ticket bodies"], dpa: "In negotiation", transfer: "SCCs", certs: ["ISO 27001"], answered: 31, questions: 40, next: "2026-11-20", status: "In review", owner: PEOPLE[5], residual: 10 },
-  { id: "v6", name: "Adatum Identity", service: "Workforce directory", tier: 1, data: ["Employee accounts", "MFA factors"], dpa: "Signed", transfer: "EU only", certs: ["SOC 2 Type II", "ISO 27001"], answered: 64, questions: 64, next: "2027-02-15", status: "Approved", owner: PEOPLE[6], residual: 6 },
-  { id: "v7", name: "Proseware CI", service: "Hosted build runners", tier: 2, data: ["Source code", "Build secrets"], dpa: "Missing", transfer: "SCCs", certs: ["SOC 2 Type I"], answered: 12, questions: 40, next: "2026-10-25", status: "Onboarding", owner: PEOPLE[7], residual: 15 },
-  { id: "v8", name: "Wingtip Hosting", service: "Managed Kubernetes", tier: 1, data: ["Production data", "Backups"], dpa: "Signed", transfer: "EU only", certs: ["ISO 27001", "SOC 2 Type II"], answered: 60, questions: 64, next: "2027-01-30", status: "Approved", owner: PEOPLE[1], residual: 8 },
-  { id: "v9", name: "Lucerne Legal", service: "External counsel", tier: 3, data: ["Contracts", "Board minutes"], dpa: "Signed", transfer: "EU only", certs: [], answered: 18, questions: 18, next: "2027-06-01", status: "Approved", owner: PEOPLE[4], residual: 3 },
-  { id: "v10", name: "Coho Translations", service: "Website translation", tier: 3, data: ["Marketing copy"], dpa: "Not required", transfer: "Not applicable", certs: [], answered: 10, questions: 18, next: "2027-05-10", status: "Approved", owner: PEOPLE[5], residual: 2 },
-  { id: "v11", name: "Trey Research Surveys", service: "Customer surveys", tier: 2, data: ["Customer emails", "Survey answers"], dpa: "Missing", transfer: "SCCs", certs: [], answered: 0, questions: 40, next: "2026-10-28", status: "Onboarding", owner: PEOPLE[0], residual: 12 },
-  { id: "v12", name: "Margie's Travel", service: "Business travel booking", tier: 3, data: ["Employee names", "Passport numbers"], dpa: "Signed", transfer: "SCCs", certs: ["ISO 27001"], answered: 18, questions: 18, next: "2026-11-01", status: "Offboarding", owner: PEOPLE[3], residual: 6 },
+  {
+    id: "v1",
+    name: "Northwind Payroll",
+    service: "Payroll and HR",
+    tier: 1,
+    data: ["Employee PII", "Bank details"],
+    dpa: "Signed",
+    transfer: "EU only",
+    certs: ["ISO 27001"],
+    answered: 64,
+    questions: 64,
+    next: "2026-10-01",
+    status: "Review overdue",
+    owner: PEOPLE[4],
+    residual: 9,
+  },
+  {
+    id: "v2",
+    name: "Contoso Cloud Mail",
+    service: "Email and calendar",
+    tier: 1,
+    data: ["Internal mail", "Customer correspondence"],
+    dpa: "Signed",
+    transfer: "SCCs",
+    certs: ["SOC 2 Type II", "ISO 27001"],
+    answered: 58,
+    questions: 64,
+    next: "2026-10-30",
+    status: "In review",
+    owner: PEOPLE[3],
+    residual: 8,
+  },
+  {
+    id: "v3",
+    name: "Fabrikam Analytics",
+    service: "Product analytics",
+    tier: 2,
+    data: ["Pseudonymised events"],
+    dpa: "Signed",
+    transfer: "EU–US DPF",
+    certs: ["SOC 2 Type II"],
+    answered: 40,
+    questions: 40,
+    next: "2027-04-12",
+    status: "Approved",
+    owner: PEOPLE[0],
+    residual: 4,
+  },
+  {
+    id: "v4",
+    name: "Litware Payments",
+    service: "Card processing",
+    tier: 1,
+    data: ["Cardholder data", "Billing addresses"],
+    dpa: "Signed",
+    transfer: "EU only",
+    certs: ["PCI DSS", "SOC 2 Type II"],
+    answered: 22,
+    questions: 64,
+    next: "2026-11-08",
+    status: "In review",
+    owner: PEOPLE[2],
+    residual: 12,
+  },
+  {
+    id: "v5",
+    name: "Tailspin Support Desk",
+    service: "Customer support tickets",
+    tier: 2,
+    data: ["Customer names", "Emails", "Ticket bodies"],
+    dpa: "In negotiation",
+    transfer: "SCCs",
+    certs: ["ISO 27001"],
+    answered: 31,
+    questions: 40,
+    next: "2026-11-20",
+    status: "In review",
+    owner: PEOPLE[5],
+    residual: 10,
+  },
+  {
+    id: "v6",
+    name: "Adatum Identity",
+    service: "Workforce directory",
+    tier: 1,
+    data: ["Employee accounts", "MFA factors"],
+    dpa: "Signed",
+    transfer: "EU only",
+    certs: ["SOC 2 Type II", "ISO 27001"],
+    answered: 64,
+    questions: 64,
+    next: "2027-02-15",
+    status: "Approved",
+    owner: PEOPLE[6],
+    residual: 6,
+  },
+  {
+    id: "v7",
+    name: "Proseware CI",
+    service: "Hosted build runners",
+    tier: 2,
+    data: ["Source code", "Build secrets"],
+    dpa: "Missing",
+    transfer: "SCCs",
+    certs: ["SOC 2 Type I"],
+    answered: 12,
+    questions: 40,
+    next: "2026-10-25",
+    status: "Onboarding",
+    owner: PEOPLE[7],
+    residual: 15,
+  },
+  {
+    id: "v8",
+    name: "Wingtip Hosting",
+    service: "Managed Kubernetes",
+    tier: 1,
+    data: ["Production data", "Backups"],
+    dpa: "Signed",
+    transfer: "EU only",
+    certs: ["ISO 27001", "SOC 2 Type II"],
+    answered: 60,
+    questions: 64,
+    next: "2027-01-30",
+    status: "Approved",
+    owner: PEOPLE[1],
+    residual: 8,
+  },
+  {
+    id: "v9",
+    name: "Lucerne Legal",
+    service: "External counsel",
+    tier: 3,
+    data: ["Contracts", "Board minutes"],
+    dpa: "Signed",
+    transfer: "EU only",
+    certs: [],
+    answered: 18,
+    questions: 18,
+    next: "2027-06-01",
+    status: "Approved",
+    owner: PEOPLE[4],
+    residual: 3,
+  },
+  {
+    id: "v10",
+    name: "Coho Translations",
+    service: "Website translation",
+    tier: 3,
+    data: ["Marketing copy"],
+    dpa: "Not required",
+    transfer: "Not applicable",
+    certs: [],
+    answered: 10,
+    questions: 18,
+    next: "2027-05-10",
+    status: "Approved",
+    owner: PEOPLE[5],
+    residual: 2,
+  },
+  {
+    id: "v11",
+    name: "Trey Research Surveys",
+    service: "Customer surveys",
+    tier: 2,
+    data: ["Customer emails", "Survey answers"],
+    dpa: "Missing",
+    transfer: "SCCs",
+    certs: [],
+    answered: 0,
+    questions: 40,
+    next: "2026-10-28",
+    status: "Onboarding",
+    owner: PEOPLE[0],
+    residual: 12,
+  },
+  {
+    id: "v12",
+    name: "Margie's Travel",
+    service: "Business travel booking",
+    tier: 3,
+    data: ["Employee names", "Passport numbers"],
+    dpa: "Signed",
+    transfer: "SCCs",
+    certs: ["ISO 27001"],
+    answered: 18,
+    questions: 18,
+    next: "2026-11-01",
+    status: "Offboarding",
+    owner: PEOPLE[3],
+    residual: 6,
+  },
 ];
 
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+const slug = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 const needsAttention = (v: VendorRow) => v.status === "Review overdue" || v.dpa === "Missing" || v.dpa === "In negotiation";
 const SECTIONS = ["Security governance", "Access control", "Encryption", "Incident response", "Business continuity", "Sub-processors"];
 
@@ -430,11 +777,49 @@ const vendorColumns: Column<VendorRow>[] = [
       </span>
     ),
   },
-  { id: "tier", header: "Tier", width: "70px", sortValue: (v) => v.tier, description: "Tier 1 vendors hold production or personal data at scale and are reviewed yearly; tier 3 every two years.", cell: (v) => <Badge tone={v.tier === 1 ? "warning" : "neutral"}>Tier {v.tier}</Badge> },
-  { id: "data", header: "Data processed", width: "200px", cell: (v) => <span className="flex flex-wrap gap-1">{v.data.map((d) => <Badge key={d} variant="outline">{d}</Badge>)}</span> },
-  { id: "dpa", header: "DPA", width: "120px", sortValue: (v) => v.dpa, description: "Data processing agreement under GDPR Art. 28.", cell: (v) => <StatusBadge tone={DPA_TONE[v.dpa]}>{v.dpa}</StatusBadge> },
-  { id: "transfer", header: "GDPR transfer", width: "120px", description: "Legal basis for personal data leaving the EU: standard contractual clauses (SCCs) or the EU–US Data Privacy Framework (DPF).", cell: (v) => v.transfer },
-  { id: "certs", header: "Assurance", width: "170px", cell: (v) => (v.certs.length ? v.certs.join(", ") : <span className="text-fg-muted">None provided</span>) },
+  {
+    id: "tier",
+    header: "Tier",
+    width: "70px",
+    sortValue: (v) => v.tier,
+    description: "Tier 1 vendors hold production or personal data at scale and are reviewed yearly; tier 3 every two years.",
+    cell: (v) => <Badge tone={v.tier === 1 ? "warning" : "neutral"}>Tier {v.tier}</Badge>,
+  },
+  {
+    id: "data",
+    header: "Data processed",
+    width: "200px",
+    cell: (v) => (
+      <span className="flex flex-wrap gap-1">
+        {v.data.map((d) => (
+          <Badge key={d} variant="outline">
+            {d}
+          </Badge>
+        ))}
+      </span>
+    ),
+  },
+  {
+    id: "dpa",
+    header: "DPA",
+    width: "120px",
+    sortValue: (v) => v.dpa,
+    description: "Data processing agreement under GDPR Art. 28.",
+    cell: (v) => <StatusBadge tone={DPA_TONE[v.dpa]}>{v.dpa}</StatusBadge>,
+  },
+  {
+    id: "transfer",
+    header: "GDPR transfer",
+    width: "120px",
+    description: "Legal basis for personal data leaving the EU: standard contractual clauses (SCCs) or the EU–US Data Privacy Framework (DPF).",
+    cell: (v) => v.transfer,
+  },
+  {
+    id: "certs",
+    header: "Assurance",
+    width: "170px",
+    cell: (v) => (v.certs.length ? v.certs.join(", ") : <span className="text-fg-muted">None provided</span>),
+  },
   {
     id: "questionnaire",
     header: "Questionnaire",
@@ -450,8 +835,21 @@ const vendorColumns: Column<VendorRow>[] = [
     ),
   },
   { id: "residual", header: "Residual", width: "110px", sortValue: (v) => v.residual, cell: (v) => <ScoreBadge score={v.residual} /> },
-  { id: "next", header: "Next review", width: "110px", mono: true, sortValue: (v) => v.next, cell: (v) => (v.status === "Review overdue" ? <span className="text-danger-text">{v.next}</span> : v.next) },
-  { id: "status", header: "Status", width: "130px", sortValue: (v) => v.status, cell: (v) => <StatusBadge tone={VENDOR_STATUS[v.status]}>{v.status}</StatusBadge> },
+  {
+    id: "next",
+    header: "Next review",
+    width: "110px",
+    mono: true,
+    sortValue: (v) => v.next,
+    cell: (v) => (v.status === "Review overdue" ? <span className="text-danger-text">{v.next}</span> : v.next),
+  },
+  {
+    id: "status",
+    header: "Status",
+    width: "130px",
+    sortValue: (v) => v.status,
+    cell: (v) => <StatusBadge tone={VENDOR_STATUS[v.status]}>{v.status}</StatusBadge>,
+  },
 ];
 
 function VendorsPage() {
@@ -495,7 +893,13 @@ function VendorsPage() {
         <KpiCard label="Vendors" value="31" unit="12 shown" delta={{ label: "+2 onboarding", direction: "up" }} />
         <KpiCard label="Tier 1" value="9" unit="critical suppliers" />
         <KpiCard label="DPAs missing" value="2" tone="danger" delta={{ label: "Proseware CI, Trey Research", intent: "bad" }} />
-        <KpiCard label="Questionnaires complete" value="71%" unit="22 of 31" tone="warning" delta={{ label: "+9 pts this quarter", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Questionnaires complete"
+          value="71%"
+          unit="22 of 31"
+          tone="warning"
+          delta={{ label: "+9 pts this quarter", direction: "up", intent: "good" }}
+        />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Vendors" description={`${rows.length} of ${VENDORS.length} · select a vendor for its review`} flush>
@@ -526,7 +930,12 @@ function VendorsPage() {
             empty={<p className="py-8">No vendors match</p>}
           />
         </Panel>
-        <Panel title={v.name} description={`${v.service} · Tier ${v.tier} · owner ${v.owner}`} actions={<StatusBadge tone={VENDOR_STATUS[v.status]}>{v.status}</StatusBadge>} aria-label="Vendor detail">
+        <Panel
+          title={v.name}
+          description={`${v.service} · Tier ${v.tier} · owner ${v.owner}`}
+          actions={<StatusBadge tone={VENDOR_STATUS[v.status]}>{v.status}</StatusBadge>}
+          aria-label="Vendor detail"
+        >
           <div className="flex flex-col gap-3">
             <dl className="grid grid-cols-2 gap-2 text-sm">
               <div>
@@ -571,7 +980,9 @@ function VendorsPage() {
               <ul className="flex flex-col gap-1 text-xs">
                 {v.dpa === "Signed" && <li>Data processing agreement · signed, GDPR Art. 28(3) clauses</li>}
                 {v.certs.map((c) => (
-                  <li key={c}>{c} {c.startsWith("SOC 2") ? "report · period ending 2026-06-30" : "certificate · valid to 2027-09"}</li>
+                  <li key={c}>
+                    {c} {c.startsWith("SOC 2") ? "report · period ending 2026-06-30" : "certificate · valid to 2027-09"}
+                  </li>
                 ))}
                 <li>Sub-processor list · {v.tier === 1 ? "14" : "5"} entries</li>
                 {v.dpa === "Missing" && <li className="text-danger-text">No DPA on file: personal data must not flow until it is signed</li>}
@@ -614,7 +1025,13 @@ interface Question {
 
 const QUESTIONS: Question[] = [
   { id: "q1", domain: "Governance", text: "Named security owner and a policy reviewed every year", weight: 2, evidence: "Policy v4.2, 2026-02" },
-  { id: "q2", domain: "Governance", text: "ISO 27001 certificate or SOC 2 Type II report from the last 12 months", weight: 3, evidence: "SOC 2 Type II, period to 2026-06-30" },
+  {
+    id: "q2",
+    domain: "Governance",
+    text: "ISO 27001 certificate or SOC 2 Type II report from the last 12 months",
+    weight: 3,
+    evidence: "SOC 2 Type II, period to 2026-06-30",
+  },
   { id: "q3", domain: "Access", text: "SSO with MFA enforced for all staff who can reach our data", weight: 3, evidence: "SOC 2 CC6.1, p. 41" },
   { id: "q4", domain: "Access", text: "Access reviewed quarterly; leavers removed within 24 hours", weight: 2, evidence: "Reviews are half-yearly" },
   { id: "q5", domain: "Encryption", text: "Encryption at rest with AES-256 and keys in a managed KMS", weight: 3, evidence: "Architecture whitepaper §3" },
@@ -691,9 +1108,28 @@ function AssessmentsPage() {
     { id: "id", header: "ID", width: "70px", mono: true, cell: (x) => x.id },
     { id: "name", header: "Assessment", sortValue: (x) => x.name, cell: (x) => <span className="font-medium">{x.name}</span> },
     { id: "kind", header: "Type", width: "80px", cell: (x) => <Badge variant="outline">{x.kind}</Badge> },
-    { id: "owner", header: "Owner", width: "140px", cell: (x) => <span className="flex items-center gap-1.5"><Avatar name={x.owner} size="sm" /><span className="truncate">{x.owner}</span></span> },
+    {
+      id: "owner",
+      header: "Owner",
+      width: "140px",
+      cell: (x) => (
+        <span className="flex items-center gap-1.5">
+          <Avatar name={x.owner} size="sm" />
+          <span className="truncate">{x.owner}</span>
+        </span>
+      ),
+    },
     { id: "due", header: "Due", width: "100px", mono: true, sortValue: (x) => x.due, cell: (x) => x.due },
-    { id: "score", header: "Score", width: "70px", align: "right", mono: true, sortValue: (x) => scoreOf(answers[x.id]!), description: "Weighted share of controls met: yes counts fully, partial half, N/A is left out.", cell: (x) => scoreOf(answers[x.id]!) },
+    {
+      id: "score",
+      header: "Score",
+      width: "70px",
+      align: "right",
+      mono: true,
+      sortValue: (x) => scoreOf(answers[x.id]!),
+      description: "Weighted share of controls met: yes counts fully, partial half, N/A is left out.",
+      cell: (x) => scoreOf(answers[x.id]!),
+    },
     { id: "stage", header: "Stage", width: "150px", cell: (x) => <StatusBadge tone={stageLabel(x.stage).tone}>{stageLabel(x.stage).label}</StatusBadge> },
   ];
   return (
@@ -708,10 +1144,23 @@ function AssessmentsPage() {
         }
       />
       <Panel title="Assessments" description="6 open or recently closed" flush>
-        <DataTable label="Assessments" columns={cols} rows={items} getRowId={(x) => x.id} onRowClick={(x) => (setActive(x.id), setNotice(""))} activeRowId={active} minWidth={820} columnMenu={false} />
+        <DataTable
+          label="Assessments"
+          columns={cols}
+          rows={items}
+          getRowId={(x) => x.id}
+          onRowClick={(x) => (setActive(x.id), setNotice(""))}
+          activeRowId={active}
+          minWidth={820}
+          columnMenu={false}
+        />
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <Panel title={`${a.id} · ${a.name}`} description={`Owner ${a.owner} · due ${a.due} · ${QUESTIONS.length} weighted questions`} aria-label="Assessment workflow">
+        <Panel
+          title={`${a.id} · ${a.name}`}
+          description={`Owner ${a.owner} · due ${a.due} · ${QUESTIONS.length} weighted questions`}
+          aria-label="Assessment workflow"
+        >
           <div className="flex flex-col gap-3">
             <ol className="grid grid-cols-4 gap-1.5" aria-label="Assessment stages">
               {STAGES.map((s, i) => {
@@ -722,7 +1171,11 @@ function AssessmentsPage() {
                     aria-current={state === "current" ? "step" : undefined}
                     className={cn(
                       "flex flex-col gap-0.5 rounded-md border px-2 py-1.5 text-xs",
-                      state === "current" ? "border-accent bg-accent-soft text-accent-text" : state === "done" ? "border-line bg-surface text-fg" : "border-dashed border-line text-fg-muted",
+                      state === "current"
+                        ? "border-accent bg-accent-soft text-accent-text"
+                        : state === "done"
+                          ? "border-line bg-surface text-fg"
+                          : "border-dashed border-line text-fg-muted",
                     )}
                   >
                     <span className="font-mono text-2xs">{state === "done" ? "Done" : `Step ${i + 1}`}</span>
@@ -851,7 +1304,15 @@ const task = (id: string, text: string, owner: string, due: string, done = false
 
 const PLANS: Plan[] = [
   {
-    id: "T-31", risk: "R-021", title: "Replace the edge VPN appliance with OpenAsy VPN", strategy: "Mitigate", owner: PEOPLE[2], due: "2026-11-15", from: 16, target: 4, status: "Behind",
+    id: "T-31",
+    risk: "R-021",
+    title: "Replace the edge VPN appliance with OpenAsy VPN",
+    strategy: "Mitigate",
+    owner: PEOPLE[2],
+    due: "2026-11-15",
+    from: 16,
+    target: 4,
+    status: "Behind",
     tasks: [
       task("t1", "Stand up lon-01 and fra-01 VPN nodes", PEOPLE[2], "2026-09-20", true),
       task("t2", "Migrate Backend engineers and SRE groups", PEOPLE[3], "2026-10-05", true),
@@ -861,7 +1322,15 @@ const PLANS: Plan[] = [
     ],
   },
   {
-    id: "T-28", risk: "R-014", title: "Immutable backups with weekly restore tests", strategy: "Mitigate", owner: PEOPLE[0], due: "2026-12-01", from: 15, target: 8, status: "On track",
+    id: "T-28",
+    risk: "R-014",
+    title: "Immutable backups with weekly restore tests",
+    strategy: "Mitigate",
+    owner: PEOPLE[0],
+    due: "2026-12-01",
+    from: 15,
+    target: 8,
+    status: "On track",
     tasks: [
       task("t1", "Enable S3 Object Lock on the backup bucket", PEOPLE[0], "2026-09-15", true),
       task("t2", "Separate backup account with its own break-glass role", PEOPLE[6], "2026-10-01", true),
@@ -871,7 +1340,15 @@ const PLANS: Plan[] = [
     ],
   },
   {
-    id: "T-27", risk: "R-009", title: "S3 Block Public Access at the account level", strategy: "Mitigate", owner: PEOPLE[3], due: "2026-10-30", from: 10, target: 5, status: "On track",
+    id: "T-27",
+    risk: "R-009",
+    title: "S3 Block Public Access at the account level",
+    strategy: "Mitigate",
+    owner: PEOPLE[3],
+    due: "2026-10-30",
+    from: 10,
+    target: 5,
+    status: "On track",
     tasks: [
       task("t1", "Inventory public buckets with Posture", PEOPLE[3], "2026-10-01", true),
       task("t2", "Move public assets to cdn.example.com", PEOPLE[4], "2026-10-12", true),
@@ -880,7 +1357,15 @@ const PLANS: Plan[] = [
     ],
   },
   {
-    id: "T-25", risk: "R-017", title: "Phishing-resistant MFA for finance", strategy: "Mitigate", owner: PEOPLE[1], due: "2026-11-30", from: 9, target: 4, status: "On track",
+    id: "T-25",
+    risk: "R-017",
+    title: "Phishing-resistant MFA for finance",
+    strategy: "Mitigate",
+    owner: PEOPLE[1],
+    due: "2026-11-30",
+    from: 9,
+    target: 4,
+    status: "On track",
     tasks: [
       task("t1", "Issue passkeys to the finance team", PEOPLE[1], "2026-10-25", true),
       task("t2", "Disable SMS and TOTP for finance accounts", PEOPLE[1], "2026-11-10"),
@@ -888,7 +1373,15 @@ const PLANS: Plan[] = [
     ],
   },
   {
-    id: "T-22", risk: "R-011", title: "Short-lived CI tokens via OIDC federation", strategy: "Mitigate", owner: PEOPLE[6], due: "2026-10-20", from: 8, target: 4, status: "Behind",
+    id: "T-22",
+    risk: "R-011",
+    title: "Short-lived CI tokens via OIDC federation",
+    strategy: "Mitigate",
+    owner: PEOPLE[6],
+    due: "2026-10-20",
+    from: 8,
+    target: 4,
+    status: "Behind",
     tasks: [
       task("t1", "OIDC trust between CI and the cloud account", PEOPLE[6], "2026-10-01", true),
       task("t2", "Move 14 pipelines off static keys", PEOPLE[4], "2026-10-15"),
@@ -896,16 +1389,43 @@ const PLANS: Plan[] = [
     ],
   },
   {
-    id: "T-19", risk: "R-003", title: "Cyber insurance rider for payroll vendor breach", strategy: "Transfer", owner: PEOPLE[4], due: "2026-12-15", from: 9, target: 6, status: "Not started",
+    id: "T-19",
+    risk: "R-003",
+    title: "Cyber insurance rider for payroll vendor breach",
+    strategy: "Transfer",
+    owner: PEOPLE[4],
+    due: "2026-12-15",
+    from: 9,
+    target: 6,
+    status: "Not started",
     tasks: [task("t1", "Quote from the broker", PEOPLE[4], "2026-11-15"), task("t2", "Board approval for the premium", PEOPLE[1], "2026-12-15")],
   },
   {
-    id: "T-16", risk: "R-030", title: "Accept single-region checkout risk until 2027", strategy: "Accept", owner: PEOPLE[5], due: "2026-09-30", from: 8, target: 8, status: "Done",
+    id: "T-16",
+    risk: "R-030",
+    title: "Accept single-region checkout risk until 2027",
+    strategy: "Accept",
+    owner: PEOPLE[5],
+    due: "2026-09-30",
+    from: 8,
+    target: 8,
+    status: "Done",
     tasks: [task("t1", "Document the acceptance rationale", PEOPLE[5], "2026-09-15", true), task("t2", "Sign-off by the CFO", PEOPLE[1], "2026-09-30", true)],
   },
   {
-    id: "T-12", risk: "R-006", title: "Retire the legacy FTP partner feed", strategy: "Avoid", owner: PEOPLE[2], due: "2026-08-31", from: 9, target: 1, status: "Done",
-    tasks: [task("t1", "Move the partner to SFTP", PEOPLE[2], "2026-08-15", true), task("t2", "Close port 21 and delete the service", PEOPLE[2], "2026-08-31", true)],
+    id: "T-12",
+    risk: "R-006",
+    title: "Retire the legacy FTP partner feed",
+    strategy: "Avoid",
+    owner: PEOPLE[2],
+    due: "2026-08-31",
+    from: 9,
+    target: 1,
+    status: "Done",
+    tasks: [
+      task("t1", "Move the partner to SFTP", PEOPLE[2], "2026-08-15", true),
+      task("t2", "Close port 21 and delete the service", PEOPLE[2], "2026-08-31", true),
+    ],
   },
 ];
 
@@ -933,8 +1453,26 @@ function TreatmentsPage() {
       ),
     },
     { id: "strategy", header: "Strategy", width: "90px", sortValue: (x) => x.strategy, cell: (x) => x.strategy },
-    { id: "owner", header: "Owner", width: "140px", sortValue: (x) => x.owner, cell: (x) => <span className="flex items-center gap-1.5"><Avatar name={x.owner} size="sm" /><span className="truncate">{x.owner}</span></span> },
-    { id: "due", header: "Due", width: "100px", mono: true, sortValue: (x) => x.due, cell: (x) => (x.status === "Behind" ? <span className="text-danger-text">{x.due}</span> : x.due) },
+    {
+      id: "owner",
+      header: "Owner",
+      width: "140px",
+      sortValue: (x) => x.owner,
+      cell: (x) => (
+        <span className="flex items-center gap-1.5">
+          <Avatar name={x.owner} size="sm" />
+          <span className="truncate">{x.owner}</span>
+        </span>
+      ),
+    },
+    {
+      id: "due",
+      header: "Due",
+      width: "100px",
+      mono: true,
+      sortValue: (x) => x.due,
+      cell: (x) => (x.status === "Behind" ? <span className="text-danger-text">{x.due}</span> : x.due),
+    },
     {
       id: "progress",
       header: "Tasks",
@@ -960,13 +1498,21 @@ function TreatmentsPage() {
       cell: (x) => (
         <span className="flex items-center gap-1">
           <ScoreBadge score={x.from} />
-          <span aria-hidden className="text-fg-muted">→</span>
+          <span aria-hidden className="text-fg-muted">
+            →
+          </span>
           <span className="sr-only">target</span>
           <ScoreBadge score={x.target} />
         </span>
       ),
     },
-    { id: "status", header: "Status", width: "110px", sortValue: (x) => x.status, cell: (x) => <StatusBadge tone={PLAN_TONE[x.status]}>{x.status}</StatusBadge> },
+    {
+      id: "status",
+      header: "Status",
+      width: "110px",
+      sortValue: (x) => x.status,
+      cell: (x) => <StatusBadge tone={PLAN_TONE[x.status]}>{x.status}</StatusBadge>,
+    },
   ];
   return (
     <>
@@ -989,10 +1535,23 @@ function TreatmentsPage() {
       <Panel title="Treatment plans" description={`${rows.length} plans`} flush>
         <div className="border-b border-line px-3 py-2">
           <FilterBar onClear={statuses.length ? () => setStatuses([]) : undefined}>
-            <FacetFilter label="Status" selected={statuses} onChange={setStatuses} options={(Object.keys(PLAN_TONE) as PlanStatus[]).map((s) => ({ value: s, count: plans.filter((x) => x.status === s).length }))} />
+            <FacetFilter
+              label="Status"
+              selected={statuses}
+              onChange={setStatuses}
+              options={(Object.keys(PLAN_TONE) as PlanStatus[]).map((s) => ({ value: s, count: plans.filter((x) => x.status === s).length }))}
+            />
           </FilterBar>
         </div>
-        <DataTable label="Treatment plans" columns={cols} rows={rows} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={active} minWidth={1000} />
+        <DataTable
+          label="Treatment plans"
+          columns={cols}
+          rows={rows}
+          getRowId={(x) => x.id}
+          onRowClick={(x) => setActive(x.id)}
+          activeRowId={active}
+          minWidth={1000}
+        />
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title={`${p.id} · ${p.title}`} description={`${p.strategy} ${p.risk} · owner ${p.owner} · due ${p.due}`} aria-label="Plan tasks">
@@ -1117,9 +1676,26 @@ function ReportsPage() {
         }
       />
       <KpiGrid>
-        <KpiCard label="Residual exposure" value={q4 ? "214" : "226"} unit="sum of scores" trend={RESIDUAL_EXPOSURE} delta={{ label: q4 ? "−12 vs. Q3" : "−18 vs. Q2", direction: "down", intent: "good" }} />
-        <KpiCard label="Above appetite" value={q4 ? "4" : "6"} unit="residual ≥ 15" tone="danger" delta={{ label: q4 ? "−2 vs. Q3" : "−1 vs. Q2", direction: "down", intent: "good" }} />
-        <KpiCard label="Critical risks" value={q4 ? "0" : "1"} tone={q4 ? "success" : "critical"} delta={{ label: q4 ? "R-021 down to High" : "R-021 VPN appliance" }} />
+        <KpiCard
+          label="Residual exposure"
+          value={q4 ? "214" : "226"}
+          unit="sum of scores"
+          trend={RESIDUAL_EXPOSURE}
+          delta={{ label: q4 ? "−12 vs. Q3" : "−18 vs. Q2", direction: "down", intent: "good" }}
+        />
+        <KpiCard
+          label="Above appetite"
+          value={q4 ? "4" : "6"}
+          unit="residual ≥ 15"
+          tone="danger"
+          delta={{ label: q4 ? "−2 vs. Q3" : "−1 vs. Q2", direction: "down", intent: "good" }}
+        />
+        <KpiCard
+          label="Critical risks"
+          value={q4 ? "0" : "1"}
+          tone={q4 ? "success" : "critical"}
+          delta={{ label: q4 ? "R-021 down to High" : "R-021 VPN appliance" }}
+        />
         <KpiCard label="Treatments on track" value={q4 ? "83%" : "76%"} unit={q4 ? "20 of 24" : "16 of 21"} />
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -1161,7 +1737,11 @@ function ReportsPage() {
                 description: "Residual score change since the Q3 2026 report.",
                 cell: (r) => {
                   const d = score(r.residual) - (previous[r.id] ?? score(r.residual));
-                  return d === 0 ? <span className="text-fg-muted">0</span> : <span className={d > 0 ? "text-danger-text" : "text-success"}>{d > 0 ? `+${d}` : d}</span>;
+                  return d === 0 ? (
+                    <span className="text-fg-muted">0</span>
+                  ) : (
+                    <span className={d > 0 ? "text-danger-text" : "text-success"}>{d > 0 ? `+${d}` : d}</span>
+                  );
                 },
               },
             ]}

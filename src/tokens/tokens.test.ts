@@ -1,15 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  LOG_LEVELS,
-  LOG_LEVEL_META,
-  SEVERITIES,
-  SEVERITY_META,
-  TONE_CLASSES,
-  TONE_COLORS,
-  compareSeverity,
-  toLogLevel,
-  toSeverity,
-} from "./levels";
+import { LOG_LEVELS, LOG_LEVEL_META, SEVERITIES, SEVERITY_META, TONE_CLASSES, TONE_COLORS, compareSeverity, toLogLevel, toSeverity } from "./levels";
 import { PRODUCTS, PRODUCT_IDS, PRODUCT_LIST, getProduct } from "./products";
 
 describe("log levels", () => {

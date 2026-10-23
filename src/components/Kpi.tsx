@@ -40,12 +40,12 @@ export function KpiCard({ label, value, unit, delta, tone, trend, trendColor, fo
     <>
       <span className="text-2xs font-medium tracking-wider text-fg-muted uppercase">{label}</span>
       <div className="flex items-baseline gap-1.5">
-        <span className={cn("text-2xl leading-8 font-semibold tabular-nums", tone && tone !== "neutral" ? TONE_CLASSES[tone].text : "text-fg")}>
-          {value}
-        </span>
+        <span className={cn("text-2xl leading-8 font-semibold tabular-nums", tone && tone !== "neutral" ? TONE_CLASSES[tone].text : "text-fg")}>{value}</span>
         {unit && <span className="text-xs text-fg-muted">{unit}</span>}
       </div>
-      {trend && trend.length > 1 && <Sparkline data={trend} height={28} color={trendColor} label={typeof label === "string" ? t("common.labelTrend", { label }) : t("common.trend")} />}
+      {trend && trend.length > 1 && (
+        <Sparkline data={trend} height={28} color={trendColor} label={typeof label === "string" ? t("common.labelTrend", { label }) : t("common.trend")} />
+      )}
       {delta && (
         <span className={cn("flex items-center gap-1 text-xs", intentClass[delta.intent ?? "neutral"])}>
           {delta.direction && <DirIcon aria-hidden className="size-3" />}

@@ -85,9 +85,21 @@ export function compareSeverity(a: Severity, b: Severity): number {
 /** Tailwind classes per tone: soft background badge, solid badge, foreground. */
 export const TONE_CLASSES: Record<Tone, { soft: string; solid: string; text: string; dot: string; border: string }> = {
   neutral: { soft: "bg-subtle text-fg-muted", solid: "bg-fg-muted text-surface", text: "text-fg-muted", dot: "bg-fg-subtle", border: "border-line" },
-  info: { soft: "bg-accent-soft text-accent-text", solid: "bg-accent text-accent-contrast", text: "text-accent-text", dot: "bg-accent", border: "border-accent/30" },
+  info: {
+    soft: "bg-accent-soft text-accent-text",
+    solid: "bg-accent text-accent-contrast",
+    text: "text-accent-text",
+    dot: "bg-accent",
+    border: "border-accent/30",
+  },
   success: { soft: "bg-success-soft text-success", solid: "bg-success text-white", text: "text-success", dot: "bg-success", border: "border-success/30" },
-  warning: { soft: "bg-warning-soft text-warning-text", solid: "bg-warning text-white", text: "text-warning-text", dot: "bg-warning", border: "border-warning/35" },
+  warning: {
+    soft: "bg-warning-soft text-warning-text",
+    solid: "bg-warning text-white",
+    text: "text-warning-text",
+    dot: "bg-warning",
+    border: "border-warning/35",
+  },
   danger: { soft: "bg-danger-soft text-danger-text", solid: "bg-danger text-white", text: "text-danger-text", dot: "bg-danger", border: "border-danger/30" },
   critical: { soft: "bg-critical text-white", solid: "bg-critical text-white", text: "text-critical", dot: "bg-critical", border: "border-critical" },
 };

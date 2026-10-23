@@ -97,20 +97,21 @@ const findings: Finding[] = [
     engine: "Semgrep CE",
     file: "internal/orders/search.go",
     line: 42,
-    flow: ["req.URL.Query().Get(\"q\")", "term", "db.Query()"],
-    explain: "User input from the q parameter is concatenated into a SQL string and run with db.Query. An attacker can read or change any table the service account can reach.",
+    flow: ['req.URL.Query().Get("q")', "term", "db.Query()"],
+    explain:
+      "User input from the q parameter is concatenated into a SQL string and run with db.Query. An attacker can read or change any table the service account can reach.",
     code: [
       { n: 38, text: "func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {" },
-      { n: 39, text: "\tterm := r.URL.Query().Get(\"q\")" },
+      { n: 39, text: '\tterm := r.URL.Query().Get("q")' },
       { n: 40, text: "\tlimit := parseLimit(r, 50)" },
       { n: 41, text: "" },
-      { n: 42, text: "\trows, err := h.db.Query(\"SELECT id, total FROM orders WHERE note LIKE '%\" + term + \"%' LIMIT \" + limit)", hot: true },
+      { n: 42, text: '\trows, err := h.db.Query("SELECT id, total FROM orders WHERE note LIKE \'%" + term + "%\' LIMIT " + limit)', hot: true },
       { n: 43, text: "\tif err != nil {" },
-      { n: 44, text: "\t\thttp.Error(w, \"search failed\", http.StatusInternalServerError)" },
+      { n: 44, text: '\t\thttp.Error(w, "search failed", http.StatusInternalServerError)' },
     ],
     fix: {
-      del: ["rows, err := h.db.Query(\"SELECT id, total FROM orders WHERE note LIKE '%\" + term + \"%' LIMIT \" + limit)"],
-      add: ["rows, err := h.db.Query(\"SELECT id, total FROM orders WHERE note LIKE $1 LIMIT $2\", \"%\"+term+\"%\", limit)"],
+      del: ['rows, err := h.db.Query("SELECT id, total FROM orders WHERE note LIKE \'%" + term + "%\' LIMIT " + limit)'],
+      add: ['rows, err := h.db.Query("SELECT id, total FROM orders WHERE note LIKE $1 LIMIT $2", "%"+term+"%", limit)'],
     },
     dast: "SQL injection confirmed on /v1/orders?q= (scan #312, 18 min ago)",
   },
@@ -124,10 +125,10 @@ const findings: Finding[] = [
     engine: "gosec",
     file: "internal/orders/export.go",
     line: 77,
-    flow: ["chi.URLParam(r, \"name\")", "path", "os.Open()"],
+    flow: ['chi.URLParam(r, "name")', "path", "os.Open()"],
     explain: "The export name from the URL is joined to the export directory without cleaning it, so ../ sequences can open any file the process can read.",
     code: [
-      { n: 75, text: "\tname := chi.URLParam(r, \"name\")" },
+      { n: 75, text: '\tname := chi.URLParam(r, "name")' },
       { n: 76, text: "\tpath := filepath.Join(h.exportDir, name)" },
       { n: 77, text: "\tf, err := os.Open(path)", hot: true },
       { n: 78, text: "\tif err != nil {" },
@@ -151,7 +152,7 @@ const findings: Finding[] = [
     explain: "The raw driver error, including table and column names, is written to the HTTP response.",
     code: [
       { n: 50, text: "\tif err := rows.Err(); err != nil {" },
-      { n: 51, text: "\t\tw.Write([]byte(fmt.Sprintf(\"query error: %v\", err)))", hot: true },
+      { n: 51, text: '\t\tw.Write([]byte(fmt.Sprintf("query error: %v", err)))', hot: true },
       { n: 52, text: "\t}" },
     ],
   },
@@ -167,7 +168,7 @@ const findings: Finding[] = [
     line: 12,
     flow: ["const dbPassword", "dsn", "sql.Open()"],
     explain: "A database password literal was removed in this pull request.",
-    code: [{ n: 12, text: "\tdsn := os.Getenv(\"ORDERS_DSN\")" }],
+    code: [{ n: 12, text: '\tdsn := os.Getenv("ORDERS_DSN")' }],
   },
 ];
 
@@ -187,7 +188,7 @@ const xssFindings: Finding[] = [
     code: [
       { n: 26, text: "  const html = marked.parse(props.comment.body);" },
       { n: 27, text: "  return (" },
-      { n: 28, text: "    <div className=\"prose\" dangerouslySetInnerHTML={{ __html: html }} />", hot: true },
+      { n: 28, text: '    <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />', hot: true },
       { n: 29, text: "  );" },
     ],
     fix: {
@@ -243,13 +244,91 @@ interface PR {
 }
 
 const PRS: PR[] = [
-  { id: "485", number: 485, title: "Bump chi to v5.2", repo: "acme/orders-api", author: PEOPLE[3]!, branch: "deps/chi-5.2", findings: [], existing: 14, scanned: "now", duration: "–", scanning: true },
-  { id: "482", number: 482, title: "Add order search endpoint", repo: "acme/orders-api", author: PEOPLE[2]!, branch: "feat/order-search", findings, existing: 14, scanned: "2 min ago", duration: "41 s" },
-  { id: "481", number: 481, title: "Retry failed webhooks with backoff", repo: "acme/notifications", author: PEOPLE[6]!, branch: "fix/webhook-retry", findings: [], existing: 3, scanned: "34 min ago", duration: "52 s" },
-  { id: "480", number: 480, title: "Sign invoices before upload", repo: "acme/billing-worker", author: PEOPLE[4]!, branch: "feat/invoice-signing", findings: md5Findings, existing: 6, scanned: "1 h ago", duration: "19 s" },
-  { id: "477", number: 477, title: "Render markdown in ticket comments", repo: "acme/web-dashboard", author: PEOPLE[5]!, branch: "feat/markdown-comments", findings: xssFindings, existing: 9, scanned: "3 h ago", duration: "1 m 08 s" },
-  { id: "476", number: 476, title: "Rotate session keys on password change", repo: "acme/auth-service", author: PEOPLE[0]!, branch: "sec/session-rotation", findings: [], existing: 2, scanned: "5 h ago", duration: "37 s" },
-  { id: "473", number: 473, title: "Terraform: private subnets for workers", repo: "acme/infra-terraform", author: PEOPLE[7]!, branch: "infra/private-subnets", findings: [], existing: 4, scanned: "Yesterday", duration: "12 s" },
+  {
+    id: "485",
+    number: 485,
+    title: "Bump chi to v5.2",
+    repo: "acme/orders-api",
+    author: PEOPLE[3]!,
+    branch: "deps/chi-5.2",
+    findings: [],
+    existing: 14,
+    scanned: "now",
+    duration: "–",
+    scanning: true,
+  },
+  {
+    id: "482",
+    number: 482,
+    title: "Add order search endpoint",
+    repo: "acme/orders-api",
+    author: PEOPLE[2]!,
+    branch: "feat/order-search",
+    findings,
+    existing: 14,
+    scanned: "2 min ago",
+    duration: "41 s",
+  },
+  {
+    id: "481",
+    number: 481,
+    title: "Retry failed webhooks with backoff",
+    repo: "acme/notifications",
+    author: PEOPLE[6]!,
+    branch: "fix/webhook-retry",
+    findings: [],
+    existing: 3,
+    scanned: "34 min ago",
+    duration: "52 s",
+  },
+  {
+    id: "480",
+    number: 480,
+    title: "Sign invoices before upload",
+    repo: "acme/billing-worker",
+    author: PEOPLE[4]!,
+    branch: "feat/invoice-signing",
+    findings: md5Findings,
+    existing: 6,
+    scanned: "1 h ago",
+    duration: "19 s",
+  },
+  {
+    id: "477",
+    number: 477,
+    title: "Render markdown in ticket comments",
+    repo: "acme/web-dashboard",
+    author: PEOPLE[5]!,
+    branch: "feat/markdown-comments",
+    findings: xssFindings,
+    existing: 9,
+    scanned: "3 h ago",
+    duration: "1 m 08 s",
+  },
+  {
+    id: "476",
+    number: 476,
+    title: "Rotate session keys on password change",
+    repo: "acme/auth-service",
+    author: PEOPLE[0]!,
+    branch: "sec/session-rotation",
+    findings: [],
+    existing: 2,
+    scanned: "5 h ago",
+    duration: "37 s",
+  },
+  {
+    id: "473",
+    number: 473,
+    title: "Terraform: private subnets for workers",
+    repo: "acme/infra-terraform",
+    author: PEOPLE[7]!,
+    branch: "infra/private-subnets",
+    findings: [],
+    existing: 4,
+    scanned: "Yesterday",
+    duration: "12 s",
+  },
 ];
 
 const newOf = (pr: PR) => pr.findings.filter((f) => f.state === "new");
@@ -286,26 +365,184 @@ interface OpenFinding {
 
 const OPEN: OpenFinding[] = (
   [
-    ["critical", "CWE-502", "Unsafe YAML deserialization", "python.lang.security.deserialization.avoid-pyyaml-load", "acme/data-pipeline", "etl/config/loader.py", 33, 46, "fixing", PEOPLE[1]],
-    ["critical", "CWE-78", "OS command injection in image resize", "go.lang.security.audit.dangerous-exec-command", "acme/mobile-bff", "internal/media/resize.go", 61, 12, "open"],
-    ["high", "CWE-89", "SQL injection in report filter", "java.lang.security.audit.formatted-sql-string", "acme/notifications", "src/main/java/com/acme/notify/ReportDao.java", 88, 73, "triaged", PEOPLE[6]],
-    ["high", "CWE-918", "Server-side request forgery in webhook test", "go.lang.security.audit.net.ssrf-user-url", "acme/notifications", "internal/webhook/test.go", 24, 31, "open"],
-    ["high", "CWE-352", "CSRF protection disabled", "java.spring.security.audit.spring-csrf-disabled", "acme/search-indexer", "src/main/java/com/acme/search/SecurityConfig.java", 41, 120, "accepted", PEOPLE[0]],
-    ["high", "CWE-611", "XML external entities enabled", "java.lang.security.audit.xxe.documentbuilderfactory-disallow-doctype-decl-missing", "acme/search-indexer", "src/main/java/com/acme/search/FeedParser.java", 17, 64, "open"],
+    [
+      "critical",
+      "CWE-502",
+      "Unsafe YAML deserialization",
+      "python.lang.security.deserialization.avoid-pyyaml-load",
+      "acme/data-pipeline",
+      "etl/config/loader.py",
+      33,
+      46,
+      "fixing",
+      PEOPLE[1],
+    ],
+    [
+      "critical",
+      "CWE-78",
+      "OS command injection in image resize",
+      "go.lang.security.audit.dangerous-exec-command",
+      "acme/mobile-bff",
+      "internal/media/resize.go",
+      61,
+      12,
+      "open",
+    ],
+    [
+      "high",
+      "CWE-89",
+      "SQL injection in report filter",
+      "java.lang.security.audit.formatted-sql-string",
+      "acme/notifications",
+      "src/main/java/com/acme/notify/ReportDao.java",
+      88,
+      73,
+      "triaged",
+      PEOPLE[6],
+    ],
+    [
+      "high",
+      "CWE-918",
+      "Server-side request forgery in webhook test",
+      "go.lang.security.audit.net.ssrf-user-url",
+      "acme/notifications",
+      "internal/webhook/test.go",
+      24,
+      31,
+      "open",
+    ],
+    [
+      "high",
+      "CWE-352",
+      "CSRF protection disabled",
+      "java.spring.security.audit.spring-csrf-disabled",
+      "acme/search-indexer",
+      "src/main/java/com/acme/search/SecurityConfig.java",
+      41,
+      120,
+      "accepted",
+      PEOPLE[0],
+    ],
+    [
+      "high",
+      "CWE-611",
+      "XML external entities enabled",
+      "java.lang.security.audit.xxe.documentbuilderfactory-disallow-doctype-decl-missing",
+      "acme/search-indexer",
+      "src/main/java/com/acme/search/FeedParser.java",
+      17,
+      64,
+      "open",
+    ],
     ["high", "CWE-327", "TLS verification disabled", "gosec.G402", "acme/payments-api", "internal/psp/client.go", 52, 9, "open"],
-    ["medium", "CWE-601", "Open redirect after sign-in", "typescript.express.security.audit.express-open-redirect", "acme/web-dashboard", "server/routes/auth.ts", 112, 27, "triaged", PEOPLE[5]],
-    ["medium", "CWE-209", "Stack trace in error response", "python.flask.security.audit.debug-enabled", "acme/billing-worker", "billing/api/app.py", 9, 88, "open"],
+    [
+      "medium",
+      "CWE-601",
+      "Open redirect after sign-in",
+      "typescript.express.security.audit.express-open-redirect",
+      "acme/web-dashboard",
+      "server/routes/auth.ts",
+      112,
+      27,
+      "triaged",
+      PEOPLE[5],
+    ],
+    [
+      "medium",
+      "CWE-209",
+      "Stack trace in error response",
+      "python.flask.security.audit.debug-enabled",
+      "acme/billing-worker",
+      "billing/api/app.py",
+      9,
+      88,
+      "open",
+    ],
     ["medium", "CWE-338", "math/rand used for reset tokens", "gosec.G404", "acme/auth-service", "internal/reset/token.go", 15, 5, "fixing", PEOPLE[0]],
-    ["medium", "CWE-1333", "Regular expression denial of service", "typescript.lang.security.audit.detect-redos", "acme/web-dashboard", "src/lib/validate.ts", 7, 140, "open"],
+    [
+      "medium",
+      "CWE-1333",
+      "Regular expression denial of service",
+      "typescript.lang.security.audit.detect-redos",
+      "acme/web-dashboard",
+      "src/lib/validate.ts",
+      7,
+      140,
+      "open",
+    ],
     ["medium", "CWE-732", "World-writable file permissions", "gosec.G302", "acme/orders-api", "internal/export/writer.go", 39, 54, "false-positive", PEOPLE[2]],
-    ["medium", "CWE-200", "S3 bucket without public access block", "terraform.aws.security.aws-s3-bucket-public-access-block", "acme/infra-terraform", "modules/exports/s3.tf", 3, 210, "accepted", PEOPLE[7]],
-    ["low", "CWE-614", "Cookie without Secure flag", "typescript.express.security.audit.express-cookie-session-no-secure", "acme/web-dashboard", "server/session.ts", 21, 33, "open"],
-    ["low", "CWE-532", "Card number logged at debug level", "go.lang.security.audit.log-sensitive", "acme/payments-api", "internal/charge/handler.go", 104, 18, "triaged", PEOPLE[3]],
+    [
+      "medium",
+      "CWE-200",
+      "S3 bucket without public access block",
+      "terraform.aws.security.aws-s3-bucket-public-access-block",
+      "acme/infra-terraform",
+      "modules/exports/s3.tf",
+      3,
+      210,
+      "accepted",
+      PEOPLE[7],
+    ],
+    [
+      "low",
+      "CWE-614",
+      "Cookie without Secure flag",
+      "typescript.express.security.audit.express-cookie-session-no-secure",
+      "acme/web-dashboard",
+      "server/session.ts",
+      21,
+      33,
+      "open",
+    ],
+    [
+      "low",
+      "CWE-532",
+      "Card number logged at debug level",
+      "go.lang.security.audit.log-sensitive",
+      "acme/payments-api",
+      "internal/charge/handler.go",
+      104,
+      18,
+      "triaged",
+      PEOPLE[3],
+    ],
     ["low", "CWE-326", "RSA key shorter than 2048 bits", "gosec.G403", "acme/auth-service", "internal/keys/gen.go", 28, 300, "open"],
-    ["low", "CWE-489", "Debug endpoint left enabled", "java.spring.security.audit.spring-actuator-dangerous-endpoints-enabled", "acme/notifications", "src/main/resources/application.yml", 14, 95, "open"],
-    ["info", "CWE-1104", "Deprecated crypto/elliptic API", "go.lang.maintainability.deprecated-elliptic", "acme/orders-api", "internal/sign/ecdsa.go", 11, 41, "open"],
+    [
+      "low",
+      "CWE-489",
+      "Debug endpoint left enabled",
+      "java.spring.security.audit.spring-actuator-dangerous-endpoints-enabled",
+      "acme/notifications",
+      "src/main/resources/application.yml",
+      14,
+      95,
+      "open",
+    ],
+    [
+      "info",
+      "CWE-1104",
+      "Deprecated crypto/elliptic API",
+      "go.lang.maintainability.deprecated-elliptic",
+      "acme/orders-api",
+      "internal/sign/ecdsa.go",
+      11,
+      41,
+      "open",
+    ],
   ] as const
-).map(([severity, cwe, title, rule, repo, file, line, age, status, assignee], i) => ({ id: `o${i + 1}`, severity, cwe, title, rule, repo, file, line, age, status, assignee }));
+).map(([severity, cwe, title, rule, repo, file, line, age, status, assignee], i) => ({
+  id: `o${i + 1}`,
+  severity,
+  cwe,
+  title,
+  rule,
+  repo,
+  file,
+  line,
+  age,
+  status,
+  assignee,
+}));
 
 interface Repo {
   id: string;
@@ -319,16 +556,97 @@ interface Repo {
 }
 
 const REPOS: Repo[] = [
-  { id: "r1", name: "acme/orders-api", language: "Go", lastScan: "2 min ago", open: [0, 2, 3, 6], gate: "failed", packs: ["default", "owasp", "golang", "secrets", "acme"], loc: "84k" },
-  { id: "r2", name: "acme/payments-api", language: "Go", lastScan: "18 min ago", open: [0, 1, 4, 5], gate: "passed", packs: ["default", "owasp", "golang", "secrets", "acme"], loc: "61k" },
-  { id: "r3", name: "acme/web-dashboard", language: "TypeScript", lastScan: "3 h ago", open: [0, 1, 6, 9], gate: "failed", packs: ["default", "owasp", "typescript", "secrets"], loc: "142k" },
-  { id: "r4", name: "acme/billing-worker", language: "Python", lastScan: "1 h ago", open: [0, 0, 2, 4], gate: "warn", packs: ["default", "python", "secrets"], loc: "23k" },
-  { id: "r5", name: "acme/auth-service", language: "Go", lastScan: "5 h ago", open: [0, 0, 2, 3], gate: "passed", packs: ["default", "owasp", "golang", "secrets", "acme"], loc: "38k" },
-  { id: "r6", name: "acme/notifications", language: "Java", lastScan: "34 min ago", open: [0, 2, 1, 7], gate: "passed", packs: ["default", "owasp", "java"], loc: "57k" },
-  { id: "r7", name: "acme/data-pipeline", language: "Python", lastScan: "Yesterday", open: [1, 0, 3, 2], gate: "passed", packs: ["default", "python"], loc: "31k" },
+  {
+    id: "r1",
+    name: "acme/orders-api",
+    language: "Go",
+    lastScan: "2 min ago",
+    open: [0, 2, 3, 6],
+    gate: "failed",
+    packs: ["default", "owasp", "golang", "secrets", "acme"],
+    loc: "84k",
+  },
+  {
+    id: "r2",
+    name: "acme/payments-api",
+    language: "Go",
+    lastScan: "18 min ago",
+    open: [0, 1, 4, 5],
+    gate: "passed",
+    packs: ["default", "owasp", "golang", "secrets", "acme"],
+    loc: "61k",
+  },
+  {
+    id: "r3",
+    name: "acme/web-dashboard",
+    language: "TypeScript",
+    lastScan: "3 h ago",
+    open: [0, 1, 6, 9],
+    gate: "failed",
+    packs: ["default", "owasp", "typescript", "secrets"],
+    loc: "142k",
+  },
+  {
+    id: "r4",
+    name: "acme/billing-worker",
+    language: "Python",
+    lastScan: "1 h ago",
+    open: [0, 0, 2, 4],
+    gate: "warn",
+    packs: ["default", "python", "secrets"],
+    loc: "23k",
+  },
+  {
+    id: "r5",
+    name: "acme/auth-service",
+    language: "Go",
+    lastScan: "5 h ago",
+    open: [0, 0, 2, 3],
+    gate: "passed",
+    packs: ["default", "owasp", "golang", "secrets", "acme"],
+    loc: "38k",
+  },
+  {
+    id: "r6",
+    name: "acme/notifications",
+    language: "Java",
+    lastScan: "34 min ago",
+    open: [0, 2, 1, 7],
+    gate: "passed",
+    packs: ["default", "owasp", "java"],
+    loc: "57k",
+  },
+  {
+    id: "r7",
+    name: "acme/data-pipeline",
+    language: "Python",
+    lastScan: "Yesterday",
+    open: [1, 0, 3, 2],
+    gate: "passed",
+    packs: ["default", "python"],
+    loc: "31k",
+  },
   { id: "r8", name: "acme/mobile-bff", language: "Go", lastScan: "6 h ago", open: [1, 0, 1, 2], gate: "passed", packs: ["default", "golang"], loc: "19k" },
-  { id: "r9", name: "acme/search-indexer", language: "Java", lastScan: "2 days ago", open: [0, 2, 2, 1], gate: "passed", packs: ["default", "java"], loc: "44k" },
-  { id: "r10", name: "acme/infra-terraform", language: "HCL", lastScan: "Yesterday", open: [0, 0, 1, 3], gate: "passed", packs: ["terraform", "secrets"], loc: "12k" },
+  {
+    id: "r9",
+    name: "acme/search-indexer",
+    language: "Java",
+    lastScan: "2 days ago",
+    open: [0, 2, 2, 1],
+    gate: "passed",
+    packs: ["default", "java"],
+    loc: "44k",
+  },
+  {
+    id: "r10",
+    name: "acme/infra-terraform",
+    language: "HCL",
+    lastScan: "Yesterday",
+    open: [0, 0, 1, 3],
+    gate: "passed",
+    packs: ["terraform", "secrets"],
+    loc: "12k",
+  },
 ];
 
 interface RulePack {
@@ -368,7 +686,11 @@ function PrDetail({ pr, onBack }: { pr: PR; onBack: () => void }) {
       <PageHeader
         breadcrumbs={[{ label: "Pull requests" }, { label: pr.repo }]}
         title={`#${pr.number} ${pr.title}`}
-        meta={<StatusBadge tone={GATE[gate].tone}>{gate === "failed" ? `Gate failed · ${blocking} new high` : `Gate ${GATE[gate].label.toLowerCase()}`}</StatusBadge>}
+        meta={
+          <StatusBadge tone={GATE[gate].tone}>
+            {gate === "failed" ? `Gate failed · ${blocking} new high` : `Gate ${GATE[gate].label.toLowerCase()}`}
+          </StatusBadge>
+        }
         actions={
           <>
             <Button size="md" variant="ghost" icon={<ArrowLeft />} onClick={onBack}>
@@ -400,7 +722,9 @@ function PrDetail({ pr, onBack }: { pr: PR; onBack: () => void }) {
       {!f ? (
         <Panel title="Findings in this PR">
           <EmptyState icon={<ScanSearch />} title={pr.scanning ? "Scan in progress" : "No findings on changed lines"}>
-            {pr.scanning ? "Results appear here when the scan finishes, usually within a minute." : `${pr.existing} existing findings in ${pr.repo} are not touched by this change.`}
+            {pr.scanning
+              ? "Results appear here when the scan finishes, usually within a minute."
+              : `${pr.existing} existing findings in ${pr.repo} are not touched by this change.`}
           </EmptyState>
         </Panel>
       ) : (
@@ -468,7 +792,15 @@ function PrDetail({ pr, onBack }: { pr: PR; onBack: () => void }) {
           >
             <div className="flex flex-col gap-2.5 text-sm">
               {f.dast && (
-                <Callout tone="danger" title="Confirmed by DAST on staging" action={<a href="#dast-scan" className="text-sm font-medium text-accent-text">Open DAST finding</a>}>
+                <Callout
+                  tone="danger"
+                  title="Confirmed by DAST on staging"
+                  action={
+                    <a href="#dast-scan" className="text-sm font-medium text-accent-text">
+                      Open DAST finding
+                    </a>
+                  }
+                >
                   {f.dast}
                 </Callout>
               )}
@@ -489,9 +821,18 @@ function PrDetail({ pr, onBack }: { pr: PR; onBack: () => void }) {
               </div>
               <figure className="m-0 flex flex-col gap-1">
                 <figcaption className="font-mono text-2xs text-fg-muted">{f.file}</figcaption>
-                <div role="region" className="overflow-x-auto rounded-md border border-line bg-subtle py-1.5 font-mono text-xs text-fg" tabIndex={0} aria-label={`Code around line ${f.line}`}>
+                <div
+                  role="region"
+                  className="overflow-x-auto rounded-md border border-line bg-subtle py-1.5 font-mono text-xs text-fg"
+                  tabIndex={0}
+                  aria-label={`Code around line ${f.line}`}
+                >
                   {f.code.map((l) => (
-                    <div key={l.n} data-hot={l.hot || undefined} className={cn("flex border-l-2 pr-3", l.hot ? "border-danger bg-danger-soft" : "border-transparent")}>
+                    <div
+                      key={l.n}
+                      data-hot={l.hot || undefined}
+                      className={cn("flex border-l-2 pr-3", l.hot ? "border-danger bg-danger-soft" : "border-transparent")}
+                    >
                       <span className="w-10 shrink-0 pr-2 text-right text-fg-muted select-none">{l.n}</span>
                       <code className="whitespace-pre">{l.text}</code>
                     </div>
@@ -501,7 +842,12 @@ function PrDetail({ pr, onBack }: { pr: PR; onBack: () => void }) {
               {f.fix && (
                 <div className="flex flex-col gap-1">
                   <span className="text-2xs font-medium tracking-wider text-fg-muted uppercase">Suggested fix</span>
-                  <div role="region" className="overflow-x-auto rounded-md border border-line bg-surface py-1.5 font-mono text-xs" tabIndex={0} aria-label="Suggested fix diff">
+                  <div
+                    role="region"
+                    className="overflow-x-auto rounded-md border border-line bg-surface py-1.5 font-mono text-xs"
+                    tabIndex={0}
+                    aria-label="Suggested fix diff"
+                  >
                     {f.fix.del.map((t, i) => (
                       <div key={`d${i}`} className="flex bg-danger-soft pr-3 text-danger-text">
                         <span aria-hidden className="w-6 shrink-0 text-center select-none">
@@ -565,7 +911,15 @@ function PullRequestsPage({ initialOpen }: { initialOpen?: string }) {
         </span>
       ),
     },
-    { id: "branch", header: "Branch", cell: (p) => <Badge mono icon={<GitBranch aria-hidden className="size-3" />}>{p.branch}</Badge> },
+    {
+      id: "branch",
+      header: "Branch",
+      cell: (p) => (
+        <Badge mono icon={<GitBranch aria-hidden className="size-3" />}>
+          {p.branch}
+        </Badge>
+      ),
+    },
     {
       id: "new",
       header: "New",
@@ -584,21 +938,41 @@ function PullRequestsPage({ initialOpen }: { initialOpen?: string }) {
         return n ? <Badge tone="success">{n}</Badge> : <span className="font-mono text-fg-muted">0</span>;
       },
     },
-    { id: "gate", header: "Gate", description: "Result of the merge gate from Policies.", sortValue: (p) => gateOf(p), cell: (p) => <StatusBadge tone={GATE[gateOf(p)].tone}>{GATE[gateOf(p)].label}</StatusBadge> },
+    {
+      id: "gate",
+      header: "Gate",
+      description: "Result of the merge gate from Policies.",
+      sortValue: (p) => gateOf(p),
+      cell: (p) => <StatusBadge tone={GATE[gateOf(p)].tone}>{GATE[gateOf(p)].label}</StatusBadge>,
+    },
     { id: "scanned", header: "Scanned", cell: (p) => <span className="text-fg-muted">{p.scanned}</span> },
   ];
   const weeks = ["Sep 7", "Sep 14", "Sep 21", "Sep 28", "Oct 5", "Oct 12", "Oct 19"];
   return (
     <>
-      <PageHeader title="Pull requests" description="Open pull requests across all connected repositories. Only findings on changed lines count toward the gate." actions={<SearchInput label="Search pull requests" className="w-60" />} />
+      <PageHeader
+        title="Pull requests"
+        description="Open pull requests across all connected repositories. Only findings on changed lines count toward the gate."
+        actions={<SearchInput label="Search pull requests" className="w-60" />}
+      />
       <KpiGrid>
         <KpiCard label="Open pull requests" value={PRS.length} unit="7 repositories" />
-        <KpiCard label="Blocked by gate" value={PRS.filter((p) => gateOf(p) === "failed").length} tone="danger" delta={{ label: "new high findings", intent: "bad" }} />
+        <KpiCard
+          label="Blocked by gate"
+          value={PRS.filter((p) => gateOf(p) === "failed").length}
+          tone="danger"
+          delta={{ label: "new high findings", intent: "bad" }}
+        />
         <KpiCard label="New findings · 7 d" value="11" trend={[2, 0, 3, 1, 0, 1, 4]} delta={{ label: "8 fixed in the same PR", intent: "good" }} />
         <KpiCard label="Median scan time" value="38" unit="s" trend={wave(14, { base: 40, amp: 6, seed: 82 })} />
       </KpiGrid>
       <FilterBar onClear={repos.length || gates.length ? () => (setRepos([]), setGates([])) : undefined}>
-        <FacetFilter label="Repository" selected={repos} onChange={setRepos} options={[...new Set(PRS.map((p) => p.repo))].map((r) => ({ value: r, count: PRS.filter((p) => p.repo === r).length }))} />
+        <FacetFilter
+          label="Repository"
+          selected={repos}
+          onChange={setRepos}
+          options={[...new Set(PRS.map((p) => p.repo))].map((r) => ({ value: r, count: PRS.filter((p) => p.repo === r).length }))}
+        />
         <FacetFilter
           label="Gate"
           selected={gates}
@@ -608,7 +982,14 @@ function PullRequestsPage({ initialOpen }: { initialOpen?: string }) {
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Open pull requests" description={`${shown.length} of ${PRS.length}`} flush>
-          <DataTable label="Open pull requests" columns={cols} rows={shown} getRowId={(p) => p.id} defaultSort={{ id: "pr", direction: "desc" }} minWidth={900} />
+          <DataTable
+            label="Open pull requests"
+            columns={cols}
+            rows={shown}
+            getRowId={(p) => p.id}
+            defaultSort={{ id: "pr", direction: "desc" }}
+            minWidth={900}
+          />
         </Panel>
         <Panel title="Gate results by week">
           <StackedBarChart
@@ -619,7 +1000,15 @@ function PullRequestsPage({ initialOpen }: { initialOpen?: string }) {
               { id: "warn", name: "Warnings", color: "var(--oa-warning)" },
               { id: "failed", name: "Failed", color: "var(--oa-danger)" },
             ]}
-            values={[[21, 3, 1], [18, 2, 2], [24, 4, 0], [19, 1, 3], [26, 2, 1], [22, 3, 2], [9, 1, 2]]}
+            values={[
+              [21, 3, 1],
+              [18, 2, 2],
+              [24, 4, 0],
+              [19, 1, 3],
+              [26, 2, 1],
+              [22, 3, 2],
+              [9, 1, 2],
+            ]}
             height={180}
             xTicks={7}
           />
@@ -670,8 +1059,24 @@ function FindingsPage() {
     },
     { id: "cwe", header: "CWE", mono: true, width: "96px", sortValue: (r) => r.cwe, cell: (r) => r.cwe },
     { id: "repo", header: "Repository", mono: true, sortValue: (r) => r.repo, cell: (r) => r.repo },
-    { id: "file", header: "File", mono: true, cell: (r) => <span className="truncate text-xs">{r.file}:{r.line}</span> },
-    { id: "age", header: "Age", align: "right", description: "Days since the finding first appeared on the default branch.", sortValue: (r) => r.age, cell: (r) => <span className={cn("font-mono", r.age > 90 && "text-danger-text")}>{r.age} d</span> },
+    {
+      id: "file",
+      header: "File",
+      mono: true,
+      cell: (r) => (
+        <span className="truncate text-xs">
+          {r.file}:{r.line}
+        </span>
+      ),
+    },
+    {
+      id: "age",
+      header: "Age",
+      align: "right",
+      description: "Days since the finding first appeared on the default branch.",
+      sortValue: (r) => r.age,
+      cell: (r) => <span className={cn("font-mono", r.age > 90 && "text-danger-text")}>{r.age} d</span>,
+    },
     {
       id: "status",
       header: "Status",
@@ -688,22 +1093,62 @@ function FindingsPage() {
   const count = (s: Severity) => rows.filter((r) => r.severity === s && r.status !== "false-positive").length;
   return (
     <>
-      <PageHeader title="Findings" description="Open findings on default branches of every repository. Triage here; PR findings live on each pull request." actions={<Button icon={<ListChecks />}>Export SARIF</Button>} />
+      <PageHeader
+        title="Findings"
+        description="Open findings on default branches of every repository. Triage here; PR findings live on each pull request."
+        actions={<Button icon={<ListChecks />}>Export SARIF</Button>}
+      />
       <KpiGrid>
         <KpiCard label="Critical" value={count("critical")} tone="critical" delta={{ label: "SLA 7 days" }} />
         <KpiCard label="High" value={count("high")} tone="danger" delta={{ label: "1 past SLA", intent: "bad" }} />
         <KpiCard label="Medium and low" value={count("medium") + count("low")} />
-        <KpiCard label="Mean time to fix" value="12" unit="days" trend={[19, 18, 16, 17, 15, 14, 12]} delta={{ label: "−3 d vs. last month", direction: "down", intent: "good" }} />
+        <KpiCard
+          label="Mean time to fix"
+          value="12"
+          unit="days"
+          trend={[19, 18, 16, 17, 15, 14, 12]}
+          delta={{ label: "−3 d vs. last month", direction: "down", intent: "good" }}
+        />
       </KpiGrid>
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
-      <FilterBar onClear={query || sevs.length || repos.length || statuses.length ? () => (setQuery(""), setSevs([]), setRepos([]), setStatuses([])) : undefined}>
+      <FilterBar
+        onClear={query || sevs.length || repos.length || statuses.length ? () => (setQuery(""), setSevs([]), setRepos([]), setStatuses([])) : undefined}
+      >
         <SearchInput label="Search findings" value={query} onChange={(e) => setQuery(e.target.value)} className="w-56" />
-        <FacetFilter label="Severity" selected={sevs} onChange={setSevs} options={(["critical", "high", "medium", "low", "info"] as Severity[]).map((s) => ({ value: s, label: SEVERITY_META[s].label, count: rows.filter((r) => r.severity === s).length }))} />
-        <FacetFilter label="Repository" searchable selected={repos} onChange={setRepos} options={[...new Set(rows.map((r) => r.repo))].map((r) => ({ value: r, count: rows.filter((x) => x.repo === r).length }))} />
-        <FacetFilter label="Status" selected={statuses} onChange={setStatuses} options={(Object.keys(STATUS_META) as Status[]).map((s) => ({ value: s, label: STATUS_META[s].label, count: rows.filter((r) => r.status === s).length }))} />
+        <FacetFilter
+          label="Severity"
+          selected={sevs}
+          onChange={setSevs}
+          options={(["critical", "high", "medium", "low", "info"] as Severity[]).map((s) => ({
+            value: s,
+            label: SEVERITY_META[s].label,
+            count: rows.filter((r) => r.severity === s).length,
+          }))}
+        />
+        <FacetFilter
+          label="Repository"
+          searchable
+          selected={repos}
+          onChange={setRepos}
+          options={[...new Set(rows.map((r) => r.repo))].map((r) => ({ value: r, count: rows.filter((x) => x.repo === r).length }))}
+        />
+        <FacetFilter
+          label="Status"
+          selected={statuses}
+          onChange={setStatuses}
+          options={(Object.keys(STATUS_META) as Status[]).map((s) => ({
+            value: s,
+            label: STATUS_META[s].label,
+            count: rows.filter((r) => r.status === s).length,
+          }))}
+        />
       </FilterBar>
       {selected.length > 0 && (
-        <div role="toolbar" aria-label="Triage actions" className="flex flex-wrap items-center gap-2 rounded-lg border border-accent bg-accent-soft px-3 py-1.5 text-sm">
+        <div
+          role="toolbar"
+          aria-label="Triage actions"
+          className="flex flex-wrap items-center gap-2 rounded-lg border border-accent bg-accent-soft px-3 py-1.5 text-sm"
+        >
           <span className="font-medium">{selected.length} selected</span>
           <Button size="sm" onClick={() => triage(null, "Assigned to Emily Clark:")}>
             Assign to me
@@ -724,7 +1169,18 @@ function FindingsPage() {
       )}
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Open findings" description={`${shown.length} of ${rows.length}`} flush>
-          <DataTable label="Open findings" columns={cols} rows={shown} getRowId={(r) => r.id} selectable selectedIds={selected} onSelectionChange={setSelected} defaultSort={{ id: "sev", direction: "desc" }} pageSize={10} minWidth={1000} />
+          <DataTable
+            label="Open findings"
+            columns={cols}
+            rows={shown}
+            getRowId={(r) => r.id}
+            selectable
+            selectedIds={selected}
+            onSelectionChange={setSelected}
+            defaultSort={{ id: "sev", direction: "desc" }}
+            pageSize={10}
+            minWidth={1000}
+          />
         </Panel>
         <Panel title="Top weaknesses">
           <BarList label="Open findings by CWE" items={cweCounts.slice(0, 8).map(([cwe, n]) => ({ id: cwe, label: cwe, value: n, href: "#cwe" }))} />
@@ -747,7 +1203,14 @@ function ReposPage() {
   const r = REPOS.find((x) => x.id === active)!;
   const shown = REPOS.filter((x) => lang.length === 0 || lang.includes(x.language));
   const cols: Column<Repo>[] = [
-    { id: "name", header: "Repository", pinned: "left", width: "22%", sortValue: (x) => x.name, cell: (x) => <span className="font-mono text-xs font-medium">{x.name}</span> },
+    {
+      id: "name",
+      header: "Repository",
+      pinned: "left",
+      width: "22%",
+      sortValue: (x) => x.name,
+      cell: (x) => <span className="font-mono text-xs font-medium">{x.name}</span>,
+    },
     { id: "lang", header: "Language", sortValue: (x) => x.language, cell: (x) => <Badge variant="outline">{x.language}</Badge> },
     { id: "scan", header: "Last scan", cell: (x) => <span className="text-fg-muted">{x.lastScan}</span> },
     {
@@ -784,14 +1247,35 @@ function ReposPage() {
   const seed = Number(r.id.slice(1));
   return (
     <>
-      <PageHeader title="Repositories" description="Showing the 10 most active of 23 connected repositories. Default branches are scanned nightly and on every push." actions={<Button variant="primary" icon={<Plus />}>Connect repository</Button>} />
+      <PageHeader
+        title="Repositories"
+        description="Showing the 10 most active of 23 connected repositories. Default branches are scanned nightly and on every push."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            Connect repository
+          </Button>
+        }
+      />
       <FilterBar onClear={lang.length ? () => setLang([]) : undefined}>
         <SearchInput label="Search repositories" className="w-56" />
-        <FacetFilter label="Language" selected={lang} onChange={setLang} options={[...new Set(REPOS.map((x) => x.language))].map((l) => ({ value: l, count: REPOS.filter((x) => x.language === l).length }))} />
+        <FacetFilter
+          label="Language"
+          selected={lang}
+          onChange={setLang}
+          options={[...new Set(REPOS.map((x) => x.language))].map((l) => ({ value: l, count: REPOS.filter((x) => x.language === l).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Repositories" flush>
-          <DataTable label="Repositories" columns={cols} rows={shown} getRowId={(x) => x.id} onRowClick={(x) => (setActive(x.id), setScanned(""))} activeRowId={active} minWidth={820} />
+          <DataTable
+            label="Repositories"
+            columns={cols}
+            rows={shown}
+            getRowId={(x) => x.id}
+            onRowClick={(x) => (setActive(x.id), setScanned(""))}
+            activeRowId={active}
+            minWidth={820}
+          />
         </Panel>
         <Panel
           aria-label="Repository detail"
@@ -815,7 +1299,12 @@ function ReposPage() {
               stacked
               height={150}
               series={[
-                { id: "high", name: "High and critical", color: "var(--oa-danger)", data: wave(12, { base: r.open[0] + r.open[1] + 1, amp: 1, seed: seed + 3 }).map(Math.round) },
+                {
+                  id: "high",
+                  name: "High and critical",
+                  color: "var(--oa-danger)",
+                  data: wave(12, { base: r.open[0] + r.open[1] + 1, amp: 1, seed: seed + 3 }).map(Math.round),
+                },
                 { id: "medium", name: "Medium", color: "var(--oa-warning)", data: wave(12, { base: r.open[2] + 2, amp: 1.5, seed: seed + 5 }).map(Math.round) },
                 { id: "low", name: "Low", data: wave(12, { base: r.open[3] + 2, amp: 2, seed: seed + 7 }).map(Math.round) },
               ]}
@@ -911,7 +1400,11 @@ function RulesPage() {
   };
   return (
     <>
-      <PageHeader title="Rules" description="Semgrep CE and gosec rule packs, plus rules your team writes." meta={<Badge>{enabled.reduce((a, p) => a + p.rules, 0).toLocaleString("en-US")} active rules</Badge>}>
+      <PageHeader
+        title="Rules"
+        description="Semgrep CE and gosec rule packs, plus rules your team writes."
+        meta={<Badge>{enabled.reduce((a, p) => a + p.rules, 0).toLocaleString("en-US")} active rules</Badge>}
+      >
         <Tabs
           label="Rules view"
           value={tab}
@@ -933,7 +1426,10 @@ function RulesPage() {
           <Panel title="Rule packs" description="Turning a pack off stops new findings from it; existing ones stay until closed." flush>
             <ul className="flex flex-col">
               {packs.map((p) => (
-                <li key={p.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-subtle px-3 py-2 last:border-0 md:grid-cols-[minmax(0,1fr)_180px_90px_auto]">
+                <li
+                  key={p.id}
+                  className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-subtle px-3 py-2 last:border-0 md:grid-cols-[minmax(0,1fr)_180px_90px_auto]"
+                >
                   <Switch
                     checked={p.enabled}
                     onCheckedChange={(v) => setPacks((ps) => ps.map((x) => (x.id === p.id ? { ...x, enabled: v } : x)))}
@@ -1051,8 +1547,15 @@ function PoliciesPage() {
   };
   return (
     <>
-      <PageHeader title="Policies" description="When a pull request is blocked, what gets posted on it, what is not scanned, and how fast findings must be fixed." />
-      {saved && <Callout tone="success" title="Policy saved" onDismiss={() => setSaved(false)}>Applies to the next scan of every repository.</Callout>}
+      <PageHeader
+        title="Policies"
+        description="When a pull request is blocked, what gets posted on it, what is not scanned, and how fast findings must be fixed."
+      />
+      {saved && (
+        <Callout tone="success" title="Policy saved" onDismiss={() => setSaved(false)}>
+          Applies to the next scan of every repository.
+        </Callout>
+      )}
       <form
         className="flex flex-col gap-2.5"
         onSubmit={(e) => {
@@ -1073,8 +1576,18 @@ function PoliciesPage() {
                   { value: "medium", label: "New medium or worse findings" },
                 ]}
               />
-              <Switch checked={newOnly} onCheckedChange={setNewOnly} label="Only count findings on changed lines" description="Existing findings never block a pull request." />
-              <Switch checked={dast} onCheckedChange={setDast} label="Always block when DAST confirms a finding" description="Even if it is below the threshold." />
+              <Switch
+                checked={newOnly}
+                onCheckedChange={setNewOnly}
+                label="Only count findings on changed lines"
+                description="Existing findings never block a pull request."
+              />
+              <Switch
+                checked={dast}
+                onCheckedChange={setDast}
+                label="Always block when DAST confirms a finding"
+                description="Even if it is below the threshold."
+              />
               <Callout tone={blocked ? "warning" : "info"} title={`${blocked} of ${PRS.length} open pull requests would be blocked`}>
                 Preview against the current scan results.
               </Callout>
@@ -1083,7 +1596,12 @@ function PoliciesPage() {
           <Panel title="Pull request comments">
             <div className="flex flex-col gap-3">
               <Switch checked={summary} onCheckedChange={setSummary} label="Post a summary comment" description="One comment per PR, updated on every push." />
-              <Switch checked={inline} onCheckedChange={setInline} label="Inline comments on changed lines" description="With the suggested fix when one exists." />
+              <Switch
+                checked={inline}
+                onCheckedChange={setInline}
+                label="Inline comments on changed lines"
+                description="With the suggested fix when one exists."
+              />
               <SelectField
                 label="Comment as"
                 defaultValue="app"
@@ -1158,7 +1676,13 @@ function PoliciesPage() {
                       <label className="sr-only" htmlFor={`sla-${s}`}>
                         {SEVERITY_META[s].label} SLA in days
                       </label>
-                      <input id={`sla-${s}`} type="number" min={1} defaultValue={d} className="h-7 w-20 rounded-md border border-line-strong bg-surface px-2 font-mono text-sm text-fg" />
+                      <input
+                        id={`sla-${s}`}
+                        type="number"
+                        min={1}
+                        defaultValue={d}
+                        className="h-7 w-20 rounded-md border border-line-strong bg-surface px-2 font-mono text-sm text-fg"
+                      />
                     </td>
                     <td className={cn("py-1.5 text-right font-mono", past ? "text-danger-text" : "text-fg-muted")}>{past}</td>
                   </tr>

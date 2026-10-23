@@ -57,7 +57,9 @@ for (const f of files) {
 let commit = process.env.GITHUB_SHA ?? null;
 if (!commit) {
   try {
-    commit = execSync("git rev-parse HEAD", { cwd: root, stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+    commit = execSync("git rev-parse HEAD", { cwd: root, stdio: ["ignore", "pipe", "ignore"] })
+      .toString()
+      .trim();
   } catch {
     commit = null;
   }
@@ -75,7 +77,10 @@ const coverageFiles = coverage
 const summary = {
   generatedAt: new Date().toISOString(),
   commit,
-  runUrl: process.env.GITHUB_SERVER_URL && process.env.GITHUB_RUN_ID ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}` : null,
+  runUrl:
+    process.env.GITHUB_SERVER_URL && process.env.GITHUB_RUN_ID
+      ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+      : null,
   success: results.success,
   totals: {
     files: files.length,

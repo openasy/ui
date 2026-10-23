@@ -38,7 +38,8 @@ export function BarList({ label, items, max, format = (v) => formatNumber(v), cl
             <span className="text-right font-mono text-xs font-semibold whitespace-nowrap tabular-nums">{format(it.value)}</span>
           </>
         );
-        const cls = "group -mx-1.5 grid h-7 grid-cols-[minmax(0,140px)_minmax(0,1fr)_minmax(44px,auto)] items-center gap-2.5 rounded px-1.5 text-fg no-underline hover:bg-canvas";
+        const cls =
+          "group -mx-1.5 grid h-7 grid-cols-[minmax(0,140px)_minmax(0,1fr)_minmax(44px,auto)] items-center gap-2.5 rounded px-1.5 text-fg no-underline hover:bg-canvas";
         return (
           <li key={it.id}>
             {it.href ? (

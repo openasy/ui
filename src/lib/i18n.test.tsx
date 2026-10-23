@@ -41,9 +41,17 @@ describe("translate", () => {
       const t = useFilesT();
       return <p>{t("files", { count: n })}</p>;
     }
-    const { rerender } = render(<BrandProvider><Files n={1} /></BrandProvider>);
+    const { rerender } = render(
+      <BrandProvider>
+        <Files n={1} />
+      </BrandProvider>,
+    );
     expect(screen.getByText("1 file")).toBeInTheDocument();
-    rerender(<BrandProvider><Files n={3} /></BrandProvider>);
+    rerender(
+      <BrandProvider>
+        <Files n={3} />
+      </BrandProvider>,
+    );
     expect(screen.getByText("3 files")).toBeInTheDocument();
     expect(messageProblems({ en: { files_one: "{{count}} file", files_other: "{{count}} files" }, tr: { files_other: "{{count}} dosya" } })).toEqual([]);
     expect(messageProblems({ en: { files_one: "{{count}} file", files_other: "{{count}} files" }, tr: {} })).toEqual(["files: no tr text"]);
@@ -52,7 +60,11 @@ describe("translate", () => {
   it("names the messages a language misses, adds or fills differently", () => {
     const en = { hosts: { ok: "{{n}} hosts", gap: "Hosts", drift: "{{n}} hosts" } };
     const tr = { hosts: { ok: "{{n}} sunucu", gap: "", drift: "{{count}} sunucu" }, extra: "Fazla" };
-    expect(messageProblems({ en, tr, de: en })).toEqual(["hosts.gap: no tr text", "hosts.drift: tr uses other placeholders than en", "extra: in tr but not in en"]);
+    expect(messageProblems({ en, tr, de: en })).toEqual([
+      "hosts.gap: no tr text",
+      "hosts.drift: tr uses other placeholders than en",
+      "extra: in tr but not in en",
+    ]);
   });
 
   it("reads a locale from a language tag", () => {
@@ -154,16 +166,27 @@ function EnglishOnly() {
 
 describe("defineMessages", () => {
   it("shows English in a language a product has not translated yet", () => {
-    render(<BrandProvider locale="de"><EnglishOnly /></BrandProvider>);
+    render(
+      <BrandProvider locale="de">
+        <EnglishOnly />
+      </BrandProvider>,
+    );
     expect(screen.getByRole("heading")).toHaveTextContent("Hosts");
     expect(messageProblems({ en: { title: "Hosts" } })).toEqual([]);
   });
 
-
   it("reads a product's own messages in the BrandProvider locale", () => {
-    const { rerender } = render(<BrandProvider locale="tr"><Page /></BrandProvider>);
+    const { rerender } = render(
+      <BrandProvider locale="tr">
+        <Page />
+      </BrandProvider>,
+    );
     expect(screen.getByRole("heading")).toHaveTextContent("3 sunucu");
-    rerender(<BrandProvider locale="de"><Page /></BrandProvider>);
+    rerender(
+      <BrandProvider locale="de">
+        <Page />
+      </BrandProvider>,
+    );
     expect(screen.getByRole("heading")).toHaveTextContent("3 Hosts");
   });
 });

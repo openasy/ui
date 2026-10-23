@@ -63,7 +63,6 @@ export interface AppShellProps {
   className?: string;
 }
 
-
 /** The menu offers a filter once it holds this many links. */
 const FILTER_FROM = 8;
 
@@ -82,11 +81,7 @@ export function BrandMark({ product, size = 24, className }: { product: ProductI
     return <img src={logo} alt="" width={size} height={size} className={cn("shrink-0 rounded-md object-contain", className)} />;
   }
   return (
-    <span
-      aria-hidden
-      className={cn("grid shrink-0 place-items-center rounded-md bg-fg text-surface", className)}
-      style={{ width: size, height: size }}
-    >
+    <span aria-hidden className={cn("grid shrink-0 place-items-center rounded-md bg-fg text-surface", className)} style={{ width: size, height: size }}>
       <Icon style={{ width: Math.round(size * 0.58), height: Math.round(size * 0.58) }} strokeWidth={2.2} />
     </span>
   );
@@ -435,8 +430,7 @@ export function AppShell({
             <Popover.Trigger className="oa-topbar-button flex h-10 items-center gap-2 rounded-md px-1.5 text-left">
               <span className="sr-only">{t("shell.account")}:</span>{" "}
               <span className="hidden flex-col leading-tight lg:flex">
-                <span className="text-sm font-medium">{user.name}</span>{" "}
-                {user.role && <span className="oa-topbar-muted text-2xs">{user.role}</span>}
+                <span className="text-sm font-medium">{user.name}</span> {user.role && <span className="oa-topbar-muted text-2xs">{user.role}</span>}
               </span>
               <Avatar name={user.name} size="md" />
             </Popover.Trigger>
@@ -506,7 +500,9 @@ export function AppShell({
               {collapsed ? <ChevronsRight aria-hidden className="size-[18px] shrink-0" /> : <ChevronsLeft aria-hidden className="size-[18px] shrink-0" />}
               <span className="oa-nav-label grow text-left">{t("shell.collapse")}</span>
             </button>
-            {!brand.hidePoweredBy && brand.name !== "OpenAsy" && <span className="oa-nav-extra px-2.5 pt-1 text-2xs text-fg-subtle">{t("shell.poweredBy")}</span>}
+            {!brand.hidePoweredBy && brand.name !== "OpenAsy" && (
+              <span className="oa-nav-extra px-2.5 pt-1 text-2xs text-fg-subtle">{t("shell.poweredBy")}</span>
+            )}
           </div>
         </nav>
         {drawer && <div aria-hidden data-testid="drawer-backdrop" className="fixed inset-0 z-30 bg-black/30 md:hidden" onClick={() => setDrawer(false)} />}

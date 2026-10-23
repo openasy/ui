@@ -171,7 +171,6 @@ const checkColumns: Column<Check>[] = [
   },
 ];
 
-
 /* ----------------------------------------------------------------- pages */
 
 /** Checks: every HTTP, TCP, DNS and TLS probe with 30 days of history. */
@@ -209,12 +208,26 @@ function ChecksPage() {
       </Callout>
       <KpiGrid>
         <KpiCard label="Up" value="40" unit="of 42" tone="success" delta={{ label: "Webhooks receiver down in prod and staging", intent: "bad" }} />
-        <KpiCard label="Avg response" value="118" unit="ms" trend={[121, 117, 119, 132, 124, 118, 115, 118, 129, 118]} delta={{ label: "-6 ms vs. last week", direction: "down", intent: "good" }} />
+        <KpiCard
+          label="Avg response"
+          value="118"
+          unit="ms"
+          trend={[121, 117, 119, 132, 124, 118, 115, 118, 129, 118]}
+          delta={{ label: "-6 ms vs. last week", direction: "down", intent: "good" }}
+        />
         <KpiCard label="Uptime · 30 d" value="99.94" unit="%" delta={{ label: "SLO 99.9%" }} />
         <KpiCard label="SSL expiring" value="2" unit="in 14 days" tone="warning" delta={{ label: "app.example.com in 9 days", intent: "bad" }} />
       </KpiGrid>
       <Panel title="All checks" description="Bars show one day each, oldest on the left" flush>
-        <DataTable label="Uptime checks" columns={checkColumns} rows={rows} getRowId={(c) => c.id} pageSize={14} defaultSort={{ id: "uptime", direction: "asc" }} minWidth={1000} />
+        <DataTable
+          label="Uptime checks"
+          columns={checkColumns}
+          rows={rows}
+          getRowId={(c) => c.id}
+          pageSize={14}
+          defaultSort={{ id: "uptime", direction: "asc" }}
+          minWidth={1000}
+        />
       </Panel>
     </>
   );
@@ -260,7 +273,11 @@ const incidents: Incident[] = [
     date: "19 Oct 2026",
     impact: "warning",
     updates: [
-      { status: "Monitoring", time: "14:02 UTC", text: "A fix for lock contention on the orders table is deployed. Order creation times are back under 1 s and we are watching closely." },
+      {
+        status: "Monitoring",
+        time: "14:02 UTC",
+        text: "A fix for lock contention on the orders table is deployed. Order creation times are back under 1 s and we are watching closely.",
+      },
       { status: "Identified", time: "13:51 UTC", text: "Some order requests wait several seconds on a database lock. Payments are not affected." },
       { status: "Investigating", time: "13:47 UTC", text: "We are looking into slower than usual checkout times." },
     ],
@@ -376,11 +393,24 @@ function StatusPageScreen() {
   );
 }
 
-
 /* ---------------------------------------------------------- local pieces */
 
 /** Not in the library yet: a multi-line text field with the same label and hint pattern as TextField. */
-function TextArea({ label, hint, value, onChange, rows = 3, placeholder }: { label: string; hint?: string; value: string; onChange: (v: string) => void; rows?: number; placeholder?: string }) {
+function TextArea({
+  label,
+  hint,
+  value,
+  onChange,
+  rows = 3,
+  placeholder,
+}: {
+  label: string;
+  hint?: string;
+  value: string;
+  onChange: (v: string) => void;
+  rows?: number;
+  placeholder?: string;
+}) {
   const id = useId();
   return (
     <div className="flex flex-col gap-1">
@@ -419,8 +449,26 @@ interface StatusSite {
 }
 
 const SITES: StatusSite[] = [
-  { id: "sp1", name: "Acme status", domain: "status.example.com", visibility: "Public", components: components.map((c) => c.name), subscribers: 1_284, state: "degraded", updated: "14:05 UTC" },
-  { id: "sp2", name: "Internal platform", domain: "status.internal.example.com", visibility: "Private · SSO", components: ["Checkout API", "Webhooks", "Postgres primary", "SMTP relay", "Kubernetes API"], subscribers: 96, state: "up", updated: "13:40 UTC" },
+  {
+    id: "sp1",
+    name: "Acme status",
+    domain: "status.example.com",
+    visibility: "Public",
+    components: components.map((c) => c.name),
+    subscribers: 1_284,
+    state: "degraded",
+    updated: "14:05 UTC",
+  },
+  {
+    id: "sp2",
+    name: "Internal platform",
+    domain: "status.internal.example.com",
+    visibility: "Private · SSO",
+    components: ["Checkout API", "Webhooks", "Postgres primary", "SMTP relay", "Kubernetes API"],
+    subscribers: 96,
+    state: "up",
+    updated: "13:40 UTC",
+  },
 ];
 
 const ALL_COMPONENTS = ["Checkout API", "Customer portal", "Webhooks", "Marketing site", "Email delivery", "Postgres primary", "SMTP relay", "Kubernetes API"];
@@ -449,7 +497,15 @@ function StatusPagesPage() {
     { id: "state", header: "Shows", cell: (s) => <StatusBadge tone={COMPONENT_STATE[s.state].tone}>{COMPONENT_STATE[s.state].label}</StatusBadge> },
     { id: "vis", header: "Visibility", cell: (s) => <Badge tone={s.visibility === "Public" ? "info" : "neutral"}>{s.visibility}</Badge> },
     { id: "components", header: "Components", align: "right", mono: true, cell: (s) => drafts[s.id]!.components.length },
-    { id: "subs", header: "Subscribers", align: "right", mono: true, description: "People who get email or RSS updates when an incident is posted.", sortValue: (s) => s.subscribers, cell: (s) => formatNumber(s.subscribers) },
+    {
+      id: "subs",
+      header: "Subscribers",
+      align: "right",
+      mono: true,
+      description: "People who get email or RSS updates when an incident is posted.",
+      sortValue: (s) => s.subscribers,
+      cell: (s) => formatNumber(s.subscribers),
+    },
     { id: "updated", header: "Updated", cell: (s) => <span className="text-xs">{s.updated}</span> },
   ];
   return (
@@ -466,11 +522,24 @@ function StatusPagesPage() {
       <KpiGrid>
         <KpiCard label="Status pages" value="2" unit="1 public" />
         <KpiCard label="Subscribers" value="1,380" delta={{ label: "+42 this week", direction: "up", intent: "good" }} />
-        <KpiCard label="Page views · 24 h" value="8.2k" trend={wave(24, { base: 200, amp: 60, seed: 210, spike: 900, spikeAt: 18, spikeLen: 2 })} delta={{ label: "Spike during checkout slowness" }} />
+        <KpiCard
+          label="Page views · 24 h"
+          value="8.2k"
+          trend={wave(24, { base: 200, amp: 60, seed: 210, spike: 900, spikeAt: 18, spikeLen: 2 })}
+          delta={{ label: "Spike during checkout slowness" }}
+        />
         <KpiCard label="Open incidents" value="1" tone="warning" delta={{ label: "Slow order creation · Monitoring" }} />
       </KpiGrid>
       <Panel title="Pages" flush>
-        <DataTable label="Status pages" columns={cols} rows={SITES} getRowId={(s) => s.id} onRowClick={(s) => setActive(s.id)} activeRowId={active} minWidth={760} />
+        <DataTable
+          label="Status pages"
+          columns={cols}
+          rows={SITES}
+          getRowId={(s) => s.id}
+          onRowClick={(s) => setActive(s.id)}
+          activeRowId={active}
+          minWidth={760}
+        />
       </Panel>
       {published && <Callout tone="success" title={published} onDismiss={() => setPublished("")} />}
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
@@ -507,8 +576,18 @@ function StatusPagesPage() {
                 ))}
               </div>
             </fieldset>
-            <Switch checked={d.bars} onCheckedChange={(v) => set({ bars: v })} label="Show 90-day uptime bars" description="One bar per day under each component." />
-            <Switch checked={d.subscribe} onCheckedChange={(v) => set({ subscribe: v })} label="Allow subscriptions" description="Visitors can subscribe by email or RSS." />
+            <Switch
+              checked={d.bars}
+              onCheckedChange={(v) => set({ bars: v })}
+              label="Show 90-day uptime bars"
+              description="One bar per day under each component."
+            />
+            <Switch
+              checked={d.subscribe}
+              onCheckedChange={(v) => set({ subscribe: v })}
+              label="Allow subscriptions"
+              description="Visitors can subscribe by email or RSS."
+            />
             <Switch checked={d.poweredBy} onCheckedChange={(v) => set({ poweredBy: v })} label="Show “Powered by OpenAsy”" />
           </div>
         </Panel>
@@ -519,7 +598,12 @@ function StatusPagesPage() {
               <span className="grow truncate text-sm font-semibold">{d.name}</span>
               {d.subscribe && <Badge variant="outline">Subscribe</Badge>}
             </div>
-            <div className={cn("rounded-md border px-2.5 py-1.5 text-sm font-semibold", site.state === "up" ? "border-success/30 bg-success-soft text-success" : "border-warning/35 bg-warning-soft text-warning-text")}>
+            <div
+              className={cn(
+                "rounded-md border px-2.5 py-1.5 text-sm font-semibold",
+                site.state === "up" ? "border-success/30 bg-success-soft text-success" : "border-warning/35 bg-warning-soft text-warning-text",
+              )}
+            >
               {site.state === "up" ? "All systems operational" : "Some systems are degraded"}
             </div>
             <ul aria-label="Preview components" className="flex flex-col">
@@ -529,9 +613,17 @@ function StatusPagesPage() {
                   <li key={name} className="flex flex-col gap-1 border-b border-subtle py-1.5 last:border-0">
                     <span className="flex items-center justify-between gap-2 text-xs">
                       <span className="font-medium">{name}</span>
-                      <span className={comp?.state === "degraded" ? "text-warning-text" : "text-success"}>{comp ? COMPONENT_STATE[comp.state].label : "Operational"}</span>
+                      <span className={comp?.state === "degraded" ? "text-warning-text" : "text-success"}>
+                        {comp ? COMPONENT_STATE[comp.state].label : "Operational"}
+                      </span>
                     </span>
-                    {d.bars && <span aria-hidden className="flex h-3 gap-px">{(comp?.days ?? history(90, name.length * 7, 0.02)).slice(-45).map((day, i) => <span key={i} className={cn("min-w-0 flex-1 rounded-[1px]", DAY_TONE[day])} />)}</span>}
+                    {d.bars && (
+                      <span aria-hidden className="flex h-3 gap-px">
+                        {(comp?.days ?? history(90, name.length * 7, 0.02)).slice(-45).map((day, i) => (
+                          <span key={i} className={cn("min-w-0 flex-1 rounded-[1px]", DAY_TONE[day])} />
+                        ))}
+                      </span>
+                    )}
                   </li>
                 );
               })}
@@ -592,7 +684,12 @@ const MANAGED: ManagedIncident[] = [
   },
 ];
 
-const INCIDENT_TONE: Record<IncidentStatus, "warning" | "info" | "success" | "danger"> = { Investigating: "danger", Identified: "warning", Monitoring: "info", Resolved: "success" };
+const INCIDENT_TONE: Record<IncidentStatus, "warning" | "info" | "success" | "danger"> = {
+  Investigating: "danger",
+  Identified: "warning",
+  Monitoring: "info",
+  Resolved: "success",
+};
 
 function IncidentsPage() {
   const [list, setList] = useState(MANAGED);
@@ -605,7 +702,9 @@ function IncidentsPage() {
   const shown = list.filter((i) => filter === "all" || (filter === "open" ? i.status !== "Resolved" : i.status === "Resolved"));
   const post = () => {
     if (!message.trim()) return;
-    setList((all) => all.map((i) => (i.id === active ? { ...i, status, updates: [{ status, time: "14:12 UTC", text: message.trim(), by: USER.name }, ...i.updates] } : i)));
+    setList((all) =>
+      all.map((i) => (i.id === active ? { ...i, status, updates: [{ status, time: "14:12 UTC", text: message.trim(), by: USER.name }, ...i.updates] } : i)),
+    );
     setMessage("");
   };
   return (
@@ -653,15 +752,27 @@ function IncidentsPage() {
               </li>
             ))}
           </ul>
-          {shown.length === 0 && <EmptyState icon={<CircleCheck />} title={`No ${filter} incidents`}>Everything on your status pages is operational.</EmptyState>}
+          {shown.length === 0 && (
+            <EmptyState icon={<CircleCheck />} title={`No ${filter} incidents`}>
+              Everything on your status pages is operational.
+            </EmptyState>
+          )}
         </Panel>
         <div className="flex min-w-0 flex-col gap-2.5">
-          <Panel aria-label="Incident detail" title={inc.title} description={`Started ${inc.started} · ${inc.impact} impact · ${inc.components.join(", ")}`} actions={<StatusBadge tone={INCIDENT_TONE[inc.status]}>{inc.status}</StatusBadge>}>
+          <Panel
+            aria-label="Incident detail"
+            title={inc.title}
+            description={`Started ${inc.started} · ${inc.impact} impact · ${inc.components.join(", ")}`}
+            actions={<StatusBadge tone={INCIDENT_TONE[inc.status]}>{inc.status}</StatusBadge>}
+          >
             <ol aria-label="Updates" className="flex flex-col gap-2.5 border-l border-line pl-3">
               {inc.updates.map((u, i) => (
                 <li key={i} className="flex flex-col gap-0.5 text-sm">
                   <span className="text-xs">
-                    <span className="font-semibold">{u.status}</span> <span className="text-fg-muted">· {u.time} · {u.by}</span>
+                    <span className="font-semibold">{u.status}</span>{" "}
+                    <span className="text-fg-muted">
+                      · {u.time} · {u.by}
+                    </span>
                   </span>
                   <p className="text-fg-muted">{u.text}</p>
                 </li>
@@ -682,8 +793,19 @@ function IncidentsPage() {
                 onChange={setStatus}
                 options={(["Investigating", "Identified", "Monitoring", "Resolved"] as const).map((s) => ({ value: s, label: s }))}
               />
-              <TextArea label="Message" value={message} onChange={setMessage} placeholder="What changed, what users see, when the next update is due" hint="Shown on the status page and emailed to subscribers." />
-              <Switch checked={notify} onCheckedChange={setNotify} label="Notify subscribers" description={`${formatNumber(SITES[0]!.subscribers)} people on status.example.com`} />
+              <TextArea
+                label="Message"
+                value={message}
+                onChange={setMessage}
+                placeholder="What changed, what users see, when the next update is due"
+                hint="Shown on the status page and emailed to subscribers."
+              />
+              <Switch
+                checked={notify}
+                onCheckedChange={setNotify}
+                label="Notify subscribers"
+                description={`${formatNumber(SITES[0]!.subscribers)} people on status.example.com`}
+              />
               <div className="flex justify-end">
                 <Button type="submit" variant="primary" disabled={!message.trim()}>
                   Post update
@@ -710,11 +832,43 @@ interface MaintWindow {
 }
 
 const WINDOWS: MaintWindow[] = [
-  { id: "m1", title: "PostgreSQL 16.5 minor upgrade", components: ["Checkout API", "Customer portal"], start: "Oct 22 · 02:00 UTC", duration: "30 min", state: "Scheduled", notify: true },
-  { id: "m2", title: "Edge certificate rotation", components: ["Marketing site", "Customer portal"], start: "Oct 25 · 04:00 UTC", duration: "15 min", state: "Scheduled", notify: false },
+  {
+    id: "m1",
+    title: "PostgreSQL 16.5 minor upgrade",
+    components: ["Checkout API", "Customer portal"],
+    start: "Oct 22 · 02:00 UTC",
+    duration: "30 min",
+    state: "Scheduled",
+    notify: true,
+  },
+  {
+    id: "m2",
+    title: "Edge certificate rotation",
+    components: ["Marketing site", "Customer portal"],
+    start: "Oct 25 · 04:00 UTC",
+    duration: "15 min",
+    state: "Scheduled",
+    notify: false,
+  },
   { id: "m3", title: "Webhook workers migration", components: ["Webhooks"], start: "Oct 19 · 13:30 UTC", duration: "1 h", state: "In progress", notify: true },
-  { id: "m4", title: "Scheduled database maintenance", components: ["Checkout API"], start: "Oct 2 · 03:00 UTC", duration: "30 min", state: "Completed", notify: true },
-  { id: "m5", title: "SMTP relay OS patching", components: ["Email delivery"], start: "Sep 24 · 05:00 UTC", duration: "20 min", state: "Completed", notify: false },
+  {
+    id: "m4",
+    title: "Scheduled database maintenance",
+    components: ["Checkout API"],
+    start: "Oct 2 · 03:00 UTC",
+    duration: "30 min",
+    state: "Completed",
+    notify: true,
+  },
+  {
+    id: "m5",
+    title: "SMTP relay OS patching",
+    components: ["Email delivery"],
+    start: "Sep 24 · 05:00 UTC",
+    duration: "20 min",
+    state: "Completed",
+    notify: false,
+  },
 ];
 
 const WINDOW_TONE: Record<MaintWindow["state"], "info" | "warning" | "neutral"> = { Scheduled: "info", "In progress": "warning", Completed: "neutral" };
@@ -725,13 +879,42 @@ function MaintenancePage() {
   const [title, setTitle] = useState("");
   const [notice, setNotice] = useState("");
   const cols: Column<MaintWindow>[] = [
-    { id: "title", header: "MaintWindow", pinned: "left", width: "260px", sortValue: (w) => w.title, cell: (w) => <span className="font-medium">{w.title}</span> },
+    {
+      id: "title",
+      header: "MaintWindow",
+      pinned: "left",
+      width: "260px",
+      sortValue: (w) => w.title,
+      cell: (w) => <span className="font-medium">{w.title}</span>,
+    },
     { id: "state", header: "State", sortValue: (w) => w.state, cell: (w) => <StatusBadge tone={WINDOW_TONE[w.state]}>{w.state}</StatusBadge> },
     { id: "start", header: "Starts", mono: true, cell: (w) => <span className="text-xs">{w.start}</span> },
     { id: "duration", header: "Duration", mono: true, cell: (w) => w.duration },
-    { id: "components", header: "Components", cell: (w) => <span className="flex flex-wrap gap-1">{w.components.map((c) => <Badge key={c} variant="outline">{c}</Badge>)}</span> },
-    { id: "notify", header: "Subscribers", description: "Whether subscribers are emailed 24 hours and 1 hour before the window.", cell: (w) => (w.notify ? <span className="text-xs">Notified</span> : <span className="text-xs text-fg-muted">Silent</span>) },
-    { id: "alerts", header: "Alerts", description: "Check alerts for these components are paused during the window.", cell: () => <span className="text-xs">Paused during window</span> },
+    {
+      id: "components",
+      header: "Components",
+      cell: (w) => (
+        <span className="flex flex-wrap gap-1">
+          {w.components.map((c) => (
+            <Badge key={c} variant="outline">
+              {c}
+            </Badge>
+          ))}
+        </span>
+      ),
+    },
+    {
+      id: "notify",
+      header: "Subscribers",
+      description: "Whether subscribers are emailed 24 hours and 1 hour before the window.",
+      cell: (w) => (w.notify ? <span className="text-xs">Notified</span> : <span className="text-xs text-fg-muted">Silent</span>),
+    },
+    {
+      id: "alerts",
+      header: "Alerts",
+      description: "Check alerts for these components are paused during the window.",
+      cell: () => <span className="text-xs">Paused during window</span>,
+    },
   ];
   return (
     <>
@@ -746,13 +929,31 @@ function MaintenancePage() {
       />
       {notice && <Callout tone="success" title={notice} onDismiss={() => setNotice("")} />}
       {open && (
-        <Panel title="Schedule maintenance" actions={<Button size="sm" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>}>
+        <Panel
+          title="Schedule maintenance"
+          actions={
+            <Button size="sm" variant="ghost" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+          }
+        >
           <form
             className="grid gap-3 md:grid-cols-4"
             onSubmit={(e) => {
               e.preventDefault();
               const t = title.trim() || "Planned maintenance";
-              setRows((r) => [{ id: `m${r.length + 1}`, title: t, components: ["Checkout API"], start: "Oct 29 · 02:00 UTC", duration: "1 h", state: "Scheduled", notify: true }, ...r]);
+              setRows((r) => [
+                {
+                  id: `m${r.length + 1}`,
+                  title: t,
+                  components: ["Checkout API"],
+                  start: "Oct 29 · 02:00 UTC",
+                  duration: "1 h",
+                  state: "Scheduled",
+                  notify: true,
+                },
+                ...r,
+              ]);
               setNotice(`Scheduled “${t}”`);
               setOpen(false);
               setTitle("");
@@ -760,7 +961,16 @@ function MaintenancePage() {
           >
             <TextField label="Title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Load balancer upgrade" className="md:col-span-2" />
             <TextField label="Starts (UTC)" type="datetime-local" defaultValue="2026-10-29T02:00" />
-            <SelectField label="Duration" defaultValue="60" options={[{ value: "15", label: "15 minutes" }, { value: "30", label: "30 minutes" }, { value: "60", label: "1 hour" }, { value: "120", label: "2 hours" }]} />
+            <SelectField
+              label="Duration"
+              defaultValue="60"
+              options={[
+                { value: "15", label: "15 minutes" },
+                { value: "30", label: "30 minutes" },
+                { value: "60", label: "1 hour" },
+                { value: "120", label: "2 hours" },
+              ]}
+            />
             <SelectField label="Components" options={ALL_COMPONENTS.map((c) => ({ value: c, label: c }))} />
             <Checkbox label="Pause alerts for affected checks" defaultChecked />
             <Checkbox label="Email subscribers 24 h and 1 h before" defaultChecked />
@@ -804,11 +1014,66 @@ interface Probe {
 }
 
 const PROBES: Probe[] = [
-  { id: "fra", code: "fra", city: "Frankfurt", runner: "GitHub Actions · eu-central", egress: "192.0.2.44", checks: 42, p50: 64, p95: 141, success: 99.96, enabled: true },
-  { id: "lon", code: "lon", city: "London", runner: "GitHub Actions · uk-south", egress: "198.51.100.7", checks: 21, p50: 71, p95: 158, success: 99.95, enabled: true },
-  { id: "iad", code: "iad", city: "Ashburn", runner: "GitHub Actions · us-east", egress: "203.0.113.9", checks: 18, p50: 112, p95: 236, success: 99.91, enabled: true },
-  { id: "sin", code: "sin", city: "Singapore", runner: "Self-hosted agent · probe-sin-01", egress: "203.0.113.181", checks: 6, p50: 208, p95: 412, success: 99.72, enabled: true },
-  { id: "syd", code: "syd", city: "Sydney", runner: "Self-hosted agent · probe-syd-01", egress: "198.51.100.96", checks: 0, p50: 0, p95: 0, success: 0, enabled: false },
+  {
+    id: "fra",
+    code: "fra",
+    city: "Frankfurt",
+    runner: "GitHub Actions · eu-central",
+    egress: "192.0.2.44",
+    checks: 42,
+    p50: 64,
+    p95: 141,
+    success: 99.96,
+    enabled: true,
+  },
+  {
+    id: "lon",
+    code: "lon",
+    city: "London",
+    runner: "GitHub Actions · uk-south",
+    egress: "198.51.100.7",
+    checks: 21,
+    p50: 71,
+    p95: 158,
+    success: 99.95,
+    enabled: true,
+  },
+  {
+    id: "iad",
+    code: "iad",
+    city: "Ashburn",
+    runner: "GitHub Actions · us-east",
+    egress: "203.0.113.9",
+    checks: 18,
+    p50: 112,
+    p95: 236,
+    success: 99.91,
+    enabled: true,
+  },
+  {
+    id: "sin",
+    code: "sin",
+    city: "Singapore",
+    runner: "Self-hosted agent · probe-sin-01",
+    egress: "203.0.113.181",
+    checks: 6,
+    p50: 208,
+    p95: 412,
+    success: 99.72,
+    enabled: true,
+  },
+  {
+    id: "syd",
+    code: "syd",
+    city: "Sydney",
+    runner: "Self-hosted agent · probe-syd-01",
+    egress: "198.51.100.96",
+    checks: 0,
+    p50: 0,
+    p95: 0,
+    success: 0,
+    enabled: false,
+  },
 ];
 
 function LocationsPage() {
@@ -831,17 +1096,43 @@ function LocationsPage() {
       ),
     },
     { id: "runner", header: "Runs on", cell: (x) => <span className="text-xs">{x.runner}</span> },
-    { id: "egress", header: "Egress IP", description: "Allow-list this address if the target filters by source IP.", cell: (x) => <EntityChip kind="ip" value={x.egress} hideKind /> },
+    {
+      id: "egress",
+      header: "Egress IP",
+      description: "Allow-list this address if the target filters by source IP.",
+      cell: (x) => <EntityChip kind="ip" value={x.egress} hideKind />,
+    },
     { id: "checks", header: "Checks", align: "right", mono: true, sortValue: (x) => x.checks, cell: (x) => x.checks },
-    { id: "p50", header: "p50", align: "right", mono: true, description: "Median response time of all HTTP checks from this location.", sortValue: (x) => x.p50, cell: (x) => (x.enabled ? `${x.p50} ms` : "–") },
-    { id: "p95", header: "p95", align: "right", mono: true, sortValue: (x) => x.p95, cell: (x) => (x.enabled ? <span className={x.p95 > 300 ? "text-warning-text" : "text-fg"}>{x.p95} ms</span> : "–") },
+    {
+      id: "p50",
+      header: "p50",
+      align: "right",
+      mono: true,
+      description: "Median response time of all HTTP checks from this location.",
+      sortValue: (x) => x.p50,
+      cell: (x) => (x.enabled ? `${x.p50} ms` : "–"),
+    },
+    {
+      id: "p95",
+      header: "p95",
+      align: "right",
+      mono: true,
+      sortValue: (x) => x.p95,
+      cell: (x) => (x.enabled ? <span className={x.p95 > 300 ? "text-warning-text" : "text-fg"}>{x.p95} ms</span> : "–"),
+    },
     { id: "success", header: "Success", align: "right", mono: true, sortValue: (x) => x.success, cell: (x) => (x.enabled ? `${x.success.toFixed(2)}%` : "–") },
     {
       id: "enabled",
       header: "Enabled",
       width: "80px",
       hideable: false,
-      cell: (x) => <Switch checked={x.enabled} onCheckedChange={(v) => setProbes((all) => all.map((y) => (y.id === x.id ? { ...y, enabled: v } : y)))} label={<span className="sr-only">Enable {x.city}</span>} />,
+      cell: (x) => (
+        <Switch
+          checked={x.enabled}
+          onCheckedChange={(v) => setProbes((all) => all.map((y) => (y.id === x.id ? { ...y, enabled: v } : y)))}
+          label={<span className="sr-only">Enable {x.city}</span>}
+        />
+      ),
     },
   ];
   return (
@@ -871,7 +1162,11 @@ function LocationsPage() {
             labels={timeLabels(24, 60)}
             height={200}
             format={(v) => `${Math.round(v)} ms`}
-            series={PROBES.filter((x) => x.p50 > 0).map((x, i) => ({ id: x.id, name: x.city, data: wave(24, { base: x.p50, amp: x.p50 * 0.15, seed: 230 + i, spike: x.id === "iad" ? 40 : 0, spikeAt: 15 }) }))}
+            series={PROBES.filter((x) => x.p50 > 0).map((x, i) => ({
+              id: x.id,
+              name: x.city,
+              data: wave(24, { base: x.p50, amp: x.p50 * 0.15, seed: 230 + i, spike: x.id === "iad" ? 40 : 0, spikeAt: 15 }),
+            }))}
           />
         </Panel>
         <Panel aria-label="Location detail" title={`${p.city} · ${p.code}`} description={p.runner}>
@@ -898,14 +1193,26 @@ function LocationsPage() {
             <BarList
               label={`Slowest checks from ${p.city}`}
               format={(v) => `${Math.round(v)} ms`}
-              items={checks.filter((c) => c.regions.includes(p.code) && c.last > 0).sort((a, b) => b.last - a.last).slice(0, 4).map((c) => ({ id: c.id, label: c.name, value: c.last * (p.p50 / 64) }))}
+              items={checks
+                .filter((c) => c.regions.includes(p.code) && c.last > 0)
+                .sort((a, b) => b.last - a.last)
+                .slice(0, 4)
+                .map((c) => ({ id: c.id, label: c.name, value: c.last * (p.p50 / 64) }))}
             />
             {!p.enabled && <p className="text-xs text-fg-muted">This location is off; enable it to start running checks.</p>}
           </div>
         </Panel>
       </div>
       <Panel title="Probe locations" flush>
-        <DataTable label="Probe locations" columns={cols} rows={probes} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={active} minWidth={960} />
+        <DataTable
+          label="Probe locations"
+          columns={cols}
+          rows={probes}
+          getRowId={(x) => x.id}
+          onRowClick={(x) => setActive(x.id)}
+          activeRowId={active}
+          minWidth={960}
+        />
       </Panel>
     </>
   );

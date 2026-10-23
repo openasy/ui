@@ -78,10 +78,16 @@ const ROOT: Node = n("all", "runtime", 10000, [
                 n("orders/pricing.Calculate", "app", 400, [n("math/big.(*Float).Mul", "stdlib", 180)]),
               ]),
               n("orders/api.(*Handler).ListOrders", "app", 2600, [
-                n("encoding/json.Marshal", "stdlib", 1500, [n("encoding/json.(*encodeState).reflectValue", "stdlib", 1300, [n("runtime.mallocgc", "runtime", 520)])]),
-                n("orders/store.(*Store).ListOrders", "app", 900, [n("database/sql.(*Rows).Next", "database", 700, [n("github.com/lib/pq.(*conn).recv", "database", 560)])]),
+                n("encoding/json.Marshal", "stdlib", 1500, [
+                  n("encoding/json.(*encodeState).reflectValue", "stdlib", 1300, [n("runtime.mallocgc", "runtime", 520)]),
+                ]),
+                n("orders/store.(*Store).ListOrders", "app", 900, [
+                  n("database/sql.(*Rows).Next", "database", 700, [n("github.com/lib/pq.(*conn).recv", "database", 560)]),
+                ]),
               ]),
-              n("orders/api.authMiddleware", "app", 800, [n("crypto/ecdsa.Verify", "stdlib", 650, [n("crypto/internal/nistec.(*P256Point).ScalarMult", "stdlib", 590)])]),
+              n("orders/api.authMiddleware", "app", 800, [
+                n("crypto/ecdsa.Verify", "stdlib", 650, [n("crypto/internal/nistec.(*P256Point).ScalarMult", "stdlib", 590)]),
+              ]),
             ]),
           ]),
           n("bufio.(*Reader).Peek", "stdlib", 120),
@@ -295,9 +301,19 @@ function FlameGraphPage() {
         />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="CPU · avg" value="1.84" unit="cores" trend={[1.6, 1.7, 1.65, 1.8, 2.4, 2.1, 1.9, 1.84]} delta={{ label: "+22% since v2.14.1", direction: "up", intent: "bad" }} />
+        <KpiCard
+          label="CPU · avg"
+          value="1.84"
+          unit="cores"
+          trend={[1.6, 1.7, 1.65, 1.8, 2.4, 2.1, 1.9, 1.84]}
+          delta={{ label: "+22% since v2.14.1", direction: "up", intent: "bad" }}
+        />
         <KpiCard label="Samples" value="10k" unit="in 1 h" />
-        <KpiCard label="Hottest function" value={<span className="font-mono text-base">json.reflectValue</span>} delta={{ label: "16.8% self · encoding/json" }} />
+        <KpiCard
+          label="Hottest function"
+          value={<span className="font-mono text-base">json.reflectValue</span>}
+          delta={{ label: "16.8% self · encoding/json" }}
+        />
         <KpiCard label="GC share" value="8.0" unit="%" tone="warning" delta={{ label: "mallocgc under JSON encoding: 5.2%", intent: "bad" }} />
       </KpiGrid>
       <Panel
@@ -346,7 +362,14 @@ function FlameGraphPage() {
         </div>
       </Panel>
       <Panel title="Top functions" description="By self time" actions={<Badge>{fns.length} of 214</Badge>} flush>
-        <DataTable label="Top functions by self time" columns={fnColumns} rows={fns} getRowId={(r) => r.id} defaultSort={{ id: "self", direction: "desc" }} minWidth={760} />
+        <DataTable
+          label="Top functions by self time"
+          columns={fnColumns}
+          rows={fns}
+          getRowId={(r) => r.id}
+          defaultSort={{ id: "self", direction: "desc" }}
+          minWidth={760}
+        />
       </Panel>
     </>
   );
@@ -383,7 +406,8 @@ const PROFILES: Profile[] = Array.from({ length: 18 }, (_, i) => {
     duration: i % 5 === 2 ? "30 s" : "60 s",
     samples: 4_000 + ((i * 1_733) % 6_000),
     pod: `${service}-7d9f${(i * 13) % 97}-x${i % 7}`,
-    version: service === "orders-api" ? (i < 8 ? "v2.14.1" : "v2.14.0") : service === "payments-api" ? "v5.3.0" : service === "inventory-api" ? "v1.22.4" : "v5.0.3",
+    version:
+      service === "orders-api" ? (i < 8 ? "v2.14.1" : "v2.14.0") : service === "payments-api" ? "v5.3.0" : service === "inventory-api" ? "v1.22.4" : "v5.0.3",
     trigger: i === 4 ? "CPU spike" : i % 6 === 1 ? "On demand" : "Continuous",
     status: "Ready",
   };
@@ -440,8 +464,21 @@ function ProfilesPage() {
     { id: "version", header: "Version", mono: true, cell: (x) => x.version },
     { id: "pod", header: "Pod", mono: true, cell: (x) => <span className="block max-w-[200px] truncate text-xs">{x.pod}</span> },
     { id: "duration", header: "Duration", align: "right", mono: true, cell: (x) => x.duration },
-    { id: "samples", header: "Samples", align: "right", mono: true, description: "Stack samples taken at 100 Hz for CPU; allocation events for memory profiles.", sortValue: (x) => x.samples, cell: (x) => formatNumber(x.samples) },
-    { id: "trigger", header: "Trigger", description: "Continuous profiles are taken every minute; CPU spike profiles start when CPU passes 80% of the limit.", cell: (x) => <span className={cn("text-xs", x.trigger === "CPU spike" && "text-warning-text")}>{x.trigger}</span> },
+    {
+      id: "samples",
+      header: "Samples",
+      align: "right",
+      mono: true,
+      description: "Stack samples taken at 100 Hz for CPU; allocation events for memory profiles.",
+      sortValue: (x) => x.samples,
+      cell: (x) => formatNumber(x.samples),
+    },
+    {
+      id: "trigger",
+      header: "Trigger",
+      description: "Continuous profiles are taken every minute; CPU spike profiles start when CPU passes 80% of the limit.",
+      cell: (x) => <span className={cn("text-xs", x.trigger === "CPU spike" && "text-warning-text")}>{x.trigger}</span>,
+    },
     { id: "status", header: "Status", cell: (x) => <StatusBadge tone={x.status === "Ready" ? "success" : "info"}>{x.status}</StatusBadge> },
   ];
   return (
@@ -459,20 +496,59 @@ function ProfilesPage() {
         }
       />
       {capturing && (
-        <Panel title="Capture a profile now" actions={<Button size="sm" variant="ghost" onClick={() => setCapturing(false)}>Cancel</Button>}>
+        <Panel
+          title="Capture a profile now"
+          actions={
+            <Button size="sm" variant="ghost" onClick={() => setCapturing(false)}>
+              Cancel
+            </Button>
+          }
+        >
           <form
             className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end"
             onSubmit={(e) => {
               e.preventDefault();
               const id = `pr-new-${rows.length}`;
-              setRows((r) => [{ id, time: "14:03", service: capService, type: capType, duration: "60 s", samples: 0, pod: `${capService}-7d9f12-x0`, version: capService === "orders-api" ? "v2.14.1" : "latest", trigger: "On demand", status: "Capturing" }, ...r]);
+              setRows((r) => [
+                {
+                  id,
+                  time: "14:03",
+                  service: capService,
+                  type: capType,
+                  duration: "60 s",
+                  samples: 0,
+                  pod: `${capService}-7d9f12-x0`,
+                  version: capService === "orders-api" ? "v2.14.1" : "latest",
+                  trigger: "On demand",
+                  status: "Capturing",
+                },
+                ...r,
+              ]);
               setActive(id);
               setCapturing(false);
             }}
           >
-            <SelectField label="Service" value={capService} onChange={(e) => setCapService(e.target.value)} options={SERVICES_LIST.map((s) => ({ value: s, label: s }))} />
-            <SelectField label="Profile type" value={capType} onChange={(e) => setCapType(e.target.value as ProfileType)} options={TYPES.map((t) => ({ value: t, label: t }))} />
-            <SelectField label="Duration" defaultValue="60" options={[{ value: "30", label: "30 seconds" }, { value: "60", label: "60 seconds" }, { value: "300", label: "5 minutes" }]} />
+            <SelectField
+              label="Service"
+              value={capService}
+              onChange={(e) => setCapService(e.target.value)}
+              options={SERVICES_LIST.map((s) => ({ value: s, label: s }))}
+            />
+            <SelectField
+              label="Profile type"
+              value={capType}
+              onChange={(e) => setCapType(e.target.value as ProfileType)}
+              options={TYPES.map((t) => ({ value: t, label: t }))}
+            />
+            <SelectField
+              label="Duration"
+              defaultValue="60"
+              options={[
+                { value: "30", label: "30 seconds" },
+                { value: "60", label: "60 seconds" },
+                { value: "300", label: "5 minutes" },
+              ]}
+            />
             <Button type="submit" variant="primary">
               Start capture
             </Button>
@@ -481,8 +557,18 @@ function ProfilesPage() {
       )}
       <FilterBar onClear={services.length || types.length ? () => (setServices([]), setTypes([])) : undefined}>
         <TimeRangePicker value={range} onChange={setRange} />
-        <FacetFilter label="Service" selected={services} onChange={setServices} options={SERVICES_LIST.map((s) => ({ value: s, count: rows.filter((x) => x.service === s).length }))} />
-        <FacetFilter label="Type" selected={types} onChange={setTypes} options={TYPES.map((t) => ({ value: t, count: rows.filter((x) => x.type === t).length }))} />
+        <FacetFilter
+          label="Service"
+          selected={services}
+          onChange={setServices}
+          options={SERVICES_LIST.map((s) => ({ value: s, count: rows.filter((x) => x.service === s).length }))}
+        />
+        <FacetFilter
+          label="Type"
+          selected={types}
+          onChange={setTypes}
+          options={TYPES.map((t) => ({ value: t, count: rows.filter((x) => x.type === t).length }))}
+        />
       </FilterBar>
       <KpiGrid>
         <KpiCard label="Profiles · 1 h" value={String(rows.length)} unit="4 services" />
@@ -497,12 +583,25 @@ function ProfilesPage() {
           stacked
           height={170}
           format={(v) => `${v.toFixed(2)} cores`}
-          series={SERVICES_LIST.map((s, i) => ({ id: s, name: s, data: wave(30, { base: [1.8, 1.1, 0.6, 0.4][i]!, amp: 0.2, seed: 300 + i, spike: i === 0 ? 0.6 : 0, spikeAt: 18, spikeLen: 3 }) }))}
+          series={SERVICES_LIST.map((s, i) => ({
+            id: s,
+            name: s,
+            data: wave(30, { base: [1.8, 1.1, 0.6, 0.4][i]!, amp: 0.2, seed: 300 + i, spike: i === 0 ? 0.6 : 0, spikeAt: 18, spikeLen: 3 }),
+          }))}
         />
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Captured profiles" description={`${shown.length} of ${rows.length}`} flush>
-          <DataTable label="Captured profiles" columns={cols} rows={shown} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={p.id} pageSize={10} minWidth={980} />
+          <DataTable
+            label="Captured profiles"
+            columns={cols}
+            rows={shown}
+            getRowId={(x) => x.id}
+            onRowClick={(x) => setActive(x.id)}
+            activeRowId={p.id}
+            pageSize={10}
+            minWidth={980}
+          />
         </Panel>
         <Panel
           aria-label="Profile detail"
@@ -610,7 +709,11 @@ function ComparePage() {
       sortValue: (r) => delta(r),
       cell: (r) => {
         const d = delta(r);
-        return <span className={cn("font-mono text-xs font-semibold", d > 0 ? "text-danger-text" : d < 0 ? "text-success" : "text-fg-muted")}>{d > 0 ? `+${d.toFixed(1)}` : d.toFixed(1)} pts</span>;
+        return (
+          <span className={cn("font-mono text-xs font-semibold", d > 0 ? "text-danger-text" : d < 0 ? "text-success" : "text-fg-muted")}>
+            {d > 0 ? `+${d.toFixed(1)}` : d.toFixed(1)} pts
+          </span>
+        );
       },
     },
     {
@@ -624,7 +727,10 @@ function ComparePage() {
         return (
           <span aria-hidden className="relative block h-2 w-40 rounded-full bg-subtle">
             <span className="absolute inset-y-0 left-1/2 w-px bg-line-strong" />
-            <span className={cn("absolute inset-y-0 rounded-full", d > 0 ? "bg-danger" : "bg-success")} style={d > 0 ? { left: "50%", width: `${w}%` } : { right: "50%", width: `${w}%` }} />
+            <span
+              className={cn("absolute inset-y-0 rounded-full", d > 0 ? "bg-danger" : "bg-success")}
+              style={d > 0 ? { left: "50%", width: `${w}%` } : { right: "50%", width: `${w}%` }}
+            />
           </span>
         );
       },
@@ -643,7 +749,15 @@ function ComparePage() {
           <SelectField label="Baseline" value={base} onChange={(e) => setBase(e.target.value)} className="w-44" options={VERSIONS} />
           <ArrowRight aria-hidden className="mb-2 size-4 text-fg-muted" />
           <SelectField label="Comparison" value={head} onChange={(e) => setHead(e.target.value)} className="w-44" options={VERSIONS} />
-          <SelectField label="Profile type" defaultValue="cpu" className="w-36" options={[{ value: "cpu", label: "CPU" }, { value: "alloc", label: "Allocations" }]} />
+          <SelectField
+            label="Profile type"
+            defaultValue="cpu"
+            className="w-36"
+            options={[
+              { value: "cpu", label: "CPU" },
+              { value: "alloc", label: "Allocations" },
+            ]}
+          />
         </div>
       </Panel>
       {same ? (
@@ -655,9 +769,23 @@ function ComparePage() {
       ) : (
         <>
           <KpiGrid>
-            <KpiCard label="CPU per request" value="+22" unit="%" tone="danger" delta={{ label: `${base} 3.1 ms → ${head} 3.8 ms`, direction: "up", intent: "bad" }} />
-            <KpiCard label="Biggest regression" value={<span className="font-mono text-base">P256Point.ScalarMult</span>} delta={{ label: "+1.8 pts · JWT verification", intent: "bad" }} />
-            <KpiCard label="Biggest improvement" value={<span className="font-mono text-base">json.reflectValue</span>} delta={{ label: "-6.1 pts · pooled encoder", intent: "good" }} />
+            <KpiCard
+              label="CPU per request"
+              value="+22"
+              unit="%"
+              tone="danger"
+              delta={{ label: `${base} 3.1 ms → ${head} 3.8 ms`, direction: "up", intent: "bad" }}
+            />
+            <KpiCard
+              label="Biggest regression"
+              value={<span className="font-mono text-base">P256Point.ScalarMult</span>}
+              delta={{ label: "+1.8 pts · JWT verification", intent: "bad" }}
+            />
+            <KpiCard
+              label="Biggest improvement"
+              value={<span className="font-mono text-base">json.reflectValue</span>}
+              delta={{ label: "-6.1 pts · pooled encoder", intent: "good" }}
+            />
             <KpiCard label="Functions changed" value={String(DIFF.filter((r) => Math.abs(delta(r)) >= 0.5).length)} unit="by 0.5 pts or more" />
           </KpiGrid>
           <Callout tone="warning" title="JWT signature checks got slower in v2.14.1">
@@ -680,7 +808,14 @@ function ComparePage() {
             }
             flush
           >
-            <DataTable label="Function changes" columns={cols} rows={rows} getRowId={(r) => r.id} defaultSort={{ id: "delta", direction: "desc" }} minWidth={860} />
+            <DataTable
+              label="Function changes"
+              columns={cols}
+              rows={rows}
+              getRowId={(r) => r.id}
+              defaultSort={{ id: "delta", direction: "desc" }}
+              minWidth={860}
+            />
           </Panel>
         </>
       )}
@@ -704,11 +839,66 @@ interface Service {
 }
 
 const SERVICES: Service[] = [
-  { id: "orders-api", name: "orders-api", runtime: "Go 1.23.2", pods: 6, cpu: 1.84, mem: "412 MB", hottest: "encoding/json.(*encodeState).reflectValue", agent: "0.9.2", state: "Collecting", types: { cpu: true, alloc: true, heap: true, goroutines: true, mutex: false } },
-  { id: "payments-api", name: "payments-api", runtime: "Java 21 · OpenJDK", pods: 4, cpu: 1.12, mem: "1.4 GB", hottest: "com.acme.payments.Ledger.post", agent: "0.9.2", state: "Collecting", types: { cpu: true, alloc: true, heap: true, goroutines: false, mutex: false } },
-  { id: "inventory-api", name: "inventory-api", runtime: "Python 3.12", pods: 3, cpu: 0.61, mem: "288 MB", hottest: "inventory.sync.reconcile", agent: "0.8.4", state: "Agent outdated", types: { cpu: true, alloc: false, heap: false, goroutines: false, mutex: false } },
-  { id: "reports-worker", name: "reports-worker", runtime: "Java 21 · OpenJDK", pods: 2, cpu: 0.42, mem: "2.1 GB", hottest: "com.acme.reports.CsvExporter.write", agent: "0.9.2", state: "Collecting", types: { cpu: true, alloc: true, heap: true, goroutines: false, mutex: false } },
-  { id: "search-indexer", name: "search-indexer", runtime: "Rust 1.82", pods: 0, cpu: 0, mem: "–", hottest: "–", agent: "–", state: "No data", types: { cpu: false, alloc: false, heap: false, goroutines: false, mutex: false } },
+  {
+    id: "orders-api",
+    name: "orders-api",
+    runtime: "Go 1.23.2",
+    pods: 6,
+    cpu: 1.84,
+    mem: "412 MB",
+    hottest: "encoding/json.(*encodeState).reflectValue",
+    agent: "0.9.2",
+    state: "Collecting",
+    types: { cpu: true, alloc: true, heap: true, goroutines: true, mutex: false },
+  },
+  {
+    id: "payments-api",
+    name: "payments-api",
+    runtime: "Java 21 · OpenJDK",
+    pods: 4,
+    cpu: 1.12,
+    mem: "1.4 GB",
+    hottest: "com.acme.payments.Ledger.post",
+    agent: "0.9.2",
+    state: "Collecting",
+    types: { cpu: true, alloc: true, heap: true, goroutines: false, mutex: false },
+  },
+  {
+    id: "inventory-api",
+    name: "inventory-api",
+    runtime: "Python 3.12",
+    pods: 3,
+    cpu: 0.61,
+    mem: "288 MB",
+    hottest: "inventory.sync.reconcile",
+    agent: "0.8.4",
+    state: "Agent outdated",
+    types: { cpu: true, alloc: false, heap: false, goroutines: false, mutex: false },
+  },
+  {
+    id: "reports-worker",
+    name: "reports-worker",
+    runtime: "Java 21 · OpenJDK",
+    pods: 2,
+    cpu: 0.42,
+    mem: "2.1 GB",
+    hottest: "com.acme.reports.CsvExporter.write",
+    agent: "0.9.2",
+    state: "Collecting",
+    types: { cpu: true, alloc: true, heap: true, goroutines: false, mutex: false },
+  },
+  {
+    id: "search-indexer",
+    name: "search-indexer",
+    runtime: "Rust 1.82",
+    pods: 0,
+    cpu: 0,
+    mem: "–",
+    hottest: "–",
+    agent: "–",
+    state: "No data",
+    types: { cpu: false, alloc: false, heap: false, goroutines: false, mutex: false },
+  },
 ];
 
 const STATE_TONE: Record<Service["state"], "success" | "warning" | "neutral"> = { Collecting: "success", "Agent outdated": "warning", "No data": "neutral" };
@@ -734,11 +924,36 @@ function ServicesPage() {
     },
     { id: "state", header: "State", sortValue: (x) => x.state, cell: (x) => <StatusBadge tone={STATE_TONE[x.state]}>{x.state}</StatusBadge> },
     { id: "pods", header: "Pods", align: "right", mono: true, sortValue: (x) => x.pods, cell: (x) => x.pods },
-    { id: "cpu", header: "CPU", align: "right", mono: true, description: "Average cores used across all pods in the last hour.", sortValue: (x) => x.cpu, cell: (x) => (x.cpu ? `${x.cpu.toFixed(2)} cores` : "–") },
+    {
+      id: "cpu",
+      header: "CPU",
+      align: "right",
+      mono: true,
+      description: "Average cores used across all pods in the last hour.",
+      sortValue: (x) => x.cpu,
+      cell: (x) => (x.cpu ? `${x.cpu.toFixed(2)} cores` : "–"),
+    },
     { id: "mem", header: "Heap in use", align: "right", mono: true, cell: (x) => x.mem },
     { id: "hottest", header: "Hottest function", cell: (x) => <span className="block max-w-[260px] truncate font-mono text-xs">{x.hottest}</span> },
-    { id: "types", header: "Profile types", cell: (x) => <span className="text-xs">{Object.entries(x.types).filter(([, on]) => on).map(([k]) => TYPE_LABELS[k]).join(", ") || "None"}</span> },
-    { id: "agent", header: "Agent", mono: true, description: "Version of the profiling agent running beside the service. Latest is 0.9.2.", cell: (x) => x.agent },
+    {
+      id: "types",
+      header: "Profile types",
+      cell: (x) => (
+        <span className="text-xs">
+          {Object.entries(x.types)
+            .filter(([, on]) => on)
+            .map(([k]) => TYPE_LABELS[k])
+            .join(", ") || "None"}
+        </span>
+      ),
+    },
+    {
+      id: "agent",
+      header: "Agent",
+      mono: true,
+      description: "Version of the profiling agent running beside the service. Latest is 0.9.2.",
+      cell: (x) => x.agent,
+    },
   ];
   return (
     <>
@@ -758,7 +973,15 @@ function ServicesPage() {
         <KpiCard label="Outdated agents" value="1" tone="warning" delta={{ label: "inventory-api on 0.8.4", intent: "bad" }} />
       </KpiGrid>
       <Panel title="Services" flush>
-        <DataTable label="Profiled services" columns={cols} rows={list} getRowId={(x) => x.id} onRowClick={(x) => setActive(x.id)} activeRowId={active} minWidth={1060} />
+        <DataTable
+          label="Profiled services"
+          columns={cols}
+          rows={list}
+          getRowId={(x) => x.id}
+          onRowClick={(x) => setActive(x.id)}
+          activeRowId={active}
+          minWidth={1060}
+        />
       </Panel>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel aria-label="Service detail" title={s.name} description={`${s.runtime} · ${s.pods} pods · agent ${s.agent}`}>
@@ -788,7 +1011,15 @@ function ServicesPage() {
             {Object.keys(TYPE_LABELS).map((k) => (
               <Switch key={k} checked={s.types[k] ?? false} onCheckedChange={(v) => toggle(k, v)} label={TYPE_LABELS[k]!} disabled={s.state === "No data"} />
             ))}
-            <SelectField label="CPU sampling rate" defaultValue="100" options={[{ value: "19", label: "19 Hz · lowest overhead" }, { value: "100", label: "100 Hz · default" }, { value: "250", label: "250 Hz · detailed" }]} />
+            <SelectField
+              label="CPU sampling rate"
+              defaultValue="100"
+              options={[
+                { value: "19", label: "19 Hz · lowest overhead" },
+                { value: "100", label: "100 Hz · default" },
+                { value: "250", label: "250 Hz · detailed" },
+              ]}
+            />
           </div>
         </Panel>
       </div>

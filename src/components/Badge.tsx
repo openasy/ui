@@ -1,14 +1,6 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "../lib/cn";
-import {
-  LOG_LEVEL_META,
-  SEVERITY_META,
-  TONE_CLASSES,
-  type LevelMeta,
-  type LogLevel,
-  type Severity,
-  type Tone,
-} from "../tokens/levels";
+import { LOG_LEVEL_META, SEVERITY_META, TONE_CLASSES, type LevelMeta, type LogLevel, type Severity, type Tone } from "../tokens/levels";
 import { useT } from "./Locale";
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {

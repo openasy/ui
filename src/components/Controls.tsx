@@ -2,7 +2,8 @@ import { forwardRef, useId, type InputHTMLAttributes, type ReactNode, type Selec
 import { ChevronDown, CircleAlert, Search } from "lucide-react";
 import { cn } from "../lib/cn";
 
-const field = "h-8 w-full rounded-md border border-line-strong bg-surface px-2.5 text-sm text-fg placeholder:text-fg-subtle disabled:bg-subtle disabled:text-fg-subtle";
+const field =
+  "h-8 w-full rounded-md border border-line-strong bg-surface px-2.5 text-sm text-fg placeholder:text-fg-subtle disabled:bg-subtle disabled:text-fg-subtle";
 
 export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
   label: ReactNode;
@@ -13,10 +14,7 @@ export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   adornment?: ReactNode;
 }
 
-export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
-  { label, hint, error, mono, adornment, id, className, ...rest },
-  ref,
-) {
+export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField({ label, hint, error, mono, adornment, id, className, ...rest }, ref) {
   const auto = useId();
   const inputId = id ?? auto;
   const hintId = `${inputId}-hint`;
@@ -55,10 +53,7 @@ export interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement
   options: Array<{ value: string; label: string }>;
 }
 
-export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(function SelectField(
-  { label, options, id, className, ...rest },
-  ref,
-) {
+export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(function SelectField({ label, options, id, className, ...rest }, ref) {
   const auto = useId();
   const selectId = id ?? auto;
   return (
@@ -89,24 +84,12 @@ export interface SearchInputProps extends Omit<InputHTMLAttributes<HTMLInputElem
   shortcut?: string;
 }
 
-export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(
-  { label, shortcut, className, placeholder, ...rest },
-  ref,
-) {
+export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput({ label, shortcut, className, placeholder, ...rest }, ref) {
   return (
     <div className={cn("relative flex h-8 items-center", className)}>
       <Search aria-hidden className="pointer-events-none absolute left-2.5 size-3.5 text-fg-muted" />
-      <input
-        ref={ref}
-        type="search"
-        aria-label={label}
-        placeholder={placeholder ?? label}
-        className={cn(field, "pl-8", shortcut && "pr-8")}
-        {...rest}
-      />
-      {shortcut && (
-        <kbd className="pointer-events-none absolute right-2 rounded border border-line px-1 font-mono text-2xs text-fg-muted">{shortcut}</kbd>
-      )}
+      <input ref={ref} type="search" aria-label={label} placeholder={placeholder ?? label} className={cn(field, "pl-8", shortcut && "pr-8")} {...rest} />
+      {shortcut && <kbd className="pointer-events-none absolute right-2 rounded border border-line px-1 font-mono text-2xs text-fg-muted">{shortcut}</kbd>}
     </div>
   );
 });

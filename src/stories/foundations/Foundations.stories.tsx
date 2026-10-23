@@ -159,9 +159,15 @@ export const StandardLevels: Story = {
         </div>
       </Panel>
       <div className="flex flex-col gap-2">
-        <Callout tone="info" title="Info">Context only, never alerts.</Callout>
-        <Callout tone="warning" title="Warning">Plan a fix.</Callout>
-        <Callout tone="danger" title="Error">Something failed and needs action.</Callout>
+        <Callout tone="info" title="Info">
+          Context only, never alerts.
+        </Callout>
+        <Callout tone="warning" title="Warning">
+          Plan a fix.
+        </Callout>
+        <Callout tone="danger" title="Error">
+          Something failed and needs action.
+        </Callout>
       </div>
     </div>
   ),

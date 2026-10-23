@@ -1,5 +1,16 @@
 import { useMemo, useSyncExternalStore } from "react";
-import { addMessages, fixedT, formatAgo, LOCALE_STORAGE_KEY, toLocale, type Locale, type MessageKey, type Messages, type Translate, type UiMessageKey } from "../lib/i18n";
+import {
+  addMessages,
+  fixedT,
+  formatAgo,
+  LOCALE_STORAGE_KEY,
+  toLocale,
+  type Locale,
+  type MessageKey,
+  type Messages,
+  type Translate,
+  type UiMessageKey,
+} from "../lib/i18n";
 import { useBrand } from "./BrandProvider";
 
 const CHANGE_EVENT = "oa-locale-change";
@@ -59,7 +70,10 @@ export function useT(): Translate<UiMessageKey> {
  * `t` takes the keys of en.json, and a key missing from tr.json or de.json fails the typecheck. A product that is
  * not translated yet passes `{ en }` alone: other languages then show its English, and it offers no language menu.
  */
-export function defineMessages<M extends Messages>(ns: string, bundles: { en: M } & Partial<Record<Exclude<Locale, "en">, NoInfer<M>>>): () => Translate<MessageKey<M>> {
+export function defineMessages<M extends Messages>(
+  ns: string,
+  bundles: { en: M } & Partial<Record<Exclude<Locale, "en">, NoInfer<M>>>,
+): () => Translate<MessageKey<M>> {
   addMessages(ns, bundles);
   return function useMessages() {
     const { locale } = useBrand();

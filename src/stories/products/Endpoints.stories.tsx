@@ -57,20 +57,135 @@ interface Device {
 }
 
 const devices: Device[] = [
-  { id: "d1", name: "MBP-DKIM-14", owner: PEOPLE[0], os: "macOS", version: "15.1", encrypted: true, encryption: "FileVault", lastSeen: "2 min ago", posture: "compliant" },
-  { id: "d2", name: "MBA-ECLARK", owner: PEOPLE[1], os: "macOS", version: "15.1", encrypted: true, encryption: "FileVault", lastSeen: "5 min ago", posture: "compliant" },
-  { id: "d3", name: "WIN-MWILSON-01", owner: PEOPLE[2], os: "Windows", version: "11 23H2", encrypted: true, encryption: "BitLocker", lastSeen: "14 min ago", posture: "at-risk", issue: "OS update pending 9 days" },
-  { id: "d4", name: "sarah-thinkpad", owner: PEOPLE[3], os: "Ubuntu", version: "24.04 LTS", encrypted: true, encryption: "LUKS2", lastSeen: "1 h ago", posture: "compliant" },
-  { id: "d5", name: "WIN-BORTIZ-02", owner: PEOPLE[4], os: "Windows", version: "10 22H2", encrypted: false, encryption: "Off", lastSeen: "3 h ago", posture: "non-compliant", issue: "Disk not encrypted" },
-  { id: "d6", name: "MBP-ADAVIS", owner: PEOPLE[5], os: "macOS", version: "14.6", encrypted: true, encryption: "FileVault", lastSeen: "26 min ago", posture: "at-risk", issue: "macOS 15 available" },
-  { id: "d7", name: "chris-xps", owner: PEOPLE[6], os: "Ubuntu", version: "22.04 LTS", encrypted: true, encryption: "LUKS2", lastSeen: "4 days ago", posture: "non-compliant", issue: "EDR not running" },
-  { id: "d8", name: "MBP-ZADAMS", owner: PEOPLE[7], os: "macOS", version: "15.1", encrypted: true, encryption: "FileVault", lastSeen: "9 min ago", posture: "compliant" },
-  { id: "d9", name: "WIN-DKIM-LAB", owner: PEOPLE[0], os: "Windows", version: "11 24H2", encrypted: true, encryption: "BitLocker", lastSeen: "2 h ago", posture: "compliant" },
-  { id: "d10", name: "MM-ECLARK-DESK", owner: PEOPLE[1], os: "macOS", version: "15.0.1", encrypted: true, encryption: "FileVault", lastSeen: "1 day ago", posture: "at-risk", issue: "Screen lock after 30 min" },
+  {
+    id: "d1",
+    name: "MBP-DKIM-14",
+    owner: PEOPLE[0],
+    os: "macOS",
+    version: "15.1",
+    encrypted: true,
+    encryption: "FileVault",
+    lastSeen: "2 min ago",
+    posture: "compliant",
+  },
+  {
+    id: "d2",
+    name: "MBA-ECLARK",
+    owner: PEOPLE[1],
+    os: "macOS",
+    version: "15.1",
+    encrypted: true,
+    encryption: "FileVault",
+    lastSeen: "5 min ago",
+    posture: "compliant",
+  },
+  {
+    id: "d3",
+    name: "WIN-MWILSON-01",
+    owner: PEOPLE[2],
+    os: "Windows",
+    version: "11 23H2",
+    encrypted: true,
+    encryption: "BitLocker",
+    lastSeen: "14 min ago",
+    posture: "at-risk",
+    issue: "OS update pending 9 days",
+  },
+  {
+    id: "d4",
+    name: "sarah-thinkpad",
+    owner: PEOPLE[3],
+    os: "Ubuntu",
+    version: "24.04 LTS",
+    encrypted: true,
+    encryption: "LUKS2",
+    lastSeen: "1 h ago",
+    posture: "compliant",
+  },
+  {
+    id: "d5",
+    name: "WIN-BORTIZ-02",
+    owner: PEOPLE[4],
+    os: "Windows",
+    version: "10 22H2",
+    encrypted: false,
+    encryption: "Off",
+    lastSeen: "3 h ago",
+    posture: "non-compliant",
+    issue: "Disk not encrypted",
+  },
+  {
+    id: "d6",
+    name: "MBP-ADAVIS",
+    owner: PEOPLE[5],
+    os: "macOS",
+    version: "14.6",
+    encrypted: true,
+    encryption: "FileVault",
+    lastSeen: "26 min ago",
+    posture: "at-risk",
+    issue: "macOS 15 available",
+  },
+  {
+    id: "d7",
+    name: "chris-xps",
+    owner: PEOPLE[6],
+    os: "Ubuntu",
+    version: "22.04 LTS",
+    encrypted: true,
+    encryption: "LUKS2",
+    lastSeen: "4 days ago",
+    posture: "non-compliant",
+    issue: "EDR not running",
+  },
+  {
+    id: "d8",
+    name: "MBP-ZADAMS",
+    owner: PEOPLE[7],
+    os: "macOS",
+    version: "15.1",
+    encrypted: true,
+    encryption: "FileVault",
+    lastSeen: "9 min ago",
+    posture: "compliant",
+  },
+  {
+    id: "d9",
+    name: "WIN-DKIM-LAB",
+    owner: PEOPLE[0],
+    os: "Windows",
+    version: "11 24H2",
+    encrypted: true,
+    encryption: "BitLocker",
+    lastSeen: "2 h ago",
+    posture: "compliant",
+  },
+  {
+    id: "d10",
+    name: "MM-ECLARK-DESK",
+    owner: PEOPLE[1],
+    os: "macOS",
+    version: "15.0.1",
+    encrypted: true,
+    encryption: "FileVault",
+    lastSeen: "1 day ago",
+    posture: "at-risk",
+    issue: "Screen lock after 30 min",
+  },
 ];
 
 const columns: Column<Device>[] = [
-  { id: "name", header: "Device", mono: true, sortValue: (d) => d.name, cell: (d) => <a href={`#${d.id}`} className="text-fg no-underline hover:underline">{d.name}</a> },
+  {
+    id: "name",
+    header: "Device",
+    mono: true,
+    sortValue: (d) => d.name,
+    cell: (d) => (
+      <a href={`#${d.id}`} className="text-fg no-underline hover:underline">
+        {d.name}
+      </a>
+    ),
+  },
   {
     id: "owner",
     header: "Owner",
@@ -99,7 +214,8 @@ const columns: Column<Device>[] = [
   {
     id: "enc",
     header: "Disk encryption",
-    cell: (d) => (d.encrypted ? <span className="text-xs text-success">{d.encryption}</span> : <span className="text-xs font-medium text-danger-text">Not encrypted</span>),
+    cell: (d) =>
+      d.encrypted ? <span className="text-xs text-success">{d.encryption}</span> : <span className="text-xs font-medium text-danger-text">Not encrypted</span>,
   },
   { id: "seen", header: "Last seen", cell: (d) => <span className="whitespace-nowrap text-fg-muted">{d.lastSeen}</span> },
   {
@@ -242,23 +358,47 @@ function DevicesPage() {
           label="Posture"
           selected={posture}
           onChange={setPosture}
-          options={(Object.keys(POSTURE) as Posture[]).map((p) => ({ value: p, label: POSTURE[p].label, count: devices.filter((d) => d.posture === p).length }))}
+          options={(Object.keys(POSTURE) as Posture[]).map((p) => ({
+            value: p,
+            label: POSTURE[p].label,
+            count: devices.filter((d) => d.posture === p).length,
+          }))}
         />
-        <FacetFilter label="OS" selected={os} onChange={setOs} options={["macOS", "Windows", "Ubuntu"].map((o) => ({ value: o, count: devices.filter((d) => d.os === o).length }))} />
+        <FacetFilter
+          label="OS"
+          selected={os}
+          onChange={setOs}
+          options={["macOS", "Windows", "Ubuntu"].map((o) => ({ value: o, count: devices.filter((d) => d.os === o).length }))}
+        />
         <SearchInput label="Search devices or owners" className="w-64" value={q} onChange={(e) => setQ(e.target.value)} />
       </FilterBar>
       <KpiGrid>
-        <KpiCard label="Disk encrypted" value="97%" unit="181 of 186" trend={wave(12, { base: 95, amp: 2, seed: 51 })} delta={{ label: "+2 pts this month", direction: "up", intent: "good" }} />
+        <KpiCard
+          label="Disk encrypted"
+          value="97%"
+          unit="181 of 186"
+          trend={wave(12, { base: 95, amp: 2, seed: 51 })}
+          delta={{ label: "+2 pts this month", direction: "up", intent: "good" }}
+        />
         <KpiCard label="OS up to date" value="84%" unit="156 of 186" tone="warning" delta={{ label: "macOS 15.1 rollout in progress" }} />
         <KpiCard label="Screen lock ≤ 5 min" value="95%" unit="177 of 186" delta={{ label: "9 above policy", intent: "bad" }} />
         <KpiCard label="EDR running" value="98%" unit="183 of 186" delta={{ label: "3 silent for over 24 h", intent: "bad" }} />
       </KpiGrid>
       <Callout tone="info" title="Access and VPN deny non-compliant devices">
-        Posture is checked at sign-in and every 15 minutes. A device that loses disk encryption or stops running EDR is disconnected from VPN and cannot open Access sessions until it is compliant again. At-risk devices get a 7-day grace period.
+        Posture is checked at sign-in and every 15 minutes. A device that loses disk encryption or stops running EDR is disconnected from VPN and cannot open
+        Access sessions until it is compliant again. At-risk devices get a 7-day grace period.
       </Callout>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Devices" description={`${rows.length} of 186 shown`} flush>
-          <DataTable label="Devices" columns={columns} rows={rows} getRowId={(d) => d.id} defaultSort={{ id: "posture", direction: "desc" }} minWidth={880} empty={<p className="py-8">No devices match these filters</p>} />
+          <DataTable
+            label="Devices"
+            columns={columns}
+            rows={rows}
+            getRowId={(d) => d.id}
+            defaultSort={{ id: "posture", direction: "desc" }}
+            minWidth={880}
+            empty={<p className="py-8">No devices match these filters</p>}
+          />
         </Panel>
         <LiveQuery />
       </div>
@@ -279,9 +419,25 @@ interface Check {
 }
 
 const CHECKS: Check[] = [
-  { id: "c-enc", name: "Disk encryption", requirement: "FileVault, BitLocker or LUKS2 on the system disk", platforms: "All", passing: 181, failing: 5, severity: "block" },
+  {
+    id: "c-enc",
+    name: "Disk encryption",
+    requirement: "FileVault, BitLocker or LUKS2 on the system disk",
+    platforms: "All",
+    passing: 181,
+    failing: 5,
+    severity: "block",
+  },
   { id: "c-edr", name: "EDR running", requirement: "Agent reported in the last 24 h", platforms: "All", passing: 183, failing: 3, severity: "block" },
-  { id: "c-os", name: "OS up to date", requirement: "macOS ≥ 15.0, Windows 11 ≥ 23H2, Ubuntu ≥ 22.04", platforms: "All", passing: 156, failing: 30, severity: "grace" },
+  {
+    id: "c-os",
+    name: "OS up to date",
+    requirement: "macOS ≥ 15.0, Windows 11 ≥ 23H2, Ubuntu ≥ 22.04",
+    platforms: "All",
+    passing: 156,
+    failing: 30,
+    severity: "grace",
+  },
   { id: "c-lock", name: "Screen lock", requirement: "Locks after 5 min or less", platforms: "All", passing: 177, failing: 9, severity: "grace" },
   { id: "c-fw", name: "Firewall on", requirement: "Application firewall or ufw enabled", platforms: "All", passing: 172, failing: 14, severity: "grace" },
   { id: "c-sip", name: "System integrity protection", requirement: "SIP enabled", platforms: "macOS", passing: 112, failing: 0, severity: "block" },
@@ -301,14 +457,94 @@ interface Failing {
 }
 
 const FAILING: Failing[] = [
-  { id: "f1", device: "WIN-BORTIZ-02", owner: PEOPLE[4], os: "Windows 10 22H2", check: "Disk encryption", detail: "BitLocker off on C:", since: "3 days", grace: "None", blocked: true },
-  { id: "f2", device: "chris-xps", owner: PEOPLE[6], os: "Ubuntu 22.04", check: "EDR running", detail: "Last report 4 days ago", since: "4 days", grace: "None", blocked: true },
-  { id: "f3", device: "WIN-BORTIZ-02", owner: PEOPLE[4], os: "Windows 10 22H2", check: "OS up to date", detail: "Windows 10 below minimum", since: "12 days", grace: "Expired", blocked: true },
-  { id: "f4", device: "WIN-MWILSON-01", owner: PEOPLE[2], os: "Windows 11 23H2", check: "OS up to date", detail: "KB5044284 pending", since: "9 days", grace: "Ends in 2 days", blocked: false },
-  { id: "f5", device: "MBP-ADAVIS", owner: PEOPLE[5], os: "macOS 14.6", check: "OS up to date", detail: "macOS 15 available", since: "5 days", grace: "Ends in 2 days", blocked: false },
-  { id: "f6", device: "MM-ECLARK-DESK", owner: PEOPLE[1], os: "macOS 15.0.1", check: "Screen lock", detail: "Locks after 30 min", since: "1 day", grace: "Ends in 6 days", blocked: false },
-  { id: "f7", device: "chris-xps", owner: PEOPLE[6], os: "Ubuntu 22.04", check: "Firewall on", detail: "ufw inactive", since: "4 days", grace: "Ends in 3 days", blocked: false },
-  { id: "f8", device: "WIN-DKIM-LAB", owner: PEOPLE[0], os: "Windows 11 24H2", check: "Secure boot", detail: "Secure boot disabled in firmware", since: "2 h", grace: "Ends in 7 days", blocked: false },
+  {
+    id: "f1",
+    device: "WIN-BORTIZ-02",
+    owner: PEOPLE[4],
+    os: "Windows 10 22H2",
+    check: "Disk encryption",
+    detail: "BitLocker off on C:",
+    since: "3 days",
+    grace: "None",
+    blocked: true,
+  },
+  {
+    id: "f2",
+    device: "chris-xps",
+    owner: PEOPLE[6],
+    os: "Ubuntu 22.04",
+    check: "EDR running",
+    detail: "Last report 4 days ago",
+    since: "4 days",
+    grace: "None",
+    blocked: true,
+  },
+  {
+    id: "f3",
+    device: "WIN-BORTIZ-02",
+    owner: PEOPLE[4],
+    os: "Windows 10 22H2",
+    check: "OS up to date",
+    detail: "Windows 10 below minimum",
+    since: "12 days",
+    grace: "Expired",
+    blocked: true,
+  },
+  {
+    id: "f4",
+    device: "WIN-MWILSON-01",
+    owner: PEOPLE[2],
+    os: "Windows 11 23H2",
+    check: "OS up to date",
+    detail: "KB5044284 pending",
+    since: "9 days",
+    grace: "Ends in 2 days",
+    blocked: false,
+  },
+  {
+    id: "f5",
+    device: "MBP-ADAVIS",
+    owner: PEOPLE[5],
+    os: "macOS 14.6",
+    check: "OS up to date",
+    detail: "macOS 15 available",
+    since: "5 days",
+    grace: "Ends in 2 days",
+    blocked: false,
+  },
+  {
+    id: "f6",
+    device: "MM-ECLARK-DESK",
+    owner: PEOPLE[1],
+    os: "macOS 15.0.1",
+    check: "Screen lock",
+    detail: "Locks after 30 min",
+    since: "1 day",
+    grace: "Ends in 6 days",
+    blocked: false,
+  },
+  {
+    id: "f7",
+    device: "chris-xps",
+    owner: PEOPLE[6],
+    os: "Ubuntu 22.04",
+    check: "Firewall on",
+    detail: "ufw inactive",
+    since: "4 days",
+    grace: "Ends in 3 days",
+    blocked: false,
+  },
+  {
+    id: "f8",
+    device: "WIN-DKIM-LAB",
+    owner: PEOPLE[0],
+    os: "Windows 11 24H2",
+    check: "Secure boot",
+    detail: "Secure boot disabled in firmware",
+    since: "2 h",
+    grace: "Ends in 7 days",
+    blocked: false,
+  },
 ];
 
 function CompliancePage() {
@@ -336,8 +572,20 @@ function CompliancePage() {
       sortValue: (c) => c.passing / (c.passing + c.failing),
       cell: (c) => <span className="font-mono text-xs">{Math.round((c.passing / (c.passing + c.failing)) * 100)}%</span>,
     },
-    { id: "failing", header: "Failing", align: "right", mono: true, sortValue: (c) => c.failing, cell: (c) => <span className={c.failing ? "text-danger-text" : "text-fg-muted"}>{c.failing}</span> },
-    { id: "sev", header: "On failure", description: "Block denies VPN and Access immediately. Grace gives the owner 7 days to fix it first.", cell: (c) => (c.severity === "block" ? <Badge tone="danger">Block</Badge> : <Badge tone="warning">7-day grace</Badge>) },
+    {
+      id: "failing",
+      header: "Failing",
+      align: "right",
+      mono: true,
+      sortValue: (c) => c.failing,
+      cell: (c) => <span className={c.failing ? "text-danger-text" : "text-fg-muted"}>{c.failing}</span>,
+    },
+    {
+      id: "sev",
+      header: "On failure",
+      description: "Block denies VPN and Access immediately. Grace gives the owner 7 days to fix it first.",
+      cell: (c) => (c.severity === "block" ? <Badge tone="danger">Block</Badge> : <Badge tone="warning">7-day grace</Badge>),
+    },
   ];
   const cols: Column<Failing>[] = [
     { id: "device", header: "Device", mono: true, sortValue: (f) => f.device, cell: (f) => f.device },
@@ -354,7 +602,11 @@ function CompliancePage() {
     },
     { id: "since", header: "Failing for", cell: (f) => <span className="text-xs whitespace-nowrap">{f.since}</span> },
     { id: "grace", header: "Grace period", cell: (f) => <span className={f.blocked ? "text-xs text-danger-text" : "text-xs"}>{f.grace}</span> },
-    { id: "access", header: "Access", cell: (f) => (f.blocked ? <StatusBadge tone="danger">Blocked</StatusBadge> : <StatusBadge tone="warning">Allowed</StatusBadge>) },
+    {
+      id: "access",
+      header: "Access",
+      cell: (f) => (f.blocked ? <StatusBadge tone="danger">Blocked</StatusBadge> : <StatusBadge tone="warning">Allowed</StatusBadge>),
+    },
     {
       id: "act",
       header: <span className="sr-only">Actions</span>,
@@ -374,7 +626,11 @@ function CompliancePage() {
   ];
   return (
     <>
-      <PageHeader title="Compliance" description="Posture checks every device must pass, and the devices that fail them" meta={<StatusBadge tone="warning">172 of 186 compliant</StatusBadge>} />
+      <PageHeader
+        title="Compliance"
+        description="Posture checks every device must pass, and the devices that fail them"
+        meta={<StatusBadge tone="warning">172 of 186 compliant</StatusBadge>}
+      />
       <KpiGrid>
         <KpiCard label="Compliant" value="92%" unit="172 of 186" tone="success" trend={wave(14, { base: 90, amp: 2, seed: 52 })} />
         <KpiCard label="Blocked from VPN and Access" value="3" unit="devices" tone="danger" delta={{ label: "2 since Friday", intent: "bad" }} />
@@ -383,7 +639,15 @@ function CompliancePage() {
       </KpiGrid>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Posture checks" description="Select a check to see the devices failing it" flush>
-          <DataTable label="Posture checks" columns={checkCols} rows={CHECKS} getRowId={(c) => c.id} onRowClick={(c) => setCheck(check === c.name ? null : c.name)} activeRowId={CHECKS.find((c) => c.name === check)?.id} minWidth={720} />
+          <DataTable
+            label="Posture checks"
+            columns={checkCols}
+            rows={CHECKS}
+            getRowId={(c) => c.id}
+            onRowClick={(c) => setCheck(check === c.name ? null : c.name)}
+            activeRowId={CHECKS.find((c) => c.name === check)?.id}
+            minWidth={720}
+          />
         </Panel>
         <Panel title="Compliance by OS" description="Devices per platform">
           <StackedBarChart
@@ -436,25 +700,162 @@ interface Software {
 }
 
 const SOFTWARE: Software[] = [
-  { id: "s-chrome", name: "Google Chrome", publisher: "Google", latest: "130.0.6723.58", installs: 172, outdated: 21, versions: [{ v: "130.0.6723.58", n: 151 }, { v: "129.0.6668.100", n: 17 }, { v: "128.0.6613.138", n: 4 }], cves: [{ id: "CVE-2024-9602", severity: "high" }], category: "Browser" },
-  { id: "s-zoom", name: "Zoom Workplace", publisher: "Zoom", latest: "6.2.5", installs: 148, outdated: 3, versions: [{ v: "6.2.5", n: 145 }, { v: "6.1.6", n: 1 }, { v: "6.0.11", n: 1 }, { v: "5.17.5", n: 1 }], cves: [{ id: "CVE-2024-39825", severity: "critical" }], category: "Communication" },
-  { id: "s-slack", name: "Slack", publisher: "Slack", latest: "4.41.97", installs: 183, outdated: 0, versions: [{ v: "4.41.97", n: 183 }], cves: [], category: "Communication" },
-  { id: "s-docker", name: "Docker Desktop", publisher: "Docker", latest: "4.34.3", installs: 94, outdated: 38, versions: [{ v: "4.34.3", n: 56 }, { v: "4.33.0", n: 26 }, { v: "4.29.0", n: 12 }], cves: [{ id: "CVE-2024-8695", severity: "critical" }, { id: "CVE-2024-8696", severity: "high" }], category: "Developer" },
-  { id: "s-vscode", name: "Visual Studio Code", publisher: "Microsoft", latest: "1.94.2", installs: 121, outdated: 9, versions: [{ v: "1.94.2", n: 112 }, { v: "1.93.1", n: 9 }], cves: [], category: "Developer" },
-  { id: "s-firefox", name: "Firefox", publisher: "Mozilla", latest: "131.0.3", installs: 44, outdated: 6, versions: [{ v: "131.0.3", n: 38 }, { v: "130.0", n: 6 }], cves: [{ id: "CVE-2024-9680", severity: "critical" }], category: "Browser" },
-  { id: "s-7zip", name: "7-Zip", publisher: "Igor Pavlov", latest: "24.08", installs: 31, outdated: 12, versions: [{ v: "24.08", n: 19 }, { v: "23.01", n: 12 }], cves: [{ id: "CVE-2024-11477", severity: "high" }], category: "Utility" },
-  { id: "s-1pw", name: "1Password", publisher: "AgileBits", latest: "8.10.48", installs: 186, outdated: 2, versions: [{ v: "8.10.48", n: 184 }, { v: "8.10.44", n: 2 }], cves: [], category: "Security" },
-  { id: "s-node", name: "Node.js", publisher: "OpenJS Foundation", latest: "22.10.0", installs: 88, outdated: 27, versions: [{ v: "22.10.0", n: 40 }, { v: "20.18.0", n: 21 }, { v: "18.20.4", n: 27 }], cves: [{ id: "CVE-2024-27980", severity: "medium" }], category: "Developer" },
-  { id: "s-teamviewer", name: "TeamViewer", publisher: "TeamViewer", latest: "15.58.5", installs: 2, outdated: 2, versions: [{ v: "15.48.4", n: 2 }], cves: [{ id: "CVE-2024-7479", severity: "high" }], category: "Remote access" },
+  {
+    id: "s-chrome",
+    name: "Google Chrome",
+    publisher: "Google",
+    latest: "130.0.6723.58",
+    installs: 172,
+    outdated: 21,
+    versions: [
+      { v: "130.0.6723.58", n: 151 },
+      { v: "129.0.6668.100", n: 17 },
+      { v: "128.0.6613.138", n: 4 },
+    ],
+    cves: [{ id: "CVE-2024-9602", severity: "high" }],
+    category: "Browser",
+  },
+  {
+    id: "s-zoom",
+    name: "Zoom Workplace",
+    publisher: "Zoom",
+    latest: "6.2.5",
+    installs: 148,
+    outdated: 3,
+    versions: [
+      { v: "6.2.5", n: 145 },
+      { v: "6.1.6", n: 1 },
+      { v: "6.0.11", n: 1 },
+      { v: "5.17.5", n: 1 },
+    ],
+    cves: [{ id: "CVE-2024-39825", severity: "critical" }],
+    category: "Communication",
+  },
+  {
+    id: "s-slack",
+    name: "Slack",
+    publisher: "Slack",
+    latest: "4.41.97",
+    installs: 183,
+    outdated: 0,
+    versions: [{ v: "4.41.97", n: 183 }],
+    cves: [],
+    category: "Communication",
+  },
+  {
+    id: "s-docker",
+    name: "Docker Desktop",
+    publisher: "Docker",
+    latest: "4.34.3",
+    installs: 94,
+    outdated: 38,
+    versions: [
+      { v: "4.34.3", n: 56 },
+      { v: "4.33.0", n: 26 },
+      { v: "4.29.0", n: 12 },
+    ],
+    cves: [
+      { id: "CVE-2024-8695", severity: "critical" },
+      { id: "CVE-2024-8696", severity: "high" },
+    ],
+    category: "Developer",
+  },
+  {
+    id: "s-vscode",
+    name: "Visual Studio Code",
+    publisher: "Microsoft",
+    latest: "1.94.2",
+    installs: 121,
+    outdated: 9,
+    versions: [
+      { v: "1.94.2", n: 112 },
+      { v: "1.93.1", n: 9 },
+    ],
+    cves: [],
+    category: "Developer",
+  },
+  {
+    id: "s-firefox",
+    name: "Firefox",
+    publisher: "Mozilla",
+    latest: "131.0.3",
+    installs: 44,
+    outdated: 6,
+    versions: [
+      { v: "131.0.3", n: 38 },
+      { v: "130.0", n: 6 },
+    ],
+    cves: [{ id: "CVE-2024-9680", severity: "critical" }],
+    category: "Browser",
+  },
+  {
+    id: "s-7zip",
+    name: "7-Zip",
+    publisher: "Igor Pavlov",
+    latest: "24.08",
+    installs: 31,
+    outdated: 12,
+    versions: [
+      { v: "24.08", n: 19 },
+      { v: "23.01", n: 12 },
+    ],
+    cves: [{ id: "CVE-2024-11477", severity: "high" }],
+    category: "Utility",
+  },
+  {
+    id: "s-1pw",
+    name: "1Password",
+    publisher: "AgileBits",
+    latest: "8.10.48",
+    installs: 186,
+    outdated: 2,
+    versions: [
+      { v: "8.10.48", n: 184 },
+      { v: "8.10.44", n: 2 },
+    ],
+    cves: [],
+    category: "Security",
+  },
+  {
+    id: "s-node",
+    name: "Node.js",
+    publisher: "OpenJS Foundation",
+    latest: "22.10.0",
+    installs: 88,
+    outdated: 27,
+    versions: [
+      { v: "22.10.0", n: 40 },
+      { v: "20.18.0", n: 21 },
+      { v: "18.20.4", n: 27 },
+    ],
+    cves: [{ id: "CVE-2024-27980", severity: "medium" }],
+    category: "Developer",
+  },
+  {
+    id: "s-teamviewer",
+    name: "TeamViewer",
+    publisher: "TeamViewer",
+    latest: "15.58.5",
+    installs: 2,
+    outdated: 2,
+    versions: [{ v: "15.48.4", n: 2 }],
+    cves: [{ id: "CVE-2024-7479", severity: "high" }],
+    category: "Remote access",
+  },
 ];
 
 function SoftwarePage() {
   const [tab, setTab] = useState<"all" | "outdated" | "vulnerable">("all");
   const [cat, setCat] = useState<string[]>([]);
   const [active, setActive] = useState("s-docker");
-  const rows = SOFTWARE.filter((s) => (tab === "all" || (tab === "outdated" && s.outdated > 0) || (tab === "vulnerable" && s.cves.length > 0)) && (cat.length === 0 || cat.includes(s.category)));
+  const rows = SOFTWARE.filter(
+    (s) =>
+      (tab === "all" || (tab === "outdated" && s.outdated > 0) || (tab === "vulnerable" && s.cves.length > 0)) &&
+      (cat.length === 0 || cat.includes(s.category)),
+  );
   const cur = SOFTWARE.find((s) => s.id === active)!;
-  const worst = (s: Software): Severity | null => (s.cves.some((c) => c.severity === "critical") ? "critical" : s.cves.some((c) => c.severity === "high") ? "high" : s.cves[0]?.severity ?? null);
+  const worst = (s: Software): Severity | null =>
+    s.cves.some((c) => c.severity === "critical") ? "critical" : s.cves.some((c) => c.severity === "high") ? "high" : (s.cves[0]?.severity ?? null);
   const cols: Column<Software>[] = [
     {
       id: "name",
@@ -474,7 +875,14 @@ function SoftwarePage() {
     { id: "installs", header: "Devices", align: "right", mono: true, sortValue: (s) => s.installs, cell: (s) => s.installs },
     { id: "versions", header: "Versions", align: "right", mono: true, sortValue: (s) => s.versions.length, cell: (s) => s.versions.length },
     { id: "latest", header: "Latest", mono: true, cell: (s) => s.latest },
-    { id: "outdated", header: "Outdated", align: "right", description: "Devices not on the latest version.", sortValue: (s) => s.outdated, cell: (s) => <span className={s.outdated ? "font-mono text-warning-text" : "font-mono text-fg-muted"}>{s.outdated}</span> },
+    {
+      id: "outdated",
+      header: "Outdated",
+      align: "right",
+      description: "Devices not on the latest version.",
+      sortValue: (s) => s.outdated,
+      cell: (s) => <span className={s.outdated ? "font-mono text-warning-text" : "font-mono text-fg-muted"}>{s.outdated}</span>,
+    },
     {
       id: "vulns",
       header: "Vulnerabilities",
@@ -517,15 +925,32 @@ function SoftwarePage() {
         <KpiCard label="Unapproved remote access" value="2" unit="TeamViewer" tone="warning" />
       </KpiGrid>
       <FilterBar onClear={cat.length ? () => setCat([]) : undefined}>
-        <FacetFilter label="Category" selected={cat} onChange={setCat} options={[...new Set(SOFTWARE.map((s) => s.category))].map((c) => ({ value: c, count: SOFTWARE.filter((s) => s.category === c).length }))} />
+        <FacetFilter
+          label="Category"
+          selected={cat}
+          onChange={setCat}
+          options={[...new Set(SOFTWARE.map((s) => s.category))].map((c) => ({ value: c, count: SOFTWARE.filter((s) => s.category === c).length }))}
+        />
       </FilterBar>
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <Panel title="Inventory" description={`${rows.length} shown`} flush>
-          <DataTable label="Software inventory" columns={cols} rows={rows} getRowId={(s) => s.id} onRowClick={(s) => setActive(s.id)} activeRowId={active} defaultSort={{ id: "vulns", direction: "desc" }} minWidth={900} />
+          <DataTable
+            label="Software inventory"
+            columns={cols}
+            rows={rows}
+            getRowId={(s) => s.id}
+            onRowClick={(s) => setActive(s.id)}
+            activeRowId={active}
+            defaultSort={{ id: "vulns", direction: "desc" }}
+            minWidth={900}
+          />
         </Panel>
         <Panel title={cur.name} description={`Versions installed · latest ${cur.latest}`} aria-label="Software detail">
           <div className="flex flex-col gap-3">
-            <BarList label={`${cur.name} versions`} items={cur.versions.map((v) => ({ id: v.v, label: v.v, value: v.n, color: v.v === cur.latest ? TONE_COLORS.success : TONE_COLORS.warning }))} />
+            <BarList
+              label={`${cur.name} versions`}
+              items={cur.versions.map((v) => ({ id: v.v, label: v.v, value: v.n, color: v.v === cur.latest ? TONE_COLORS.success : TONE_COLORS.warning }))}
+            />
             <Button size="sm" icon={<Terminal />}>
               Query devices with old versions
             </Button>
@@ -551,12 +976,72 @@ interface SavedQuery {
 }
 
 const SAVED: SavedQuery[] = [
-  { id: "sq-zoom", name: "Outdated Zoom", description: "Zoom below 6.2.0", sql: DEFAULT_SQL, schedule: "Hourly", platforms: "macOS", lastRun: "14 min ago", rows: 3, author: PEOPLE[1] },
-  { id: "sq-usb", name: "USB storage devices", description: "Removable disks connected now", sql: "SELECT vendor, model, serial\nFROM usb_devices\nWHERE removable = 1;", schedule: "Every 15 min", platforms: "All", lastRun: "6 min ago", rows: 4, author: PEOPLE[3] },
-  { id: "sq-ssh", name: "SSH keys without passphrase", description: "Private keys readable by the user", sql: "SELECT path, encrypted\nFROM user_ssh_keys\nWHERE encrypted = 0;", schedule: "Daily", platforms: "macOS, Ubuntu", lastRun: "3 h ago", rows: 11, author: PEOPLE[7] },
-  { id: "sq-admin", name: "Local admin accounts", description: "Members of admin or Administrators", sql: "SELECT u.username, g.groupname\nFROM users u JOIN user_groups ug USING (uid)\nJOIN groups g USING (gid)\nWHERE g.groupname IN ('admin', 'Administrators');", schedule: "Daily", platforms: "All", lastRun: "3 h ago", rows: 27, author: PEOPLE[1] },
-  { id: "sq-ext", name: "Browser extensions", description: "Chrome extensions with broad permissions", sql: "SELECT name, identifier, permissions\nFROM chrome_extensions\nWHERE permissions LIKE '%<all_urls>%';", schedule: "Daily", platforms: "All", lastRun: "3 h ago", rows: 19, author: PEOPLE[5] },
-  { id: "sq-listen", name: "Listening ports", description: "Processes listening on all interfaces", sql: "SELECT p.name, l.port, l.address\nFROM listening_ports l JOIN processes p USING (pid)\nWHERE l.address = '0.0.0.0';", schedule: "Manual", platforms: "All", lastRun: "Yesterday", rows: 58, author: PEOPLE[2] },
+  {
+    id: "sq-zoom",
+    name: "Outdated Zoom",
+    description: "Zoom below 6.2.0",
+    sql: DEFAULT_SQL,
+    schedule: "Hourly",
+    platforms: "macOS",
+    lastRun: "14 min ago",
+    rows: 3,
+    author: PEOPLE[1],
+  },
+  {
+    id: "sq-usb",
+    name: "USB storage devices",
+    description: "Removable disks connected now",
+    sql: "SELECT vendor, model, serial\nFROM usb_devices\nWHERE removable = 1;",
+    schedule: "Every 15 min",
+    platforms: "All",
+    lastRun: "6 min ago",
+    rows: 4,
+    author: PEOPLE[3],
+  },
+  {
+    id: "sq-ssh",
+    name: "SSH keys without passphrase",
+    description: "Private keys readable by the user",
+    sql: "SELECT path, encrypted\nFROM user_ssh_keys\nWHERE encrypted = 0;",
+    schedule: "Daily",
+    platforms: "macOS, Ubuntu",
+    lastRun: "3 h ago",
+    rows: 11,
+    author: PEOPLE[7],
+  },
+  {
+    id: "sq-admin",
+    name: "Local admin accounts",
+    description: "Members of admin or Administrators",
+    sql: "SELECT u.username, g.groupname\nFROM users u JOIN user_groups ug USING (uid)\nJOIN groups g USING (gid)\nWHERE g.groupname IN ('admin', 'Administrators');",
+    schedule: "Daily",
+    platforms: "All",
+    lastRun: "3 h ago",
+    rows: 27,
+    author: PEOPLE[1],
+  },
+  {
+    id: "sq-ext",
+    name: "Browser extensions",
+    description: "Chrome extensions with broad permissions",
+    sql: "SELECT name, identifier, permissions\nFROM chrome_extensions\nWHERE permissions LIKE '%<all_urls>%';",
+    schedule: "Daily",
+    platforms: "All",
+    lastRun: "3 h ago",
+    rows: 19,
+    author: PEOPLE[5],
+  },
+  {
+    id: "sq-listen",
+    name: "Listening ports",
+    description: "Processes listening on all interfaces",
+    sql: "SELECT p.name, l.port, l.address\nFROM listening_ports l JOIN processes p USING (pid)\nWHERE l.address = '0.0.0.0';",
+    schedule: "Manual",
+    platforms: "All",
+    lastRun: "Yesterday",
+    rows: 58,
+    author: PEOPLE[2],
+  },
 ];
 
 const USB_ROWS = [
@@ -754,9 +1239,24 @@ function PoliciesPage() {
           </Panel>
           <Panel title="Enforcement" description="Where a non-compliant device is refused">
             <div className="flex flex-col gap-3">
-              <Switch checked={enforce.vpn} onCheckedChange={(v) => setEnforce((s) => ({ ...s, vpn: v }))} label="VPN" description="Disconnect and refuse new tunnels" />
-              <Switch checked={enforce.access} onCheckedChange={(v) => setEnforce((s) => ({ ...s, access: v }))} label="Access" description="Refuse database and SSH sessions" />
-              <Switch checked={enforce.identity} onCheckedChange={(v) => setEnforce((s) => ({ ...s, identity: v }))} label="Identity sign-in" description="Refuse SSO to every application" />
+              <Switch
+                checked={enforce.vpn}
+                onCheckedChange={(v) => setEnforce((s) => ({ ...s, vpn: v }))}
+                label="VPN"
+                description="Disconnect and refuse new tunnels"
+              />
+              <Switch
+                checked={enforce.access}
+                onCheckedChange={(v) => setEnforce((s) => ({ ...s, access: v }))}
+                label="Access"
+                description="Refuse database and SSH sessions"
+              />
+              <Switch
+                checked={enforce.identity}
+                onCheckedChange={(v) => setEnforce((s) => ({ ...s, identity: v }))}
+                label="Identity sign-in"
+                description="Refuse SSO to every application"
+              />
               <Callout tone="info" title="Owners are told first">
                 The device owner gets an email and a desktop notification with fix instructions before access is removed.
               </Callout>

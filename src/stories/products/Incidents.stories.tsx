@@ -59,13 +59,49 @@ interface TimelineEntry {
 const COMMANDER = PEOPLE[4];
 
 const TIMELINE: TimelineEntry[] = [
-  { id: "t1", time: "13:41:07", source: "vpn", text: "Sign-in for ben.ortiz from 198.51.100.201 after 3 failed TOTP attempts", detail: "New country for this user · client openvpn 2.6.12" },
-  { id: "t2", time: "13:44:52", source: "siem", text: "Signal: SSH login from VPN address to api-prod-03 followed by curl | sh", detail: "Sigma: lnx_susp_curl_pipe_shell · score 87" },
-  { id: "t3", time: "13:48:10", source: "infrastructure", text: "api-prod-03 CPU jumped from 38% to 97%", detail: "Container kworkerd (alpine:3.20) started outside the deploy pipeline" },
+  {
+    id: "t1",
+    time: "13:41:07",
+    source: "vpn",
+    text: "Sign-in for ben.ortiz from 198.51.100.201 after 3 failed TOTP attempts",
+    detail: "New country for this user · client openvpn 2.6.12",
+  },
+  {
+    id: "t2",
+    time: "13:44:52",
+    source: "siem",
+    text: "Signal: SSH login from VPN address to api-prod-03 followed by curl | sh",
+    detail: "Sigma: lnx_susp_curl_pipe_shell · score 87",
+  },
+  {
+    id: "t3",
+    time: "13:48:10",
+    source: "infrastructure",
+    text: "api-prod-03 CPU jumped from 38% to 97%",
+    detail: "Container kworkerd (alpine:3.20) started outside the deploy pipeline",
+  },
   { id: "t4", time: "13:49:30", source: "alerts", text: "Firing: Host CPU above 85% and orders-api p95 above SLO", detail: "Paged Payments and #ops-oncall" },
-  { id: "t5", time: "13:51:02", source: "malware", text: "YARA XMRig_Miner matched /tmp/.x/kworkerd", detail: "SHA-256 9f1c…e04a · quarantined copy kept for analysis" },
-  { id: "t6", time: "13:52:18", source: "note", text: "Declared incident, Ben Ortiz is commander. Isolating api-prod-03 from the load balancer.", author: COMMANDER },
-  { id: "t7", time: "13:56:40", source: "runtime", text: "Blocked outbound to 203.0.113.181:3333 (stratum mining pool)", detail: "eBPF policy deny-mining-pools applied to role=api" },
+  {
+    id: "t5",
+    time: "13:51:02",
+    source: "malware",
+    text: "YARA XMRig_Miner matched /tmp/.x/kworkerd",
+    detail: "SHA-256 9f1c…e04a · quarantined copy kept for analysis",
+  },
+  {
+    id: "t6",
+    time: "13:52:18",
+    source: "note",
+    text: "Declared incident, Ben Ortiz is commander. Isolating api-prod-03 from the load balancer.",
+    author: COMMANDER,
+  },
+  {
+    id: "t7",
+    time: "13:56:40",
+    source: "runtime",
+    text: "Blocked outbound to 203.0.113.181:3333 (stratum mining pool)",
+    detail: "eBPF policy deny-mining-pools applied to role=api",
+  },
 ];
 
 const EVIDENCE: Array<{ kind: EntityKind; value: string; href: string; note: string }> = [
@@ -97,9 +133,7 @@ const RELATED: Array<{ id: ProductId; text: string }> = [
 
 function SourceTag({ source }: { source: TimelineEntry["source"] }) {
   if (source === "note") {
-    return (
-      <Badge icon={<MessageSquarePlus aria-hidden className="size-3" />}>Note</Badge>
-    );
+    return <Badge icon={<MessageSquarePlus aria-hidden className="size-3" />}>Note</Badge>;
   }
   const P = PRODUCTS[source];
   return <Badge icon={<P.icon aria-hidden className="size-3" />}>{P.name}</Badge>;
@@ -167,7 +201,12 @@ function DetailPage() {
               <li key={e.id} className="relative grid grid-cols-[68px_16px_minmax(0,1fr)] gap-2 pb-3 last:pb-0">
                 <span className="pt-0.5 text-right font-mono text-2xs text-fg-muted tabular-nums">{e.time}</span>
                 <span aria-hidden className="relative flex justify-center">
-                  <span className={cn("z-10 mt-1 size-2.5 rounded-full border-2 border-surface", e.source === "note" ? "bg-accent" : e.source === "malware" || e.source === "alerts" ? "bg-danger" : "bg-fg-subtle")} />
+                  <span
+                    className={cn(
+                      "z-10 mt-1 size-2.5 rounded-full border-2 border-surface",
+                      e.source === "note" ? "bg-accent" : e.source === "malware" || e.source === "alerts" ? "bg-danger" : "bg-fg-subtle",
+                    )}
+                  />
                   {i < timeline.length - 1 && <span className="absolute top-2 -bottom-3 w-px bg-line" />}
                 </span>
                 <div className="flex min-w-0 flex-col gap-0.5">
@@ -187,7 +226,13 @@ function DetailPage() {
             ))}
           </ol>
           <form onSubmit={addNote} className="mt-3 flex items-end gap-1.5 border-t border-line pt-3">
-            <TextField label="Add a note to the timeline" value={note} onChange={(e) => setNote(e.target.value)} placeholder="What did you just learn or do?" className="grow" />
+            <TextField
+              label="Add a note to the timeline"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="What did you just learn or do?"
+              className="grow"
+            />
             <Button type="submit" variant="primary">
               Post
             </Button>
@@ -250,7 +295,6 @@ function DetailPage() {
       </div>
     </>
   );
-  
 }
 
 interface Incident {
@@ -266,14 +310,94 @@ interface Incident {
 }
 
 const INCIDENTS: Incident[] = [
-  { id: "INC-142", title: "Crypto miner on api-prod-03", severity: "critical", status: "investigating", commander: PEOPLE[4], opened: "Today 13:52", openedSort: 142, minutes: 68, products: ["malware", "siem", "vpn"] },
-  { id: "INC-141", title: "orders-api p95 above SLO", severity: "high", status: "identified", commander: PEOPLE[3], opened: "Today 13:49", openedSort: 141, minutes: 71, products: ["metrics", "alerts"] },
-  { id: "INC-140", title: "edge-fra-02 unreachable", severity: "medium", status: "monitoring", commander: PEOPLE[2], opened: "Today 11:20", openedSort: 140, minutes: 220, products: ["infrastructure"] },
-  { id: "INC-139", title: "Leaked Stripe key in public gist", severity: "high", status: "resolved", commander: PEOPLE[1], opened: "Oct 17 16:04", openedSort: 139, minutes: 46, products: ["secrets"] },
-  { id: "INC-138", title: "Billing worker queue lag 40k", severity: "medium", status: "resolved", commander: PEOPLE[6], opened: "Oct 15 09:31", openedSort: 138, minutes: 132, products: ["metrics", "logs"] },
-  { id: "INC-137", title: "SQL injection on /search reported by DAST", severity: "critical", status: "resolved", commander: PEOPLE[0], opened: "Oct 12 22:10", openedSort: 137, minutes: 305, products: ["dast", "sast"] },
-  { id: "INC-136", title: "VPN brute force from 203.0.113.0/24", severity: "low", status: "resolved", commander: PEOPLE[5], opened: "Oct 9 03:44", openedSort: 136, minutes: 28, products: ["vpn", "siem"] },
-  { id: "INC-135", title: "Expired TLS certificate on status page", severity: "medium", status: "resolved", commander: PEOPLE[7], opened: "Oct 4 07:02", openedSort: 135, minutes: 54, products: ["infrastructure"] },
+  {
+    id: "INC-142",
+    title: "Crypto miner on api-prod-03",
+    severity: "critical",
+    status: "investigating",
+    commander: PEOPLE[4],
+    opened: "Today 13:52",
+    openedSort: 142,
+    minutes: 68,
+    products: ["malware", "siem", "vpn"],
+  },
+  {
+    id: "INC-141",
+    title: "orders-api p95 above SLO",
+    severity: "high",
+    status: "identified",
+    commander: PEOPLE[3],
+    opened: "Today 13:49",
+    openedSort: 141,
+    minutes: 71,
+    products: ["metrics", "alerts"],
+  },
+  {
+    id: "INC-140",
+    title: "edge-fra-02 unreachable",
+    severity: "medium",
+    status: "monitoring",
+    commander: PEOPLE[2],
+    opened: "Today 11:20",
+    openedSort: 140,
+    minutes: 220,
+    products: ["infrastructure"],
+  },
+  {
+    id: "INC-139",
+    title: "Leaked Stripe key in public gist",
+    severity: "high",
+    status: "resolved",
+    commander: PEOPLE[1],
+    opened: "Oct 17 16:04",
+    openedSort: 139,
+    minutes: 46,
+    products: ["secrets"],
+  },
+  {
+    id: "INC-138",
+    title: "Billing worker queue lag 40k",
+    severity: "medium",
+    status: "resolved",
+    commander: PEOPLE[6],
+    opened: "Oct 15 09:31",
+    openedSort: 138,
+    minutes: 132,
+    products: ["metrics", "logs"],
+  },
+  {
+    id: "INC-137",
+    title: "SQL injection on /search reported by DAST",
+    severity: "critical",
+    status: "resolved",
+    commander: PEOPLE[0],
+    opened: "Oct 12 22:10",
+    openedSort: 137,
+    minutes: 305,
+    products: ["dast", "sast"],
+  },
+  {
+    id: "INC-136",
+    title: "VPN brute force from 203.0.113.0/24",
+    severity: "low",
+    status: "resolved",
+    commander: PEOPLE[5],
+    opened: "Oct 9 03:44",
+    openedSort: 136,
+    minutes: 28,
+    products: ["vpn", "siem"],
+  },
+  {
+    id: "INC-135",
+    title: "Expired TLS certificate on status page",
+    severity: "medium",
+    status: "resolved",
+    commander: PEOPLE[7],
+    opened: "Oct 4 07:02",
+    openedSort: 135,
+    minutes: 54,
+    products: ["infrastructure"],
+  },
 ];
 
 const dur = (m: number) => (m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, "0")} m` : `${m} m`);
@@ -294,8 +418,18 @@ const incidentColumns: Column<Incident>[] = [
       </span>
     ),
   },
-  { id: "severity", header: "Severity", sortValue: (i) => ["info", "low", "medium", "high", "critical"].indexOf(i.severity), cell: (i) => <SeverityBadge severity={i.severity} /> },
-  { id: "status", header: "Status", sortValue: (i) => Object.keys(STATUS).indexOf(i.status), cell: (i) => <StatusBadge tone={STATUS[i.status].tone}>{STATUS[i.status].label}</StatusBadge> },
+  {
+    id: "severity",
+    header: "Severity",
+    sortValue: (i) => ["info", "low", "medium", "high", "critical"].indexOf(i.severity),
+    cell: (i) => <SeverityBadge severity={i.severity} />,
+  },
+  {
+    id: "status",
+    header: "Status",
+    sortValue: (i) => Object.keys(STATUS).indexOf(i.status),
+    cell: (i) => <StatusBadge tone={STATUS[i.status].tone}>{STATUS[i.status].label}</StatusBadge>,
+  },
   {
     id: "commander",
     header: "Commander",
@@ -347,12 +481,18 @@ function ListPage() {
           />
         </div>
         <div className="border-t border-line">
-          <DataTable label="Incidents" columns={incidentColumns} rows={rows} getRowId={(i) => i.id} defaultSort={{ id: "id", direction: "desc" }} minWidth={860} />
+          <DataTable
+            label="Incidents"
+            columns={incidentColumns}
+            rows={rows}
+            getRowId={(i) => i.id}
+            defaultSort={{ id: "id", direction: "desc" }}
+            minWidth={860}
+          />
         </div>
       </Panel>
     </>
   );
-  
 }
 
 /* ------------------------------------------------------------- postmortems */
@@ -392,7 +532,8 @@ const POSTMORTEMS: Postmortem[] = [
     author: PEOPLE[1],
     status: "in review",
     due: "Oct 24",
-    summary: "A restricted Stripe key was pasted into a public gist while debugging. Secrets detected it within 6 minutes; the key was rolled after 46 minutes.",
+    summary:
+      "A restricted Stripe key was pasted into a public gist while debugging. Secrets detected it within 6 minutes; the key was rolled after 46 minutes.",
     rootCause: "Local debugging script printed the full environment. No push protection for gists.",
     actions: [
       { id: "a1", text: "Roll the key and audit Stripe logs", owner: PEOPLE[1], done: true },
@@ -413,7 +554,17 @@ const POSTMORTEMS: Postmortem[] = [
       { id: "a2", text: "Alert on queue depth > 5k for 5 min", owner: PEOPLE[2], done: true },
     ],
   },
-  { id: "pm-136", incident: "INC-136", title: "VPN brute force from 203.0.113.0/24", author: PEOPLE[5], status: "draft", due: "Oct 30", summary: "Password spraying against the VPN; no successful logins.", rootCause: "Rate limiting was per IP, not per range.", actions: [{ id: "a1", text: "Rate limit per /24", owner: PEOPLE[5], done: false }] },
+  {
+    id: "pm-136",
+    incident: "INC-136",
+    title: "VPN brute force from 203.0.113.0/24",
+    author: PEOPLE[5],
+    status: "draft",
+    due: "Oct 30",
+    summary: "Password spraying against the VPN; no successful logins.",
+    rootCause: "Rate limiting was per IP, not per range.",
+    actions: [{ id: "a1", text: "Rate limit per /24", owner: PEOPLE[5], done: false }],
+  },
 ];
 
 const PM_TONE = { draft: "neutral", "in review": "info", published: "success", overdue: "danger" } as const;
@@ -431,13 +582,29 @@ function PostmortemsPage() {
   ];
   return (
     <>
-      <PageHeader title="Postmortems" description="Blameless write-ups, due 5 working days after an incident is resolved. Timelines are prefilled from the incident." />
+      <PageHeader
+        title="Postmortems"
+        description="Blameless write-ups, due 5 working days after an incident is resolved. Timelines are prefilled from the incident."
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <Panel title="Postmortems" flush>
-          <DataTable label="Postmortems" columns={cols} rows={POSTMORTEMS} getRowId={(p) => p.id} onRowClick={(p) => setActive(p.id)} activeRowId={active} minWidth={620} />
+          <DataTable
+            label="Postmortems"
+            columns={cols}
+            rows={POSTMORTEMS}
+            getRowId={(p) => p.id}
+            onRowClick={(p) => setActive(p.id)}
+            activeRowId={active}
+            minWidth={620}
+          />
         </Panel>
         {cur && (
-          <Panel title={cur.title} description={`${cur.incident} · by ${cur.author}`} aria-label="Postmortem" actions={<Badge tone={PM_TONE[cur.status]}>{cur.status}</Badge>}>
+          <Panel
+            title={cur.title}
+            description={`${cur.incident} · by ${cur.author}`}
+            aria-label="Postmortem"
+            actions={<Badge tone={PM_TONE[cur.status]}>{cur.status}</Badge>}
+          >
             <div className="flex flex-col gap-3 text-sm">
               <section className="flex flex-col gap-1">
                 <h3 className="text-xs font-semibold text-fg-muted uppercase">Summary</h3>
@@ -486,10 +653,53 @@ interface Playbook {
 }
 
 const PLAYBOOKS: Playbook[] = [
-  { id: "pb1", name: "Compromised host", trigger: "SIEM critical signal on a host", steps: ["Isolate host via Infrastructure", "Snapshot disk to Backups", "Revoke Access grants for the host", "Collect process tree from Runtime", "Page security on-call"], runs: 4, lastRun: "Today 13:53", owner: PEOPLE[4] },
-  { id: "pb2", name: "Leaked secret", trigger: "Secrets verified finding", steps: ["Revoke or roll the secret", "Search logs for use of the secret", "Notify the repository owner", "Open postmortem"], runs: 7, lastRun: "Oct 17", owner: PEOPLE[1] },
-  { id: "pb3", name: "SLO burn", trigger: "Alerts: fast burn on any SLO", steps: ["Post in #incidents", "Attach the last deploy diff", "Page service owner", "Update status page if customer-facing"], runs: 12, lastRun: "Today 13:49", owner: PEOPLE[3] },
-  { id: "pb4", name: "Data exfiltration suspected", trigger: "Network IDS DNS tunnel or Cost egress anomaly", steps: ["Block destination at egress", "Identify data source via Network IDS flows", "Engage legal for GDPR Art. 33 assessment (72 h)", "Preserve evidence"], runs: 1, lastRun: "Sep 3", owner: PEOPLE[4] },
+  {
+    id: "pb1",
+    name: "Compromised host",
+    trigger: "SIEM critical signal on a host",
+    steps: [
+      "Isolate host via Infrastructure",
+      "Snapshot disk to Backups",
+      "Revoke Access grants for the host",
+      "Collect process tree from Runtime",
+      "Page security on-call",
+    ],
+    runs: 4,
+    lastRun: "Today 13:53",
+    owner: PEOPLE[4],
+  },
+  {
+    id: "pb2",
+    name: "Leaked secret",
+    trigger: "Secrets verified finding",
+    steps: ["Revoke or roll the secret", "Search logs for use of the secret", "Notify the repository owner", "Open postmortem"],
+    runs: 7,
+    lastRun: "Oct 17",
+    owner: PEOPLE[1],
+  },
+  {
+    id: "pb3",
+    name: "SLO burn",
+    trigger: "Alerts: fast burn on any SLO",
+    steps: ["Post in #incidents", "Attach the last deploy diff", "Page service owner", "Update status page if customer-facing"],
+    runs: 12,
+    lastRun: "Today 13:49",
+    owner: PEOPLE[3],
+  },
+  {
+    id: "pb4",
+    name: "Data exfiltration suspected",
+    trigger: "Network IDS DNS tunnel or Cost egress anomaly",
+    steps: [
+      "Block destination at egress",
+      "Identify data source via Network IDS flows",
+      "Engage legal for GDPR Art. 33 assessment (72 h)",
+      "Preserve evidence",
+    ],
+    runs: 1,
+    lastRun: "Sep 3",
+    owner: PEOPLE[4],
+  },
 ];
 
 function PlaybooksPage() {
@@ -504,10 +714,26 @@ function PlaybooksPage() {
   ];
   return (
     <>
-      <PageHeader title="Playbooks" description="Checklists that start automatically when an incident matches. Automated steps run through Automation." actions={<Button variant="primary" icon={<Plus />}>New playbook</Button>} />
+      <PageHeader
+        title="Playbooks"
+        description="Checklists that start automatically when an incident matches. Automated steps run through Automation."
+        actions={
+          <Button variant="primary" icon={<Plus />}>
+            New playbook
+          </Button>
+        }
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Playbooks" flush>
-          <DataTable label="Playbooks" columns={cols} rows={PLAYBOOKS} getRowId={(p) => p.id} onRowClick={(p) => (setActive(p.id), setRan(null))} activeRowId={active} minWidth={720} />
+          <DataTable
+            label="Playbooks"
+            columns={cols}
+            rows={PLAYBOOKS}
+            getRowId={(p) => p.id}
+            onRowClick={(p) => (setActive(p.id), setRan(null))}
+            activeRowId={active}
+            minWidth={720}
+          />
         </Panel>
         {cur && (
           <Panel
@@ -554,7 +780,9 @@ const COMPONENTS: Array<{ id: string; name: string; state: ComponentState; uptim
 function StatusPage() {
   const [states, setStates] = useState<Record<string, ComponentState>>(Object.fromEntries(COMPONENTS.map((c) => [c.id, c.state])));
   const [update, setUpdate] = useState("");
-  const [updates, setUpdates] = useState([{ time: "13:58", status: "Identified", text: "Checkout is slower than usual. We have found the cause and are deploying a fix." }]);
+  const [updates, setUpdates] = useState([
+    { time: "13:58", status: "Identified", text: "Checkout is slower than usual. We have found the cause and are deploying a fix." },
+  ]);
   const post = (e: FormEvent) => {
     e.preventDefault();
     if (!update.trim()) return;
@@ -563,7 +791,11 @@ function StatusPage() {
   };
   return (
     <>
-      <PageHeader title="Status page" description="status.example.com · 1,284 subscribers by email and RSS" meta={<StatusBadge tone="warning">Degraded performance</StatusBadge>} />
+      <PageHeader
+        title="Status page"
+        description="status.example.com · 1,284 subscribers by email and RSS"
+        meta={<StatusBadge tone="warning">Degraded performance</StatusBadge>}
+      />
       <div className="grid gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title="Components" description="What customers see" flush>
           <ul aria-label="Status components" className="flex flex-col">
@@ -586,7 +818,12 @@ function StatusPage() {
         </Panel>
         <Panel title="Updates" description="INC-141 · orders-api p95 above SLO">
           <form onSubmit={post} className="flex flex-col gap-2" aria-label="Post an update">
-            <TextField label="New update" value={update} onChange={(e) => setUpdate(e.target.value)} placeholder="A fix has been deployed and we are monitoring." />
+            <TextField
+              label="New update"
+              value={update}
+              onChange={(e) => setUpdate(e.target.value)}
+              placeholder="A fix has been deployed and we are monitoring."
+            />
             <Button type="submit" size="sm" variant="primary" icon={<MessageSquarePlus />} className="self-start" disabled={!update.trim()}>
               Post update
             </Button>
@@ -630,7 +867,10 @@ export const Detail: Story = {
     for (const name of ["VPN", "SIEM", "Infrastructure", "Alerts", "Malware"]) await expect(tl).toHaveTextContent(name);
 
     // Evidence chips link out.
-    await expect(within(c.getByRole("list", { name: "Evidence" })).getByRole("link", { name: /198\.51\.100\.201/ })).toHaveAttribute("href", "#siem/entity/ip/198.51.100.201");
+    await expect(within(c.getByRole("list", { name: "Evidence" })).getByRole("link", { name: /198\.51\.100\.201/ })).toHaveAttribute(
+      "href",
+      "#siem/entity/ip/198.51.100.201",
+    );
 
     // Tick a task.
     const task = c.getByRole("checkbox", { name: "Snapshot disk and memory for forensics" });

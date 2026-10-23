@@ -517,6 +517,19 @@ describe("filters", () => {
     expect(screen.getByRole("button", { name: "Time range: 2026-10-01..2026-10-07" })).toBeInTheDocument();
   });
 
+  it("TimeRangePicker is as tall as the filters, or as a QueryBar's Run button with size md", () => {
+    renderUI(
+      <>
+        <TimeRangePicker value="1h" onChange={() => {}} />
+        <QueryBar value="" onChange={() => {}} onSubmit={() => {}} />
+        <TimeRangePicker size="md" value="24h" onChange={() => {}} />
+      </>,
+    );
+    expect(screen.getByRole("button", { name: "Time range: Last 1 hour" })).toHaveClass("h-7");
+    expect(screen.getByRole("button", { name: "Time range: Last 24 hours" })).toHaveClass("h-8");
+    expect(screen.getByRole("button", { name: "Run" })).toHaveClass("h-8");
+  });
+
   it("FacetFilter toggles, searches and clears", async () => {
     function H() {
       const [sel, setSel] = useState<string[]>(["error"]);

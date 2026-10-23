@@ -39,10 +39,12 @@ export interface TimeRangePickerProps {
   onChange: (value: string) => void;
   ranges?: TimeRange[];
   defaultOpen?: boolean;
+  /** md beside a QueryBar or a field, so the row has one height; sm, the default, among filters. */
+  size?: "sm" | "md";
 }
 
 /** Preset list in a popover: nobody fights a calendar for "last 24 hours". */
-export function TimeRangePicker({ value, onChange, ranges: given, defaultOpen }: TimeRangePickerProps) {
+export function TimeRangePicker({ value, onChange, ranges: given, defaultOpen, size = "sm" }: TimeRangePickerProps) {
   const t = useT();
   const ranges = given ?? DEFAULT_TIME_RANGES.map((r) => ({ ...r, label: t(`range.${r.value}` as "range.1h") }));
   const [open, setOpen] = useState(defaultOpen ?? false);
@@ -58,7 +60,12 @@ export function TimeRangePicker({ value, onChange, ranges: given, defaultOpen }:
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <Button size="sm" icon={<Clock aria-hidden />} iconRight={<ChevronDown aria-hidden />} aria-label={t("filters.timeRangeIs", { range: current.label })}>
+        <Button
+          size={size}
+          icon={<Clock aria-hidden />}
+          iconRight={<ChevronDown aria-hidden />}
+          aria-label={t("filters.timeRangeIs", { range: current.label })}
+        >
           {current.label}
         </Button>
       </Popover.Trigger>

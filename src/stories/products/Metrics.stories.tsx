@@ -820,7 +820,7 @@ function ExplorePage() {
       >
         <div className="flex flex-wrap items-center gap-1.5">
           <QueryBar value={draft} onChange={setDraft} onSubmit={run} label="PromQL query" placeholder="rate(http_requests_total[5m])" />
-          <TimeRangePicker value={range} onChange={setRange} />
+          <TimeRangePicker size="md" value={range} onChange={setRange} />
         </div>
       </PageHeader>
       <div className="flex flex-wrap items-center gap-1.5">

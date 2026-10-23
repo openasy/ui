@@ -253,7 +253,7 @@ function ExplorerPage() {
       >
         <div className="flex flex-wrap items-center gap-1.5">
           <QueryBar value={draft} onChange={setDraft} onSubmit={setQuery} label="Log query" placeholder='service:orders-api level:error "timeout"' />
-          <TimeRangePicker value={range} onChange={setRange} />
+          <TimeRangePicker size="md" value={range} onChange={setRange} />
         </div>
       </PageHeader>
       <FilterBar

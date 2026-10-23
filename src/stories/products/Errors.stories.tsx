@@ -1216,7 +1216,7 @@ function DiscoverPage() {
             placeholder="level:error release:web@3.42.0"
           />
           <div className="flex flex-wrap items-end gap-2.5">
-            <TimeRangePicker value={range} onChange={setRange} />
+            <TimeRangePicker size="md" value={range} onChange={setRange} />
             <SelectField
               label="Y axis"
               value={yAxis}

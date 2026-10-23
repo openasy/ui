@@ -78,9 +78,15 @@ export function toLocale(tag: string | null | undefined): Locale {
   return (LOCALES as readonly string[]).includes(base ?? "") ? (base as Locale) : "en";
 }
 
-/** Adds a product's messages under its namespace. defineMessages() calls it. */
-export function addMessages(ns: string, bundles: Record<Locale, Messages>) {
-  for (const locale of LOCALES) i18n.addResourceBundle(locale, ns, bundles[locale], true, true);
+/** A product's messages: English always, other languages once they are translated. */
+export type MessageBundles<M extends Messages = Messages> = { en: M } & Partial<Record<Exclude<Locale, "en">, M>>;
+
+/** Adds a product's messages under its namespace. defineMessages() calls it. A language without a file shows English. */
+export function addMessages(ns: string, bundles: MessageBundles) {
+  for (const locale of LOCALES) {
+    const messages = bundles[locale];
+    if (messages) i18n.addResourceBundle(locale, ns, messages, true, true);
+  }
 }
 
 function flatten(messages: Messages, prefix = ""): Map<string, string> {
@@ -95,15 +101,16 @@ function flatten(messages: Messages, prefix = ""): Map<string, string> {
 const placeholders = (text: string) => [...text.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map((m) => m[1]).sort().join(",");
 
 /**
- * What is wrong with a product's messages: a key missing, empty or extra in a language, or using other
+ * What is wrong with a product's messages: a key missing, empty or extra in a language given, or using other
  * {{placeholders}} than in English. A product's test expects this to be empty.
  */
-export function messageProblems(bundles: Record<Locale, Messages>): string[] {
+export function messageProblems(bundles: MessageBundles): string[] {
   const problems: string[] = [];
   const english = flatten(bundles.en);
   for (const locale of LOCALES) {
-    if (locale === "en") continue;
-    const other = flatten(bundles[locale]);
+    const messages = bundles[locale];
+    if (locale === "en" || !messages) continue;
+    const other = flatten(messages);
     for (const [key, text] of english) {
       const translated = other.get(key);
       if (!translated) problems.push(`${key}: no ${locale} text`);

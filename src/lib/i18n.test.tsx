@@ -123,7 +123,21 @@ function Page() {
   return <h1>{t("page.title", { n: 3 })}</h1>;
 }
 
+const useEnglishOnlyT = defineMessages("english-only-test", { en: { title: "Hosts" } });
+
+function EnglishOnly() {
+  const t = useEnglishOnlyT();
+  return <h1>{t("title")}</h1>;
+}
+
 describe("defineMessages", () => {
+  it("shows English in a language a product has not translated yet", () => {
+    render(<BrandProvider locale="de"><EnglishOnly /></BrandProvider>);
+    expect(screen.getByRole("heading")).toHaveTextContent("Hosts");
+    expect(messageProblems({ en: { title: "Hosts" } })).toEqual([]);
+  });
+
+
   it("reads a product's own messages in the BrandProvider locale", () => {
     const { rerender } = render(<BrandProvider locale="tr"><Page /></BrandProvider>);
     expect(screen.getByRole("heading")).toHaveTextContent("3 sunucu");

@@ -15,7 +15,7 @@ The shell, tables, filters, dialogs, charts and severity badges carry words of t
 - The page has one i18next instance (`i18n`), whose own language never changes: each `BrandProvider` reads it through `getFixedT(locale)`, so two providers with different locales on one page keep theirs.
 - `BrandProvider` takes `locale`, English by default, and sets `lang` on its element (on `<html>` with `root`). Components read it with `useT()`.
 - `useLocalePreference()` keeps the person's choice in `localStorage` under `oa-locale` and syncs it across tabs, like the theme (decision 0002). Without a choice it follows the browser's language, English when that is not supported.
-- A product keeps its own words in `messages/<locale>.json` files and registers them under its namespace with `defineMessages("vpn", { en, tr, de })`, which returns its `useT`. Keys come from `en.json`, and a key missing in another language fails the typecheck. `messageProblems({ en, tr, de })` also lists empty texts, extra keys and other placeholders, for the product's tests.
+- A product keeps its own words in `messages/<locale>.json` files and registers them under its namespace with `defineMessages("vpn", { en, tr, de })`, which returns its `useT`. A product not translated yet passes `{ en }` alone, and other languages show its English. Keys come from `en.json`, and a key missing in another language fails the typecheck. `messageProblems({ en, tr, de })` also lists empty texts, extra keys and other placeholders, for the product's tests.
 - `AppShell` shows `LanguageMenu` next to the theme menu when given `onLanguageChange`. It lists `LOCALES` by their own names unless the product passes `languages`.
 
 ## Consequences

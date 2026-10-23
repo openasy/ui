@@ -56,9 +56,10 @@ export function useT(): Translate<UiMessageKey> {
  *   import en from "./messages/en.json"; import tr from "./messages/tr.json"; import de from "./messages/de.json";
  *   export const useT = defineMessages("vpn", { en, tr, de });
  *
- * `t` takes the keys of en.json, and a key missing from tr.json or de.json fails the typecheck.
+ * `t` takes the keys of en.json, and a key missing from tr.json or de.json fails the typecheck. A product that is
+ * not translated yet passes `{ en }` alone: other languages then show its English, and it offers no language menu.
  */
-export function defineMessages<M extends Messages>(ns: string, bundles: { en: M } & Record<Exclude<Locale, "en">, NoInfer<M>>): () => Translate<MessageKey<M>> {
+export function defineMessages<M extends Messages>(ns: string, bundles: { en: M } & Partial<Record<Exclude<Locale, "en">, NoInfer<M>>>): () => Translate<MessageKey<M>> {
   addMessages(ns, bundles);
   return function useMessages() {
     const { locale } = useBrand();

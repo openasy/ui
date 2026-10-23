@@ -107,6 +107,9 @@ const t = useT();
 t("hosts.count", { n: 3 });
 ```
 
+A product that is not translated yet keeps its words in `messages/en.json` alone and passes `{ en }`; it offers no
+language menu until it has more languages.
+
 `useT()` from the library returns `t(key, values)` for its own words. On the OpenAsy brand the top bar shows the
 OpenAsy mark (`OpenAsyMark`) and wordmark; a white-label brand shows its own logo.
 

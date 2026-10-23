@@ -72,13 +72,15 @@ export const NAV_COLLAPSED_KEY = "oa-nav-collapsed";
 /**
  * The brand logo when one is set (theme-aware), otherwise the product glyph.
  * Use it on screens outside the shell, such as sign-in pages.
+ * A logo is `size` high and as wide as its shape needs, up to six times that, so a wide logo is not shrunk into a
+ * square.
  */
 export function BrandMark({ product, size = 24, className }: { product: ProductId; size?: number; className?: string }) {
   const { brand, theme } = useBrand();
   const logo = theme === "dark" ? (brand.logoDarkUrl ?? brand.logoUrl) : brand.logoUrl;
   const Icon = PRODUCTS[product].icon;
   if (logo) {
-    return <img src={logo} alt="" width={size} height={size} className={cn("shrink-0 rounded-md object-contain", className)} />;
+    return <img src={logo} alt="" height={size} className={cn("w-auto shrink-0 object-contain", className)} style={{ height: size, maxWidth: size * 6 }} />;
   }
   return (
     <span aria-hidden className={cn("grid shrink-0 place-items-center rounded-md bg-fg text-surface", className)} style={{ width: size, height: size }}>
@@ -399,16 +401,19 @@ export function AppShell({
           </Popover.Root>
         )}
         <span className="flex min-w-0 items-center gap-2 px-1.5">
-          {openasy ? <OpenAsyMark /> : <BrandMark product={product} />}
-          <span className="hidden text-base font-semibold tracking-tight sm:inline">
-            {openasy ? (
-              <>
-                Open<span className="oa-topbar-wordmark">Asy</span>
-              </>
-            ) : (
-              brand.name
-            )}
-          </span>
+          {openasy ? <OpenAsyMark /> : <BrandMark product={product} size={brand.logoUrl ? 28 : 24} />}
+          {/* A logo stands for the brand, so its name is not written next to it. */}
+          {!brand.logoUrl && (
+            <span className="hidden text-base font-semibold tracking-tight sm:inline">
+              {openasy ? (
+                <>
+                  Open<span className="oa-topbar-wordmark">Asy</span>
+                </>
+              ) : (
+                brand.name
+              )}
+            </span>
+          )}
           <span aria-hidden className="oa-topbar-muted hidden sm:inline">
             /
           </span>

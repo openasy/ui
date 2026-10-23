@@ -15,6 +15,17 @@ const BRANDS: Record<string, Partial<Brand>> = {
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#0b7366"/><path d="M7 16l5-9 5 9z" fill="#fff"/></svg>',
       ),
   },
+  // An install's brand from config/brand.env (ADR 0053): a wide logo with text, which stands for the name.
+  wide: {
+    name: "OpenAsy",
+    organization: "Test IQ",
+    accent: "#c30193",
+    logoUrl:
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 32"><rect width="32" height="32" rx="7" fill="#c30193"/><path d="M9 22l7-12 7 12z" fill="#fff"/><text x="42" y="23" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#c30193">YouReply</text></svg>',
+      ),
+  },
   bank: { name: "Northwind SOC", organization: "Security Operations Center", accent: "#7a4fd1", fontFamily: "system-ui, sans-serif" },
 };
 
@@ -77,6 +88,7 @@ const preview: Preview = {
         items: [
           { value: "openasy", title: "OpenAsy (default)" },
           { value: "acme", title: "Acme Shield (teal, custom logo)" },
+          { value: "wide", title: "Test IQ (magenta, wide logo)" },
           { value: "bank", title: "Northwind SOC (purple, system font)" },
         ],
         dynamicTitle: true,

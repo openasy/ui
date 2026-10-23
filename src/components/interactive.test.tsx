@@ -410,6 +410,25 @@ describe("AppShell", () => {
     expect(mark.querySelector("svg")).toBeInTheDocument();
   });
 
+  it("BrandMark shows a logo at a fixed height, as wide as it is", () => {
+    const { container } = renderUI(<BrandMark product="identity" size={28} />, { brand: { name: "Acme", logoUrl: "/logo.png" } });
+    const logo = container.querySelector("img") as HTMLImageElement;
+    expect(logo.style.height).toBe("28px");
+    expect(logo.style.maxWidth).toBe("168px");
+    expect(logo).not.toHaveAttribute("width");
+  });
+
+  it("the top bar shows a logo instead of the brand's name", () => {
+    const { container } = renderUI(
+      <AppShell product="logs" nav={[{ id: "x", label: "X", href: "/x" }]}>
+        <p>content</p>
+      </AppShell>,
+      { brand: { name: "Acme", logoUrl: "/logo.png" } },
+    );
+    expect(container.querySelector("header img")).toHaveAttribute("src", "/logo.png");
+    expect(screen.queryByText("Acme")).not.toBeInTheDocument();
+  });
+
   it("ProductSwitcher without connections is static", () => {
     renderUI(<ProductSwitcher product="siem" connected={[]} />);
     expect(screen.queryByRole("button")).not.toBeInTheDocument();

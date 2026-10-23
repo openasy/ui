@@ -1,5 +1,5 @@
-import { useCallback, useSyncExternalStore } from "react";
-import { LOCALE_STORAGE_KEY, toLocale, translate, translateFrom, type Catalogue, type Locale, type MessageKey } from "../lib/i18n";
+import { useMemo, useSyncExternalStore } from "react";
+import { addMessages, fixedT, LOCALE_STORAGE_KEY, toLocale, type Locale, type MessageKey, type Messages, type Translate, type UiMessageKey } from "../lib/i18n";
 import { useBrand } from "./BrandProvider";
 
 const CHANGE_EVENT = "oa-locale-change";
@@ -44,17 +44,24 @@ export function useLocalePreference(storageKey: string = LOCALE_STORAGE_KEY): [L
   return [locale, setLocale];
 }
 
-/** `t(key, vars)` in the locale of the nearest BrandProvider. */
-export function useT(): (key: MessageKey, vars?: Record<string, string | number>) => string {
+/** `t(key, values)` for the library's own words, in the locale of the nearest BrandProvider. */
+export function useT(): Translate<UiMessageKey> {
   const { locale } = useBrand();
-  return useCallback((key, vars) => translate(locale, key, vars), [locale]);
+  return useMemo(() => fixedT(locale, "ui"), [locale]);
 }
 
 /**
- * `t(key, vars)` for a product's own catalogue, in the locale of the nearest BrandProvider.
- * Define the catalogue outside the component so `t` stays the same between renders.
+ * Adds a product's messages, one JSON file per locale, under its namespace and returns its `useT`:
+ *
+ *   import en from "./messages/en.json"; import tr from "./messages/tr.json"; import de from "./messages/de.json";
+ *   export const useT = defineMessages("vpn", { en, tr, de });
+ *
+ * `t` takes the keys of en.json, and a key missing from tr.json or de.json fails the typecheck.
  */
-export function useMessages<K extends string>(catalogue: Catalogue<K>): (key: K, vars?: Record<string, string | number>) => string {
-  const { locale } = useBrand();
-  return useCallback((key, vars) => translateFrom(catalogue, locale, key, vars), [catalogue, locale]);
+export function defineMessages<M extends Messages>(ns: string, bundles: { en: M } & Record<Exclude<Locale, "en">, NoInfer<M>>): () => Translate<MessageKey<M>> {
+  addMessages(ns, bundles);
+  return function useMessages() {
+    const { locale } = useBrand();
+    return useMemo(() => fixedT(locale, ns), [locale]);
+  };
 }

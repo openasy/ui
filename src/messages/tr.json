@@ -1,0 +1,88 @@
+{
+  "shell": {
+    "openNavigation": "Menüyü aç",
+    "closeNavigation": "Menüyü kapat",
+    "navigation": "{{product}} menüsü",
+    "switchProduct": "Ürün değiştir, şu anki:",
+    "products": "{{brand}} ürünleri",
+    "connectedProducts": "Bağlı ürünler",
+    "notConnected": "Bağlı değil",
+    "availableProducts": "Bağlanabilecek ürünler",
+    "connect": "Bağla",
+    "account": "Hesap",
+    "settings": "Ayarlar",
+    "integrations": "Entegrasyonlar",
+    "filterMenu": "Menüde ara",
+    "noMatch": "Eşleşen sayfa yok.",
+    "collapse": "Daralt",
+    "collapseMenu": "Menüyü daralt",
+    "expandMenu": "Menüyü genişlet",
+    "poweredBy": "OpenAsy ile çalışır",
+    "language": "Dil"
+  },
+  "theme": {
+    "label": "Tema",
+    "system": "Sistem",
+    "light": "Açık",
+    "dark": "Koyu"
+  },
+  "common": {
+    "close": "Kapat",
+    "dismiss": "Kapat",
+    "moreInformation": "Daha fazla bilgi",
+    "trend": "Eğilim",
+    "labelTrend": "{{label}} eğilimi"
+  },
+  "table": {
+    "hidden": "{{count}} gizli",
+    "showAll": "Tüm sütunları göster",
+    "selectAll": "Bu sayfadaki tüm satırları seç",
+    "selectRow": "{{id}} satırını seç",
+    "about": "{{column}} hakkında",
+    "resize": "{{column}} genişliğini değiştir",
+    "noResults": "Sonuç yok",
+    "range": "{{total}} kayıttan {{from}}–{{to}}",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "columnOptions": "{{column}} sütun seçenekleri",
+    "sortAscending": "Artan sırala",
+    "sortDescending": "Azalan sırala",
+    "pinLeft": "Sola sabitle",
+    "pinRight": "Sağa sabitle",
+    "unpin": "Sabitlemeyi kaldır",
+    "resetWidths": "Sütun genişliklerini sıfırla",
+    "hideColumn": "Sütunu gizle"
+  },
+  "filters": {
+    "label": "Filtreler",
+    "clearAll": "Filtreleri temizle",
+    "clear": "Temizle",
+    "noMatches": "Eşleşme yok",
+    "search": "{{label}} içinde ara",
+    "remove": "{{field}} filtresini kaldır",
+    "timeRange": "Zaman aralığı",
+    "timeRangeIs": "Zaman aralığı: {{range}}",
+    "query": "Sorgu",
+    "run": "Çalıştır"
+  },
+  "range": {
+    "15m": "Son 15 dakika",
+    "1h": "Son 1 saat",
+    "6h": "Son 6 saat",
+    "24h": "Son 24 saat",
+    "7d": "Son 7 gün",
+    "30d": "Son 30 gün"
+  },
+  "chart": {
+    "readValues": "{{label}}. Değerleri okumak için ok tuşlarını kullanın.",
+    "hoverCell": "Bir hücrenin üzerine gelin"
+  },
+  "severity": {
+    "label": "Önem {{level}}",
+    "critical": "Kritik",
+    "high": "Yüksek",
+    "medium": "Orta",
+    "low": "Düşük",
+    "info": "Bilgi"
+  }
+}

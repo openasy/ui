@@ -8,8 +8,8 @@ import { DataTable } from "../components/DataTable";
 import { SeverityBadge } from "../components/Badge";
 import { TimeRangePicker } from "../components/Filters";
 import { BrandProvider } from "../components/BrandProvider";
-import { useLocalePreference, useMessages } from "../components/Locale";
-import { LOCALE_STORAGE_KEY, MESSAGES, catalogueProblems, toLocale, translate, translateFrom } from "./i18n";
+import { defineMessages, useLocalePreference } from "../components/Locale";
+import { LOCALE_STORAGE_KEY, UI_MESSAGES, messageProblems, toLocale, translate } from "./i18n";
 
 afterEach(() => {
   localStorage.clear();
@@ -20,21 +20,17 @@ describe("translate", () => {
   it("fills in values and falls back to the placeholder when one is missing", () => {
     expect(translate("tr", "table.range", { from: 1, to: 10, total: 42 })).toBe("42 kayıttan 1–10");
     expect(translate("de", "shell.navigation", { product: "Logs" })).toBe("Logs-Navigation");
-    expect(translate("en", "table.selectRow")).toBe("Select row {id}");
+    expect(translate("en", "table.selectRow")).toBe("Select row {{id}}");
   });
 
   it("has every message in every locale, with the same placeholders", () => {
-    expect(catalogueProblems(MESSAGES)).toEqual([]);
+    expect(messageProblems(UI_MESSAGES)).toEqual([]);
   });
 
-  it("names the messages a catalogue misses or fills differently", () => {
-    const catalogue = {
-      ok: { en: "{n} hosts", tr: "{n} sunucu", de: "{n} Hosts" },
-      gap: { en: "Hosts", tr: "", de: "Hosts" },
-      drift: { en: "{n} hosts", tr: "{count} sunucu", de: "{n} Hosts" },
-    };
-    expect(catalogueProblems(catalogue)).toEqual(["gap: no tr text", "drift: tr uses other placeholders than en"]);
-    expect(translateFrom(catalogue, "tr", "gap")).toBe("Hosts");
+  it("names the messages a language misses, adds or fills differently", () => {
+    const en = { hosts: { ok: "{{n}} hosts", gap: "Hosts", drift: "{{n}} hosts" } };
+    const tr = { hosts: { ok: "{{n}} sunucu", gap: "", drift: "{{count}} sunucu" }, extra: "Fazla" };
+    expect(messageProblems({ en, tr, de: en })).toEqual(["hosts.gap: no tr text", "hosts.drift: tr uses other placeholders than en", "extra: in tr but not in en"]);
   });
 
   it("reads a locale from a language tag", () => {
@@ -116,15 +112,19 @@ describe("useLocalePreference", () => {
   });
 });
 
-const PAGE = { title: { en: "{n} hosts", tr: "{n} sunucu", de: "{n} Hosts" } };
+const useHostsT = defineMessages("hosts-test", {
+  en: { page: { title: "{{n}} hosts" } },
+  tr: { page: { title: "{{n}} sunucu" } },
+  de: { page: { title: "{{n}} Hosts" } },
+});
 
 function Page() {
-  const t = useMessages(PAGE);
-  return <h1>{t("title", { n: 3 })}</h1>;
+  const t = useHostsT();
+  return <h1>{t("page.title", { n: 3 })}</h1>;
 }
 
-describe("useMessages", () => {
-  it("reads a product's own catalogue in the BrandProvider locale", () => {
+describe("defineMessages", () => {
+  it("reads a product's own messages in the BrandProvider locale", () => {
     const { rerender } = render(<BrandProvider locale="tr"><Page /></BrandProvider>);
     expect(screen.getByRole("heading")).toHaveTextContent("3 sunucu");
     rerender(<BrandProvider locale="de"><Page /></BrandProvider>);

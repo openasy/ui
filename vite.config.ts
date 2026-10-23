@@ -19,7 +19,7 @@ export default defineConfig({
       cssFileName: "styles",
     },
     rolldownOptions: {
-      external: [/^react($|\/)/, /^react-dom($|\/)/, "lucide-react", /^@radix-ui\//, "clsx", "tailwind-merge"],
+      external: [/^react($|\/)/, /^react-dom($|\/)/, "lucide-react", /^@radix-ui\//, "clsx", "tailwind-merge", "i18next"],
     },
     sourcemap: true,
     emptyOutDir: true,

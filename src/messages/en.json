@@ -1,0 +1,88 @@
+{
+  "shell": {
+    "openNavigation": "Open navigation",
+    "closeNavigation": "Close navigation",
+    "navigation": "{{product}} navigation",
+    "switchProduct": "Switch product, current:",
+    "products": "{{brand}} products",
+    "connectedProducts": "Connected products",
+    "notConnected": "Not connected",
+    "availableProducts": "Available products",
+    "connect": "Connect",
+    "account": "Account",
+    "settings": "Settings",
+    "integrations": "Integrations",
+    "filterMenu": "Filter the menu",
+    "noMatch": "No page matches.",
+    "collapse": "Collapse",
+    "collapseMenu": "Collapse the menu",
+    "expandMenu": "Expand the menu",
+    "poweredBy": "Powered by OpenAsy",
+    "language": "Language"
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "common": {
+    "close": "Close",
+    "dismiss": "Dismiss",
+    "moreInformation": "More information",
+    "trend": "Trend",
+    "labelTrend": "{{label}} trend"
+  },
+  "table": {
+    "hidden": "{{count}} hidden",
+    "showAll": "Show all columns",
+    "selectAll": "Select all rows on this page",
+    "selectRow": "Select row {{id}}",
+    "about": "About {{column}}",
+    "resize": "Resize {{column}}",
+    "noResults": "No results",
+    "range": "{{from}}–{{to}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "columnOptions": "{{column}} column options",
+    "sortAscending": "Sort ascending",
+    "sortDescending": "Sort descending",
+    "pinLeft": "Pin to left",
+    "pinRight": "Pin to right",
+    "unpin": "Unpin",
+    "resetWidths": "Reset column widths",
+    "hideColumn": "Hide column"
+  },
+  "filters": {
+    "label": "Filters",
+    "clearAll": "Clear filters",
+    "clear": "Clear",
+    "noMatches": "No matches",
+    "search": "Search {{label}}",
+    "remove": "Remove filter {{field}}",
+    "timeRange": "Time range",
+    "timeRangeIs": "Time range: {{range}}",
+    "query": "Query",
+    "run": "Run"
+  },
+  "range": {
+    "15m": "Last 15 minutes",
+    "1h": "Last 1 hour",
+    "6h": "Last 6 hours",
+    "24h": "Last 24 hours",
+    "7d": "Last 7 days",
+    "30d": "Last 30 days"
+  },
+  "chart": {
+    "readValues": "{{label}}. Use arrow keys to read values.",
+    "hoverCell": "Hover a cell"
+  },
+  "severity": {
+    "label": "Severity {{level}}",
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "info": "Info"
+  }
+}

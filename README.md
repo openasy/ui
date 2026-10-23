@@ -80,7 +80,8 @@ and the choice is remembered in this browser. Below 768 px it is a drawer opened
 
 ### Languages
 
-The library's own words (shell, tables, filters, dialogs, charts, severities) come in English, Turkish and German.
+The library's own words (shell, tables, filters, dialogs, charts, severities) come in English, Turkish and German,
+from one JSON file per language in `src/messages/`, read with [i18next](https://www.i18next.com).
 `BrandProvider` takes `locale`; `useLocalePreference()` remembers the person's choice and starts from the browser's
 language. Pass `onLanguageChange` to `AppShell` and the top bar offers a language menu next to the theme:
 
@@ -91,16 +92,22 @@ const [locale, setLocale] = useLocalePreference();
 </BrandProvider>
 ```
 
-A product translates its own pages with a catalogue of the same shape and `useMessages()`; `catalogueProblems()`
-in a test catches a message missing in a language:
+A product translates its own pages the same way: `messages/en.json`, `tr.json` and `de.json` under its namespace.
+`t` takes the keys of `en.json`, a key missing in another language fails the typecheck, and `messageProblems()` in a
+test catches empty texts and other placeholders:
 
 ```tsx
-const MESSAGES = { hosts: { en: "{n} hosts", tr: "{n} sunucu", de: "{n} Hosts" } } satisfies Catalogue;
-const t = useMessages(MESSAGES);
-t("hosts", { n: 3 });
+// messages/en.json: { "hosts": { "count": "{{n}} hosts" } }
+import en from "./messages/en.json";
+import tr from "./messages/tr.json";
+import de from "./messages/de.json";
+
+export const useT = defineMessages("logs", { en, tr, de });
+const t = useT();
+t("hosts.count", { n: 3 });
 ```
 
-`useT()` returns `t(key, vars)` for a product that wants the library's own words. On the OpenAsy brand the top bar shows the
+`useT()` from the library returns `t(key, values)` for its own words. On the OpenAsy brand the top bar shows the
 OpenAsy mark (`OpenAsyMark`) and wordmark; a white-label brand shows its own logo.
 
 ### Routing

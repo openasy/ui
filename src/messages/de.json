@@ -1,0 +1,88 @@
+{
+  "shell": {
+    "openNavigation": "Navigation öffnen",
+    "closeNavigation": "Navigation schließen",
+    "navigation": "{{product}}-Navigation",
+    "switchProduct": "Produkt wechseln, aktuell:",
+    "products": "{{brand}}-Produkte",
+    "connectedProducts": "Verbundene Produkte",
+    "notConnected": "Nicht verbunden",
+    "availableProducts": "Verfügbare Produkte",
+    "connect": "Verbinden",
+    "account": "Konto",
+    "settings": "Einstellungen",
+    "integrations": "Integrationen",
+    "filterMenu": "Menü filtern",
+    "noMatch": "Keine passende Seite.",
+    "collapse": "Einklappen",
+    "collapseMenu": "Menü einklappen",
+    "expandMenu": "Menü ausklappen",
+    "poweredBy": "Bereitgestellt von OpenAsy",
+    "language": "Sprache"
+  },
+  "theme": {
+    "label": "Design",
+    "system": "System",
+    "light": "Hell",
+    "dark": "Dunkel"
+  },
+  "common": {
+    "close": "Schließen",
+    "dismiss": "Ausblenden",
+    "moreInformation": "Weitere Informationen",
+    "trend": "Trend",
+    "labelTrend": "{{label}}-Trend"
+  },
+  "table": {
+    "hidden": "{{count}} ausgeblendet",
+    "showAll": "Alle Spalten anzeigen",
+    "selectAll": "Alle Zeilen dieser Seite auswählen",
+    "selectRow": "Zeile {{id}} auswählen",
+    "about": "Über {{column}}",
+    "resize": "{{column}} Breite ändern",
+    "noResults": "Keine Ergebnisse",
+    "range": "{{from}}–{{to}} von {{total}}",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "columnOptions": "Optionen für Spalte {{column}}",
+    "sortAscending": "Aufsteigend sortieren",
+    "sortDescending": "Absteigend sortieren",
+    "pinLeft": "Links anheften",
+    "pinRight": "Rechts anheften",
+    "unpin": "Lösen",
+    "resetWidths": "Spaltenbreiten zurücksetzen",
+    "hideColumn": "Spalte ausblenden"
+  },
+  "filters": {
+    "label": "Filter",
+    "clearAll": "Filter zurücksetzen",
+    "clear": "Zurücksetzen",
+    "noMatches": "Keine Treffer",
+    "search": "{{label}} durchsuchen",
+    "remove": "Filter {{field}} entfernen",
+    "timeRange": "Zeitraum",
+    "timeRangeIs": "Zeitraum: {{range}}",
+    "query": "Abfrage",
+    "run": "Ausführen"
+  },
+  "range": {
+    "15m": "Letzte 15 Minuten",
+    "1h": "Letzte Stunde",
+    "6h": "Letzte 6 Stunden",
+    "24h": "Letzte 24 Stunden",
+    "7d": "Letzte 7 Tage",
+    "30d": "Letzte 30 Tage"
+  },
+  "chart": {
+    "readValues": "{{label}}. Mit den Pfeiltasten Werte lesen.",
+    "hoverCell": "Zeigen Sie auf eine Zelle"
+  },
+  "severity": {
+    "label": "Schweregrad {{level}}",
+    "critical": "Kritisch",
+    "high": "Hoch",
+    "medium": "Mittel",
+    "low": "Niedrig",
+    "info": "Info"
+  }
+}

@@ -62,4 +62,4 @@ export const DOC_IPS = ["203.0.113.24", "198.51.100.7", "203.0.113.181", "198.51
 export const CONNECTED = ["infrastructure", "logs", "metrics", "alerts", "vulnerabilities", "incidents"] as const;
 export const AVAILABLE = ["vpn", "siem", "audit", "sast", "dast", "malware", "posture", "secrets", "runtime", "access", "compliance", "identity"] as const;
 
-export const USER = { name: "Emily Clark", role: "Owner" };
+export const USER = { name: "Emily Clark", role: "Owner", accountHref: "#account", onSignOut: () => {} };

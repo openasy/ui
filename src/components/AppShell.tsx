@@ -9,6 +9,7 @@ import {
   Code,
   Grip,
   Info,
+  LogOut,
   Mail,
   Menu,
   Plug,
@@ -16,6 +17,7 @@ import {
   Settings,
   ShieldAlert,
   Sparkles,
+  UserRound,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -45,6 +47,10 @@ export interface NavItem {
 export interface ShellUser {
   name: string;
   role?: string;
+  /** Where the person manages their account: the product's Account page, or Identity's when it keeps people. */
+  accountHref?: string;
+  /** Signs out of the product; the user menu offers it. */
+  onSignOut?: () => void;
 }
 
 export interface AppShellProps {
@@ -337,6 +343,60 @@ function textOf(label: ReactNode): string {
  * desktops when collapsed) and a drawer on phones.
  */
 /** The top bar's help menu: the version, About, the release notes, the API, support and security reports. */
+/** The signed-in person: their name and role, where they manage their account, and signing out. */
+function UserMenu({ user }: { user: ShellUser }) {
+  const t = useT();
+  const [open, setOpen] = useState(false);
+  const item = "flex min-h-10 items-center gap-2.5 rounded-md px-2.5 text-sm text-fg no-underline hover:bg-subtle";
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger className="oa-topbar-button flex h-10 items-center gap-2 rounded-md px-1.5 text-left">
+        <span className="sr-only">{t("shell.account")}:</span>{" "}
+        <span className="hidden flex-col leading-tight lg:flex">
+          <span className="text-sm font-medium">{user.name}</span> {user.role && <span className="oa-topbar-muted text-2xs">{user.role}</span>}
+        </span>
+        <Avatar name={user.name} size="md" />
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          align="end"
+          sideOffset={4}
+          aria-label={t("shell.account")}
+          className="oa-root z-50 flex w-64 flex-col rounded-lg border border-line bg-surface p-1.5 shadow-overlay"
+        >
+          <div className="flex items-center gap-2 px-1.5 py-1.5">
+            <Avatar name={user.name} />
+            <span className="flex min-w-0 flex-col">
+              <span className="truncate text-sm font-semibold">{user.name}</span>
+              {user.role && <span className="truncate text-xs text-fg-muted">{user.role}</span>}
+            </span>
+          </div>
+          {(user.accountHref || user.onSignOut) && <div aria-hidden className="my-1 h-px bg-subtle" />}
+          {user.accountHref && (
+            <a className={item} href={user.accountHref} onClick={() => setOpen(false)}>
+              <UserRound aria-hidden className="size-4 text-fg-muted" />
+              {t("shell.manageAccount")}
+            </a>
+          )}
+          {user.onSignOut && (
+            <button
+              type="button"
+              className={cn(item, "w-full border-0 bg-transparent text-left font-[inherit]")}
+              onClick={() => {
+                setOpen(false);
+                user.onSignOut!();
+              }}
+            >
+              <LogOut aria-hidden className="size-4 text-fg-muted" />
+              {t("shell.signOut")}
+            </button>
+          )}
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
+
 function HelpMenu({ product, about, onAbout }: { product: ProductId; about: Colophon; onAbout?: () => void }) {
   const { brand } = useBrand();
   const t = useT();
@@ -529,31 +589,7 @@ export function AppShell({
         )}
         {withTheme && <ThemeMenu value={theme} onChange={onThemeChange} className="oa-topbar-button" />}
         {about && <HelpMenu product={product} about={about} onAbout={navigate ? () => navigate("about") : undefined} />}
-        {user && (
-          <Popover.Root>
-            <Popover.Trigger className="oa-topbar-button flex h-10 items-center gap-2 rounded-md px-1.5 text-left">
-              <span className="sr-only">{t("shell.account")}:</span>{" "}
-              <span className="hidden flex-col leading-tight lg:flex">
-                <span className="text-sm font-medium">{user.name}</span> {user.role && <span className="oa-topbar-muted text-2xs">{user.role}</span>}
-              </span>
-              <Avatar name={user.name} size="md" />
-            </Popover.Trigger>
-            <Popover.Portal>
-              <Popover.Content
-                align="end"
-                sideOffset={4}
-                aria-label={t("shell.account")}
-                className="oa-root z-50 flex w-64 items-center gap-2 rounded-lg border border-line bg-surface p-3 shadow-overlay"
-              >
-                <Avatar name={user.name} />
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-sm font-semibold">{user.name}</span>
-                  {user.role && <span className="truncate text-xs text-fg-muted">{user.role}</span>}
-                </span>
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover.Root>
-        )}
+        {user && <UserMenu user={user} />}
       </header>
 
       <div className="flex min-h-0 flex-1">

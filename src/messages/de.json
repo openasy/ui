@@ -20,7 +20,9 @@
     "poweredBy": "Bereitgestellt von OpenAsy",
     "language": "Sprache",
     "help": "Hilfe und Info",
-    "about": "Info"
+    "about": "Info",
+    "manageAccount": "Konto verwalten",
+    "signOut": "Abmelden"
   },
   "theme": {
     "label": "Design",

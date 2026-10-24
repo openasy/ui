@@ -162,6 +162,20 @@ describe("AppShell", () => {
     expect(screen.queryByText("Powered by OpenAsy")).not.toBeInTheDocument();
   });
 
+  it("offers managing the account and signing out in the user menu", async () => {
+    const onSignOut = vi.fn();
+    const { user } = renderUI(
+      <AppShell product="vpn" nav={nav} user={{ name: "Emily Clark", role: "Owner", accountHref: "https://id.example.com/account", onSignOut }}>
+        <p>content</p>
+      </AppShell>,
+    );
+    await user.click(screen.getByRole("button", { name: /Account:/ }));
+    const menu = screen.getByRole("dialog", { name: "Account" });
+    expect(within(menu).getByRole("link", { name: "Manage account" })).toHaveAttribute("href", "https://id.example.com/account");
+    await user.click(within(menu).getByRole("button", { name: "Sign out" }));
+    expect(onSignOut).toHaveBeenCalledOnce();
+  });
+
   it("opens and closes the mobile navigation drawer", async () => {
     const onNavigate = vi.fn();
     const { user } = renderUI(

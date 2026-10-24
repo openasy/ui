@@ -20,7 +20,9 @@
     "poweredBy": "Powered by OpenAsy",
     "language": "Language",
     "help": "Help and about",
-    "about": "About"
+    "about": "About",
+    "manageAccount": "Manage account",
+    "signOut": "Sign out"
   },
   "theme": {
     "label": "Theme",

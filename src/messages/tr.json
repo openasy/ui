@@ -20,7 +20,9 @@
     "poweredBy": "OpenAsy ile çalışır",
     "language": "Dil",
     "help": "Yardım ve hakkında",
-    "about": "Hakkında"
+    "about": "Hakkında",
+    "manageAccount": "Hesabı yönet",
+    "signOut": "Çıkış yap"
   },
   "theme": {
     "label": "Tema",

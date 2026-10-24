@@ -89,6 +89,11 @@ export interface AppShellProps {
    * menu, the menu ends with About, and on the page "about" the shell shows the About page in place of children.
    */
   about?: Colophon;
+  /**
+   * The product has a Setup page, "setup": how to connect its scanners, agents or pipelines. The help menu leads to it,
+   * so it is done once without standing in the menu every day.
+   */
+  setup?: boolean;
   children: ReactNode;
   className?: string;
 }
@@ -397,7 +402,7 @@ function UserMenu({ user }: { user: ShellUser }) {
   );
 }
 
-function HelpMenu({ product, about, onAbout }: { product: ProductId; about: Colophon; onAbout?: () => void }) {
+function HelpMenu({ product, about, onAbout, onSetup }: { product: ProductId; about: Colophon; onAbout?: () => void; onSetup?: () => void }) {
   const { brand } = useBrand();
   const t = useT();
   const [open, setOpen] = useState(false);
@@ -422,6 +427,19 @@ function HelpMenu({ product, about, onAbout }: { product: ProductId; about: Colo
             <p className="m-0 text-xs text-fg-muted">{t("about.freeSoftware", { license: about.license.replace(/-only$|-or-later$/, "") })}</p>
           </div>
           <div aria-hidden className="my-1 h-px bg-subtle" />
+          {onSetup && (
+            <button
+              type="button"
+              className={cn(item, "w-full border-0 bg-transparent text-left font-[inherit]")}
+              onClick={() => {
+                setOpen(false);
+                onSetup();
+              }}
+            >
+              <Settings aria-hidden className="size-4 text-fg-muted" />
+              {t("about.setUpProduct", { product: PRODUCTS[product].name })}
+            </button>
+          )}
           {onAbout && (
             <button
               type="button"
@@ -478,6 +496,7 @@ export function AppShell({
   languages,
   onLanguageChange,
   about,
+  setup = false,
   children,
   className,
 }: AppShellProps) {
@@ -588,7 +607,14 @@ export function AppShell({
           />
         )}
         {withTheme && <ThemeMenu value={theme} onChange={onThemeChange} className="oa-topbar-button" />}
-        {about && <HelpMenu product={product} about={about} onAbout={navigate ? () => navigate("about") : undefined} />}
+        {about && (
+          <HelpMenu
+            product={product}
+            about={about}
+            onAbout={navigate ? () => navigate("about") : undefined}
+            onSetup={setup && navigate ? () => navigate("setup") : undefined}
+          />
+        )}
         {user && <UserMenu user={user} />}
       </header>
 

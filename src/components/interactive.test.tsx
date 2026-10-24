@@ -428,6 +428,20 @@ describe("AppShell", () => {
     expect(screen.getByText("ghcr.io/openasy/vpn:0.6.0")).toBeInTheDocument();
   });
 
+  it("leads to the Setup page from the help menu, not from the menu", async () => {
+    const about = { version: "0.6.0", license: "AGPL-3.0-only", repository: "https://github.com/openasy/vpn", libraries: [], openasy: [] };
+    const onNavigate = vi.fn();
+    const { user } = renderUI(
+      <AppShell product="vpn" nav={nav} onNavigate={onNavigate} about={about} setup>
+        <p>Page</p>
+      </AppShell>,
+    );
+    expect(within(screen.getByRole("navigation", { name: /VPN/ })).queryByRole("link", { name: /Set up/ })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Help and about" }));
+    await user.click(within(await screen.findByRole("dialog", { name: "Help and about" })).getByRole("button", { name: "Set up VPN" }));
+    expect(onNavigate).toHaveBeenCalledWith("setup");
+  });
+
   it("uses the dark logo in dark mode and hides powered-by on request", () => {
     const { container } = renderUI(
       <AppShell product="vpn" nav={nav}>

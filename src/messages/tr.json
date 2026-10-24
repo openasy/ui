@@ -124,6 +124,7 @@
     "role": "Buradaki görevi",
     "contactSupport": "Desteğe yaz",
     "reportSecurity": "Güvenlik açığı bildir",
+    "setUpProduct": "{{product}} kurulumu",
     "aboutProduct": "{{product}} hakkında",
     "whatIsNewIn": "{{version}} sürümündeki yenilikler"
   }

@@ -124,6 +124,7 @@
     "role": "What it does here",
     "contactSupport": "Contact support",
     "reportSecurity": "Report a security issue",
+    "setUpProduct": "Set up {{product}}",
     "aboutProduct": "About {{product}}",
     "whatIsNewIn": "What is new in {{version}}"
   }

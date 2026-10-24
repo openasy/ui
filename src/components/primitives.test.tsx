@@ -164,6 +164,18 @@ describe("Panel and EmptyState", () => {
     expect(screen.getByText("body")).toBeInTheDocument();
   });
 
+  it("gives the body room at the top when there is no header to", () => {
+    renderUI(
+      <>
+        <Panel>alone</Panel>
+        <Panel title="T">under a title</Panel>
+      </>,
+    );
+    expect(screen.getByText("alone")).toHaveClass("p-3");
+    expect(screen.getByText("under a title")).toHaveClass("px-3", "pb-3");
+    expect(screen.getByText("under a title")).not.toHaveClass("p-3");
+  });
+
   it("flush panels without a header still render", () => {
     renderUI(
       <>

@@ -735,12 +735,7 @@ function TargetsPage() {
     <>
       <PageHeader
         title="Targets"
-        description="Apps and APIs under example.com that DAST may scan, with their scope."
-        actions={
-          <Button variant="primary" icon={<Plus />}>
-            Add target
-          </Button>
-        }
+        description="Apps and APIs under example.com that DAST may scan, with their scope. They come from the endpoints file the install keeps."
       />
       <KpiGrid>
         <KpiCard label="Targets" value="5" unit="3 staging · 2 prod" />

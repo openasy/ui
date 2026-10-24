@@ -25,7 +25,8 @@ export function Panel({ title, description, actions, flush, footer, className, c
           {actions && <div className="flex shrink-0 items-center gap-1">{actions}</div>}
         </header>
       )}
-      <div className={cn("min-w-0 grow", !flush && "px-3 pb-3", flush && hasHeader && "border-t border-line")}>{children}</div>
+      {/* Without a header nothing gives the body room at the top, so it takes its own. */}
+      <div className={cn("min-w-0 grow", !flush && (hasHeader ? "px-3 pb-3" : "p-3"), flush && hasHeader && "border-t border-line")}>{children}</div>
       {footer && <footer className="border-t border-line px-3 py-2 text-xs text-fg-muted">{footer}</footer>}
     </section>
   );

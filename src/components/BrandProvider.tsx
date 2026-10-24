@@ -18,6 +18,8 @@ export interface Brand {
   fontFamily?: string;
   /** Hide "Powered by OpenAsy" footers. */
   hidePoweredBy?: boolean;
+  /** Where people get help: an email address or a web address. OpenAsy's own support when left out. */
+  support?: string;
 }
 
 export const DEFAULT_BRAND: Brand = { name: "OpenAsy", organization: "Acme Corp" };

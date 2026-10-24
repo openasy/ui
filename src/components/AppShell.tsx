@@ -1,6 +1,24 @@
 import { useEffect, useState, type ReactNode } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { Check, ChevronsLeft, ChevronsRight, ChevronsUpDown, Grip, Menu, Plug, Search, Settings, X, type LucideIcon } from "lucide-react";
+import {
+  Check,
+  ChevronsLeft,
+  ChevronsRight,
+  ChevronsUpDown,
+  CircleHelp,
+  Code,
+  Grip,
+  Info,
+  Mail,
+  Menu,
+  Plug,
+  Search,
+  Settings,
+  ShieldAlert,
+  Sparkles,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "../lib/cn";
 import { PRODUCTS, type ProductId } from "../tokens/products";
 import { useBrand } from "./BrandProvider";
@@ -9,6 +27,7 @@ import { LOCALES, LOCALE_NAMES } from "../lib/i18n";
 import { Avatar } from "./Avatar";
 import { LanguageMenu, type Language } from "./LanguageMenu";
 import { ThemeMenu, type ThemePreference } from "./Theme";
+import { AboutPage, colophonLinks, type Colophon } from "./About";
 
 export interface NavItem {
   id: string;
@@ -59,6 +78,11 @@ export interface AppShellProps {
   language?: string;
   languages?: Language[];
   onLanguageChange?: (code: string) => void;
+  /**
+   * What the product is and what it is built on, from the colophon() Vite plugin. With it, the top bar has a help
+   * menu, the menu ends with About, and on the page "about" the shell shows the About page in place of children.
+   */
+  about?: Colophon;
   children: ReactNode;
   className?: string;
 }
@@ -312,6 +336,68 @@ function textOf(label: ReactNode): string {
  * page filling the rest. The menu is a labelled icon rail on tablets (and on
  * desktops when collapsed) and a drawer on phones.
  */
+/** The top bar's help menu: the version, About, the release notes, the API, support and security reports. */
+function HelpMenu({ product, about, onAbout }: { product: ProductId; about: Colophon; onAbout?: () => void }) {
+  const { brand } = useBrand();
+  const t = useT();
+  const [open, setOpen] = useState(false);
+  const links = colophonLinks(product, about, brand.support);
+  const item = "flex min-h-10 items-center gap-2.5 rounded-md px-2.5 text-sm text-fg no-underline hover:bg-subtle";
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger aria-label={t("shell.help")} title={t("shell.help")} className="oa-topbar-button grid size-10 place-items-center rounded-md">
+        <CircleHelp aria-hidden className="size-[18px]" />
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          align="end"
+          sideOffset={4}
+          aria-label={t("shell.help")}
+          className="oa-root z-50 flex w-72 flex-col rounded-lg border border-line bg-surface p-1.5 shadow-overlay"
+        >
+          <div className="px-2.5 pt-2 pb-2">
+            <p className="m-0 text-sm font-semibold">
+              {links.name} {about.version}
+            </p>
+            <p className="m-0 text-xs text-fg-muted">{t("about.freeSoftware", { license: about.license.replace(/-only$|-or-later$/, "") })}</p>
+          </div>
+          <div aria-hidden className="my-1 h-px bg-subtle" />
+          {onAbout && (
+            <button
+              type="button"
+              className={cn(item, "w-full border-0 bg-transparent text-left font-[inherit]")}
+              onClick={() => {
+                setOpen(false);
+                onAbout();
+              }}
+            >
+              <Info aria-hidden className="size-4 text-fg-muted" />
+              {t("about.aboutProduct", { product: PRODUCTS[product].name })}
+            </button>
+          )}
+          <a className={item} href={links.notes}>
+            <Sparkles aria-hidden className="size-4 text-fg-muted" />
+            {t("about.whatIsNewIn", { version: about.version })}
+          </a>
+          <a className={item} href={links.api}>
+            <Code aria-hidden className="size-4 text-fg-muted" />
+            {t("about.apiReference")}
+          </a>
+          <div aria-hidden className="my-1 h-px bg-subtle" />
+          <a className={item} href={links.support}>
+            <Mail aria-hidden className="size-4 text-fg-muted" />
+            {t("about.contactSupport")}
+          </a>
+          <a className={item} href={links.security}>
+            <ShieldAlert aria-hidden className="size-4 text-fg-muted" />
+            {t("about.reportSecurity")}
+          </a>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
+
 export function AppShell({
   product,
   nav,
@@ -331,18 +417,23 @@ export function AppShell({
   language,
   languages,
   onLanguageChange,
+  about,
   children,
   className,
 }: AppShellProps) {
   const { brand, locale } = useBrand();
   const t = useT();
-  const footerNav = footerNavProp ?? [
-    { id: "integrations", label: t("shell.integrations"), icon: Plug },
-    { id: "settings", label: t("shell.settings"), icon: Settings },
+  const footerNav = [
+    ...(footerNavProp ?? [
+      { id: "integrations", label: t("shell.integrations"), icon: Plug },
+      { id: "settings", label: t("shell.settings"), icon: Settings },
+    ]),
+    ...(about ? [{ id: "about", label: t("shell.about"), icon: Info }] : []),
   ];
   const footerLabel = footerLabelProp ?? t("shell.settings");
   // OpenAsy itself shows its own mark and wordmark; a white-label brand keeps its logo or the product glyph.
   const openasy = brand.name === "OpenAsy" && !brand.logoUrl;
+  const poweredBy = !brand.hidePoweredBy && brand.name !== "OpenAsy";
   const [drawer, setDrawer] = useState(false);
   const [products, setProducts] = useState(false);
   const [collapsed, setCollapsed] = useCollapsed();
@@ -417,6 +508,13 @@ export function AppShell({
           <span aria-hidden className="oa-topbar-muted hidden sm:inline">
             /
           </span>
+          {/* The product's own glyph tells the products apart at a glance, on every screen size. A brand without a logo
+              already shows it as its mark. */}
+          {(openasy || brand.logoUrl) && (
+            <span aria-hidden className="oa-topbar-glyph grid size-7 shrink-0 place-items-center rounded-md">
+              <info.icon className="size-4" />
+            </span>
+          )}
           <span className="truncate text-base font-medium">{name}</span>
         </span>
         <div className="mx-auto hidden max-w-xl min-w-0 flex-1 px-4 md:block">{search}</div>
@@ -430,6 +528,7 @@ export function AppShell({
           />
         )}
         {withTheme && <ThemeMenu value={theme} onChange={onThemeChange} className="oa-topbar-button" />}
+        {about && <HelpMenu product={product} about={about} onAbout={navigate ? () => navigate("about") : undefined} />}
         {user && (
           <Popover.Root>
             <Popover.Trigger className="oa-topbar-button flex h-10 items-center gap-2 rounded-md px-1.5 text-left">
@@ -468,17 +567,9 @@ export function AppShell({
             drawer ? "visible translate-x-0 shadow-modal" : "invisible -translate-x-full",
           )}
         >
-          <div className="oa-nav-head mb-2 flex items-center gap-2.5 border-b border-subtle px-1 pb-3.5">
-            <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent">
-              <info.icon className="size-5" />
-            </span>
-            <span className="oa-nav-head-text flex min-w-0 flex-col">
-              <span className="truncate text-[15px] leading-5 font-semibold">{name}</span>
-              <span className="truncate text-xs text-fg-muted">{brand.organization ?? brand.name}</span>
-            </span>
-          </div>
+          {/* The product's name is in the top bar, which every screen size shows, so the menu starts with itself. */}
           {nav.length + footerNav.length >= FILTER_FROM && (
-            <label className="oa-nav-filter mb-1 flex h-9 items-center gap-1.5 rounded-md border border-line bg-canvas px-2.5 text-sm text-fg-subtle">
+            <label className="oa-nav-filter mb-1 flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-line bg-canvas px-2.5 text-sm text-fg-subtle">
               <Search aria-hidden className="size-3.5" />
               <input
                 type="search"
@@ -505,13 +596,33 @@ export function AppShell({
               {collapsed ? <ChevronsRight aria-hidden className="size-[18px] shrink-0" /> : <ChevronsLeft aria-hidden className="size-[18px] shrink-0" />}
               <span className="oa-nav-label grow text-left">{t("shell.collapse")}</span>
             </button>
-            {!brand.hidePoweredBy && brand.name !== "OpenAsy" && (
-              <span className="oa-nav-extra px-2.5 pt-1 text-2xs text-fg-subtle">{t("shell.poweredBy")}</span>
+            {(brand.organization || poweredBy) && (
+              <span className="oa-nav-extra truncate px-2.5 pt-1 text-2xs text-fg-subtle">
+                {brand.organization}
+                {brand.organization && poweredBy && " · "}
+                {poweredBy &&
+                  (about && navigate ? (
+                    <a
+                      href="/about"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate("about");
+                      }}
+                      className="text-fg-subtle underline"
+                    >
+                      {t("shell.poweredBy")}
+                    </a>
+                  ) : (
+                    t("shell.poweredBy")
+                  ))}
+              </span>
             )}
           </div>
         </nav>
         {drawer && <div aria-hidden data-testid="drawer-backdrop" className="fixed inset-0 z-30 bg-black/30 md:hidden" onClick={() => setDrawer(false)} />}
-        <main className="flex min-w-0 flex-1 flex-col gap-4 px-4 pt-5 pb-8 md:px-6 md:pt-6 md:pb-10">{children}</main>
+        <main className="flex min-w-0 flex-1 flex-col gap-4 px-4 pt-5 pb-8 md:px-6 md:pt-6 md:pb-10">
+          {about && activeNav === "about" ? <AboutPage product={product} colophon={about} /> : children}
+        </main>
       </div>
     </div>
   );

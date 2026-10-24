@@ -18,7 +18,9 @@
     "collapseMenu": "Collapse the menu",
     "expandMenu": "Expand the menu",
     "poweredBy": "Powered by OpenAsy",
-    "language": "Language"
+    "language": "Language",
+    "help": "Help and about",
+    "about": "About"
   },
   "theme": {
     "label": "Theme",
@@ -91,5 +93,36 @@
     "minutesAgo": "{{n}} min ago",
     "hoursAgo": "{{n}} h ago",
     "daysAgo": "{{n}} d ago"
+  },
+  "about": {
+    "title": "About {{product}}",
+    "description": "What runs here, where to get help, and the open-source software it is built on.",
+    "version": "Version",
+    "image": "Image",
+    "license": "Licence",
+    "api": "API",
+    "whatIsNew": "What is new",
+    "freeSoftware": "{{license}}, free software",
+    "sourceCode": "Source code",
+    "apiReference": "API reference",
+    "needHelp": "Need help?",
+    "needHelpText": "A question, something that does not work, or a feature you need: write to us. We read every message and answer it.",
+    "emailSupport": "Email {{address}}",
+    "getSupport": "Get support",
+    "askOnGithub": "Ask on GitHub",
+    "mailSays": "The message already says which product and version this is.",
+    "supportPlans": "Support plans",
+    "securityIssue": "Found a security issue? Do not post it in public.",
+    "reportPrivately": "Report it privately",
+    "builtWith": "Built with open-source software",
+    "builtWithText": "{{product}} stands on these free projects. Thank you to everyone who makes them.",
+    "everyDependency": "Every dependency and its licence",
+    "fromOpenAsy": "From OpenAsy",
+    "project": "Project",
+    "role": "What it does here",
+    "contactSupport": "Contact support",
+    "reportSecurity": "Report a security issue",
+    "aboutProduct": "About {{product}}",
+    "whatIsNewIn": "What is new in {{version}}"
   }
 }

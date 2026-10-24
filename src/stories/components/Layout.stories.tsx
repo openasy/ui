@@ -177,6 +177,58 @@ export const WithSettingsGroup: Story = {
   },
 };
 
+/** With a colophon from the colophon() Vite plugin: a help menu in the top bar, About in the menu and the About page. */
+export const About: Story = {
+  args: {
+    product: "identity",
+    activeNav: "about",
+    nav: [
+      { id: "overview", label: "Overview", icon: LayoutGrid },
+      { id: "people", label: "People", icon: Users, count: 214 },
+    ],
+    footerNav: [{ id: "members", label: "Members", icon: Users }],
+    user: USER,
+    about: {
+      version: "0.4.0",
+      license: "AGPL-3.0-only",
+      repository: "https://github.com/openasy/identity",
+      libraries: [
+        {
+          name: "oidc-provider",
+          version: "9.12.2",
+          license: "MIT",
+          url: "https://github.com/panva/node-oidc-provider",
+          role: "The OpenID Connect provider, OpenID Certified",
+        },
+        { name: "samlify", version: "2.15.1", license: "MIT", url: "https://github.com/tngan/samlify", role: "SAML 2.0 for applications that need it" },
+        { name: "ldapts", version: "9.2.0", license: "MIT", url: "https://github.com/ldapts/ldapts", role: "LDAP and Active Directory" },
+        { name: "Node.js", version: "26 LTS", license: "MIT", url: "https://nodejs.org/", role: "Runs the server" },
+        { name: "SQLite", version: "in Node.js", license: "Public domain", url: "https://sqlite.org/", role: "The database, one file" },
+        { name: "React", version: "19.3.1", license: "MIT", url: "https://react.dev/", role: "The screens" },
+        { name: "Lucide", version: "1.59.0", license: "ISC", url: "https://lucide.dev", role: "Icons" },
+      ],
+      openasy: [
+        { name: "@openasy/auth", version: "0.9.0", license: "Apache-2.0", role: "Sign-in, members and API tokens, the same in every product" },
+        { name: "@openasy/ui", version: "0.8.0", license: "Apache-2.0", role: "The components every product shares" },
+      ],
+    },
+  },
+  render: (args) => (
+    <AppShell {...args}>
+      <Panel title="Content">Shown on every page but about.</Panel>
+    </AppShell>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await expect(c.getByRole("heading", { level: 1, name: "About Identity" })).toBeInTheDocument();
+    await expect(c.getByRole("link", { name: "Email info@openasy.com" })).toHaveAttribute("href", "mailto:info@openasy.com?subject=OpenAsy%20Identity%200.4.0");
+    await expect(within(c.getByRole("navigation", { name: "Identity navigation" })).getByRole("link", { name: "About" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  },
+};
+
 export const Header: Story = {
   name: "PageHeader",
   parameters: { layout: "padded" },

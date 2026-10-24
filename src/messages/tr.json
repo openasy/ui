@@ -18,7 +18,9 @@
     "collapseMenu": "Menüyü daralt",
     "expandMenu": "Menüyü genişlet",
     "poweredBy": "OpenAsy ile çalışır",
-    "language": "Dil"
+    "language": "Dil",
+    "help": "Yardım ve hakkında",
+    "about": "Hakkında"
   },
   "theme": {
     "label": "Tema",
@@ -91,5 +93,36 @@
     "minutesAgo": "{{n}} dk önce",
     "hoursAgo": "{{n}} sa önce",
     "daysAgo": "{{n}} gün önce"
+  },
+  "about": {
+    "title": "{{product}} hakkında",
+    "description": "Burada ne çalışıyor, yardım nereden alınır ve hangi açık kaynak yazılımlar üzerine kurulu.",
+    "version": "Sürüm",
+    "image": "İmaj",
+    "license": "Lisans",
+    "api": "API",
+    "whatIsNew": "Yenilikler",
+    "freeSoftware": "{{license}}, özgür yazılım",
+    "sourceCode": "Kaynak kodu",
+    "apiReference": "API referansı",
+    "needHelp": "Yardım mı lazım?",
+    "needHelpText": "Bir soru, çalışmayan bir şey ya da ihtiyaç duyduğunuz bir özellik: bize yazın. Her mesajı okur ve yanıtlarız.",
+    "emailSupport": "{{address}} adresine yaz",
+    "getSupport": "Destek al",
+    "askOnGithub": "GitHub'da sor",
+    "mailSays": "Mesaj, hangi ürün ve sürüm olduğunu zaten söylüyor.",
+    "supportPlans": "Destek planları",
+    "securityIssue": "Bir güvenlik açığı mı buldunuz? Herkese açık paylaşmayın.",
+    "reportPrivately": "Gizli olarak bildirin",
+    "builtWith": "Açık kaynak yazılımlarla yapıldı",
+    "builtWithText": "{{product}} bu özgür projelerin üzerinde duruyor. Onları yapan herkese teşekkürler.",
+    "everyDependency": "Tüm bağımlılıklar ve lisansları",
+    "fromOpenAsy": "OpenAsy'den",
+    "project": "Proje",
+    "role": "Buradaki görevi",
+    "contactSupport": "Desteğe yaz",
+    "reportSecurity": "Güvenlik açığı bildir",
+    "aboutProduct": "{{product}} hakkında",
+    "whatIsNewIn": "{{version}} sürümündeki yenilikler"
   }
 }

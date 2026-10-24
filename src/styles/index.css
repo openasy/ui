@@ -88,6 +88,10 @@
 .oa-topbar-wordmark {
   color: #7ea2ff;
 }
+.oa-topbar-glyph {
+  background: rgb(255 255 255 / 0.08);
+  color: #7ea2ff;
+}
 .oa-topbar-button {
   color: var(--oa-topbar-fg);
 }
@@ -109,11 +113,8 @@
     width: 5.25rem;
     padding-inline: 0.5rem;
   }
-  .oa-shell-nav :is(.oa-nav-head-text, .oa-nav-filter, .oa-nav-section, .oa-nav-count, .oa-nav-extra) {
+  .oa-shell-nav :is(.oa-nav-filter, .oa-nav-section, .oa-nav-count, .oa-nav-extra) {
     display: none;
-  }
-  .oa-shell-nav .oa-nav-head {
-    justify-content: center;
   }
   .oa-shell-nav .oa-nav-link {
     flex-direction: column;
@@ -152,11 +153,8 @@
     width: 5.25rem;
     padding-inline: 0.5rem;
   }
-  .oa-shell-nav[data-collapsed] :is(.oa-nav-head-text, .oa-nav-filter, .oa-nav-section, .oa-nav-count, .oa-nav-extra) {
+  .oa-shell-nav[data-collapsed] :is(.oa-nav-filter, .oa-nav-section, .oa-nav-count, .oa-nav-extra) {
     display: none;
-  }
-  .oa-shell-nav[data-collapsed] .oa-nav-head {
-    justify-content: center;
   }
   .oa-shell-nav[data-collapsed] .oa-nav-link {
     flex-direction: column;

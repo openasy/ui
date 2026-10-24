@@ -366,9 +366,51 @@ describe("AppShell", () => {
       </AppShell>,
       { brand: { name: "Acme Shield", organization: "Acme Prod", logoUrl: "logo.svg" } },
     );
-    expect(screen.getByText("Acme Prod")).toBeInTheDocument();
     expect(container.querySelector('img[src="logo.svg"]')).toBeInTheDocument();
-    expect(screen.getByText("Powered by OpenAsy")).toBeInTheDocument();
+    // The organization goes with the powered-by line at the foot of the menu; the product's name is in the top bar only.
+    expect(screen.getByRole("navigation", { name: /VPN/ })).toHaveTextContent("Acme Prod · Powered by OpenAsy");
+    expect(screen.getAllByText("VPN")).toHaveLength(1);
+    expect(within(screen.getByRole("banner")).getByText("VPN")).toBeInTheDocument();
+  });
+
+  it("with a colophon, offers help in the top bar and shows the About page", async () => {
+    const about = {
+      version: "0.6.0",
+      license: "AGPL-3.0-only",
+      repository: "https://github.com/openasy/vpn",
+      libraries: [{ name: "React", version: "19.3.1", license: "MIT", role: "The screens" }],
+      openasy: [{ name: "@openasy/ui", version: "0.9.0", license: "Apache-2.0" }],
+    };
+    const onNavigate = vi.fn();
+    const shell = (activeNav: string, brand?: object) =>
+      renderUI(
+        <AppShell product="vpn" nav={nav} activeNav={activeNav} onNavigate={onNavigate} about={about}>
+          <p>Page</p>
+        </AppShell>,
+        brand ? { brand } : undefined,
+      );
+    const { user, unmount } = shell("overview", { name: "Acme", organization: "Acme Prod" });
+    // The menu ends with About, and the powered-by line leads there too.
+    expect(within(screen.getByRole("navigation", { name: /VPN/ })).getByRole("link", { name: "About" })).toBeInTheDocument();
+    await user.click(screen.getByRole("link", { name: "Powered by OpenAsy" }));
+    expect(onNavigate).toHaveBeenCalledWith("about");
+
+    await user.click(screen.getByRole("button", { name: "Help and about" }));
+    const menu = await screen.findByRole("dialog", { name: "Help and about" });
+    expect(menu).toHaveTextContent("OpenAsy VPN 0.6.0");
+    expect(within(menu).getByRole("link", { name: "What is new in 0.6.0" })).toHaveAttribute("href", "https://github.com/openasy/vpn/releases/tag/v0.6.0");
+    expect(within(menu).getByRole("link", { name: "Contact support" })).toHaveAttribute("href", "mailto:info@openasy.com?subject=OpenAsy%20VPN%200.6.0");
+    expect(within(menu).getByRole("link", { name: "Report a security issue" })).toHaveAttribute("href", "https://github.com/openasy/vpn/security/policy");
+    unmount();
+
+    // On the page "about" the shell shows the About page; an install's own support replaces OpenAsy's.
+    shell("about", { name: "Acme", support: "https://help.acme.example/" });
+    expect(screen.queryByText("Page")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "About VPN" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Get support" })).toHaveAttribute("href", "https://help.acme.example/");
+    expect(screen.queryByRole("link", { name: "Ask on GitHub" })).not.toBeInTheDocument();
+    expect(screen.getByRole("table", { name: "Built with open-source software" })).toHaveTextContent("React");
+    expect(screen.getByText("ghcr.io/openasy/vpn:0.6.0")).toBeInTheDocument();
   });
 
   it("uses the dark logo in dark mode and hides powered-by on request", () => {
@@ -379,7 +421,7 @@ describe("AppShell", () => {
       { brand: { name: "Acme", logoUrl: "l.svg", logoDarkUrl: "d.svg", hidePoweredBy: true }, theme: "dark" },
     );
     expect(container.querySelector('img[src="d.svg"]')).toBeInTheDocument();
-    expect(screen.queryByText("Powered by OpenAsy")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Powered by OpenAsy/)).not.toBeInTheDocument();
   });
 
   it("ProductSwitcher lists connected and available products and switches", async () => {

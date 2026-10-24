@@ -18,7 +18,9 @@
     "collapseMenu": "Menü einklappen",
     "expandMenu": "Menü ausklappen",
     "poweredBy": "Bereitgestellt von OpenAsy",
-    "language": "Sprache"
+    "language": "Sprache",
+    "help": "Hilfe und Info",
+    "about": "Info"
   },
   "theme": {
     "label": "Design",
@@ -91,5 +93,36 @@
     "minutesAgo": "vor {{n}} Min.",
     "hoursAgo": "vor {{n}} Std.",
     "daysAgo": "vor {{n}} T."
+  },
+  "about": {
+    "title": "Über {{product}}",
+    "description": "Was hier läuft, wo es Hilfe gibt und auf welcher Open-Source-Software es aufbaut.",
+    "version": "Version",
+    "image": "Image",
+    "license": "Lizenz",
+    "api": "API",
+    "whatIsNew": "Neuerungen",
+    "freeSoftware": "{{license}}, freie Software",
+    "sourceCode": "Quellcode",
+    "apiReference": "API-Referenz",
+    "needHelp": "Hilfe nötig?",
+    "needHelpText": "Eine Frage, etwas funktioniert nicht oder Ihnen fehlt eine Funktion: Schreiben Sie uns. Wir lesen und beantworten jede Nachricht.",
+    "emailSupport": "E-Mail an {{address}}",
+    "getSupport": "Support erhalten",
+    "askOnGithub": "Auf GitHub fragen",
+    "mailSays": "Die Nachricht nennt Produkt und Version bereits.",
+    "supportPlans": "Support-Pläne",
+    "securityIssue": "Eine Sicherheitslücke gefunden? Bitte nicht öffentlich posten.",
+    "reportPrivately": "Vertraulich melden",
+    "builtWith": "Gebaut mit Open-Source-Software",
+    "builtWithText": "{{product}} baut auf diesen freien Projekten auf. Danke an alle, die sie entwickeln.",
+    "everyDependency": "Alle Abhängigkeiten und ihre Lizenzen",
+    "fromOpenAsy": "Von OpenAsy",
+    "project": "Projekt",
+    "role": "Aufgabe hier",
+    "contactSupport": "Support kontaktieren",
+    "reportSecurity": "Sicherheitslücke melden",
+    "aboutProduct": "Über {{product}}",
+    "whatIsNewIn": "Neu in {{version}}"
   }
 }

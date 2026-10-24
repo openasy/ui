@@ -98,9 +98,6 @@ export interface AppShellProps {
   className?: string;
 }
 
-/** The menu offers a filter once it holds this many links. */
-const FILTER_FROM = 8;
-
 /** Where the desktop menu remembers being collapsed to the icon rail. */
 export const NAV_COLLAPSED_KEY = "oa-nav-collapsed";
 
@@ -630,7 +627,7 @@ export function AppShell({
           )}
         >
           {/* The product's name is in the top bar, which every screen size shows, so the menu starts with itself. */}
-          {nav.length + footerNav.length >= FILTER_FROM && (
+          {nav.length + footerNav.length > 0 && (
             <label className="oa-nav-filter mb-1 flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-line bg-canvas px-2.5 text-sm text-fg-subtle">
               <Search aria-hidden className="size-3.5" />
               <input

@@ -300,8 +300,8 @@ describe("AppShell", () => {
     expect(link.querySelector(".oa-nav-dot")).toBeInTheDocument();
   });
 
-  it("filters a long menu", async () => {
-    const many = Array.from({ length: 8 }, (_, i) => ({ id: `p${i}`, label: `Page ${i}` }));
+  it("filters the menu, however short", async () => {
+    const many = Array.from({ length: 5 }, (_, i) => ({ id: `p${i}`, label: `Page ${i}` }));
     const { user } = renderUI(
       <AppShell product="logs" nav={many}>
         <p />

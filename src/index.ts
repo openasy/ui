@@ -14,6 +14,7 @@ export * from "./components/Theme";
 export * from "./components/LanguageMenu";
 export * from "./components/Locale";
 export * from "./components/AppShell";
+export * from "./components/CommandPalette";
 export * from "./components/About";
 export * from "./components/Avatar";
 export * from "./components/PageHeader";

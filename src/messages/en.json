@@ -12,8 +12,6 @@
     "account": "Account",
     "settings": "Settings",
     "integrations": "Integrations",
-    "filterMenu": "Filter the menu",
-    "noMatch": "No page matches.",
     "collapse": "Collapse",
     "collapseMenu": "Collapse the menu",
     "expandMenu": "Expand the menu",
@@ -127,5 +125,27 @@
     "setUpProduct": "Set up {{product}}",
     "aboutProduct": "About {{product}}",
     "whatIsNewIn": "What is new in {{version}}"
+  },
+  "search": {
+    "button": "Search",
+    "title": "Search {{product}}",
+    "label": "Search {{product}}",
+    "results": "Results",
+    "placeholder": "Search pages and products…",
+    "placeholderWithData": "Search pages, products and {{product}}…",
+    "inProduct": "In {{product}}",
+    "pages": "Pages",
+    "products": "Products",
+    "account": "Account",
+    "page": "Page",
+    "product": "Product",
+    "searching": "Searching {{product}}…",
+    "failed": "{{product}} could not be searched. Try again in a moment.",
+    "nothing": "Nothing matches “{{query}}”",
+    "looks": "Search looks through this product's pages and the other products.",
+    "looksWithData": "Search looks through this product's pages, the other products and what {{product}} holds.",
+    "move": "to move",
+    "open": "to open",
+    "close": "to close"
   }
 }

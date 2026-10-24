@@ -30,6 +30,8 @@ import { Avatar } from "./Avatar";
 import { LanguageMenu, type Language } from "./LanguageMenu";
 import { ThemeMenu, type ThemePreference } from "./Theme";
 import { AboutPage, colophonLinks, type Colophon } from "./About";
+import { accountEntries, CommandPalette, shortcutLabel, type PaletteEntry, type SearchFn } from "./CommandPalette";
+import { navigate as goTo } from "../lib/routing";
 
 export interface NavItem {
   id: string;
@@ -94,6 +96,11 @@ export interface AppShellProps {
    * so it is done once without standing in the menu every day.
    */
   setup?: boolean;
+  /**
+   * Finds the product's own things (CVEs, hosts, rules...) for the search window that Cmd+K or Ctrl+K and the menu's
+   * search button open. Without it, the window finds the product's pages and the other products only.
+   */
+  onSearch?: SearchFn;
   children: ReactNode;
   className?: string;
 }
@@ -494,6 +501,7 @@ export function AppShell({
   onLanguageChange,
   about,
   setup = false,
+  onSearch,
   children,
   className,
 }: AppShellProps) {
@@ -513,7 +521,7 @@ export function AppShell({
   const [drawer, setDrawer] = useState(false);
   const [products, setProducts] = useState(false);
   const [collapsed, setCollapsed] = useCollapsed();
-  const [filter, setFilter] = useState("");
+  const [searching, setSearching] = useState(false);
   const navigate = onNavigate
     ? (id: string) => {
         setDrawer(false);
@@ -529,10 +537,38 @@ export function AppShell({
   const info = PRODUCTS[product];
   const name = info.name;
   const withTheme = theme !== undefined && onThemeChange !== undefined;
-  const q = filter.trim().toLowerCase();
-  const match = (item: NavItem) => !q || textOf(item.label).toLowerCase().includes(q);
-  const shownNav = nav.filter(match);
-  const shownFooter = footerNav.filter(match);
+  // Cmd+K on Apple devices, Ctrl+K elsewhere, from anywhere on the page.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearching((s) => !s);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+  const openHref = (href: string) => (href.startsWith("/") && !href.startsWith("//") ? goTo(href) : window.location.assign(href));
+  const pageEntry = (item: NavItem): PaletteEntry => ({
+    id: `page:${item.id}`,
+    label: textOf(item.label),
+    icon: item.icon,
+    run: () => (item.href ? openHref(item.href) : navigate ? navigate(item.id) : openHref(`/${item.id}`)),
+  });
+  const pages: PaletteEntry[] = [
+    ...nav.map(pageEntry),
+    ...footerNav.filter((i) => i.id !== "about").map(pageEntry),
+    ...(setup ? [pageEntry({ id: "setup", label: t("about.setUpProduct", { product: info.name }), icon: Settings })] : []),
+    ...(about ? [pageEntry({ id: "about", label: t("about.aboutProduct", { product: info.name }), icon: Info })] : []),
+  ];
+  const others: PaletteEntry[] = (connectedProducts ?? []).map((id) => ({
+    id: `product:${id}`,
+    label: PRODUCTS[id].name,
+    detail: PRODUCTS[id].summary,
+    icon: PRODUCTS[id].icon,
+    run: () => onSwitchProduct?.(id),
+  }));
+  const account = accountEntries(t, openHref, user?.accountHref, user?.onSignOut);
   const hasProducts = connectedProducts !== undefined && connectedProducts.length > 0;
 
   return (
@@ -614,6 +650,16 @@ export function AppShell({
         )}
         {user && <UserMenu user={user} />}
       </header>
+      <CommandPalette
+        open={searching}
+        onOpenChange={setSearching}
+        product={product}
+        pages={pages}
+        products={others}
+        account={account}
+        onSearch={onSearch}
+        onOpenResult={openHref}
+      />
 
       <div className="flex min-h-0 flex-1">
         <nav
@@ -627,23 +673,18 @@ export function AppShell({
           )}
         >
           {/* The product's name is in the top bar, which every screen size shows, so the menu starts with itself. */}
-          {nav.length + footerNav.length > 0 && (
-            <label className="oa-nav-filter mb-1 flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-line bg-canvas px-2.5 text-sm text-fg-subtle">
-              <Search aria-hidden className="size-3.5" />
-              <input
-                type="search"
-                aria-label={t("shell.filterMenu")}
-                placeholder={t("shell.filterMenu")}
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="min-w-0 flex-1 bg-transparent text-fg outline-none"
-              />
-            </label>
-          )}
-          <NavGroup label={navLabel} items={shownNav} activeNav={activeNav} onNavigate={navigate} />
-          {shownNav.length > 0 && shownFooter.length > 0 && <div aria-hidden className="oa-nav-rule mx-3 my-2 h-px bg-line" />}
-          <NavGroup label={footerLabel} items={shownFooter} activeNav={activeNav} onNavigate={navigate} />
-          {q && shownNav.length + shownFooter.length === 0 && <p className="px-2.5 py-2 text-sm text-fg-muted">{t("shell.noMatch")}</p>}
+          <button
+            type="button"
+            onClick={() => setSearching(true)}
+            className="oa-nav-filter mb-1 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-line bg-canvas px-2.5 text-left text-sm text-fg-subtle"
+          >
+            <Search aria-hidden className="size-3.5" />
+            <span className="oa-nav-label flex-1">{t("search.button")}</span>
+            <kbd className="oa-nav-label rounded border border-line px-1 font-mono text-2xs">{shortcutLabel()}</kbd>
+          </button>
+          <NavGroup label={navLabel} items={nav} activeNav={activeNav} onNavigate={navigate} />
+          {nav.length > 0 && footerNav.length > 0 && <div aria-hidden className="oa-nav-rule mx-3 my-2 h-px bg-line" />}
+          <NavGroup label={footerLabel} items={footerNav} activeNav={activeNav} onNavigate={navigate} />
           <div className="mt-auto flex flex-col gap-1 border-t border-subtle pt-3">
             <button
               type="button"

@@ -12,8 +12,6 @@
     "account": "Hesap",
     "settings": "Ayarlar",
     "integrations": "Entegrasyonlar",
-    "filterMenu": "Menüde ara",
-    "noMatch": "Eşleşen sayfa yok.",
     "collapse": "Daralt",
     "collapseMenu": "Menüyü daralt",
     "expandMenu": "Menüyü genişlet",
@@ -127,5 +125,27 @@
     "setUpProduct": "{{product}} kurulumu",
     "aboutProduct": "{{product}} hakkında",
     "whatIsNewIn": "{{version}} sürümündeki yenilikler"
+  },
+  "search": {
+    "button": "Ara",
+    "title": "{{product}} içinde ara",
+    "label": "{{product}} içinde ara",
+    "results": "Sonuçlar",
+    "placeholder": "Sayfa ve ürün ara…",
+    "placeholderWithData": "Sayfa, ürün ve {{product}} içinde ara…",
+    "inProduct": "{{product}} içinde",
+    "pages": "Sayfalar",
+    "products": "Ürünler",
+    "account": "Hesap",
+    "page": "Sayfa",
+    "product": "Ürün",
+    "searching": "{{product}} içinde aranıyor…",
+    "failed": "{{product}} içinde aranamadı. Biraz sonra yeniden deneyin.",
+    "nothing": "“{{query}}” ile eşleşen bir şey yok",
+    "looks": "Arama bu ürünün sayfalarına ve diğer ürünlere bakar.",
+    "looksWithData": "Arama bu ürünün sayfalarına, diğer ürünlere ve {{product}} içindekilere bakar.",
+    "move": "gezin",
+    "open": "aç",
+    "close": "kapat"
   }
 }

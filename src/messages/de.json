@@ -12,8 +12,6 @@
     "account": "Konto",
     "settings": "Einstellungen",
     "integrations": "Integrationen",
-    "filterMenu": "Menü filtern",
-    "noMatch": "Keine passende Seite.",
     "collapse": "Einklappen",
     "collapseMenu": "Menü einklappen",
     "expandMenu": "Menü ausklappen",
@@ -127,5 +125,27 @@
     "setUpProduct": "{{product}} einrichten",
     "aboutProduct": "Über {{product}}",
     "whatIsNewIn": "Neu in {{version}}"
+  },
+  "search": {
+    "button": "Suchen",
+    "title": "In {{product}} suchen",
+    "label": "In {{product}} suchen",
+    "results": "Ergebnisse",
+    "placeholder": "Seiten und Produkte suchen…",
+    "placeholderWithData": "Seiten, Produkte und {{product}} durchsuchen…",
+    "inProduct": "In {{product}}",
+    "pages": "Seiten",
+    "products": "Produkte",
+    "account": "Konto",
+    "page": "Seite",
+    "product": "Produkt",
+    "searching": "{{product}} wird durchsucht…",
+    "failed": "{{product}} konnte nicht durchsucht werden. Versuchen Sie es gleich noch einmal.",
+    "nothing": "Nichts passt zu „{{query}}“",
+    "looks": "Die Suche umfasst die Seiten dieses Produkts und die anderen Produkte.",
+    "looksWithData": "Die Suche umfasst die Seiten dieses Produkts, die anderen Produkte und was {{product}} enthält.",
+    "move": "wechseln",
+    "open": "öffnen",
+    "close": "schließen"
   }
 }

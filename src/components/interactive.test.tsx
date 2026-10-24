@@ -300,20 +300,81 @@ describe("AppShell", () => {
     expect(link.querySelector(".oa-nav-dot")).toBeInTheDocument();
   });
 
-  it("filters the menu, however short", async () => {
-    const many = Array.from({ length: 5 }, (_, i) => ({ id: `p${i}`, label: `Page ${i}` }));
+  it("opens the search window with Cmd+K and the menu's button, and goes to a page, a product or the account", async () => {
+    const onNavigate = vi.fn();
+    const onSwitchProduct = vi.fn();
+    const onSignOut = vi.fn();
     const { user } = renderUI(
-      <AppShell product="logs" nav={many}>
+      <AppShell
+        product="vulnerabilities"
+        nav={[
+          { id: "findings", label: "Findings" },
+          { id: "hosts", label: "Hosts" },
+        ]}
+        footerNav={[{ id: "tokens", label: "API tokens" }]}
+        onNavigate={onNavigate}
+        connectedProducts={["logs", "siem"]}
+        onSwitchProduct={onSwitchProduct}
+        user={{ name: "Emily Clark", onSignOut }}
+      >
         <p />
       </AppShell>,
     );
-    await user.type(screen.getByRole("searchbox", { name: "Filter the menu" }), "page 3");
-    const navEl = screen.getByRole("navigation", { name: "Logs navigation" });
-    expect(within(navEl).getByRole("link", { name: "Page 3" })).toBeInTheDocument();
-    expect(within(navEl).queryByRole("link", { name: "Page 4" })).not.toBeInTheDocument();
-    await user.clear(screen.getByRole("searchbox", { name: "Filter the menu" }));
-    await user.type(screen.getByRole("searchbox", { name: "Filter the menu" }), "nothing");
-    expect(within(navEl).getByText("No page matches.")).toBeInTheDocument();
+    await user.keyboard("{Meta>}k{/Meta}");
+    const box = await screen.findByRole("combobox", { name: "Search Vulnerabilities" });
+    const list = screen.getByRole("listbox");
+    expect(within(list).getByRole("group", { name: "Pages" })).toHaveTextContent("Hosts");
+    expect(within(list).getByRole("group", { name: "Products" })).toHaveTextContent("Logs");
+    expect(within(list).getByRole("group", { name: "Account" })).toHaveTextContent("Sign out");
+    await user.type(box, "host");
+    // The first match is chosen: the Hosts page, then products whose description says hosts.
+    expect(within(list).getAllByRole("option")[0]).toHaveTextContent("Hosts");
+    await user.keyboard("{Enter}");
+    expect(onNavigate).toHaveBeenCalledWith("hosts");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Search/ }));
+    await user.clear(await screen.findByRole("combobox"));
+    await user.type(screen.getByRole("combobox"), "siem");
+    expect(within(screen.getByRole("listbox")).getAllByRole("option")[0]).toHaveTextContent("SIEM");
+    await user.keyboard("{ArrowDown}{ArrowUp}{Enter}");
+    expect(onSwitchProduct).toHaveBeenCalledWith("siem");
+  });
+
+  it("finds the product's own things and opens their page", async () => {
+    const onSearch = vi.fn(async (q: string) =>
+      q.startsWith("log4")
+        ? [
+            {
+              id: "cve",
+              label: "CVE-2021-44228",
+              detail: "log4j-core 2.14.1",
+              kind: "CVE",
+              severity: "critical" as const,
+              href: "/vulnerabilities/CVE-2021-44228",
+              mono: true,
+            },
+          ]
+        : [],
+    );
+    const { user } = renderUI(
+      <AppShell product="vulnerabilities" nav={[{ id: "findings", label: "Findings" }]} onNavigate={() => {}} onSearch={onSearch}>
+        <p />
+      </AppShell>,
+    );
+    await user.keyboard("{Control>}k{/Control}");
+    const box = await screen.findByRole("combobox");
+    await user.type(box, "log4");
+    const found = await screen.findByRole("group", { name: /^In Vulnerabilities/ });
+    expect(found).toHaveTextContent("CVE-2021-44228");
+    expect(found).toHaveTextContent("Critical");
+    expect(onSearch).toHaveBeenLastCalledWith("log4", expect.any(AbortSignal));
+    await user.click(within(found).getByRole("option"));
+    expect(location.pathname).toBe("/vulnerabilities/CVE-2021-44228");
+
+    await user.keyboard("{Control>}k{/Control}");
+    await user.type(await screen.findByRole("combobox"), "zzz");
+    expect(await screen.findByText("Nothing matches “zzz”")).toBeInTheDocument();
   });
 
   it("collapses the menu to the rail and remembers it", async () => {

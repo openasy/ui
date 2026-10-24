@@ -70,20 +70,21 @@ function Row({ label, children }: { label: ReactNode; children: ReactNode }) {
 function Libraries({ label, items }: { label: string; items: ColophonLibrary[] }) {
   const t = useT();
   return (
-    <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+    // Fixed columns, so the tables one under the other line up whatever their contents.
+    <table className="w-full min-w-[36rem] table-fixed border-collapse text-left text-sm">
       <caption className="sr-only">{label}</caption>
       <thead>
         <tr className="border-t border-line bg-subtle text-2xs font-semibold tracking-wider text-fg-muted uppercase">
-          <th scope="col" className="px-4 py-2 font-semibold">
+          <th scope="col" className="w-1/4 px-4 py-2 font-semibold">
             {t("about.project")}
           </th>
           <th scope="col" className="px-4 py-2 font-semibold">
             {t("about.role")}
           </th>
-          <th scope="col" className="w-28 px-4 py-2 font-semibold">
+          <th scope="col" className="w-32 px-4 py-2 font-semibold">
             {t("about.version")}
           </th>
-          <th scope="col" className="w-32 px-4 py-2 font-semibold">
+          <th scope="col" className="w-36 px-4 py-2 font-semibold">
             {t("about.license")}
           </th>
         </tr>
@@ -91,13 +92,13 @@ function Libraries({ label, items }: { label: string; items: ColophonLibrary[] }
       <tbody>
         {items.map((l) => (
           <tr key={l.name} className="border-t border-subtle">
-            <th scope="row" className="px-4 py-2.5 font-normal">
+            <th scope="row" className="px-4 py-2.5 font-normal break-words">
               {l.url ? <a href={l.url}>{l.name}</a> : l.name}
             </th>
             <td className="px-4 py-2.5 text-fg-muted">{l.role}</td>
             <td className="px-4 py-2.5 font-mono text-xs">{l.version}</td>
             <td className="px-4 py-2.5">
-              <span className="inline-flex h-[22px] items-center rounded-full bg-subtle px-2 text-xs font-medium">{l.license}</span>
+              <span className="inline-flex h-[22px] items-center rounded-full bg-subtle px-2 text-xs font-medium whitespace-nowrap">{l.license}</span>
             </td>
           </tr>
         ))}

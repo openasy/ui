@@ -596,10 +596,9 @@ export function AppShell({
               {collapsed ? <ChevronsRight aria-hidden className="size-[18px] shrink-0" /> : <ChevronsLeft aria-hidden className="size-[18px] shrink-0" />}
               <span className="oa-nav-label grow text-left">{t("shell.collapse")}</span>
             </button>
-            {(brand.organization || poweredBy) && (
+            {/* The organization is under the product's name at the top; here only what it runs on. */}
+            {poweredBy && (
               <span className="oa-nav-extra truncate px-2.5 pt-1 text-2xs text-fg-subtle">
-                {brand.organization}
-                {brand.organization && poweredBy && " · "}
                 {poweredBy &&
                   (about && navigate ? (
                     <a

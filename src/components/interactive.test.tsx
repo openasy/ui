@@ -367,8 +367,9 @@ describe("AppShell", () => {
       { brand: { name: "Acme Shield", organization: "Acme Prod", logoUrl: "logo.svg" } },
     );
     expect(container.querySelector('img[src="logo.svg"]')).toBeInTheDocument();
-    // The organization goes with the powered-by line at the foot of the menu; the product's name is in the top bar only.
-    expect(screen.getByRole("navigation", { name: /VPN/ })).toHaveTextContent("Acme Prod · Powered by OpenAsy");
+    // The foot of the menu says only what it runs on; with a logo, the logo stands for the organization (ADR 0053).
+    expect(screen.getByRole("navigation", { name: /VPN/ })).toHaveTextContent("Powered by OpenAsy");
+    expect(screen.queryByText(/Acme Prod/)).not.toBeInTheDocument();
     expect(screen.getAllByText("VPN")).toHaveLength(1);
     expect(within(screen.getByRole("banner")).getByText("VPN")).toBeInTheDocument();
   });

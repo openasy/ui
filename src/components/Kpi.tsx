@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ArrowDown, ArrowUp, Minus } from "lucide-react";
+import { ArrowDown, ArrowUp, Minus, type LucideIcon } from "lucide-react";
 import { cn } from "../lib/cn";
 import { Sparkline } from "../charts/Sparkline";
 import { TONE_CLASSES, type Tone } from "../tokens/levels";
@@ -17,6 +17,8 @@ export interface KpiCardProps {
   label: ReactNode;
   value: ReactNode;
   unit?: ReactNode;
+  /** Small icon beside the label, tinted with the tone. */
+  icon?: LucideIcon;
   delta?: KpiDelta;
   /** Tints the value for states like "9 failed sign-ins". */
   tone?: Tone;
@@ -33,12 +35,15 @@ export interface KpiCardProps {
 const intentClass = { good: "text-success", bad: "text-danger-text", neutral: "text-fg-muted" } as const;
 
 /** A headline number. Use KpiGrid to lay several out. */
-export function KpiCard({ label, value, unit, delta, tone, trend, trendColor, footer, href, className }: KpiCardProps) {
+export function KpiCard({ label, value, unit, icon: Icon, delta, tone, trend, trendColor, footer, href, className }: KpiCardProps) {
   const t = useT();
   const DirIcon = delta?.direction === "up" ? ArrowUp : delta?.direction === "down" ? ArrowDown : Minus;
   const body = (
     <>
-      <span className="text-2xs font-medium tracking-wider text-fg-muted uppercase">{label}</span>
+      <span className="flex items-center justify-between gap-2">
+        <span className="text-2xs font-medium tracking-wider text-fg-muted uppercase">{label}</span>
+        {Icon && <Icon aria-hidden className={cn("size-3.5 shrink-0", tone && tone !== "neutral" ? TONE_CLASSES[tone].text : "text-fg-subtle")} />}
+      </span>
       <div className="flex items-baseline gap-1.5">
         <span className={cn("text-2xl leading-8 font-semibold tabular-nums", tone && tone !== "neutral" ? TONE_CLASSES[tone].text : "text-fg")}>{value}</span>
         {unit && <span className="text-xs text-fg-muted">{unit}</span>}
@@ -78,4 +83,21 @@ export function KpiGrid({ children, minWidth = 180, className }: KpiGridProps) {
       {children}
     </div>
   );
+}
+
+export interface OverviewGridProps {
+  children: ReactNode;
+  /** main-side: two thirds and one third; halves: two equal columns; thirds: three. */
+  layout?: "main-side" | "halves" | "thirds";
+  className?: string;
+}
+
+/** Panels side by side on an overview, one under another on narrow screens. */
+export function OverviewGrid({ children, layout = "main-side", className }: OverviewGridProps) {
+  const cols = {
+    "main-side": "xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]",
+    halves: "lg:grid-cols-2",
+    thirds: "lg:grid-cols-3",
+  }[layout];
+  return <div className={cn("grid gap-2.5", cols, className)}>{children}</div>;
 }

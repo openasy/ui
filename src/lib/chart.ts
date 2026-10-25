@@ -15,10 +15,14 @@ export function smoothPath(points: readonly Point[]): string {
     const p1 = points[i]!;
     const p2 = points[i + 1]!;
     const p3 = points[i + 2] ?? p2;
+    // Control points stay between the two ends, so the curve never swings past the data: no dip below zero after a
+    // flat run, no peak above the highest value.
+    const lo = Math.min(p1[1], p2[1]);
+    const hi = Math.max(p1[1], p2[1]);
     const c1x = p1[0] + (p2[0] - p0[0]) / 6;
-    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c1y = Math.min(hi, Math.max(lo, p1[1] + (p2[1] - p0[1]) / 6));
     const c2x = p2[0] - (p3[0] - p1[0]) / 6;
-    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    const c2y = Math.min(hi, Math.max(lo, p2[1] - (p3[1] - p1[1]) / 6));
     d += ` C${f(c1x)},${f(c1y)} ${f(c2x)},${f(c2y)} ${f(p2[0])},${f(p2[1])}`;
   }
   return d;

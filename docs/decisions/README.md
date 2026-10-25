@@ -18,5 +18,6 @@ Each record has a **Decision** status (`Proposed`, `Accepted`, `Superseded by NN
 | 0004 | [Distributed as a GitHub release asset](./0004-distribution.md) | Engineering | Accepted | Implemented |
 | 0005 | [The shell is laid out like a cloud portal](./0005-portal-shell.md) | Layout | Accepted | Implemented |
 | 0006 | [The library's own words are translated](./0006-translated-library-words.md) | Behaviour | Accepted | Implemented |
+| 0007 | [Every product opens on an overview drawn from one set of charts](./0007-overview-charts.md) | Layout | Accepted | Implemented |
 
 To propose a change, open a pull request that adds a record or changes the status of an existing one.

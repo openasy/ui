@@ -8,7 +8,7 @@ import { SegmentedControl } from "./SegmentedControl";
 import { Tabs } from "./Tabs";
 import { AppShell, BrandMark, NAV_COLLAPSED_KEY, ProductSwitcher } from "./AppShell";
 import { PageHeader } from "./PageHeader";
-import { KpiCard, KpiGrid } from "./Kpi";
+import { KpiCard, KpiGrid, OverviewGrid } from "./Kpi";
 import { FacetFilter, FilterBar, FilterChip, QueryBar, TimeRangePicker } from "./Filters";
 
 describe("form controls", () => {
@@ -623,6 +623,32 @@ describe("KPI", () => {
   it("names the trend generically when the label is not text", () => {
     renderUI(<KpiCard label={<span>Rich</span>} value="1" trend={[1, 2]} />);
     expect(screen.getByRole("img", { name: /^Trend/ })).toBeInTheDocument();
+  });
+
+  it("tints its icon with the tone", () => {
+    const { container } = renderUI(
+      <>
+        <KpiCard label="Down" value="1" tone="danger" icon={Server} />
+        <KpiCard label="Hosts" value="4" icon={Server} />
+      </>,
+    );
+    const icons = container.querySelectorAll("svg");
+    expect(icons[0]!.getAttribute("class")).toContain("text-danger-text");
+    expect(icons[1]!.getAttribute("class")).toContain("text-fg-subtle");
+  });
+
+  it("OverviewGrid lays panels out by layout", () => {
+    const { container } = renderUI(
+      <>
+        <OverviewGrid>a</OverviewGrid>
+        <OverviewGrid layout="halves">b</OverviewGrid>
+        <OverviewGrid layout="thirds">c</OverviewGrid>
+      </>,
+    );
+    const grids = container.querySelectorAll(".grid");
+    expect(grids[0]!.className).toContain("xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]");
+    expect(grids[1]!.className).toContain("lg:grid-cols-2");
+    expect(grids[2]!.className).toContain("lg:grid-cols-3");
   });
 });
 

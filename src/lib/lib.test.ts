@@ -79,6 +79,19 @@ describe("chart helpers", () => {
     expect(d.match(/C/g)).toHaveLength(2);
   });
 
+  it("smoothPath never swings past the data", () => {
+    // A flat run at the baseline (y = 100) before a climb: the curve must not dip below it.
+    const d = smoothPath([
+      [0, 100],
+      [10, 100],
+      [20, 100],
+      [30, 0],
+    ]);
+    const ys = [...d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map((m) => Number(m[2]));
+    expect(Math.max(...ys)).toBe(100);
+    expect(Math.min(...ys)).toBe(0);
+  });
+
   it("linearPath draws straight segments", () => {
     expect(
       linearPath([

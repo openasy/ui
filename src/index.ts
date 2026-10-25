@@ -40,3 +40,6 @@ export * from "./charts/StackedBarChart";
 export * from "./charts/Heatmap";
 export * from "./charts/Sparkline";
 export * from "./charts/BarList";
+export * from "./charts/DonutChart";
+export * from "./charts/Gauge";
+export * from "./charts/StatusStrip";

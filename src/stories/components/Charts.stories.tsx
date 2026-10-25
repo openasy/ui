@@ -6,6 +6,12 @@ import { StackedBarChart } from "../../charts/StackedBarChart";
 import { Heatmap } from "../../charts/Heatmap";
 import { Sparkline } from "../../charts/Sparkline";
 import { BarList } from "../../charts/BarList";
+import { DonutChart } from "../../charts/DonutChart";
+import { Gauge } from "../../charts/Gauge";
+import { StatusStrip } from "../../charts/StatusStrip";
+import { KpiCard, KpiGrid, OverviewGrid } from "../../components/Kpi";
+import { TONE_COLORS } from "../../tokens/levels";
+import { ShieldAlert, Activity, Clock, Server } from "lucide-react";
 import { Panel } from "../../components/Panel";
 import { timeLabels, wave } from "../mocks";
 
@@ -198,4 +204,60 @@ export const ListsAndSparklines: Story = {
       </Panel>
     </div>
   ),
+};
+
+const days = Array.from({ length: 60 }, (_, i) => {
+  const r = (i * 37) % 23;
+  return { id: String(i), label: `Day ${i + 1}`, tone: r === 0 ? ("danger" as const) : r === 7 ? ("warning" as const) : ("success" as const) };
+});
+
+/** An overview: headline numbers, then a part-of-whole, a ratio and a run of days. Hover the ring and the strip. */
+export const Overview: Story = {
+  name: "Overview: Donut, Gauge & StatusStrip",
+  render: () => (
+    <div className="flex flex-col gap-2.5">
+      <KpiGrid minWidth={160}>
+        <KpiCard
+          label="Critical"
+          value={4}
+          tone="critical"
+          icon={ShieldAlert}
+          trend={wave(14, { base: 5, amp: 2, seed: 31 })}
+          trendColor="var(--oa-critical)"
+        />
+        <KpiCard label="Checks down" value={1} tone="danger" icon={Activity} delta={{ label: "+1 since yesterday", direction: "up", intent: "bad" }} />
+        <KpiCard label="Uptime 30 days" value="99.94%" tone="success" icon={Clock} />
+        <KpiCard label="Hosts" value={42} icon={Server} delta={{ label: "+3 this week", direction: "up", intent: "neutral" }} />
+      </KpiGrid>
+      <OverviewGrid layout="thirds">
+        <Panel title="Open by severity">
+          <DonutChart
+            label="Open findings by severity"
+            caption="open"
+            slices={[
+              { id: "critical", name: "Critical", value: 4, color: TONE_COLORS.critical },
+              { id: "high", name: "High", value: 17, color: TONE_COLORS.danger },
+              { id: "medium", name: "Medium", value: 38, color: TONE_COLORS.warning },
+              { id: "low", name: "Low", value: 21, color: TONE_COLORS.info },
+            ]}
+          />
+        </Panel>
+        <Panel title="Second factor">
+          <Gauge label="People with a second factor" value={41} max={44} tone="success" caption="41 of 44 people" />
+        </Panel>
+        <Panel title="Backups that worked">
+          <Gauge label="Backups that worked in 30 days" value={86} tone="warning" caption="86 of 100 runs" />
+        </Panel>
+      </OverviewGrid>
+      <Panel title="Last 60 days">
+        <StatusStrip label="Uptime per day" cells={days} start="60 days ago" end="Today" />
+      </Panel>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await userEvent.hover(c.getByText("High"));
+    await expect(c.getByTestId("donut-center")).toHaveTextContent("17");
+    await expect(c.getAllByRole("meter")).toHaveLength(2);
+  },
 };

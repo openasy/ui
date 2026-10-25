@@ -7,6 +7,9 @@ import { StackedBarChart } from "./StackedBarChart";
 import { Heatmap } from "./Heatmap";
 import { Sparkline } from "./Sparkline";
 import { BarList } from "./BarList";
+import { DonutChart } from "./DonutChart";
+import { Gauge } from "./Gauge";
+import { StatusStrip } from "./StatusStrip";
 import { ChartLegend, ChartTooltip } from "./parts";
 
 const labels = ["00:00", "01:00", "02:00", "03:00", "04:00"];
@@ -254,6 +257,85 @@ describe("BarList", () => {
     const bars = container.querySelectorAll<HTMLElement>(".rounded-r-\\[3px\\] > span");
     expect(bars[0]!.style.width).toBe("100%");
     expect(bars[1]!.style.width).toBe("50%");
+  });
+});
+
+describe("DonutChart", () => {
+  const slices = [
+    { id: "high", name: "High", value: 30, color: "red" },
+    { id: "low", name: "Low", value: 10, href: "#low" },
+    { id: "none", name: "None", value: 0 },
+  ];
+
+  it("shows the total in the middle and a share per slice", () => {
+    const { container } = renderUI(<DonutChart label="Open" slices={slices} caption="open" />);
+    expect(screen.getByRole("figure", { name: "Open" })).toBeInTheDocument();
+    expect(screen.getByTestId("donut-center")).toHaveTextContent("40open");
+    expect(container.querySelectorAll("circle[data-slice]")).toHaveLength(2);
+    expect(screen.getByText("75%")).toBeInTheDocument();
+    expect(screen.getByRole("link")).toHaveAttribute("href", "#low");
+  });
+
+  it("reads one slice on hover and focus", () => {
+    const { container } = renderUI(<DonutChart label="Open" slices={slices} />);
+    fireEvent.pointerEnter(container.querySelector('circle[data-slice="low"]')!);
+    expect(screen.getByTestId("donut-center")).toHaveTextContent("10Low");
+    expect(container.querySelector<SVGElement>('circle[data-slice="high"]')!.style.opacity).toBe("0.4");
+    fireEvent.pointerLeave(container.querySelector("svg")!.parentElement!);
+    const high = screen.getByText("High").parentElement!;
+    fireEvent.focus(high);
+    expect(screen.getByTestId("donut-center")).toHaveTextContent("30High");
+    fireEvent.blur(high);
+    expect(screen.getByTestId("donut-center")).toHaveTextContent("40");
+  });
+
+  it("draws an empty ring when there is nothing", () => {
+    const { container } = renderUI(<DonutChart label="Open" slices={[{ id: "a", name: "A", value: 0 }]} />);
+    expect(container.querySelectorAll("circle[data-slice]")).toHaveLength(0);
+    expect(screen.getByText("0%")).toBeInTheDocument();
+  });
+});
+
+describe("Gauge", () => {
+  it("is a meter with the share in the middle", () => {
+    renderUI(<Gauge label="Second factor" value={41} max={44} caption="41 of 44" tone="success" />);
+    const m = screen.getByRole("meter", { name: "Second factor" });
+    expect(m).toHaveAttribute("aria-valuenow", "41");
+    expect(m).toHaveAttribute("aria-valuetext", "93.2%");
+    expect(m).toHaveTextContent("93.2%41 of 44");
+    expect(screen.getByTestId("gauge-arc")).toHaveAttribute("stroke", "var(--oa-success)");
+  });
+
+  it("takes its own display and draws no arc at zero", () => {
+    renderUI(<Gauge label="Uptime" value={0} display="0 of 0" />);
+    expect(screen.getByRole("meter")).toHaveAttribute("aria-valuetext", "0 of 0");
+    expect(screen.queryByTestId("gauge-arc")).not.toBeInTheDocument();
+  });
+});
+
+describe("StatusStrip", () => {
+  const cells = Array.from({ length: 10 }, (_, i) => ({
+    id: String(i),
+    label: `Day ${i}`,
+    tone: i === 9 ? ("danger" as const) : i === 0 ? ("neutral" as const) : ("success" as const),
+    detail: i === 9 ? "1 outage" : undefined,
+  }));
+
+  it("draws one cell per bucket and explains it on hover", () => {
+    renderUI(<StatusStrip label="Uptime" cells={cells} start="10 days ago" end="Today" />);
+    expect(screen.getAllByRole("button")).toHaveLength(10);
+    const last = screen.getByRole("button", { name: "Day 9: 1 outage" });
+    expect(last).toHaveAttribute("data-tone", "danger");
+    fireEvent.pointerEnter(last);
+    expect(screen.getByRole("status")).toHaveTextContent("Day 91 outage");
+    expect(screen.getByRole("status").style.transform).toBe("translateX(-100%)");
+    fireEvent.focus(screen.getAllByRole("button")[0]!);
+    expect(screen.getByRole("status").style.transform).toBe("none");
+    fireEvent.focus(screen.getAllByRole("button")[5]!);
+    expect(screen.getByRole("status").style.transform).toBe("translateX(-50%)");
+    fireEvent.blur(screen.getAllByRole("button")[5]!);
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByText("Today")).toBeInTheDocument();
   });
 });
 

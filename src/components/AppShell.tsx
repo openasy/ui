@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import {
   Check,
@@ -22,7 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "../lib/cn";
-import { PRODUCTS, type ProductId } from "../tokens/products";
+import { PRODUCTS, type ProductGroup, type ProductId } from "../tokens/products";
 import { useBrand } from "./BrandProvider";
 import { useT } from "./Locale";
 import { LOCALES, LOCALE_NAMES } from "../lib/i18n";
@@ -140,6 +140,12 @@ export function OpenAsyMark({ size = 24, className }: { size?: number; className
 }
 
 /** The products menu: the linked products to switch to, then the ones that could be connected. */
+const GROUP_ORDER: ProductGroup[] = ["operations", "security", "identity", "platform"];
+
+/**
+ * The linked products as a grid of tiles by group, with a search that narrows it; arrow keys move between tiles. The
+ * search is the first thing in the popover, so it has the focus when it opens.
+ */
 function ProductMenu({
   product,
   connected,
@@ -157,65 +163,134 @@ function ProductMenu({
 }) {
   const { brand } = useBrand();
   const t = useT();
-  const items = [product, ...connected.filter((p) => p !== product)];
+  const [query, setQuery] = useState("");
+  const q = query.trim().toLowerCase();
+  const matches = (id: ProductId) => !q || `${PRODUCTS[id].name} ${PRODUCTS[id].summary} ${id}`.toLowerCase().includes(q);
+  const items = [product, ...connected.filter((p) => p !== product)].filter(matches);
+  const groups = GROUP_ORDER.map((g) => ({ id: g, items: items.filter((id) => PRODUCTS[id].group === g) })).filter((g) => g.items.length);
+  const others = available.filter((id) => id !== product && !connected.includes(id) && matches(id));
+  const choose = (id: ProductId) => {
+    onSwitch?.(id);
+    close();
+  };
+  // Tiles are in rows of three, each group starting a row: left and right step one tile, up and down one row, keeping
+  // the column where the next row is long enough.
+  const rows = groups.reduce<number[]>((out, _g, i) => [...out, i ? out[i - 1]! + Math.ceil(groups[i - 1]!.items.length / 3) : 0], []);
+  const move = (e: ReactKeyboardEvent<HTMLElement>) => {
+    const tiles = [...e.currentTarget.querySelectorAll<HTMLButtonElement>("[data-tile]")];
+    const at = tiles.indexOf(document.activeElement as HTMLButtonElement);
+    if (at < 0) return;
+    const pos = (b: HTMLButtonElement) => [Number(b.dataset.row), Number(b.dataset.col)] as const;
+    const [r, c] = pos(tiles[at]!);
+    let next: HTMLButtonElement | undefined;
+    if (e.key === "ArrowLeft") next = tiles[at - 1];
+    else if (e.key === "ArrowRight") next = tiles[at + 1];
+    else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      const inRow = tiles.filter((b) => pos(b)[0] === r + (e.key === "ArrowUp" ? -1 : 1));
+      next = inRow[Math.min(c, inRow.length - 1)];
+    } else return;
+    e.preventDefault();
+    next?.focus();
+  };
   return (
     <Popover.Content
       align="start"
       sideOffset={4}
       aria-label={t("shell.products", { brand: brand.name })}
-      className="oa-root z-50 max-h-[min(70vh,560px)] w-72 overflow-y-auto rounded-lg border border-line bg-surface p-1 shadow-overlay"
+      onKeyDown={move}
+      className="oa-root z-50 flex max-h-[min(80vh,640px)] w-[min(92vw,22rem)] flex-col overflow-hidden rounded-lg border border-line bg-surface shadow-overlay"
     >
-      <p className="px-2 pt-1.5 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">{t("shell.products", { brand: brand.name })}</p>
-      <ul aria-label={t("shell.connectedProducts")}>
-        {items.map((id) => {
-          const P = PRODUCTS[id];
-          const on = id === product;
-          return (
-            <li key={id}>
-              <button
-                type="button"
-                onClick={() => {
-                  onSwitch?.(id);
-                  close();
-                }}
-                aria-current={on ? "page" : undefined}
-                className={cn("flex h-8 w-full items-center gap-2 rounded-md px-2 text-sm text-fg hover:bg-subtle", on && "bg-accent-soft")}
-              >
-                <P.icon aria-hidden className="size-4 text-fg-muted" />
-                <span className="grow text-left">{P.name}</span>
-                {on && <Check aria-hidden className="size-3.5 text-accent" />}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      {available.length > 0 && (
-        <>
-          <div className="my-1 h-px bg-line" />
-          <p className="px-2 pt-1 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">{t("shell.notConnected")}</p>
-          <ul aria-label={t("shell.availableProducts")}>
-            {available.map((id) => {
-              const P = PRODUCTS[id];
-              return (
-                <li key={id} className="flex h-8 items-center gap-2 px-2 text-sm text-fg-muted">
-                  <P.icon aria-hidden className="size-4" />
-                  <span className="grow">{P.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onConnect?.(id);
-                      close();
-                    }}
-                    className="text-xs font-medium text-accent hover:underline"
-                  >
-                    {t("shell.connect")}
-                  </button>
-                </li>
-              );
-            })}
+      <div className="relative shrink-0 border-b border-line p-2">
+        <Search aria-hidden className="pointer-events-none absolute top-1/2 left-4.5 size-4 -translate-y-1/2 text-fg-muted" />
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && items[0]) choose(items[0]);
+            if (e.key === "ArrowDown") {
+              // The grid's own arrow keys would move on from the tile focused here.
+              e.preventDefault();
+              e.stopPropagation();
+              e.currentTarget.closest("[role=dialog]")?.querySelector<HTMLButtonElement>("[data-tile]")?.focus();
+            }
+          }}
+          aria-label={t("shell.searchProducts")}
+          placeholder={t("shell.searchProducts")}
+          className="h-9 w-full rounded-md border border-line bg-canvas pr-2 pl-8 text-sm text-fg placeholder:text-fg-subtle focus:border-accent focus:outline-none"
+        />
+      </div>
+      <div className="min-h-0 grow overflow-y-auto p-2">
+        {groups.length > 0 && (
+          <ul aria-label={t("shell.connectedProducts")} className="flex flex-col gap-2">
+            {groups.map((g, gi) => (
+              <li key={g.id}>
+                <p className="px-1 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">{t(`shell.group.${g.id}`)}</p>
+                <ul aria-label={t(`shell.group.${g.id}`)} className="grid grid-cols-3 gap-1">
+                  {g.items.map((id, i) => {
+                    const P = PRODUCTS[id];
+                    const on = id === product;
+                    return (
+                      <li key={id}>
+                        <button
+                          type="button"
+                          data-tile
+                          data-row={rows[gi]! + Math.floor(i / 3)}
+                          data-col={i % 3}
+                          title={P.summary}
+                          onClick={() => choose(id)}
+                          aria-current={on ? "page" : undefined}
+                          className={cn(
+                            "relative flex h-20 w-full flex-col items-center justify-center gap-1.5 rounded-md px-1 text-xs text-fg hover:bg-subtle focus-visible:bg-subtle",
+                            on && "bg-accent-soft font-semibold text-accent-text hover:bg-accent-soft",
+                          )}
+                        >
+                          <span
+                            aria-hidden
+                            className={cn("grid size-9 place-items-center rounded-lg", on ? "bg-surface text-accent" : "bg-subtle text-fg-muted")}
+                          >
+                            <P.icon className="size-[18px]" />
+                          </span>
+                          <span className="line-clamp-2 text-center leading-tight">{P.name}</span>
+                          {on && <Check aria-hidden className="absolute top-1.5 right-1.5 size-3.5 text-accent" />}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </li>
+            ))}
           </ul>
-        </>
-      )}
+        )}
+        {groups.length === 0 && others.length === 0 && <p className="m-0 px-1 py-6 text-center text-sm text-fg-muted">{t("shell.noProducts")}</p>}
+        {others.length > 0 && (
+          <>
+            {groups.length > 0 && <div className="my-2 h-px bg-line" />}
+            <p className="px-1 pb-1 text-2xs font-medium tracking-wider text-fg-muted uppercase">{t("shell.notConnected")}</p>
+            <ul aria-label={t("shell.availableProducts")}>
+              {others.map((id) => {
+                const P = PRODUCTS[id];
+                return (
+                  <li key={id} className="flex h-8 items-center gap-2 px-1 text-sm text-fg-muted">
+                    <P.icon aria-hidden className="size-4" />
+                    <span className="grow">{P.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onConnect?.(id);
+                        close();
+                      }}
+                      className="text-xs font-medium text-accent hover:underline"
+                    >
+                      {t("shell.connect")}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
+      </div>
     </Popover.Content>
   );
 }

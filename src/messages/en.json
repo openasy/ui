@@ -20,7 +20,15 @@
     "help": "Help and about",
     "about": "About",
     "manageAccount": "Manage account",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "searchProducts": "Search products",
+    "noProducts": "No product matches.",
+    "group": {
+      "operations": "Operations",
+      "security": "Security",
+      "identity": "Identity",
+      "platform": "Platform"
+    }
   },
   "theme": {
     "label": "Theme",

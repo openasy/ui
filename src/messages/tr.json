@@ -20,7 +20,15 @@
     "help": "Yardım ve hakkında",
     "about": "Hakkında",
     "manageAccount": "Hesabı yönet",
-    "signOut": "Çıkış yap"
+    "signOut": "Çıkış yap",
+    "searchProducts": "Ürün ara",
+    "noProducts": "Eşleşen ürün yok.",
+    "group": {
+      "operations": "Operasyon",
+      "security": "Güvenlik",
+      "identity": "Kimlik",
+      "platform": "Platform"
+    }
   },
   "theme": {
     "label": "Tema",

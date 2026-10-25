@@ -20,7 +20,15 @@
     "help": "Hilfe und Info",
     "about": "Info",
     "manageAccount": "Konto verwalten",
-    "signOut": "Abmelden"
+    "signOut": "Abmelden",
+    "searchProducts": "Produkte suchen",
+    "noProducts": "Kein Produkt passt.",
+    "group": {
+      "operations": "Betrieb",
+      "security": "Sicherheit",
+      "identity": "Identität",
+      "platform": "Plattform"
+    }
   },
   "theme": {
     "label": "Design",

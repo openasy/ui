@@ -527,6 +527,33 @@ describe("AppShell", () => {
     expect(screen.queryByRole("list", { name: "Connected products" })).not.toBeInTheDocument();
   });
 
+  it("ProductSwitcher groups products and narrows them by a search", async () => {
+    const onSwitch = vi.fn();
+    const { user } = renderUI(<ProductSwitcher product="logs" connected={["sast", "dast", "vpn", "identity"]} available={["metrics"]} onSwitch={onSwitch} />);
+    await user.click(screen.getByRole("button", { name: /^Switch product, current: Logs/ }));
+    expect(await screen.findByRole("list", { name: "Security" })).toHaveTextContent("SASTDAST");
+    expect(screen.getByRole("list", { name: "Operations" })).toHaveTextContent("Logs");
+    const search = screen.getByRole("searchbox", { name: "Search products" });
+    expect(search).toHaveFocus();
+    // Arrow keys go from the search to the first tile and between tiles; the current product comes first.
+    await user.type(search, "{ArrowDown}");
+    expect(screen.getByRole("button", { name: "Logs" })).toHaveFocus();
+    await user.keyboard("{ArrowDown}");
+    expect(screen.getByRole("button", { name: "SAST" })).toHaveFocus();
+    await user.keyboard("{ArrowRight}");
+    expect(screen.getByRole("button", { name: "DAST" })).toHaveFocus();
+    await user.type(search, "sast");
+    expect(screen.getByRole("button", { name: "SAST" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "DAST" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("list", { name: "Operations" })).not.toBeInTheDocument();
+    await user.clear(search);
+    await user.type(search, "nothing like it");
+    expect(screen.getByText("No product matches.")).toBeInTheDocument();
+    await user.clear(search);
+    await user.type(search, "dast{Enter}");
+    expect(onSwitch).toHaveBeenCalledWith("dast");
+  });
+
   it("ProductSwitcher asks to connect an available product", async () => {
     const onConnect = vi.fn();
     const { user } = renderUI(<ProductSwitcher product="logs" connected={["metrics"]} available={["vpn"]} onConnect={onConnect} />);

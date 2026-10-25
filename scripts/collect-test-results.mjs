@@ -24,6 +24,8 @@ writeFileSync(resultsPath, JSON.stringify(results));
 const coverage = existsSync(coveragePath) ? JSON.parse(readFileSync(coveragePath, "utf8")) : null;
 
 const rel = (f) => path.relative(root, f).split(path.sep).join("/");
+// Vitest colours its messages for a terminal; the page shows them as text.
+const plain = (s) => s.replace(/\u001b\[[0-9;]*m/g, "");
 const projectOf = (file) => (file.includes(".stories.") ? "storybook" : "unit");
 
 const files = results.testResults.map((r) => {
@@ -40,7 +42,7 @@ const files = results.testResults.map((r) => {
     durationMs: Math.max(0, (r.endTime ?? 0) - (r.startTime ?? 0)),
     failures: tests
       .filter((t) => t.status === "failed")
-      .map((t) => ({ title: [...(t.ancestorTitles ?? []), t.title].join(" › "), message: (t.failureMessages ?? []).join("\n").slice(0, 2000) })),
+      .map((t) => ({ title: [...(t.ancestorTitles ?? []), t.title].join(" › "), message: plain((t.failureMessages ?? []).join("\n")).slice(0, 2000) })),
   };
 });
 

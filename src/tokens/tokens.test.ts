@@ -70,10 +70,10 @@ describe("severity", () => {
 });
 
 describe("products", () => {
-  it("registers 38 products with unique images and matching ids", () => {
-    expect(PRODUCT_IDS).toHaveLength(38);
+  it("registers 39 products with unique images and matching ids", () => {
+    expect(PRODUCT_IDS).toHaveLength(39);
     expect(PRODUCT_LIST.map((p) => p.id)).toEqual([...PRODUCT_IDS]);
-    expect(new Set(PRODUCT_LIST.map((p) => p.image)).size).toBe(38);
+    expect(new Set(PRODUCT_LIST.map((p) => p.image)).size).toBe(39);
     PRODUCT_LIST.forEach((p) => expect(PRODUCTS[p.id].id).toBe(p.id));
   });
 

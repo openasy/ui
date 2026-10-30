@@ -17,6 +17,7 @@ import {
   Megaphone,
   Send,
   UsersRound,
+  Mail,
   MousePointerClick,
   Network,
   OctagonX,
@@ -47,7 +48,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export type ProductGroup = "operations" | "security" | "identity" | "growth" | "platform";
+export type ProductGroup = "operations" | "security" | "identity" | "growth" | "workplace" | "platform";
 
 export interface ProductInfo {
   id: ProductId;
@@ -90,6 +91,7 @@ export const PRODUCT_IDS = [
   "crm",
   "campaigns",
   "forms",
+  "mail",
   "certificates",
   "attack-surface",
   "supply-chain",
@@ -338,6 +340,14 @@ export const PRODUCTS: Record<ProductId, ProductInfo> = {
     icon: ClipboardList,
     image: "ghcr.io/openasy/forms",
     summary: "Lead, contact and NPS forms that add people to Audience and CRM, with consent recorded.",
+  },
+  mail: {
+    id: "mail",
+    name: "Mail",
+    group: "workplace",
+    icon: Mail,
+    image: "ghcr.io/openasy/mail",
+    summary: "Your company's email on your own server: webmail, mailboxes, aliases and delivery reports, on Stalwart.",
   },
   certificates: {
     id: "certificates",

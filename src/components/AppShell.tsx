@@ -140,7 +140,7 @@ export function OpenAsyMark({ size = 24, className }: { size?: number; className
 }
 
 /** The products menu: the linked products to switch to, then the ones that could be connected. */
-const GROUP_ORDER: ProductGroup[] = ["operations", "security", "identity", "growth", "platform"];
+const GROUP_ORDER: ProductGroup[] = ["operations", "security", "identity", "growth", "workplace", "platform"];
 
 /**
  * The linked products as a grid of tiles by group, with a search that narrows it; arrow keys move between tiles. The

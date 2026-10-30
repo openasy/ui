@@ -79,7 +79,7 @@ describe("products", () => {
 
   it("groups every product", () => {
     const groups = new Set(PRODUCT_LIST.map((p) => p.group));
-    expect([...groups].sort()).toEqual(["finance", "growth", "identity", "operations", "people", "platform", "security", "service", "workplace"]);
+    expect([...groups].sort()).toEqual(["finance", "growth", "operations", "people", "platform", "security", "service", "workplace"]);
   });
 
   it("looks a product up by id", () => {

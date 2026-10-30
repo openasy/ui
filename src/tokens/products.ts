@@ -67,7 +67,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export type ProductGroup = "operations" | "security" | "identity" | "workplace" | "people" | "service" | "growth" | "finance" | "platform";
+export type ProductGroup = "operations" | "security" | "workplace" | "people" | "service" | "growth" | "finance" | "platform";
 
 export interface ProductInfo {
   id: ProductId;
@@ -294,7 +294,7 @@ export const PRODUCTS: Record<ProductId, ProductInfo> = {
   identity: {
     id: "identity",
     name: "Identity",
-    group: "identity",
+    group: "operations",
     icon: Fingerprint,
     image: "ghcr.io/openasy/identity",
     summary: "SSO with OIDC and SAML, MFA and passkeys, for OpenAsy and anything else.",
@@ -329,7 +329,7 @@ export const PRODUCTS: Record<ProductId, ProductInfo> = {
     group: "growth",
     icon: MousePointerClick,
     image: "ghcr.io/openasy/analytics",
-    summary: "How people use your websites: visits, sources, clicks, funnels, heatmaps and session replays, kept in the install.",
+    summary: "How people use your websites: visits, sources, pages, clicks and goals, from one script tag, kept in the install.",
   },
   audience: {
     id: "audience",

@@ -70,16 +70,16 @@ describe("severity", () => {
 });
 
 describe("products", () => {
-  it("registers 39 products with unique images and matching ids", () => {
-    expect(PRODUCT_IDS).toHaveLength(39);
+  it("registers 45 products with unique images and matching ids", () => {
+    expect(PRODUCT_IDS).toHaveLength(45);
     expect(PRODUCT_LIST.map((p) => p.id)).toEqual([...PRODUCT_IDS]);
-    expect(new Set(PRODUCT_LIST.map((p) => p.image)).size).toBe(39);
+    expect(new Set(PRODUCT_LIST.map((p) => p.image)).size).toBe(45);
     PRODUCT_LIST.forEach((p) => expect(PRODUCTS[p.id].id).toBe(p.id));
   });
 
   it("groups every product", () => {
     const groups = new Set(PRODUCT_LIST.map((p) => p.group));
-    expect([...groups].sort()).toEqual(["identity", "operations", "platform", "security"]);
+    expect([...groups].sort()).toEqual(["growth", "identity", "operations", "platform", "security"]);
   });
 
   it("looks a product up by id", () => {

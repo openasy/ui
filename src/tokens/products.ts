@@ -11,6 +11,12 @@ import {
   GraduationCap,
   HeartPulse,
   Laptop,
+  ClipboardList,
+  Handshake,
+  ListChecks,
+  Megaphone,
+  Send,
+  UsersRound,
   MousePointerClick,
   Network,
   OctagonX,
@@ -41,7 +47,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export type ProductGroup = "operations" | "security" | "identity" | "platform";
+export type ProductGroup = "operations" | "security" | "identity" | "growth" | "platform";
 
 export interface ProductInfo {
   id: ProductId;
@@ -78,6 +84,12 @@ export const PRODUCT_IDS = [
   "uptime",
   "errors",
   "analytics",
+  "audience",
+  "consent",
+  "messages",
+  "crm",
+  "campaigns",
+  "forms",
   "certificates",
   "attack-surface",
   "supply-chain",
@@ -274,10 +286,58 @@ export const PRODUCTS: Record<ProductId, ProductInfo> = {
   analytics: {
     id: "analytics",
     name: "Analytics",
-    group: "operations",
+    group: "growth",
     icon: MousePointerClick,
     image: "ghcr.io/openasy/analytics",
     summary: "How people use your websites: visits, sources, clicks, funnels, heatmaps and session replays, kept in the install.",
+  },
+  audience: {
+    id: "audience",
+    name: "Audience",
+    group: "growth",
+    icon: UsersRound,
+    image: "ghcr.io/openasy/audience",
+    summary: "One profile per customer from every product's events, and segments that stay up to date.",
+  },
+  consent: {
+    id: "consent",
+    name: "Consent",
+    group: "growth",
+    icon: ListChecks,
+    image: "ghcr.io/openasy/consent",
+    summary: "Who agreed to what, on which channel and text: a cookie banner, a preference page and İYS sync.",
+  },
+  messages: {
+    id: "messages",
+    name: "Messages",
+    group: "growth",
+    icon: Send,
+    image: "ghcr.io/openasy/messages",
+    summary: "Email, SMS and WhatsApp campaigns and journeys through your own providers, only to people who agreed.",
+  },
+  crm: {
+    id: "crm",
+    name: "CRM",
+    group: "growth",
+    icon: Handshake,
+    image: "ghcr.io/openasy/crm",
+    summary: "Companies, contacts and deals through a pipeline you define, with tasks, quotes and meeting links.",
+  },
+  campaigns: {
+    id: "campaigns",
+    name: "Campaigns",
+    group: "growth",
+    icon: Megaphone,
+    image: "ghcr.io/openasy/campaigns",
+    summary: "Plan campaigns with a calendar, budget and approvals, tagged links, and results from every channel.",
+  },
+  forms: {
+    id: "forms",
+    name: "Forms",
+    group: "growth",
+    icon: ClipboardList,
+    image: "ghcr.io/openasy/forms",
+    summary: "Lead, contact and NPS forms that add people to Audience and CRM, with consent recorded.",
   },
   certificates: {
     id: "certificates",

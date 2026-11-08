@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Copy, KeyRound, Plus, Trash2 } from "lucide-react";
 import { PageHeader } from "../../components/PageHeader";
 import { Panel } from "../../components/Panel";
@@ -254,9 +254,13 @@ const AUDIT = [
   { id: "a5", at: "Oct 17", who: PEOPLE[5], action: "Exported audit log for SOC 2 evidence", ip: "192.0.2.44" },
 ];
 
-export function SettingsPage({ product }: { product: ProductId }) {
+/**
+ * A product that keeps its own settings in a YAML file passes `file`: its tab comes first and opens by default, next to the
+ * shared tabs every product has.
+ */
+export function SettingsPage({ product, file }: { product: ProductId; file?: { name: string; content: ReactNode } }) {
   const { brand } = useBrand();
-  const [tab, setTab] = useState<"general" | "members" | "sso" | "data" | "audit">("general");
+  const [tab, setTab] = useState<"file" | "general" | "members" | "sso" | "data" | "audit">(file ? "file" : "general");
   const [members, setMembers] = useState(MEMBERS);
   const [enforceSso, setEnforceSso] = useState(true);
   const [saved, setSaved] = useState(false);
@@ -302,6 +306,7 @@ export function SettingsPage({ product }: { product: ProductId }) {
           value={tab}
           onChange={setTab}
           items={[
+            ...(file ? [{ value: "file" as const, label: file.name }] : []),
             { value: "general", label: "General" },
             { value: "members", label: "Members", count: members.length },
             { value: "sso", label: "Single sign-on" },
@@ -310,6 +315,7 @@ export function SettingsPage({ product }: { product: ProductId }) {
           ]}
         />
       </PageHeader>
+      {tab === "file" && file?.content}
       {tab === "general" && (
         <Panel title="General">
           <form

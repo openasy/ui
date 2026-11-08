@@ -46,7 +46,7 @@ const nav = [
 ];
 
 const meta = {
-  title: "Products/LiveChat",
+  title: "Products/Live Chat",
   parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

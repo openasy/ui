@@ -49,7 +49,7 @@ const nav = [
 ];
 
 const meta = {
-  title: "Products/Crm",
+  title: "Products/CRM",
   parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

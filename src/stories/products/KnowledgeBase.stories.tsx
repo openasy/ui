@@ -33,7 +33,7 @@ const nav = [
 ];
 
 const meta = {
-  title: "Products/KnowledgeBase",
+  title: "Products/Knowledge Base",
   parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

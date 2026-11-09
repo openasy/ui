@@ -45,7 +45,8 @@
     "dismiss": "Dismiss",
     "moreInformation": "More information",
     "trend": "Trend",
-    "labelTrend": "{{label}} trend"
+    "labelTrend": "{{label}} trend",
+    "breadcrumb": "Breadcrumb"
   },
   "table": {
     "hidden": "{{count}} hidden",
@@ -89,7 +90,8 @@
   },
   "chart": {
     "readValues": "{{label}}. Use arrow keys to read values.",
-    "hoverCell": "Hover a cell"
+    "hoverCell": "Hover a cell",
+    "legend": "Legend"
   },
   "severity": {
     "label": "Severity {{level}}",

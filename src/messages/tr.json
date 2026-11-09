@@ -45,7 +45,8 @@
     "dismiss": "Kapat",
     "moreInformation": "Daha fazla bilgi",
     "trend": "Eğilim",
-    "labelTrend": "{{label}} eğilimi"
+    "labelTrend": "{{label}} eğilimi",
+    "breadcrumb": "Sayfa yolu"
   },
   "table": {
     "hidden": "{{count}} gizli",
@@ -89,7 +90,8 @@
   },
   "chart": {
     "readValues": "{{label}}. Değerleri okumak için ok tuşlarını kullanın.",
-    "hoverCell": "Bir hücrenin üzerine gelin"
+    "hoverCell": "Bir hücrenin üzerine gelin",
+    "legend": "Açıklama"
   },
   "severity": {
     "label": "Önem {{level}}",

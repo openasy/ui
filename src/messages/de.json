@@ -45,7 +45,8 @@
     "dismiss": "Ausblenden",
     "moreInformation": "Weitere Informationen",
     "trend": "Trend",
-    "labelTrend": "{{label}}-Trend"
+    "labelTrend": "{{label}}-Trend",
+    "breadcrumb": "Pfadnavigation"
   },
   "table": {
     "hidden": "{{count}} ausgeblendet",
@@ -89,7 +90,8 @@
   },
   "chart": {
     "readValues": "{{label}}. Mit den Pfeiltasten Werte lesen.",
-    "hoverCell": "Zeigen Sie auf eine Zelle"
+    "hoverCell": "Zeigen Sie auf eine Zelle",
+    "legend": "Legende"
   },
   "severity": {
     "label": "Schweregrad {{level}}",

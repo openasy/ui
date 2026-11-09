@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "../lib/cn";
+import { useT } from "../components/Locale";
 
 export interface LegendItem {
   id: string;
@@ -20,8 +21,9 @@ export function ChartLegend({
   mark?: "line" | "box";
   className?: string;
 }) {
+  const t = useT();
   return (
-    <ul aria-label="Legend" className={cn("flex flex-wrap items-center gap-1", className)}>
+    <ul aria-label={t("chart.legend")} className={cn("flex flex-wrap items-center gap-1", className)}>
       {items.map((it) => {
         const key = (
           <span aria-hidden className={cn("shrink-0", mark === "line" ? "h-0.5 w-2.5 rounded-full" : "size-2.5 rounded-sm")} style={{ background: it.color }} />

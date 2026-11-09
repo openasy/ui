@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import { cn } from "../lib/cn";
+import { useT } from "./Locale";
 
 export interface Crumb {
   label: ReactNode;
@@ -22,12 +23,13 @@ export interface PageHeaderProps {
 
 /** Title row for every page: breadcrumbs, title, meta, actions. */
 export function PageHeader({ title, description, breadcrumbs, meta, actions, children, className }: PageHeaderProps) {
+  const t = useT();
   return (
     <header className={cn("flex flex-col gap-2", className)}>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="flex min-w-0 grow flex-col gap-0.5">
           {breadcrumbs && breadcrumbs.length > 0 && (
-            <nav aria-label="Breadcrumb" className="pb-1">
+            <nav aria-label={t("common.breadcrumb")} className="pb-1">
               <ol className="flex flex-wrap items-center gap-1 text-xs text-fg-muted">
                 {breadcrumbs.map((c, i) => (
                   <Fragment key={i}>

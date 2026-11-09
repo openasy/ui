@@ -641,7 +641,7 @@ export const PRODUCTS: Record<ProductId, ProductInfo> = {
     group: "operations",
     icon: ArchiveRestore,
     image: "ghcr.io/openasy/backups",
-    summary: "Backup job tracking for restic and Velero, with automated restore tests.",
+    summary: "Tracks the backup runs and restore-test results that restic, Velero or your scripts report.",
   },
   awareness: {
     id: "awareness",

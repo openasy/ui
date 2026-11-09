@@ -1,5 +1,6 @@
 import { createContext, useContext, useLayoutEffect, useMemo, useRef, type CSSProperties, type ReactNode } from "react";
 import { cn } from "../lib/cn";
+import { setFormatLocale } from "../lib/format";
 import type { Locale } from "../lib/i18n";
 import { useResolvedTheme, type ThemeMode, type ThemePreference } from "./Theme";
 
@@ -56,6 +57,8 @@ export interface BrandProviderProps {
  */
 export function BrandProvider({ brand, theme: preference = "system", locale = "en", root, className, style, children }: BrandProviderProps) {
   const theme = useResolvedTheme(preference);
+  // Set while rendering, so the children's numbers and dates are written in this language the first time they draw.
+  setFormatLocale(locale);
   const value = useMemo<BrandContextValue>(() => ({ brand: { ...DEFAULT_BRAND, ...brand }, theme, locale }), [brand, theme, locale]);
   const applied = useRef(false);
   useIsomorphicLayoutEffect(() => {

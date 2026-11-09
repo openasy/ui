@@ -3,6 +3,15 @@
 
 @source not "../**/*.test.tsx";
 
+/* Products use these prebuilt styles, so the logical sides they need for right-to-left languages are built here
+   even where no component of this library uses them yet (ADR 0006). */
+@source inline("{,sm:,md:,lg:,xl:}text-{start,end}");
+@source inline("{,sm:,md:,lg:,xl:}{ms,me,ps,pe}-{0,0.5,1,1.5,2,2.5,3,3.5,4,5,6,7,8,9,10,12,16,auto}");
+@source inline("-{ms,me}-{0.5,1,1.5,2,2.5,3,4}");
+@source inline("{,-}{start,end}-{0,0.5,1,1.5,2,2.5,3,4,5,6,8,auto,full}");
+@source inline("{,first:,last:}border-{s,e}{,-0,-2,-4}");
+@source inline("rounded-{s,e,ss,se,es,ee}{,-sm,-md,-lg,-xl,-full}");
+
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {

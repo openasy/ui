@@ -29,10 +29,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
           id={inputId}
           aria-invalid={error ? true : undefined}
           aria-describedby={hint || error ? hintId : undefined}
-          className={cn(field, mono && "font-mono", error && "border-danger", adornment && "pr-24")}
+          className={cn(field, mono && "font-mono", error && "border-danger", adornment && "pe-24")}
           {...rest}
         />
-        {adornment && <span className="absolute inset-y-0 right-1.5 flex items-center">{adornment}</span>}
+        {adornment && <span className="absolute inset-y-0 end-1.5 flex items-center">{adornment}</span>}
       </div>
       {error ? (
         <span id={hintId} className="flex items-center gap-1 text-xs text-danger-text">
@@ -64,14 +64,14 @@ export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(funct
         </label>
       )}
       <div className="relative">
-        <select ref={ref} id={selectId} className={cn(field, "appearance-none pr-8")} {...rest}>
+        <select ref={ref} id={selectId} className={cn(field, "appearance-none pe-8")} {...rest}>
           {options.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
           ))}
         </select>
-        <ChevronDown aria-hidden className="pointer-events-none absolute top-2 right-2 size-4 text-fg-muted" />
+        <ChevronDown aria-hidden className="pointer-events-none absolute top-2 end-2 size-4 text-fg-muted" />
       </div>
     </div>
   );
@@ -87,9 +87,9 @@ export interface SearchInputProps extends Omit<InputHTMLAttributes<HTMLInputElem
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput({ label, shortcut, className, placeholder, ...rest }, ref) {
   return (
     <div className={cn("relative flex h-8 items-center", className)}>
-      <Search aria-hidden className="pointer-events-none absolute left-2.5 size-3.5 text-fg-muted" />
-      <input ref={ref} type="search" aria-label={label} placeholder={placeholder ?? label} className={cn(field, "pl-8", shortcut && "pr-8")} {...rest} />
-      {shortcut && <kbd className="pointer-events-none absolute right-2 rounded border border-line px-1 font-mono text-2xs text-fg-muted">{shortcut}</kbd>}
+      <Search aria-hidden className="pointer-events-none absolute start-2.5 size-3.5 text-fg-muted" />
+      <input ref={ref} type="search" aria-label={label} placeholder={placeholder ?? label} className={cn(field, "ps-8", shortcut && "pe-8")} {...rest} />
+      {shortcut && <kbd className="pointer-events-none absolute end-2 rounded border border-line px-1 font-mono text-2xs text-fg-muted">{shortcut}</kbd>}
     </div>
   );
 });

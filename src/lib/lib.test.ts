@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { cn } from "./cn";
-import { formatBytes, formatDelta, formatDuration, formatNumber, formatPercent } from "./format";
+import { formatBytes, formatDelta, formatDuration, formatLocale, formatNumber, formatPercent, setFormatLocale } from "./format";
 import { colorAt, indexFromPointer, linearPath, niceScale, smoothPath } from "./chart";
 
 describe("cn", () => {
@@ -62,6 +62,24 @@ describe("formatDelta", () => {
     expect(formatDelta(-3.5, "%")).toBe("−3.5%");
     expect(formatDelta(0, " ms")).toBe("0 ms");
     expect(formatDelta(Number.NaN)).toBe("–");
+  });
+});
+
+describe("numbers in the viewer's language (ADR 0006)", () => {
+  it("writes Turkish and German numbers their own way, and goes back to English", () => {
+    try {
+      setFormatLocale("tr");
+      expect(formatLocale()).toBe("tr");
+      expect(formatNumber(1204.5)).toBe("1.204,5");
+      expect(formatPercent(0.0523)).toBe("%5,2");
+      expect(formatBytes(1536)).toBe("1,5 KB");
+      setFormatLocale("de");
+      expect(formatNumber(2_100_000, { compact: false })).toBe("2.100.000");
+      expect(formatPercent(0.457)).toMatch(/^46\s%$/);
+    } finally {
+      setFormatLocale("en");
+    }
+    expect(formatNumber(1204.5)).toBe("1,204.5");
   });
 });
 

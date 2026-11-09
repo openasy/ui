@@ -341,7 +341,7 @@ export function DataTable<T>({
             <thead className={cn(stickyHeader && "sticky top-0 z-20")}>
               <tr className="border-b border-line bg-canvas">
                 {selectable && (
-                  <th scope="col" className={cn("bg-canvas px-2.5 py-1.5 text-left", anyPinned && "sticky left-0 z-10")}>
+                  <th scope="col" className={cn("bg-canvas px-2.5 py-1.5 text-start", anyPinned && "sticky start-0 z-10")}>
                     <input
                       type="checkbox"
                       aria-label={t("table.selectAll")}
@@ -374,7 +374,7 @@ export function DataTable<T>({
                       style={stickyStyle(c)}
                       className={cn(
                         "group/th relative bg-canvas px-2.5 py-1.5 text-2xs font-medium tracking-wider whitespace-nowrap text-fg-muted uppercase",
-                        c.align === "right" ? "text-right" : c.align === "center" ? "text-center" : "text-left",
+                        c.align === "right" ? "text-end" : c.align === "center" ? "text-center" : "text-start",
                         pin && "z-10",
                         edge(c),
                       )}
@@ -491,7 +491,7 @@ export function DataTable<T>({
                       )}
                     >
                       {selectable && (
-                        <td className={cn(cellPad, anyPinned && cn("sticky left-0 z-[1]", rowBg))} onClick={(e) => e.stopPropagation()}>
+                        <td className={cn(cellPad, anyPinned && cn("sticky start-0 z-[1]", rowBg))} onClick={(e) => e.stopPropagation()}>
                           <input
                             type="checkbox"
                             aria-label={t("table.selectRow", { id })}
@@ -512,7 +512,7 @@ export function DataTable<T>({
                               "align-middle",
                               c.mono && "font-mono text-xs",
                               (c.mono || c.align === "right") && "whitespace-nowrap",
-                              c.align === "right" ? "text-right" : c.align === "center" ? "text-center" : "text-left",
+                              c.align === "right" ? "text-end" : c.align === "center" ? "text-center" : "text-start",
                               sized && "overflow-hidden text-ellipsis",
                               pin && cn("z-[1]", rowBg, onRowClick && !(selected || active) && "group-hover/row:bg-canvas"),
                               edge(c),
@@ -566,7 +566,7 @@ function ColumnMenu({ name, sortable, pin, hideable, resized, onSort, onPin, onH
     fn();
     setOpen(false);
   };
-  const item = "flex h-7 w-full items-center gap-2 rounded-md px-2 text-left text-sm font-normal tracking-normal text-fg normal-case hover:bg-subtle";
+  const item = "flex h-7 w-full items-center gap-2 rounded-md px-2 text-start text-sm font-normal tracking-normal text-fg normal-case hover:bg-subtle";
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger

@@ -71,7 +71,7 @@ export function Dialog({
               {description !== undefined && <RadixDialog.Description className="text-fg-muted">{description}</RadixDialog.Description>}
             </div>
             <RadixDialog.Close asChild>
-              <IconButton label={t("common.close")} className="-mt-1 -mr-2 shrink-0">
+              <IconButton label={t("common.close")} className="-mt-1 -me-2 shrink-0">
                 <X aria-hidden className="size-4" />
               </IconButton>
             </RadixDialog.Close>

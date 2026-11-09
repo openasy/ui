@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, type FormEvent, type KeyboardEvent, type Rea
 import * as Popover from "@radix-ui/react-popover";
 import { Check, ChevronDown, Clock, Play, X } from "lucide-react";
 import { cn } from "../lib/cn";
+import { formatNumber } from "../lib/format";
 import { Button } from "./Button";
 import { useT } from "./Locale";
 
@@ -102,7 +103,7 @@ export function TimeRangePicker({ value, onChange, ranges: given, defaultOpen, s
                   }}
                   className={cn("flex h-7 w-full items-center gap-2 rounded-md px-2 text-sm hover:bg-subtle", on ? "font-semibold text-fg" : "text-fg")}
                 >
-                  <span className="grow text-left">{r.label}</span>
+                  <span className="grow text-start">{r.label}</span>
                   {on && <Check aria-hidden className="size-4 text-accent" strokeWidth={3} />}
                 </button>
               );
@@ -194,7 +195,7 @@ export function FacetFilter({ label, options, selected, onChange, searchable, de
               <label key={o.value} className="flex h-7 cursor-pointer items-center gap-2 rounded-md px-2 text-sm hover:bg-subtle">
                 <input type="checkbox" checked={selected.includes(o.value)} onChange={() => toggle(o.value)} className="size-3.5 accent-[var(--oa-accent)]" />
                 <span className="grow truncate">{o.label ?? o.value}</span>
-                {o.count !== undefined && <span className="font-mono text-2xs text-fg-muted">{o.count.toLocaleString("en-US")}</span>}
+                {o.count !== undefined && <span className="font-mono text-2xs text-fg-muted">{formatNumber(o.count, { compact: false })}</span>}
               </label>
             ))}
             {shown.length === 0 && <p className="px-2 py-1.5 text-xs text-fg-muted">{t("filters.noMatches")}</p>}

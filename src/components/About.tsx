@@ -71,7 +71,7 @@ function Libraries({ label, items }: { label: string; items: ColophonLibrary[] }
   const t = useT();
   return (
     // Fixed columns, so the tables one under the other line up whatever their contents.
-    <table className="w-full min-w-[36rem] table-fixed border-collapse text-left text-sm">
+    <table className="w-full min-w-[36rem] table-fixed border-collapse text-start text-sm">
       <caption className="sr-only">{label}</caption>
       <thead>
         <tr className="border-t border-line bg-subtle text-2xs font-semibold tracking-wider text-fg-muted uppercase">

@@ -201,7 +201,7 @@ function ProductMenu({
       className="oa-root z-50 flex max-h-[min(80vh,640px)] w-[min(92vw,22rem)] flex-col overflow-hidden rounded-lg border border-line bg-surface shadow-overlay"
     >
       <div className="relative shrink-0 border-b border-line p-2">
-        <Search aria-hidden className="pointer-events-none absolute top-1/2 left-4.5 size-4 -translate-y-1/2 text-fg-muted" />
+        <Search aria-hidden className="pointer-events-none absolute top-1/2 start-4.5 size-4 -translate-y-1/2 text-fg-muted" />
         <input
           type="search"
           value={query}
@@ -217,7 +217,7 @@ function ProductMenu({
           }}
           aria-label={t("shell.searchProducts")}
           placeholder={t("shell.searchProducts")}
-          className="h-9 w-full rounded-md border border-line bg-canvas pr-2 pl-8 text-sm text-fg placeholder:text-fg-subtle focus:border-accent focus:outline-none"
+          className="h-9 w-full rounded-md border border-line bg-canvas pe-2 ps-8 text-sm text-fg placeholder:text-fg-subtle focus:border-accent focus:outline-none"
         />
       </div>
       <div className="min-h-0 grow overflow-y-auto p-2">
@@ -252,7 +252,7 @@ function ProductMenu({
                             <P.icon className="size-[18px]" />
                           </span>
                           <span className="line-clamp-2 text-center leading-tight">{P.name}</span>
-                          {on && <Check aria-hidden className="absolute top-1.5 right-1.5 size-3.5 text-accent" />}
+                          {on && <Check aria-hidden className="absolute top-1.5 end-1.5 size-3.5 text-accent" />}
                         </button>
                       </li>
                     );
@@ -313,7 +313,7 @@ export function ProductSwitcher({ product, connected, available, onSwitch, onCon
   const label = (
     <>
       <BrandMark product={product} />
-      <span className="flex min-w-0 grow flex-col text-left">
+      <span className="flex min-w-0 grow flex-col text-start">
         <span className="truncate text-sm font-semibold text-fg">{info.name}</span>{" "}
         <span className="truncate text-2xs text-fg-muted">{brand.organization ?? brand.name}</span>
       </span>
@@ -352,7 +352,7 @@ function NavLink({ item, active, onNavigate }: { item: NavItem; active: boolean;
       className={cn(
         "oa-nav-link relative flex min-h-10 items-center gap-3 rounded-md px-2.5 text-base no-underline",
         active
-          ? "bg-accent-soft font-semibold text-accent-text before:absolute before:inset-y-2 before:left-0 before:w-[3px] before:rounded-full before:bg-accent"
+          ? "bg-accent-soft font-semibold text-accent-text before:absolute before:inset-y-2 before:start-0 before:w-[3px] before:rounded-full before:bg-accent"
           : "font-medium text-fg hover:bg-subtle",
       )}
     >
@@ -360,7 +360,7 @@ function NavLink({ item, active, onNavigate }: { item: NavItem; active: boolean;
         <span className={cn("relative flex shrink-0", active ? "text-accent" : "text-fg-muted")}>
           <Icon aria-hidden className="size-[18px]" />
           {item.attention && item.count !== undefined && (
-            <span aria-hidden className="oa-nav-dot absolute -top-1 -right-1 size-2 rounded-full bg-danger ring-2 ring-surface" />
+            <span aria-hidden className="oa-nav-dot absolute -top-1 -end-1 size-2 rounded-full bg-danger ring-2 ring-surface" />
           )}
         </span>
       )}
@@ -434,7 +434,7 @@ function UserMenu({ user }: { user: ShellUser }) {
   const item = "flex min-h-10 items-center gap-2.5 rounded-md px-2.5 text-sm text-fg no-underline hover:bg-subtle";
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger className="oa-topbar-button flex h-10 items-center gap-2 rounded-md px-1.5 text-left">
+      <Popover.Trigger className="oa-topbar-button flex h-10 items-center gap-2 rounded-md px-1.5 text-start">
         <span className="sr-only">{t("shell.account")}:</span>{" "}
         <span className="hidden flex-col leading-tight lg:flex">
           <span className="text-sm font-medium">{user.name}</span> {user.role && <span className="oa-topbar-muted text-2xs">{user.role}</span>}
@@ -465,7 +465,7 @@ function UserMenu({ user }: { user: ShellUser }) {
           {user.onSignOut && (
             <button
               type="button"
-              className={cn(item, "w-full border-0 bg-transparent text-left font-[inherit]")}
+              className={cn(item, "w-full border-0 bg-transparent text-start font-[inherit]")}
               onClick={() => {
                 setOpen(false);
                 user.onSignOut!();
@@ -509,7 +509,7 @@ function HelpMenu({ product, about, onAbout, onSetup }: { product: ProductId; ab
           {onSetup && (
             <button
               type="button"
-              className={cn(item, "w-full border-0 bg-transparent text-left font-[inherit]")}
+              className={cn(item, "w-full border-0 bg-transparent text-start font-[inherit]")}
               onClick={() => {
                 setOpen(false);
                 onSetup();
@@ -522,7 +522,7 @@ function HelpMenu({ product, about, onAbout, onSetup }: { product: ProductId; ab
           {onAbout && (
             <button
               type="button"
-              className={cn(item, "w-full border-0 bg-transparent text-left font-[inherit]")}
+              className={cn(item, "w-full border-0 bg-transparent text-start font-[inherit]")}
               onClick={() => {
                 setOpen(false);
                 onAbout();
@@ -751,7 +751,7 @@ export function AppShell({
           <button
             type="button"
             onClick={() => setSearching(true)}
-            className="oa-nav-filter mb-1 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-line bg-canvas px-2.5 text-left text-sm text-fg-subtle"
+            className="oa-nav-filter mb-1 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-line bg-canvas px-2.5 text-start text-sm text-fg-subtle"
           >
             <Search aria-hidden className="size-3.5" />
             <span className="oa-nav-label flex-1">{t("search.button")}</span>
@@ -769,7 +769,7 @@ export function AppShell({
               className="oa-nav-link oa-nav-collapse hidden min-h-10 items-center gap-3 rounded-md px-2.5 text-base font-medium text-fg-muted hover:bg-subtle lg:flex"
             >
               {collapsed ? <ChevronsRight aria-hidden className="size-[18px] shrink-0" /> : <ChevronsLeft aria-hidden className="size-[18px] shrink-0" />}
-              <span className="oa-nav-label grow text-left">{t("shell.collapse")}</span>
+              <span className="oa-nav-label grow text-start">{t("shell.collapse")}</span>
             </button>
             {/* The organization is under the product's name at the top; here only what it runs on. */}
             {poweredBy && (

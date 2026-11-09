@@ -169,7 +169,7 @@ export function ThemeMenu({ value, onChange, className }: ThemeToggleProps) {
                     setOpen(false);
                   }}
                   className={cn(
-                    "flex h-9 items-center gap-2.5 rounded-md px-2.5 text-left text-sm",
+                    "flex h-9 items-center gap-2.5 rounded-md px-2.5 text-start text-sm",
                     on ? "bg-accent-soft font-medium text-accent-text" : "text-fg hover:bg-subtle",
                   )}
                 >
